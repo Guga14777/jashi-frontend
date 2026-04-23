@@ -34,7 +34,7 @@
      Header → hero (natural height) → quote section, with normal gaps. */
   min-height: auto;
   display: block;
-  padding-top: 56px;
+  padding-top: 68px;
   padding-bottom: 40px;
   position: relative;
   width: 100%;
@@ -69,11 +69,11 @@
 }
 
 .hero-headline {
-  font-size: clamp(38px, 3.2vw, 52px);
+  font-size: clamp(42px, 3.6vw, 58px);
   line-height: 1.08;
   font-weight: 800;
   color: #0F172A;
-  margin: 0 auto 20px auto;
+  margin: 0 auto 22px auto;
   letter-spacing: -0.02em;
   text-align: center;
   white-space: nowrap;
