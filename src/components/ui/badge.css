@@ -1,0 +1,189 @@
+/* src/components/ui/badge.css */
+
+/* ============================================
+   BASE BADGE STYLES
+   ============================================ */
+.badge {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  font-variant-numeric: tabular-nums;
+  font-weight: 600;
+  border-radius: 999px;
+  transition: all 0.15s ease;
+  white-space: nowrap;
+  line-height: 1;
+  vertical-align: middle;
+}
+
+/* ============================================
+   SIZE VARIANTS
+   ============================================ */
+.badge-sm {
+  height: 20px;
+  min-width: 20px;
+  padding: 0 6px;
+  font-size: 11px;
+  font-weight: 700;
+}
+
+.badge-md {
+  height: 24px;
+  min-width: 24px;
+  padding: 0 8px;
+  font-size: 12px;
+  font-weight: 600;
+}
+
+.badge-lg {
+  height: 28px;
+  min-width: 28px;
+  padding: 0 10px;
+  font-size: 13px;
+  font-weight: 600;
+}
+
+/* ============================================
+   COLOR VARIANTS
+   ============================================ */
+
+/* Default/Neutral variant */
+.badge-default,
+.badge-neutral {
+  background: #F1F5F9;
+  color: #475569;
+  border: 1px solid #E2E8F0;
+}
+
+.badge-default:hover,
+.badge-neutral:hover {
+  background: #E2E8F0;
+  border-color: #CBD5E1;
+}
+
+/* Primary variant */
+.badge-primary {
+  background: #EFF6FF;
+  color: #0A5DFF;
+  border: 1px solid #BFDBFE;
+}
+
+.badge-primary:hover {
+  background: #DBEAFE;
+  border-color: #93C5FD;
+}
+
+/* Success variant */
+.badge-success {
+  background: #D1FAE5;
+  color: #065F46;
+  border: 1px solid #A7F3D0;
+}
+
+.badge-success:hover {
+  background: #A7F3D0;
+  border-color: #6EE7B7;
+}
+
+/* Warning variant */
+.badge-warning {
+  background: #FEF3C7;
+  color: #92400E;
+  border: 1px solid #FDE68A;
+}
+
+.badge-warning:hover {
+  background: #FDE68A;
+  border-color: #FCD34D;
+}
+
+/* Info variant */
+.badge-info {
+  background: #E0E7FF;
+  color: #3730A3;
+  border: 1px solid #C7D2FE;
+}
+
+.badge-info:hover {
+  background: #C7D2FE;
+  border-color: #A5B4FC;
+}
+
+/* Danger variant (optional) */
+.badge-danger {
+  background: #FEE2E2;
+  color: #991B1B;
+  border: 1px solid #FECACA;
+}
+
+.badge-danger:hover {
+  background: #FECACA;
+  border-color: #FCA5A5;
+}
+
+/* ============================================
+   INVERTED VARIANT (for dark backgrounds)
+   ============================================ */
+.badge-invert,
+.badge[data-invert="true"] {
+  background: rgba(255, 255, 255, 0.2) !important;
+  color: white !important;
+  border: 1px solid rgba(255, 255, 255, 0.25) !important;
+}
+
+.badge-invert:hover,
+.badge[data-invert="true"]:hover {
+  background: rgba(255, 255, 255, 0.3) !important;
+  border-color: rgba(255, 255, 255, 0.35) !important;
+}
+
+/* ============================================
+   SPECIAL STATES
+   ============================================ */
+
+/* When inside a button or link */
+button .badge,
+a .badge {
+  pointer-events: none;
+  margin-left: 4px;
+}
+
+/* Ensure badge text doesn't inherit parent styles */
+.badge * {
+  color: inherit !important;
+}
+
+/* Badge inside active/selected parent */
+.active .badge:not(.badge-invert),
+.selected .badge:not(.badge-invert),
+[aria-selected="true"] .badge:not(.badge-invert) {
+  background: rgba(255, 255, 255, 0.2);
+  color: white !important;
+  border-color: rgba(255, 255, 255, 0.25);
+}
+
+/* ============================================
+   RESPONSIVE
+   ============================================ */
+@media (max-width: 640px) {
+  .badge-sm {
+    height: 18px;
+    min-width: 18px;
+    padding: 0 5px;
+    font-size: 10px;
+  }
+  
+  .badge-md {
+    height: 22px;
+    min-width: 22px;
+    padding: 0 7px;
+    font-size: 11px;
+  }
+  
+  .badge-lg {
+    height: 26px;
+    min-width: 26px;
+    padding: 0 9px;
+    font-size: 12px;
+  }
+}

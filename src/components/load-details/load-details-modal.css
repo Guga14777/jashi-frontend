@@ -1,0 +1,13 @@
+/* ============================================================
+   FILE: src/components/load-details/load-details-modal.css
+   Main CSS file - imports all modular styles
+   ============================================================ */
+
+/* Import modular CSS files */
+@import './styles/base.css';
+@import './styles/status-stepper.css';
+@import './styles/cards.css';
+@import './styles/actions.css';
+@import './styles/alerts.css';
+@import './styles/documents.css';
+@import './styles/cancel-modal.css';

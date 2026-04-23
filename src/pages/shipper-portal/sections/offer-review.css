@@ -1,0 +1,726 @@
+/* ============================================================
+   FILE: src/pages/shipper-portal/sections/offer-review.css
+   PROFESSIONAL ENTERPRISE VERSION - Stripe/Fintech Style
+   ============================================================ */
+
+/* Page Container */
+.offer-review-page {
+  width: 100%;
+  max-width: 1200px;
+  margin: 0 auto;
+  opacity: 0;
+  transform: translateY(20px);
+  transition: opacity 0.4s ease, transform 0.4s ease;
+}
+
+.offer-review-page.animated {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+/* Header Section */
+.or-header-section {
+  text-align: center;
+  margin-bottom: 32px;
+  position: relative;
+}
+
+.or-status-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 6px 14px;
+  background: #DCFCE7;
+  border: 1px solid #86EFAC;
+  border-radius: 999px;
+  font-size: 12px;
+  font-weight: 600;
+  color: #15803D;
+  margin-bottom: 16px;
+  box-shadow: 0 2px 6px rgba(21, 128, 61, 0.08);
+}
+
+.or-status-badge svg {
+  width: 14px;
+  height: 14px;
+  stroke-width: 2.5;
+}
+
+.or-title {
+  font-size: 28px;
+  font-weight: 700;
+  color: #0F172A;
+  margin: 0 0 8px;
+  letter-spacing: -0.01em;
+}
+
+.or-subtitle {
+  font-size: 15px;
+  color: #64748B;
+  margin: 0;
+  max-width: 600px;
+  margin: 0 auto;
+}
+
+/* Content Grid */
+.or-content-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 24px;
+  margin-bottom: 32px;
+}
+
+/* Column Containers */
+.or-col-left,
+.or-col-right {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+/* Card Base - Clean Professional Style */
+.or-section {
+  background: #ffffff;
+  border: 1px solid #E2E8F0;
+  border-radius: 16px;
+  padding: 24px;
+  box-shadow: 0 4px 14px rgba(15, 23, 42, 0.06);
+  transition: all 0.2s ease;
+  position: relative;
+}
+
+.or-section:hover {
+  border-color: #CBD5E1;
+  box-shadow: 0 8px 24px rgba(15, 23, 42, 0.08);
+  transform: translateY(-1px);
+}
+
+/* Section Header */
+.or-section-header {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  margin-bottom: 20px;
+  padding-bottom: 16px;
+  border-bottom: 1px solid #F1F5F9;
+}
+
+.or-icon-wrapper {
+  width: 44px;
+  height: 44px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 10px;
+  flex-shrink: 0;
+}
+
+.or-icon-wrapper svg {
+  stroke-width: 2;
+}
+
+.or-icon-route {
+  background: #EFF6FF;
+  color: #0066CC;
+}
+
+.or-icon-vehicle {
+  background: #F5F3FF;
+  color: #7C3AED;
+}
+
+.or-icon-pricing {
+  background: #ECFDF5;
+  color: #059669;
+}
+
+.or-section-label {
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: #94A3B8;
+  margin-bottom: 2px;
+}
+
+.or-section-title {
+  font-size: 16px;
+  font-weight: 600;
+  color: #1E293B;
+}
+
+/* Route Card Specific */
+.or-route-flow {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  padding: 20px;
+  background: #F8FAFC;
+  border-radius: 12px;
+  margin-bottom: 16px;
+  border: 1px solid #F1F5F9;
+}
+
+.or-location {
+  flex: 1;
+}
+
+.or-location-label {
+  font-size: 11px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: #94A3B8;
+  margin-bottom: 6px;
+}
+
+.or-location-value {
+  font-size: 20px;
+  font-weight: 700;
+  color: #0F172A;
+  font-family: var(--font-mono, monospace);
+}
+
+.or-route-arrow {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 40px;
+  height: 40px;
+  background: white;
+  border-radius: 50%;
+  color: #0066CC;
+  box-shadow: 0 2px 8px rgba(0, 102, 204, 0.12);
+  flex-shrink: 0;
+  border: 1px solid #E0F2FE;
+}
+
+.or-route-arrow svg {
+  width: 20px;
+  height: 20px;
+  stroke-width: 2.5;
+}
+
+.or-distance-info {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 14px;
+  color: #475569;
+  padding: 12px 16px;
+  background: #F0F9FF;
+  border-radius: 10px;
+  border: 1px solid #E0F2FE;
+}
+
+.or-distance-info svg {
+  width: 16px;
+  height: 16px;
+  color: #0066CC;
+  flex-shrink: 0;
+}
+
+.or-distance-info strong {
+  color: #0066CC;
+  font-weight: 600;
+}
+
+/* Vehicle Card Specific */
+.or-vehicle-details {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 20px;
+}
+
+.or-detail-item {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.or-detail-label {
+  font-size: 12px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: #94A3B8;
+}
+
+.or-detail-value {
+  font-size: 15px;
+  font-weight: 600;
+  color: #1E293B;
+}
+
+.or-transport-tag {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 8px 14px;
+  background: #EFF6FF;
+  border: 1px solid #BFDBFE;
+  border-radius: 999px;
+  font-size: 13px;
+  font-weight: 600;
+  color: #1E40AF;
+  width: fit-content;
+}
+
+.or-tag-dot {
+  width: 6px;
+  height: 6px;
+  background: #3B82F6;
+  border-radius: 50%;
+}
+
+/* Pricing Card Specific */
+.or-pricing-card {
+  background: #ffffff;
+}
+
+.or-main-offer {
+  padding: 24px;
+  background: #0066CC;
+  border-radius: 14px;
+  text-align: center;
+  margin-bottom: 20px;
+  box-shadow: 0 6px 18px rgba(0, 102, 204, 0.20);
+}
+
+.or-offer-label {
+  font-size: 12px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: rgba(255, 255, 255, 0.8);
+  margin-bottom: 8px;
+}
+
+.or-offer-amount {
+  font-size: 40px;
+  font-weight: 800;
+  color: white;
+  letter-spacing: -0.02em;
+}
+
+.or-price-comparison {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  padding: 14px;
+  background: #F8FAFC;
+  border-radius: 12px;
+  margin-bottom: 20px;
+  border: 1px solid #F1F5F9;
+}
+
+.or-price-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-size: 14px;
+}
+
+.or-price-label {
+  color: #64748B;
+  font-weight: 500;
+}
+
+.or-price-value {
+  font-weight: 600;
+  color: #1E293B;
+  font-family: var(--font-mono, monospace);
+}
+
+.or-price-range {
+  color: #0F172A;
+  font-weight: 600;
+}
+
+/* Market Difference Row */
+.or-price-diff-row {
+  margin-top: 4px;
+  padding-top: 8px;
+  border-top: 1px solid #F1F5F9;
+}
+
+.or-price-diff {
+  font-size: 12px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.03em;
+}
+
+.or-diff-above {
+  color: #DC2626;
+}
+
+.or-diff-below {
+  color: #15803D;
+}
+
+.or-diff-neutral {
+  color: #6B7280;
+}
+
+/* Likelihood Section */
+.or-likelihood {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.or-likelihood-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.or-likelihood-label {
+  font-size: 12px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: #64748B;
+}
+
+.or-likelihood-value {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.or-likelihood-pct {
+  font-size: 18px;
+  font-weight: 700;
+  color: #0F172A;
+}
+
+.or-likelihood-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  padding: 4px 10px;
+  border-radius: 999px;
+  font-size: 11px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+}
+
+.or-likelihood-badge svg {
+  width: 12px;
+  height: 12px;
+  stroke-width: 3;
+}
+
+.or-badge-high {
+  background: #DCFCE7;
+  color: #15803D;
+  border: 1px solid #86EFAC;
+}
+
+.or-badge-medium {
+  background: #FEF3C7;
+  color: #D97706;
+  border: 1px solid #FCD34D;
+}
+
+.or-badge-low {
+  background: #FEE2E2;
+  color: #DC2626;
+  border: 1px solid #FCA5A5;
+}
+
+/* Progress Bar */
+.or-likelihood-bar {
+  position: relative;
+  height: 10px;
+  background: #F1F5F9;
+  border-radius: 999px;
+  overflow: hidden;
+  box-shadow: inset 0 1px 3px rgba(15, 23, 42, 0.05);
+}
+
+.or-likelihood-fill {
+  height: 100%;
+  border-radius: inherit;
+  position: relative;
+  transition: width 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.or-fill-shine {
+  display: none;
+}
+
+.or-fill-high {
+  background: #15803D;
+}
+
+.or-fill-medium {
+  background: #D97706;
+}
+
+.or-fill-low {
+  background: #DC2626;
+}
+
+/* Likelihood Message */
+.or-likelihood-message {
+  padding: 14px 16px;
+  border-radius: 12px;
+  font-size: 14px;
+  line-height: 1.5;
+}
+
+.or-likelihood-message p {
+  margin: 0;
+  color: inherit;
+}
+
+.or-message-high {
+  background: #F0FDF4;
+  border: 1px solid #BBF7D0;
+  color: #15803D;
+}
+
+.or-message-medium {
+  background: #FFFBEB;
+  border: 1px solid #FDE68A;
+  color: #D97706;
+}
+
+.or-message-low {
+  background: #FEF2F2;
+  border: 1px solid #FECACA;
+  color: #DC2626;
+}
+
+/* Info Notice */
+.or-info-notice {
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+  padding: 16px;
+  background: #F0F9FF;
+  border: 1px solid #E0F2FE;
+  border-radius: 12px;
+  font-size: 14px;
+  line-height: 1.6;
+  color: #1E40AF;
+}
+
+.or-info-notice svg {
+  width: 18px;
+  height: 18px;
+  flex-shrink: 0;
+  margin-top: 2px;
+  stroke-width: 2;
+}
+
+.or-info-notice p {
+  margin: 0;
+}
+
+/* Action Buttons */
+.or-actions {
+  display: flex;
+  justify-content: center;
+  gap: 14px;
+  padding-top: 24px;
+  border-top: 1px solid #F1F5F9;
+}
+
+.or-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  padding: 13px 28px;
+  border-radius: 999px;
+  font-size: 15px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  border: 2px solid transparent;
+}
+
+.or-btn svg {
+  width: 16px;
+  height: 16px;
+  stroke-width: 2.5;
+  transition: transform 0.2s ease;
+}
+
+.or-btn-primary {
+  background: #0066CC;
+  color: white;
+  box-shadow: 0 6px 18px rgba(0, 102, 204, 0.25);
+}
+
+.or-btn-primary:hover {
+  background: #0052CC;
+  transform: translateY(-1px);
+  box-shadow: 0 8px 24px rgba(0, 102, 204, 0.30);
+}
+
+.or-btn-primary:hover svg {
+  transform: translateX(2px);
+}
+
+.or-btn-primary:active {
+  transform: translateY(0);
+}
+
+.or-btn-secondary {
+  background: white;
+  color: #0066CC;
+  border-color: #CBD5E1;
+  box-shadow: 0 2px 6px rgba(15, 23, 42, 0.06);
+}
+
+.or-btn-secondary:hover {
+  background: #F8FAFC;
+  border-color: #94A3B8;
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(15, 23, 42, 0.08);
+}
+
+.or-btn-secondary:hover svg {
+  transform: translateX(-2px);
+}
+
+.or-btn-secondary:active {
+  transform: translateY(0);
+}
+
+/* Mobile Responsive */
+@media (max-width: 968px) {
+  .or-content-grid {
+    grid-template-columns: 1fr;
+  }
+  
+  .or-title {
+    font-size: 24px;
+  }
+  
+  .or-vehicle-details {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (max-width: 640px) {
+  .or-section {
+    padding: 20px;
+    border-radius: 14px;
+  }
+  
+  .or-header-section {
+    margin-bottom: 24px;
+  }
+  
+  .or-title {
+    font-size: 22px;
+  }
+  
+  .or-subtitle {
+    font-size: 14px;
+  }
+  
+  .or-route-flow {
+    flex-direction: column;
+    gap: 12px;
+  }
+  
+  .or-route-arrow {
+    transform: rotate(90deg);
+  }
+  
+  .or-location {
+    text-align: center;
+    width: 100%;
+  }
+  
+  .or-offer-amount {
+    font-size: 36px;
+  }
+  
+  .or-actions {
+    flex-direction: column-reverse;
+  }
+  
+  .or-btn {
+    width: 100%;
+  }
+  
+  .or-content-grid {
+    gap: 16px;
+  }
+  
+  .or-col-left,
+  .or-col-right {
+    gap: 16px;
+  }
+}
+/* ============================================================
+   ADD THESE STYLES TO offer-review.css
+   Loading state styles for offer review page
+   ============================================================ */
+
+/* Loading State Container */
+.or-loading-state {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  min-height: 400px;
+  gap: 1rem;
+  color: var(--color-text-secondary, #666);
+}
+
+.or-loading-state p {
+  font-size: 1rem;
+  margin: 0;
+}
+
+/* Spinning loader */
+.or-loading-spinner {
+  animation: or-spin 1s linear infinite;
+  color: var(--color-primary, #2563eb);
+}
+
+/* Inline loading text */
+.or-loading-text {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  color: var(--color-text-secondary, #888);
+  font-style: italic;
+}
+
+.or-inline-spinner {
+  animation: or-spin 1s linear infinite;
+  color: var(--color-primary, #2563eb);
+}
+
+@keyframes or-spin {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+/* Ensure location values don't break layout when loading */
+.or-location-value {
+  min-height: 1.5em;
+  display: flex;
+  align-items: center;
+}
+
+/* Offer amount loading state */
+.or-offer-amount .or-loading-text {
+  font-size: 1.5rem;
+}

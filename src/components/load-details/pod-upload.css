@@ -1,0 +1,207 @@
+/* ============================================================
+   FILE: src/components/load-details/pod-upload.css
+   ✅ NEW: Styles for the PODUpload component
+   ============================================================ */
+
+.pod-container {
+  width: 100%;
+}
+
+/* ─────────────────────────────────────────
+   Dropzone
+───────────────────────────────────────────*/
+.pod-dropzone {
+  position: relative;
+  border: 2px dashed #d1d5db;
+  border-radius: 8px;
+  padding: 20px 16px;
+  text-align: center;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  background: #fafafa;
+}
+
+.pod-dropzone:hover {
+  border-color: #10b981;
+  background: #f0fdf4;
+}
+
+.pod-dropzone--active {
+  border-color: #10b981;
+  background: #f0fdf4;
+  border-style: solid;
+}
+
+.pod-dropzone--disabled {
+  pointer-events: none;
+  opacity: 0.7;
+}
+
+.pod-input {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  opacity: 0;
+  cursor: pointer;
+}
+
+.pod-dropzone-content {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 6px;
+  pointer-events: none;
+}
+
+.pod-dropzone-content svg {
+  color: #9ca3af;
+  transition: color 0.2s;
+}
+
+.pod-dropzone:hover .pod-dropzone-content svg,
+.pod-dropzone--active .pod-dropzone-content svg {
+  color: #10b981;
+}
+
+.pod-dropzone-text {
+  font-size: 13px;
+  font-weight: 500;
+  color: #374151;
+  margin: 0;
+}
+
+.pod-dropzone-hint {
+  font-size: 11px;
+  color: #9ca3af;
+  margin: 0;
+}
+
+.pod-spinner {
+  color: #10b981 !important;
+  animation: pod-spin 1s linear infinite;
+}
+
+@keyframes pod-spin {
+  to { transform: rotate(360deg); }
+}
+
+/* ─────────────────────────────────────────
+   Preview (Uploaded Document)
+───────────────────────────────────────────*/
+.pod-preview {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 12px 14px;
+  background: #f0fdf4;
+  border: 1px solid #bbf7d0;
+  border-radius: 8px;
+  gap: 12px;
+}
+
+.pod-preview-info {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  flex: 1;
+  min-width: 0;
+}
+
+.pod-preview-thumb {
+  width: 44px;
+  height: 44px;
+  object-fit: cover;
+  border-radius: 6px;
+  flex-shrink: 0;
+}
+
+.pod-preview-icon {
+  width: 44px;
+  height: 44px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: white;
+  border-radius: 6px;
+  color: #10b981;
+  flex-shrink: 0;
+}
+
+.pod-preview-details {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  min-width: 0;
+  flex: 1;
+}
+
+.pod-preview-name {
+  font-size: 13px;
+  font-weight: 500;
+  color: #111827;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.pod-preview-size {
+  font-size: 11px;
+  color: #6b7280;
+}
+
+.pod-preview-check {
+  color: #10b981;
+  flex-shrink: 0;
+}
+
+.pod-remove-btn {
+  background: none;
+  border: none;
+  color: #dc2626;
+  font-size: 12px;
+  font-weight: 500;
+  cursor: pointer;
+  padding: 6px 10px;
+  border-radius: 4px;
+  flex-shrink: 0;
+  transition: background 0.15s;
+}
+
+.pod-remove-btn:hover {
+  background: #fef2f2;
+}
+
+/* ─────────────────────────────────────────
+   Error
+───────────────────────────────────────────*/
+.pod-error {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 8px 12px;
+  margin-top: 8px;
+  background: #fef2f2;
+  border: 1px solid #fecaca;
+  border-radius: 6px;
+  font-size: 12px;
+  color: #dc2626;
+}
+
+.pod-error svg {
+  flex-shrink: 0;
+}
+
+/* ─────────────────────────────────────────
+   Responsive
+───────────────────────────────────────────*/
+@media (max-width: 480px) {
+  .pod-preview {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .pod-remove-btn {
+    align-self: flex-end;
+  }
+}

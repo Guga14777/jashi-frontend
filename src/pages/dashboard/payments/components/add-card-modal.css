@@ -1,0 +1,378 @@
+/* Import design tokens - ensure these are available */
+/* @import '/path/to/tokens.css'; */
+
+.acm-container {
+  max-width: 520px;
+  width: 100%;
+}
+
+.acm-header {
+  padding: var(--space-6, 24px) var(--space-6, 24px) var(--space-4, 16px) var(--space-6, 24px);
+  text-align: center;
+}
+
+.acm-title {
+  font-size: var(--font-size-xl, 20px);
+  font-weight: 700;
+  color: var(--text-primary, #1a1a1a);
+  margin: 0 0 var(--space-2, 8px) 0;
+}
+
+.acm-subtitle {
+  color: var(--text-secondary, #666666);
+  margin: 0;
+  font-size: var(--font-size-sm, 14px);
+}
+
+.acm-form {
+  padding: 0 var(--space-6, 24px) var(--space-6, 24px) var(--space-6, 24px);
+}
+
+/* Visually hidden utility for live region */
+.sr-only {
+  position: absolute !important;
+  width: 1px; 
+  height: 1px;
+  padding: 0; 
+  margin: -1px;
+  overflow: hidden; 
+  clip: rect(0,0,0,0);
+  white-space: nowrap; 
+  border: 0;
+}
+
+/* Error banner */
+.acm-error-banner {
+  background: var(--error-bg-light, #FEF2F2);
+  color: var(--error-text, #B91C1C);
+  padding: var(--space-3, 12px) var(--space-4, 16px);
+  border-radius: var(--radius-md, 6px);
+  margin-bottom: var(--space-4, 16px);
+  font-size: var(--font-size-sm, 14px);
+  border: 1px solid var(--error-border-light, #FECACA);
+}
+
+/* Field spacing with reserved space for errors */
+.acm-field { 
+  margin-bottom: var(--space-5, 20px);
+  min-height: 80px; /* Reserve space for error messages to prevent layout jump */
+}
+
+.acm-label {
+  display: block;
+  font-weight: 600;
+  color: var(--text-primary, #1a1a1a);
+  margin-bottom: var(--space-2, 8px);
+  font-size: var(--font-size-base, 16px); /* Increased from sm for better readability */
+}
+
+/* Input wrapper for brand hints */
+.acm-input-wrapper {
+  position: relative;
+}
+
+.acm-input {
+  width: 100%;
+  min-height: 48px; /* Increased tap target for mobile */
+  height: 48px;
+  padding: 0 var(--space-3, 12px);
+  border: 1px solid var(--border-light, #d1d5db);
+  border-radius: var(--radius-md, 6px);
+  font-size: var(--font-size-base, 16px); /* Increased for better readability */
+  color: var(--text-primary, #1a1a1a);
+  background: var(--bg-primary, white);
+  transition: all 0.2s ease;
+}
+
+/* Respect reduced motion preference */
+@media (prefers-reduced-motion: reduce) {
+  .acm-input,
+  .pc-btn {
+    transition: none;
+  }
+}
+
+.acm-input::placeholder { 
+  color: var(--text-tertiary, #9ca3af); 
+}
+
+.acm-input:hover {
+  border-color: var(--border-hover, #9ca3af);
+}
+
+.acm-input:focus {
+  outline: none;
+  border-color: var(--brand-blue, #0066ff);
+  box-shadow: none; /* Remove blue glow */
+}
+
+.acm-input:focus-visible {
+  outline: 2px solid rgba(100,116,139,.4); /* neutral */
+  outline-offset: 2px;
+  border-color: var(--border-hover, #9ca3af);
+  box-shadow: none;
+}
+
+.acm-input[aria-invalid="true"] { 
+  border-color: var(--error-border, #DC2626); 
+}
+
+.acm-input[aria-invalid="true"]:focus {
+  border-color: var(--error-border, #DC2626);
+  box-shadow: none; /* Remove error glow */
+}
+
+.acm-input:disabled {
+  background: var(--bg-subtle, #f9fafb);
+  cursor: not-allowed;
+  opacity: 0.7;
+  color: var(--text-disabled, #9ca3af);
+}
+
+/* Field feedback styles */
+.acm-field-error {
+  display: block;
+  color: var(--error-text, #DC2626);
+  font-size: var(--font-size-xs, 12px);
+  margin-top: var(--space-1, 4px);
+  line-height: 1.4;
+}
+
+.acm-field-warning {
+  display: block;
+  color: var(--warning-text, #D97706);
+  font-size: var(--font-size-xs, 12px);
+  margin-top: var(--space-1, 4px);
+  background: var(--warning-bg-light, #FFFBEB);
+  padding: var(--space-2, 8px);
+  border-radius: var(--radius-sm, 4px);
+  border: 1px solid var(--warning-border-light, #FDE68A);
+  line-height: 1.4;
+}
+
+.acm-field-hint {
+  display: block;
+  color: var(--text-secondary, #666666);
+  font-size: var(--font-size-xs, 12px);
+  margin-top: var(--space-1, 4px);
+  line-height: 1.4;
+}
+
+/* Actions */
+.acm-actions {
+  display: flex;
+  gap: var(--space-3, 12px);
+  justify-content: flex-end;
+  padding-top: var(--space-4, 16px);
+  border-top: none;
+}
+
+.acm-actions .pc-btn {
+  min-width: 100px;
+  min-height: 48px; /* Increased tap target */
+  height: 48px;
+  border: none !important;
+  box-shadow: none !important;
+  font-size: var(--font-size-base, 16px);
+  font-weight: 600;
+  border-radius: var(--radius-md, 6px);
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.acm-actions .pc-btn--primary {
+  background: var(--brand-blue, #0066ff) !important;
+  color: var(--text-on-primary, #ffffff) !important;
+}
+
+.acm-actions .pc-btn--primary:hover:not(:disabled) { 
+  background: var(--brand-blue-hover, #0052cc) !important;
+}
+
+.acm-actions .pc-btn--primary:disabled { 
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+.acm-actions .pc-btn--ghost {
+  background: transparent !important;
+  color: var(--brand-blue, #0066ff) !important;
+  padding-left: var(--space-3, 12px);
+  padding-right: var(--space-3, 12px);
+}
+
+.acm-actions .pc-btn--ghost:hover:not(:disabled) {
+  background: var(--bg-subtle, #f9fafb) !important;
+}
+
+.acm-actions .pc-btn:focus-visible {
+  outline: 2px solid var(--brand-blue, #0066ff);
+  outline-offset: 2px;
+  box-shadow: none;
+}
+
+/* Button content with spinner */
+.acm-btn-content {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2, 8px);
+  justify-content: center;
+}
+
+.acm-spinner {
+  width: 16px;
+  height: 16px;
+  border: 2px solid currentColor;
+  border-radius: 50%;
+  border-top-color: transparent;
+  animation: spin 0.8s linear infinite;
+}
+
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+/* Disable animation for reduced motion */
+@media (prefers-reduced-motion: reduce) {
+  .acm-spinner {
+    animation: none;
+  }
+}
+
+/* Dark theme support */
+.theme-dark .acm-title {
+  color: var(--dark-text-primary, #ffffff);
+}
+
+.theme-dark .acm-subtitle {
+  color: var(--dark-text-secondary, #a1a1aa);
+}
+
+.theme-dark .acm-label {
+  color: var(--dark-text-primary, #ffffff);
+}
+
+.theme-dark .acm-input {
+  background: var(--dark-bg-primary, #1f2937);
+  border-color: var(--dark-border-light, #374151);
+  color: var(--dark-text-primary, #ffffff);
+}
+
+.theme-dark .acm-input::placeholder {
+  color: var(--dark-text-tertiary, #6b7280);
+}
+
+.theme-dark .acm-input:focus {
+  border-color: var(--brand-blue, #0066ff);
+  box-shadow: none; /* Remove dark theme glow */
+}
+
+.theme-dark .acm-error-banner {
+  background: var(--dark-error-bg, #7f1d1d);
+  color: var(--dark-error-text, #fecaca);
+  border-color: var(--dark-error-border, #991b1b);
+}
+
+.theme-dark .acm-field-warning {
+  background: var(--dark-warning-bg, #78350f);
+  color: var(--dark-warning-text, #fcd34d);
+  border-color: var(--dark-warning-border, #92400e);
+}
+
+/* Modal height management */
+.acm-modal .modal-body,
+.acm-modal .modal-content,
+.acm-modal .pc-modal__body,
+.acm-modal .pc-modal__content {
+  max-height: none !important;
+  overflow: visible !important;
+}
+
+/* Handle very short viewports */
+@media (max-height: 720px) {
+  .acm-modal .modal-body,
+  .acm-modal .modal-content,
+  .acm-modal .pc-modal__body,
+  .acm-modal .pc-modal__content {
+    max-height: calc(100vh - 96px) !important;
+    overflow: auto !important;
+  }
+  
+  .acm-field {
+    margin-bottom: var(--space-4, 16px);
+    min-height: 72px; /* Reduce reserved space on short screens */
+  }
+}
+
+/* Mobile responsive */
+@media (max-width: 768px) {
+  .acm-container { 
+    max-width: 100%; 
+    margin: 0; 
+  }
+  
+  .acm-header { 
+    padding: var(--space-5, 20px) var(--space-4, 16px) var(--space-3, 12px) var(--space-4, 16px); 
+  }
+  
+  .acm-title { 
+    font-size: var(--font-size-lg, 18px); 
+  }
+  
+  .acm-form { 
+    padding: 0 var(--space-4, 16px) var(--space-5, 20px) var(--space-4, 16px); 
+  }
+  
+  .acm-actions { 
+    flex-direction: column-reverse; 
+    gap: var(--space-2, 8px);
+  }
+  
+  .acm-actions .pc-btn { 
+    width: 100%; 
+    min-width: auto; 
+  }
+  
+  .acm-field {
+    min-height: 76px; /* Adjust for mobile */
+  }
+}
+
+/* Very narrow screens */
+@media (max-width: 360px) {
+  .acm-header {
+    padding-left: var(--space-3, 12px);
+    padding-right: var(--space-3, 12px);
+  }
+  
+  .acm-form {
+    padding-left: var(--space-3, 12px);
+    padding-right: var(--space-3, 12px);
+  }
+}
+
+/* High contrast mode support */
+@media (prefers-contrast: high) {
+  .acm-input {
+    border-width: 2px;
+  }
+  
+  .acm-input:focus {
+    outline: 3px solid;
+    outline-offset: 2px;
+  }
+  
+  .acm-field-error,
+  .acm-field-warning {
+    font-weight: 600;
+  }
+}
+
+/* Print styles */
+@media print {
+  .acm-modal {
+    display: none !important;
+  }
+}

@@ -1,0 +1,264 @@
+/* UNIFIED LOGIN STYLES — Shipper & Carrier 1:1 Identical */
+
+.simple-login {
+  padding: 32px;
+  background: #ffffff;
+  width: 100%;
+  max-width: 100%;
+  overflow: hidden;
+  box-sizing: border-box;
+  margin: 0;
+}
+
+.simple-title {
+  font-size: 28px;
+  font-weight: 800;
+  color: #0066ff;
+  margin: 0 0 8px 0;
+  text-align: center;
+  letter-spacing: -0.5px;
+  padding: 0;
+}
+
+/* subtitle tuned to fit one line, centered */
+.simple-subtitle {
+  display: block;
+  font-size: 13px;            /* was 11px, now larger */
+  color: #64748b;
+  line-height: 1.4;
+  font-weight: 400;
+  letter-spacing: -0.2px;     /* less compressed so it looks natural */
+
+  /* spacing around */
+  margin: 0 0 24px 0;
+  padding: 0;
+
+  /* layout / centering */
+  max-width: 400px;
+  text-align: center;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+/* keep it on one line */
+.one-line {
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: clip;
+}
+
+.simple-form {
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+  margin: 0;
+  padding: 0;
+}
+
+.simple-field {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  margin: 0;
+  padding: 0;
+}
+
+.simple-field label {
+  font-size: 14px;
+  font-weight: 600;
+  color: #0f172a;
+  margin: 0;
+  padding: 0;
+}
+
+.simple-field input {
+  width: 100%;
+  height: 48px;
+  padding: 0 16px;
+  font-size: 15px;
+  border: 1px solid #e2e8f0;
+  border-radius: 12px;
+  outline: none;
+  box-sizing: border-box;
+  background: #ffffff;
+  transition: border-color 0.15s ease;
+  margin: 0;
+}
+
+.simple-field input::placeholder {
+  color: #cbd5e1;
+}
+
+.simple-field input:focus {
+  border-color: #0066ff;
+  box-shadow: none;
+}
+
+.simple-password {
+  position: relative;
+  display: flex;
+  align-items: center;
+  margin: 0;
+  padding: 0;
+}
+
+.simple-password input {
+  padding-right: 50px;
+}
+
+.simple-toggle {
+  position: absolute;
+  right: 12px;
+  top: 50%;
+  transform: translateY(-50%);
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  padding: 8px;
+  color: #64748b;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: color 0.15s ease;
+}
+
+.simple-toggle:hover {
+  color: #0f172a;
+}
+
+.simple-toggle:focus {
+  outline: none;
+}
+
+.simple-forgot {
+  text-align: right;
+  margin: 0;
+  padding: 0;
+  height: 20px;
+}
+
+.simple-forgot button {
+  background: none;
+  border: none;
+  color: #0066ff;
+  font-size: 14px;
+  cursor: pointer;
+  padding: 0;
+  font-weight: 500;
+  text-decoration: none;
+  transition: text-decoration 0.15s ease;
+  margin: 0;
+}
+
+.simple-forgot button:hover {
+  text-decoration: underline;
+}
+
+.simple-forgot button:focus {
+  outline: none;
+}
+
+.simple-submit {
+  width: 100%;
+  height: 48px;
+  margin: 8px 0 0 0;
+  padding: 0;
+  font-size: 15px;
+  font-weight: 600;
+  color: #ffffff;
+  background: #0066ff;
+  border: none;
+  border-radius: 12px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.simple-submit:hover:not(:disabled) {
+  background: #0052cc;
+  transform: translateY(-1px);
+}
+
+.simple-submit:active:not(:disabled) {
+  transform: translateY(0);
+}
+
+.simple-submit:disabled {
+  background: #cbd5e1;
+  cursor: not-allowed;
+}
+
+.simple-submit:focus {
+  outline: none;
+}
+
+/* Footer — NO dividers or borders */
+.simple-footer {
+  margin: 24px 0 0 0;
+  padding: 0;
+  border: none !important;
+  box-shadow: none !important;
+  text-align: center;
+}
+
+.simple-footer p {
+  margin: 0 0 12px 0;
+  padding: 0;
+  font-size: 14px;
+  color: #64748b;
+  line-height: 1.5;
+}
+
+.simple-footer p:last-child {
+  margin-bottom: 0;
+}
+
+.simple-footer button {
+  background: none;
+  border: none;
+  color: #0066ff;
+  font-weight: 600;
+  cursor: pointer;
+  padding: 0;
+  font-size: inherit;
+  transition: text-decoration 0.15s ease;
+}
+
+.simple-footer button:hover {
+  text-decoration: underline;
+}
+
+.simple-footer button:focus {
+  outline: none;
+}
+
+.simple-legal {
+  font-size: 13px !important;
+  color: #94a3b8 !important;
+  margin: 0 !important;
+  padding: 0 !important;
+}
+
+.simple-legal a {
+  color: #0066ff;
+  text-decoration: none;
+  transition: text-decoration 0.15s ease;
+}
+
+.simple-legal a:hover {
+  text-decoration: underline;
+}
+
+.simple-legal a:focus {
+  outline: none;
+}
+
+/* Kill any injected dividers/borders */
+.simple-login hr,
+.simple-login .divider,
+.simple-login .footer-divider {
+  display: none !important;
+  height: 0 !important;
+  border: 0 !important;
+  margin: 0 !important;
+  padding: 0 !important;
+}

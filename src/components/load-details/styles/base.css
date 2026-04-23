@@ -1,0 +1,446 @@
+/* ============================================================
+   FILE: src/components/load-details/styles/base.css
+   Base styles for load details modal
+   ✅ Improved close button design
+   ✅ Cleaner error alert styling
+   ============================================================ */
+
+/* Modal backdrop */
+.ldm-backdrop {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.5);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+  padding: 1rem;
+  backdrop-filter: blur(2px);
+}
+
+/* Modal container */
+.ldm-modal {
+  background: white;
+  border-radius: 16px;
+  max-width: 640px;
+  width: 100%;
+  max-height: calc(100vh - 2rem);
+  display: flex;
+  flex-direction: column;
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.2);
+  animation: ldm-slide-in 0.2s ease-out;
+}
+
+@keyframes ldm-slide-in {
+  from {
+    opacity: 0;
+    transform: translateY(20px) scale(0.98);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+.ldm-modal--loading {
+  padding: 3rem;
+  align-items: center;
+  justify-content: center;
+  gap: 1rem;
+}
+
+/* ============================================================
+   HEADER
+   ============================================================ */
+
+.ldm-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 1rem 1.25rem;
+  border-bottom: 1px solid #e5e7eb;
+  flex-shrink: 0;
+}
+
+.ldm-header__left {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+}
+
+.ldm-header__title,
+.ldm-title {
+  font-size: 1.125rem;
+  font-weight: 600;
+  color: #111827;
+  margin: 0;
+}
+
+.ldm-header__id,
+.ldm-order-badge {
+  font-size: 0.8125rem;
+  color: #6b7280;
+  font-weight: 500;
+  background: #f3f4f6;
+  padding: 0.25rem 0.5rem;
+  border-radius: 6px;
+}
+
+.ldm-header__right {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+}
+
+/* Multi-vehicle badge */
+.ldm-multi-vehicle-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  font-size: 0.75rem;
+  font-weight: 600;
+  color: #475569;
+  background: #f1f5f9;
+  padding: 0.25rem 0.5rem;
+  border-radius: 6px;
+}
+
+.ldm-multi-vehicle-badge svg {
+  width: 14px;
+  height: 14px;
+}
+
+/* ============================================================
+   CLOSE BUTTON - Clean icon button
+   ============================================================ */
+
+.ldm-close-btn,
+.ldm-close {
+  width: 36px;
+  height: 36px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: #f8fafc;
+  border: 1px solid #e2e8f0;
+  border-radius: 8px;
+  color: #64748b;
+  cursor: pointer;
+  transition: all 0.15s ease;
+  flex-shrink: 0;
+}
+
+.ldm-close-btn:hover,
+.ldm-close:hover {
+  background: #f1f5f9;
+  border-color: #cbd5e1;
+  color: #334155;
+}
+
+.ldm-close-btn:focus,
+.ldm-close:focus {
+  outline: none;
+  box-shadow: 0 0 0 2px rgba(59, 130, 246, 0.2);
+  border-color: #93c5fd;
+}
+
+.ldm-close-btn svg,
+.ldm-close svg {
+  width: 18px;
+  height: 18px;
+}
+
+/* Content area */
+.ldm-content {
+  flex: 1;
+  overflow-y: auto;
+  padding: 1.25rem;
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+/* Section wrapper */
+.ldm-section {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.ldm-section-title {
+  font-size: 0.6875rem;
+  font-weight: 600;
+  color: #6b7280;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  margin-bottom: 0.25rem;
+}
+
+/* ============================================================
+   FOOTER
+   ============================================================ */
+
+.ldm-footer {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 1rem 1.25rem;
+  border-top: 1px solid #e5e7eb;
+  flex-shrink: 0;
+  gap: 0.75rem;
+}
+
+.ldm-footer__left {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.ldm-footer__right {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+/* Footer buttons */
+.ldm-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  padding: 0.625rem 1rem;
+  border-radius: 8px;
+  font-size: 0.875rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.15s;
+  border: none;
+}
+
+.ldm-btn:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.ldm-btn--ghost {
+  background: #f8fafc;
+  color: #475569;
+  border: 1px solid #e2e8f0;
+}
+
+.ldm-btn--ghost:hover:not(:disabled) {
+  background: #f1f5f9;
+  border-color: #cbd5e1;
+  color: #334155;
+}
+
+.ldm-btn--danger {
+  background: transparent;
+  color: #dc2626;
+  border: 1px solid #fecaca;
+}
+
+.ldm-btn--danger:hover:not(:disabled) {
+  background: #fef2f2;
+}
+
+.ldm-btn--primary {
+  background: #2563eb;
+  color: white;
+}
+
+.ldm-btn--primary:hover:not(:disabled) {
+  background: #1d4ed8;
+}
+
+/* Loading spinner */
+.ldm-spinner {
+  width: 24px;
+  height: 24px;
+  border: 3px solid #e5e7eb;
+  border-top-color: #3b82f6;
+  border-radius: 50%;
+  animation: ldm-spin 0.8s linear infinite;
+}
+
+@keyframes ldm-spin {
+  to { transform: rotate(360deg); }
+}
+
+/* ============================================================
+   ACTION ERROR ALERT - Subtle red outline style
+   ============================================================ */
+
+.ldm-action-error {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  padding: 0.75rem 1rem;
+  background: #fef2f2;
+  border: 1px solid #fecaca;
+  border-radius: 8px;
+  margin-bottom: 0.5rem;
+}
+
+.ldm-action-error svg {
+  color: #dc2626;
+  flex-shrink: 0;
+  width: 16px;
+  height: 16px;
+}
+
+.ldm-action-error span {
+  flex: 1;
+  font-size: 0.8125rem;
+  color: #991b1b;
+  line-height: 1.4;
+}
+
+.ldm-action-error__close {
+  width: 24px;
+  height: 24px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: transparent;
+  border: none;
+  border-radius: 4px;
+  color: #991b1b;
+  font-size: 1.125rem;
+  cursor: pointer;
+  flex-shrink: 0;
+  transition: background 0.15s ease;
+}
+
+.ldm-action-error__close:hover {
+  background: rgba(220, 38, 38, 0.1);
+}
+
+/* ============================================================
+   STATUS BADGES
+   ============================================================ */
+
+.ldm-status-badge {
+  padding: 0.25rem 0.625rem;
+  border-radius: 20px;
+  font-size: 0.6875rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.3px;
+}
+
+.ldm-status--scheduled {
+  background: #dbeafe;
+  color: #1e40af;
+}
+
+.ldm-status--assigned {
+  background: #e0e7ff;
+  color: #3730a3;
+}
+
+/* On the way - Blue instead of yellow */
+.ldm-status--on-the-way {
+  background: #e0f2fe;
+  color: #0369a1;
+}
+
+/* At pickup - Indigo instead of pink */
+.ldm-status--at-pickup,
+.ldm-status--arrived {
+  background: #e0e7ff;
+  color: #4338ca;
+}
+
+.ldm-status--picked-up,
+.ldm-status--in-transit {
+  background: #d1fae5;
+  color: #065f46;
+}
+
+.ldm-status--delivered {
+  background: #d1fae5;
+  color: #065f46;
+}
+
+.ldm-status--cancelled {
+  background: #f3f4f6;
+  color: #6b7280;
+}
+
+/* ============================================================
+   BOL BUTTON
+   ============================================================ */
+
+.ldm-bol-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  width: 100%;
+  padding: 0.75rem 1rem;
+  background: #f8fafc;
+  border: 1px solid #e2e8f0;
+  border-radius: 8px;
+  color: #334155;
+  font-size: 0.875rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.15s;
+}
+
+.ldm-bol-btn:hover:not(:disabled) {
+  background: #f1f5f9;
+  border-color: #cbd5e1;
+}
+
+.ldm-bol-btn:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+.ldm-bol-btn svg {
+  width: 16px;
+  height: 16px;
+  color: #64748b;
+}
+
+/* ============================================================
+   RESPONSIVE
+   ============================================================ */
+
+@media (max-width: 640px) {
+  .ldm-backdrop {
+    padding: 0;
+    align-items: flex-end;
+  }
+  
+  .ldm-modal {
+    max-height: 95vh;
+    border-radius: 16px 16px 0 0;
+  }
+  
+  .ldm-content {
+    padding: 1rem;
+  }
+  
+  .ldm-header,
+  .ldm-footer {
+    padding: 0.875rem 1rem;
+  }
+  
+  .ldm-footer {
+    flex-direction: column;
+    gap: 0.5rem;
+  }
+  
+  .ldm-footer__left,
+  .ldm-footer__right {
+    width: 100%;
+    justify-content: stretch;
+  }
+  
+  .ldm-footer__right .ldm-btn {
+    flex: 1;
+  }
+}

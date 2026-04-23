@@ -1,0 +1,165 @@
+/* Adjust if your sticky CarrierHeader height differs */
+.page-shell.compliance {
+  --sticky-header-h: 72px;   /* header height */
+  --page-top-extra: 20px;    /* was 64px → tighter top spacing */
+}
+
+/* ---- Page shell / container ---- */
+.page-shell.compliance .page-main{
+  max-width: 1100px;
+  margin: 0 auto;
+
+  /* Clear sticky header + smaller top spacing */
+  padding: calc(var(--sticky-header-h) + var(--page-top-extra)) 16px 64px;
+}
+
+/* Ensure in-page anchors don't hide under the header */
+.page-shell.compliance [id]{
+  scroll-margin-top: calc(var(--sticky-header-h) + 12px);
+}
+
+/* ---- Page header (make this the biggest) ---- */
+.page-shell.compliance .page-header{
+  margin: 0 0 18px;     /* was 22px */
+  padding-top: 0;       /* remove extra top padding */
+}
+.page-shell.compliance .page-header h1{
+  font-size: 40px;
+  line-height: 1.15;
+  font-weight: 800;
+  letter-spacing: -0.02em;
+  margin: 0 0 10px;
+}
+.page-shell.compliance .page-header p{
+  margin: 0;
+  font-size: 16px;
+  line-height: 1.5;
+  color: var(--text-muted, #6b7280);
+}
+
+/* ---- Cards & utilities ---- */
+.page-shell.compliance .card{
+  border: 1px solid rgba(16,24,40,.08);
+  border-radius: 12px;
+  padding: 20px;
+  background: rgba(255,255,255,.02);
+  margin-top: 16px;
+  box-shadow: 0 1px 0 rgba(16,24,40,.02), 0 8px 24px rgba(16,24,40,.04);
+}
+
+/* Section titles inside cards (2nd level) */
+.page-shell.compliance .card > h2{
+  font-size: 22px;
+  line-height: 1.3;
+  font-weight: 700;
+  letter-spacing: -0.01em;
+  margin: 0 0 10px;
+}
+
+/* Sub-card titles (3rd level) */
+.page-shell.compliance .card-sub > h3{
+  font-size: 18px;
+  line-height: 1.35;
+  font-weight: 700;
+  margin: 0 0 8px;
+}
+
+/* Lists / body copy */
+.page-shell.compliance .list{
+  margin: 8px 0 0 18px;
+  font-size: 15px;
+  line-height: 1.55;
+}
+.page-shell.compliance .list.ordered{
+  list-style: decimal;
+  margin-left: 22px;
+}
+
+/* Two-column grid for paired sections */
+.page-shell.compliance .grid.two{
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 16px;
+}
+.page-shell.compliance .grid.two .card-sub{
+  border: 1px solid rgba(16,24,40,.08);
+  border-radius: 10px;
+  padding: 16px;
+  background: rgba(255,255,255,.03);
+}
+
+/* ---- Support CTA ---- */
+.page-shell.compliance .support-cta{
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 24px;
+}
+.page-shell.compliance .support-cta .support-copy h2{
+  margin: 0 0 6px;
+  font-size: 22px;
+  line-height: 1.3;
+  font-weight: 700;
+}
+.page-shell.compliance .support-cta .support-copy p{
+  margin: 0;
+  font-size: 15px;
+  color: var(--text-default, #111827);
+}
+.page-shell.compliance .support-cta .support-actions{
+  display: flex;
+  gap: 16px;
+  align-items: center;
+}
+
+/* Base pill (non-interactive) */
+.page-shell.compliance .apps-btn{
+  appearance: none;
+  border-radius: 12px;
+  padding: 12px 16px;
+  font-weight: 700;
+  font-size: 14px;
+  box-shadow: 0 1px 2px rgba(16,24,40,.05);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  white-space: nowrap;
+  user-select: text;
+  pointer-events: none;
+  cursor: default;
+  border: 1px solid rgba(16,24,40,.15);
+}
+
+/* Email pill */
+.page-shell.compliance .apps-btn.email{
+  background: transparent;
+  color: var(--color-primary, #2563eb);
+  border-color: rgba(37,99,235,.30);
+}
+
+/* Phone pill */
+.page-shell.compliance .apps-btn.phone{
+  background: var(--color-primary, #2563eb);
+  border-color: rgba(37,99,235,.55);
+  color: rgba(255,255,255,.90);
+}
+
+/* ---- Responsive ---- */
+@media (max-width: 920px){
+  .page-shell.compliance .page-main{
+    padding: calc(var(--sticky-header-h) + 12px) 14px 56px; /* tighter on mobile */
+  }
+  .page-shell.compliance .page-header h1{ font-size: 34px; }
+  .page-shell.compliance .card > h2{ font-size: 20px; }
+  .page-shell.compliance .card-sub > h3{ font-size: 17px; }
+
+  .page-shell.compliance .grid.two{ grid-template-columns: 1fr; }
+  .page-shell.compliance .support-cta{
+    flex-direction: column;
+    align-items: flex-start;
+  }
+  .page-shell.compliance .support-cta .support-actions{
+    width: 100%;
+    flex-wrap: wrap;
+  }
+}

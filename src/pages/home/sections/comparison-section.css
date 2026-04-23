@@ -1,0 +1,123 @@
+/* src/pages/home/sections/comparison-section.css */
+
+.comparison {
+  background: #FFFFFF;
+}
+
+.comparison-title {
+  text-align: center;
+  margin-bottom: 16px;
+}
+
+.comparison-intro {
+  text-align: center;
+  font-size: 18px;
+  color: #64748B;
+  max-width: 720px;
+  margin: 0 auto 48px;
+  line-height: 1.5;
+}
+
+/* Table Styles */
+.comparison-table {
+  width: 100%;
+  background: #FFFFFF;
+  border: 1px solid #E5E7EB;
+  border-radius: 8px;
+  overflow: hidden;
+}
+
+.comparison-table thead {
+  background: #F8FAFC;
+}
+
+.comparison-table th {
+  padding: 16px 12px;
+  font-size: 14px;
+  font-weight: 600;
+  color: #64748B;
+  text-align: left;
+  white-space: nowrap;
+  border-bottom: 1px solid #E5E7EB;
+}
+
+.comparison-table tbody tr {
+  transition: background 0.2s ease;
+}
+
+.comparison-table tbody tr:hover {
+  background: #F8FAFC;
+}
+
+.comparison-table td {
+  padding: 16px 12px;
+  font-size: 14px;
+  color: #0F172A;
+  white-space: nowrap;
+}
+
+/* Cell alignments */
+.model-cell {
+  font-weight: 500;
+}
+
+.number-cell {
+  text-align: right;
+}
+
+.currency-cell {
+  text-align: right;
+  font-family: 'SF Mono', 'Monaco', 'Inconsolata', monospace;
+}
+
+/* Footnote */
+.table-footnote {
+  margin-top: 16px;
+  font-size: 13px;
+  color: #64748B;
+  font-style: italic;
+}
+
+/* CTA */
+.comparison-cta {
+  margin-top: 32px;
+  text-align: center;
+}
+
+/* Responsive with horizontal scroll */
+@media (max-width: 1024px) {
+  .table-wrapper {
+    overflow-x: auto;
+    margin: 0 -32px;
+    padding: 0 32px;
+  }
+  
+  .comparison-table {
+    min-width: 900px;
+  }
+}
+
+@media (max-width: 768px) {
+  .table-wrapper {
+    margin: 0 -24px;
+    padding: 0 24px;
+  }
+  
+  /* Make first column sticky on mobile */
+  .comparison-table td:first-child,
+  .comparison-table th:first-child {
+    position: sticky;
+    left: 24px;
+    background: #FFFFFF;
+    z-index: 1;
+    box-shadow: 2px 0 4px rgba(0, 0, 0, 0.05);
+  }
+  
+  .comparison-table thead th:first-child {
+    background: #F8FAFC;
+  }
+  
+  .comparison-intro {
+    font-size: 16px;
+  }
+}

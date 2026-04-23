@@ -1,0 +1,150 @@
+/* likelihood-meter.css */
+
+/* Use your design tokens if present; fallback otherwise */
+:root {
+  --lm-green: var(--success-color, #10B981);
+  --lm-yellow: var(--warning-color, #F59E0B);
+  --lm-red: var(--error-color, #EF4444);
+  --lm-track: var(--border-color, #E5E7EB);
+  --lm-title: var(--text-primary, #0F172A);
+  --lm-text: var(--text-secondary, #475569);
+  --lm-muted: var(--text-muted, #94A3B8);
+  --lm-surface: #FFFFFF;
+}
+
+/* Container */
+.likelihood-meter {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+/* Header row */
+.meter-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.meter-label {
+  font-size: 12px;
+  font-weight: 600;
+  letter-spacing: .02em;
+  color: var(--lm-text);
+  text-transform: uppercase;
+}
+
+.meter-value {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.meter-percentage {
+  font-size: 16px;
+  font-weight: 700;
+  color: var(--lm-title);
+  line-height: 1;
+}
+
+/* Badge */
+.meter-badge {
+  display: inline-flex;
+  align-items: center;
+  height: 22px;
+  padding: 0 8px;
+  border-radius: 999px;
+  font-size: 12px;
+  font-weight: 600;
+  line-height: 1;
+  border: 1px solid transparent;
+  background: transparent;
+}
+
+/* Badge color states */
+.meter-badge.meter-high {
+  color: var(--lm-green);
+  background: color-mix(in srgb, var(--lm-green) 12%, transparent);
+  border-color: color-mix(in srgb, var(--lm-green) 28%, transparent);
+}
+
+.meter-badge.meter-medium {
+  color: var(--lm-yellow);
+  background: color-mix(in srgb, var(--lm-yellow) 12%, transparent);
+  border-color: color-mix(in srgb, var(--lm-yellow) 28%, transparent);
+}
+
+.meter-badge.meter-low {
+  color: var(--lm-red);
+  background: color-mix(in srgb, var(--lm-red) 12%, transparent);
+  border-color: color-mix(in srgb, var(--lm-red) 28%, transparent);
+}
+
+/* Fallback for older browsers without color-mix */
+@supports not (color-mix(in srgb, black 10%, white)) {
+  .meter-badge.meter-high { background: rgba(16,185,129,.12); border-color: rgba(16,185,129,.28); }
+  .meter-badge.meter-medium { background: rgba(245,158,11,.12); border-color: rgba(245,158,11,.28); }
+  .meter-badge.meter-low { background: rgba(239,68,68,.12); border-color: rgba(239,68,68,.28); }
+}
+
+/* Bar */
+.meter-bar-container {
+  display: block;
+}
+
+.meter-bar-background {
+  height: 10px;
+  width: 100%;
+  background: var(--lm-track);
+  border-radius: 999px;
+  overflow: hidden;
+  position: relative;
+}
+
+.meter-bar-fill {
+  height: 100%;
+  width: 0%;
+  max-width: 100%;
+  border-radius: inherit;
+  transition: width 220ms ease, background-color 160ms ease;
+  will-change: width;
+}
+
+/* Bar color states */
+.meter-bar-fill.meter-high { background: var(--lm-green); }
+.meter-bar-fill.meter-medium { background: var(--lm-yellow); }
+.meter-bar-fill.meter-low { background: var(--lm-red); }
+
+/* Copy */
+.meter-copy {
+  display: grid;
+  gap: 4px;
+}
+
+.meter-headline {
+  margin: 0;
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--lm-title);
+  line-height: 1.35;
+}
+
+.meter-support {
+  margin: 0;
+  font-size: 13px;
+  color: var(--lm-text);
+  line-height: 1.45;
+}
+
+/* Empty state */
+.meter-empty {
+  margin: 0;
+  padding: 8px 0;
+  font-size: 13px;
+  color: var(--lm-muted);
+}
+
+/* Compact variant (optional; add .compact on wrapper if needed) */
+.likelihood-meter.compact .meter-headline { font-size: 13px; }
+.likelihood-meter.compact .meter-support { display: none; }
+.likelihood-meter.compact .meter-bar-background { height: 8px; }

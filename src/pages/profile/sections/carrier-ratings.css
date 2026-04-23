@@ -1,0 +1,108 @@
+/* Carrier Ratings Component Styles - Read-Only Version */
+.carrier-ratings {
+  background: var(--bg-primary, #ffffff);
+  border: 1px solid var(--border-light, #e2e8f0);
+  border-radius: 12px;
+  padding: 20px;
+  box-shadow: 0 1px 2px rgba(0,0,0,0.04);
+}
+
+/* Header */
+.cr-header { margin-bottom: 24px; }
+.cr-title {
+  font-size: 1.25rem; font-weight: 600; color: var(--text-primary, #0f172a);
+  margin: 0 0 4px 0;
+}
+.cr-subtitle { font-size: .875rem; color: var(--text-secondary, #64748b); margin: 0; }
+
+/* Grid */
+.cr-grid { display: grid; gap: 20px; align-items: stretch; }
+@media (min-width: 900px) { .cr-grid { grid-template-columns: 1fr 1fr; } }
+
+/* Card */
+.cr-card {
+  background: var(--bg-secondary, #f8fafc);
+  border: 1px solid var(--border-light, #e2e8f0);
+  border-radius: 12px;
+  padding: 16px;
+  box-shadow: 0 1px 2px rgba(0,0,0,0.04);
+  min-width: 280px;
+  height: 100%;
+  min-height: 176px;
+}
+.cr-card-header {
+  display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px;
+}
+.cr-card-title { font-size: 1rem; font-weight: 600; color: var(--text-primary, #0f172a); margin: 0; }
+
+/* Badge */
+.cr-badge {
+  background: var(--primary, #0066ff); color: #fff; font-size: .75rem; font-weight: 500;
+  padding: 4px 12px; border-radius: 999px; white-space: nowrap;
+}
+
+/* Stars (read-only) */
+.cr-stars-row { display: flex; align-items: center; gap: 16px; }
+.cr-stars-container { display: flex; gap: 2px; }
+.cr-star { font-size: 1.5rem; line-height: 1; user-select: none; }
+.cr-star.filled { color: #fbbf24; }
+.cr-star.half {
+  background: linear-gradient(90deg, #fbbf24 50%, #e2e8f0 50%);
+  -webkit-background-clip: text; background-clip: text; -webkit-text-fill-color: transparent;
+  color: #fbbf24;
+}
+.cr-star.empty { color: #e2e8f0; }
+.cr-rating-number { font-size: 1.125rem; font-weight: 600; color: var(--text-primary, #0f172a); }
+
+/* Pill */
+.cr-indicator {
+  font-size: .75rem; font-weight: 500; padding: 4px 12px; border-radius: 999px; border: 1px solid; white-space: nowrap;
+}
+.cr-indicator.good { color: #15803d; background: #dcfce7; border-color: #bbf7d0; }
+.cr-indicator.warn { color: #92400e; background: #fef3c7; border-color: #fde68a; }
+.cr-indicator.bad  { color: #7f1d1d; background: #fce8e8; border-color: #f5bdbd; }
+
+/* Cancellation card */
+.cr-card--cancel {
+  display: flex; flex-direction: column;
+}
+
+/* Center the metric block (SVG + % + caption) in the card */
+.cr-metric {
+  flex: 1;                         /* take remaining vertical space */
+  display: flex; flex-direction: column; align-items: center; justify-content: center;
+  text-align: center;
+  margin: 0;                        /* ensure not pushed down */
+}
+
+/* Circular meter */
+.cr-meter { position: relative; width: 120px; height: 120px; }
+.cr-meter-svg { transform: rotate(-90deg); display: block; }
+.cr-progress-circle { transition: stroke-dasharray .6s ease-in-out; }
+.cr-meter-center {
+  position: absolute; inset: 0;
+  display: flex; align-items: center; justify-content: center;
+}
+.cr-meter-value { font-size: 1.5rem; font-weight: 700; color: var(--text-primary, #0f172a); line-height: 1; }
+
+/* Caption — tight under the % and centered */
+.cr-meter-caption {
+  margin-top: 6px;                 /* <<< tighter gap under the number */
+  font-size: .75rem; color: var(--text-muted, #94a3b8);
+  white-space: nowrap; text-align: center;
+}
+
+/* Responsive */
+@media (max-width: 899px) {
+  .carrier-ratings { padding: 16px; }
+  .cr-grid { gap: 16px; }
+  .cr-card { min-height: auto; padding: 12px; }
+  .cr-card-header { margin-bottom: 12px; flex-wrap: wrap; gap: 8px; }
+  .cr-stars-row { gap: 12px; }
+  .cr-meter { width: 100px; height: 100px; }
+  .cr-meter-value { font-size: 1.25rem; }
+}
+@media (max-width: 640px) {
+  .cr-card-header { flex-direction: column; align-items: flex-start; gap: 8px; }
+  .cr-stars-row { justify-content: space-between; }
+}

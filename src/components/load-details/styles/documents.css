@@ -1,0 +1,335 @@
+/* ============================================================
+   FILE: src/components/load-details/styles/documents.css
+   Photos grid, lightbox, download buttons, gate pass list
+   ============================================================ */
+
+/* Documents Section */
+.ldm-docs-section {
+  padding: 0;
+  background: transparent;
+  border: none;
+}
+
+.ldm-docs-group {
+  background: #f9fafb;
+  border: 1px solid #e5e7eb;
+  border-radius: 8px;
+  padding: 14px;
+  margin-bottom: 12px;
+}
+
+.ldm-docs-group:last-child {
+  margin-bottom: 0;
+}
+
+.ldm-docs-group-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 12px;
+}
+
+.ldm-docs-group-title {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 13px;
+  font-weight: 600;
+  color: #374151;
+}
+
+.ldm-docs-group-title svg {
+  color: #3b82f6;
+}
+
+/* Download All Button */
+.ldm-download-all-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 6px 12px;
+  background: #fff;
+  border: 1px solid #d1d5db;
+  border-radius: 6px;
+  font-size: 12px;
+  font-weight: 500;
+  color: #374151;
+  cursor: pointer;
+  transition: all 0.15s;
+}
+
+.ldm-download-all-btn:hover:not(:disabled) {
+  background: #f3f4f6;
+  border-color: #9ca3af;
+}
+
+.ldm-download-all-btn:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+.ldm-download-all-btn--loading {
+  color: #6b7280;
+}
+
+.ldm-download-all-btn__spinner {
+  width: 12px;
+  height: 12px;
+  border: 2px solid #e5e7eb;
+  border-top-color: #6b7280;
+  border-radius: 50%;
+  animation: ldm-spin 0.8s linear infinite;
+}
+
+/* Photo Grid */
+.ldm-photos-container {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.ldm-photos-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(80px, 1fr));
+  gap: 8px;
+}
+
+.ldm-photo-thumb {
+  position: relative;
+  aspect-ratio: 1;
+  border-radius: 6px;
+  overflow: hidden;
+  border: none;
+  padding: 0;
+  cursor: pointer;
+  background: #e5e7eb;
+}
+
+.ldm-photo-thumb img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform 0.2s;
+}
+
+.ldm-photo-thumb:hover img {
+  transform: scale(1.05);
+}
+
+.ldm-photo-thumb__overlay {
+  position: absolute;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.4);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #fff;
+  opacity: 0;
+  transition: opacity 0.2s;
+}
+
+.ldm-photo-thumb:hover .ldm-photo-thumb__overlay {
+  opacity: 1;
+}
+
+.ldm-photos-toggle {
+  align-self: flex-start;
+  padding: 6px 12px;
+  background: transparent;
+  border: 1px solid #d1d5db;
+  border-radius: 6px;
+  font-size: 12px;
+  font-weight: 500;
+  color: #6b7280;
+  cursor: pointer;
+  transition: all 0.15s;
+}
+
+.ldm-photos-toggle:hover {
+  background: #f3f4f6;
+  color: #374151;
+}
+
+/* Lightbox */
+.ldm-lightbox {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.95);
+  z-index: 2000;
+  display: flex;
+  flex-direction: column;
+}
+
+.ldm-lightbox__toolbar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 12px 20px;
+  background: rgba(0, 0, 0, 0.5);
+}
+
+.ldm-lightbox__toolbar-left,
+.ldm-lightbox__toolbar-right {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.ldm-lightbox__counter {
+  color: #fff;
+  font-size: 14px;
+  font-weight: 500;
+}
+
+.ldm-lightbox__tool-btn {
+  width: 40px;
+  height: 40px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(255, 255, 255, 0.1);
+  border: none;
+  border-radius: 8px;
+  color: #fff;
+  cursor: pointer;
+  transition: all 0.15s;
+}
+
+.ldm-lightbox__tool-btn:hover {
+  background: rgba(255, 255, 255, 0.2);
+}
+
+.ldm-lightbox__close-btn:hover {
+  background: rgba(239, 68, 68, 0.8);
+}
+
+.ldm-lightbox__content {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 20px;
+  overflow: hidden;
+}
+
+.ldm-lightbox__content--zoomed {
+  cursor: zoom-out;
+  overflow: auto;
+}
+
+.ldm-lightbox__image {
+  max-width: 100%;
+  max-height: 100%;
+  object-fit: contain;
+  border-radius: 4px;
+  transition: transform 0.3s ease;
+}
+
+.ldm-lightbox__image--zoomed {
+  max-width: none;
+  max-height: none;
+  transform: scale(2);
+}
+
+.ldm-lightbox__nav {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 50px;
+  height: 80px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(0, 0, 0, 0.5);
+  border: none;
+  color: #fff;
+  cursor: pointer;
+  transition: all 0.15s;
+}
+
+.ldm-lightbox__nav:hover {
+  background: rgba(0, 0, 0, 0.7);
+}
+
+.ldm-lightbox__nav--prev {
+  left: 0;
+  border-radius: 0 8px 8px 0;
+}
+
+.ldm-lightbox__nav--next {
+  right: 0;
+  border-radius: 8px 0 0 8px;
+}
+
+.ldm-lightbox__info {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+  padding: 12px 20px;
+  background: rgba(0, 0, 0, 0.5);
+}
+
+.ldm-lightbox__filename {
+  color: #fff;
+  font-size: 14px;
+  font-weight: 500;
+}
+
+.ldm-lightbox__hint {
+  color: rgba(255, 255, 255, 0.6);
+  font-size: 12px;
+}
+
+/* Gate Pass Styles */
+.ldm-gatepass-list {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  margin-top: 8px;
+}
+
+.ldm-gatepass-item {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 12px;
+  background: #f8fafc;
+  border: 1px solid #e2e8f0;
+  border-radius: 6px;
+  transition: background 0.15s ease;
+}
+
+.ldm-gatepass-item:hover {
+  background: #f1f5f9;
+}
+
+.ldm-gatepass-item .ldm-doc-link {
+  flex: 1;
+  margin-top: 0;
+}
+
+.ldm-gatepass-type {
+  font-size: 11px;
+  color: #64748b;
+  font-style: italic;
+}
+
+/* Order Documents Section Enhancement */
+.ldm-docs-section .ldm-docs-group:not(:last-child) {
+  margin-bottom: 16px;
+  padding-bottom: 16px;
+  border-bottom: 1px solid #e2e8f0;
+}
+
+/* Responsive */
+@media (max-width: 600px) {
+  .ldm-photos-grid {
+    grid-template-columns: repeat(3, 1fr);
+  }
+
+  .ldm-lightbox__nav {
+    width: 40px;
+    height: 60px;
+  }
+}

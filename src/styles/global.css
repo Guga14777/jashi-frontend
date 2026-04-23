@@ -1,0 +1,470 @@
+/* src/styles/global.css - FIXED: No smooth scroll for instant pagination */
+/* 
+ * IMPORTANT: This file must be loaded AFTER tokens.css
+ * 
+ * PURPOSE: Define app-level utilities only (spacing, containers, typography, resets)
+ * Do NOT define or override design tokens here - tokens live in tokens.css
+ */
+
+:root {
+  /* App-specific aliases (not design tokens) */
+  --bg-white: var(--bg-primary);
+  --bg-dark: #0B1220;
+  --font-sans: system-ui, -apple-system, 'Segoe UI', Roboto, Inter, 'Helvetica Neue', Arial, 'Noto Sans', 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol', sans-serif;
+  
+  /* Spacing tokens - App-level utilities */
+  --spacing-unit: 24px;
+  --spacing-xs: 4px;
+  --spacing-sm: 8px;
+  --spacing-md: 16px;
+  --spacing-lg: 24px;
+  --spacing-xl: 32px;
+  --spacing-2xl: 48px;
+  --spacing-3xl: 64px;
+}
+
+/* ============================================
+   GLOBAL RESET - FIXED: Modal-compatible + CLS prevention
+   ============================================ */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+html {
+  width: 100%;
+  height: 100%;
+  overflow-x: hidden;
+  /* FIXED: Prevent scrollbar-induced layout shift */
+  scrollbar-gutter: stable;
+  /* ⭐ FIXED: Removed smooth scroll for instant pagination */
+  scroll-behavior: auto;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  background: var(--bg-white);
+}
+
+body {
+  width: 100%;
+  min-height: 100vh;
+  font-family: var(--font-sans);
+  font-size: 16px;
+  line-height: 1.6;
+  color: var(--text-primary);
+  overflow-x: hidden;
+  /* FIXED: Removed overflow-y to allow modal scroll lock to work */
+  background: var(--bg-white);
+  /* FIXED: Prevent font-induced layout shift */
+  font-display: swap;
+}
+
+/* Root app container - FIXED: Modal-safe + no stacking context */
+#root {
+  width: 100%;
+  min-height: 100vh;
+  overflow-x: hidden;
+  background: var(--bg-white);
+  /* CRITICAL: Ensure no transforms that break modals or cause CLS */
+  transform: none !important;
+  filter: none !important;
+  perspective: none !important;
+  /* ✅ REMOVED: contain: none !important; — was creating stacking context that broke portal */
+  will-change: auto !important;
+}
+
+/* ============================================
+   MODAL SCROLL LOCK - FIXED: Proper implementation
+   ============================================ */
+html.has-modal,
+body.has-modal,
+html.has-open-modal, /* backward-compat */
+body.has-open-modal {
+  overflow: hidden !important;
+  height: 100% !important;
+}
+
+/* Prevent any layout shift when modal opens (alias) */
+body.modal-open {
+  overflow: hidden !important;
+}
+
+/* While a modal is open, flatten header borders/shadows app-wide */
+html.has-modal .pub-header,
+body.has-modal .pub-header,
+html.has-open-modal .pub-header,
+body.has-open-modal .pub-header {
+  border-bottom-color: transparent !important;
+  box-shadow: none !important;
+}
+
+/* ============================================
+   SVG ICONS - FIXED: Prevent size jumps
+   ============================================ */
+svg {
+  display: inline-block;
+  vertical-align: middle;
+  flex-shrink: 0;
+  /* FIXED: Prevent icon size shifts */
+  width: 1em;
+  height: 1em;
+}
+
+/* Scoped to icon SVGs to avoid affecting filled SVGs */
+.icon svg path,
+.icon svg circle,
+.icon svg line,
+.icon svg polyline,
+.icon svg rect,
+svg.icon path,
+svg.icon circle,
+svg.icon line,
+svg.icon polyline,
+svg.icon rect {
+  stroke: currentColor;
+}
+
+/* FIXED: Explicit icon sizing prevents layout jumps */
+.icon {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 1em;
+  height: 1em;
+  flex-shrink: 0;
+}
+
+/* ============================================
+   CONTAINER SYSTEM - Using tokens.css values
+   ============================================ */
+.container {
+  max-width: var(--container-max);
+  margin: 0 auto;
+  padding: 0 var(--page-gutter);
+  width: 100%;
+}
+
+.container-wide {
+  max-width: var(--container-max);
+  margin: 0 auto;
+  padding: 0 var(--page-gutter);
+  width: 100%;
+}
+
+.container-full {
+  width: 100%;
+  padding: 0 var(--page-gutter);
+}
+
+/* ============================================
+   SECTION SPACING
+   ============================================ */
+.section {
+  padding: var(--spacing-3xl) 0;
+  width: 100%;
+}
+
+.section-compact {
+  padding: var(--spacing-2xl) 0;
+  width: 100%;
+}
+
+.section-large {
+  padding: calc(var(--spacing-3xl) * 1.5) 0;
+  width: 100%;
+}
+
+/* ============================================
+   BACKGROUND UTILITIES
+   ============================================ */
+.bg-dark {
+  background: var(--bg-dark);
+  color: var(--bg-white);
+}
+
+.bg-white {
+  background: var(--bg-white);
+  color: var(--text-primary);
+}
+
+.bg-muted {
+  background: var(--bg-secondary);
+  color: var(--text-primary);
+}
+
+/* ============================================
+   TYPOGRAPHY - FIXED: Prevent font reflow
+   ============================================ */
+h1, h2, h3, h4, h5, h6 {
+  font-weight: 700;
+  line-height: 1.2;
+  margin: 0;
+  /* FIXED: Prevent font loading shifts */
+  font-display: swap;
+}
+
+h1 {
+  font-size: clamp(36px, 5vw, 56px);
+  letter-spacing: -0.02em;
+}
+
+h2 {
+  font-size: clamp(28px, 4vw, 40px);
+  letter-spacing: -0.01em;
+}
+
+h3 {
+  font-size: clamp(24px, 3vw, 32px);
+}
+
+h4 {
+  font-size: clamp(20px, 2.5vw, 24px);
+}
+
+h5 {
+  font-size: 18px;
+}
+
+h6 {
+  font-size: 16px;
+}
+
+p {
+  margin: 0;
+}
+
+/* For reference/citation text, use the mono font */
+.reference-text,
+.citation {
+  font-family: var(--font-mono);
+}
+
+/* ============================================
+   LINKS - Using tokenized transitions - FIXED: Scoped
+   ============================================ */
+a:not(.pub-header a):not(.car-header a):not(.nav-link):not(.auth-form-wrapper a):not(.quote-widget a) {
+  color: var(--color-primary);
+  text-decoration: none;
+  /* FIXED: Only transition specific properties, not all */
+  transition: color var(--transition-base);
+}
+
+a:not(.pub-header a):not(.car-header a):not(.nav-link):not(.auth-form-wrapper a):not(.quote-widget a):hover {
+  color: var(--color-primary-hover);
+}
+
+/* ============================================
+   BUTTONS - NO GLOBAL RESET
+   ============================================ */
+button[type="submit"],
+.auth-submit-button,
+.pill-chip,
+.qw-chip,
+.qw-other-chip,
+.choice-card,
+.transport-option,
+.transport-pill {
+  font-family: inherit;
+  cursor: pointer;
+}
+
+/* ============================================
+   FOCUS STATES - Using tokenized values
+   ============================================ */
+*:focus {
+  outline: none;
+}
+
+*:focus-visible {
+  outline: var(--focus-ring-width) solid var(--focus-ring-color);
+  outline-offset: 2px;
+  border-radius: var(--radius-sm);
+  box-shadow: var(--focus-ring);
+}
+
+/* ============================================
+   SCROLLBAR - Using tokenized radii
+   ============================================ */
+::-webkit-scrollbar {
+  width: 10px;
+  height: 10px;
+}
+
+::-webkit-scrollbar-track {
+  background: var(--bg-secondary);
+}
+
+::-webkit-scrollbar-thumb {
+  background: var(--border-default);
+  border-radius: var(--radius-base);
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: var(--border-hover);
+}
+
+/* ============================================
+   UTILITY CLASSES
+   ============================================ */
+.text-center { text-align: center; }
+.text-left   { text-align: left; }
+.text-right  { text-align: right; }
+
+.font-normal   { font-weight: 400; }
+.font-medium   { font-weight: 500; }
+.font-semibold { font-weight: 600; }
+.font-bold     { font-weight: 700; }
+
+/* ============================================
+   SPACING UTILITIES
+   ============================================ */
+.mt-0 { margin-top: 0 !important; }
+.mt-1 { margin-top: var(--spacing-xs); }
+.mt-2 { margin-top: var(--spacing-sm); }
+.mt-3 { margin-top: var(--spacing-md); }
+.mt-4 { margin-top: var(--spacing-lg); }
+.mt-5 { margin-top: var(--spacing-xl); }
+.mt-6 { margin-top: var(--spacing-2xl); }
+
+.mb-0 { margin-bottom: 0 !important; }
+.mb-1 { margin-bottom: var(--spacing-xs); }
+.mb-2 { margin-bottom: var(--spacing-sm); }
+.mb-3 { margin-bottom: var(--spacing-md); }
+.mb-4 { margin-bottom: var(--spacing-lg); }
+.mb-5 { margin-bottom: var(--spacing-xl); }
+.mb-6 { margin-bottom: var(--spacing-2xl); }
+
+/* ============================================
+   PREVENT iOS BOUNCE SCROLLING - Scoped properly
+   ============================================ */
+.ldm-backdrop, .ldm-container, .ldm-body {
+  -webkit-overflow-scrolling: touch;
+  overscroll-behavior: contain;
+}
+
+/* ============================================
+   LAYOUT STABILITY FIXES - PREVENT CARD SHAKING
+   ============================================ */
+
+/* FIXED: Prevent images from causing layout shift in cards */
+.card img,
+.card video,
+.card svg {
+  display: block;
+  max-width: 100%;
+  height: auto;
+  /* Prevent image size jumps */
+  object-fit: cover;
+}
+
+/* FIXED: Ensure cards have consistent min-height */
+.card {
+  min-height: 120px; /* Adjust based on your typical card content */
+  /* Prevent border changes from affecting layout */
+  border: 1px solid transparent;
+}
+
+/* FIXED: Prevent skeleton animations from affecting real cards */
+.card:not(.skeleton) {
+  animation: none !important;
+  transform: none !important;
+}
+
+/* FIXED: Prevent font loading from shifting card content */
+.card * {
+  font-display: swap;
+}
+
+/* ============================================
+   BACKWARD COMPATIBILITY ALIASES
+   Remove these when all components are updated
+   ============================================ */
+:root {
+  /* Border radius aliases - DEPRECATED: Use --radius-* from tokens.css */
+  --border-radius-sm: var(--radius-sm);
+  --border-radius-md: var(--radius-base);
+  --border-radius-lg: var(--radius-lg);
+  --border-radius-xl: var(--radius-2xl);
+  --border-radius-full: var(--radius-full);
+  
+  /* Container aliases - DEPRECATED: Use --container-max and --page-gutter from tokens.css */
+  --container-sm: 640px;
+  --container-md: 768px;
+  --container-lg: 1024px;
+  --container-xl: var(--container-max);
+  --container-2xl: var(--container-max);
+}
+
+/* ============================================
+   GLOBAL MODAL FIX - HIGHEST PRIORITY
+   ============================================ */
+
+/* Force removal of double card in auth modals */
+.auth-modal .modal-content > div:first-child,
+.auth-modal .modal-content .customer-login,
+.auth-modal .modal-content .carrier-login,
+.auth-modal .modal-content .customer-signup,
+.auth-modal .modal-content .carrier-signup {
+  background: transparent !important;
+  box-shadow: none !important;
+  border: 0 !important;
+  padding: 0 !important;
+  margin: 0 !important;
+  border-radius: 0 !important;
+}
+
+/* Target all card-like wrappers inside auth modals */
+.auth-modal .auth-page,
+.auth-modal .auth-container,
+.auth-modal .auth-card,
+.auth-modal [class*="auth-page"],
+.auth-modal [class*="auth-container"],
+.auth-modal [class*="auth-card"] {
+  background: transparent !important;
+  box-shadow: none !important;
+  border: 0 !important;
+  padding: 0 !important;
+  margin: 0 !important;
+  min-height: auto !important;
+  border-radius: 0 !important;
+}
+
+/* Exception: Keep input and button styling intact */
+.auth-modal input:not([type="checkbox"]),
+.auth-modal textarea,
+.auth-modal select {
+  background: #FFFFFF !important;
+  border: 1px solid #E2E8F0 !important;
+  box-shadow: none !important;
+}
+
+.auth-modal input:focus {
+  border-color: #0066FF !important;
+  box-shadow: 0 0 0 3px rgba(0, 102, 255, 0.12) !important;
+}
+
+.auth-modal button[type="submit"],
+.auth-modal .auth-submit-button {
+  background: #0066FF !important;
+  border: none !important;
+}
+
+.auth-modal button[type="submit"]:hover:not(:disabled),
+.auth-modal .auth-submit-button:hover:not(:disabled) {
+  background: #0052CC !important;
+}
+
+.auth-modal button[type="submit"]:disabled,
+.auth-modal .auth-submit-button:disabled {
+  background: #CBD5E1 !important;
+}
+
+/* Keep error banners and footer borders */
+.auth-modal .auth-error-banner {
+  background: #FEF2F2 !important;
+  border: 1px solid #FCA5A5 !important;
+}
+
+.auth-modal .auth-form-footer {
+  border-top: 1px solid #E2E8F0 !important;
+}

@@ -1,0 +1,142 @@
+/* src/pages/legal/carrier-terms.css */
+
+/* Page shell + spacing */
+.page-shell.carrier-terms {
+  /* Adjust if your sticky CarrierHeader is taller/shorter */
+  --sticky-header-h: 72px;
+}
+
+.page-shell.carrier-terms .page-main {
+  max-width: 1100px;
+  margin: 0 auto;
+
+  /* KEY: extra space so the H1 isn't tight under the sticky header */
+  padding: calc(var(--sticky-header-h) + 36px) 16px 48px;
+}
+
+/* Ensure in-page anchor jumps don't hide under sticky header */
+.page-shell.carrier-terms [id] {
+  scroll-margin-top: calc(var(--sticky-header-h) + 16px);
+}
+
+/* Header area */
+.page-shell.carrier-terms .page-header {
+  /* small internal padding + a touch more air above section content */
+  padding-top: 16px;
+  margin-bottom: 24px;
+}
+
+.page-shell.carrier-terms h1 {
+  font-size: 44px;
+  line-height: 1.15;
+  letter-spacing: -0.02em;
+  margin: 0 0 12px;
+}
+
+.page-shell.carrier-terms .lead {
+  color: #6b7280;
+  margin: 0 0 20px;
+}
+
+/* Buttons (outline/pill) */
+.page-shell.carrier-terms .action-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 14px;
+}
+
+.page-shell.carrier-terms .btn_pill {
+  appearance: none;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 14px 24px;
+  border-radius: 18px;
+  font-weight: 600;
+  text-decoration: none;
+  transition: box-shadow .2s ease, transform .02s ease, background .2s ease;
+  line-height: 1;
+}
+
+.page-shell.carrier-terms .btn_ghost {
+  color: #2563eb;
+  background: rgba(255, 255, 255, 0.9);
+  border: 2px solid rgba(37, 99, 235, 0.25);
+  box-shadow:
+    0 8px 28px rgba(16, 24, 40, 0.05),
+    0 0 2px rgba(37, 99, 235, 0.15) inset;
+}
+
+.page-shell.carrier-terms .btn_ghost:hover {
+  border-color: rgba(37, 99, 235, 0.42);
+  box-shadow:
+    0 10px 30px rgba(16, 24, 40, 0.07),
+    0 0 0 rgba(37, 99, 235, 0.18) inset;
+}
+
+.page-shell.carrier-terms .btn_ghost:active {
+  transform: translateY(1px);
+}
+
+/* Cards */
+.page-shell.carrier-terms .card {
+  border: 1px solid rgba(16, 24, 40, 0.08);
+  border-radius: 14px;
+  padding: 18px 18px 16px;
+  background: rgba(255, 255, 255, 0.55);
+  backdrop-filter: blur(2px);
+  margin: 14px 0;
+  box-shadow:
+    0 1px 0 rgba(16, 24, 40, 0.02),
+    0 12px 30px -12px rgba(2, 6, 23, 0.12);
+}
+
+.page-shell.carrier-terms .card h2 {
+  font-size: 22px;
+  letter-spacing: -0.01em;
+  margin: 0 0 10px;
+}
+
+/* Lists & text */
+.page-shell.carrier-terms .list {
+  margin: 8px 0 0 18px;
+}
+
+.page-shell.carrier-terms .list li {
+  margin: 8px 0;
+}
+
+.page-shell.carrier-terms .note {
+  margin-top: 8px;
+  color: #6b7280;
+  font-size: 14px;
+}
+
+/* Links inside text */
+.page-shell.carrier-terms a {
+  color: #2563eb;
+  text-decoration: none;
+}
+.page-shell.carrier-terms a:hover {
+  text-decoration: underline;
+}
+
+/* Responsive tweaks */
+@media (max-width: 768px) {
+  .page-shell.carrier-terms .page-main {
+    padding: calc(var(--sticky-header-h) + 28px) 14px 40px;
+  }
+  .page-shell.carrier-terms h1 {
+    font-size: 34px;
+  }
+  .page-shell.carrier-terms .action-row {
+    gap: 10px;
+  }
+  .page-shell.carrier-terms .btn_pill {
+    padding: 12px 18px;
+    border-radius: 16px;
+  }
+  .page-shell.carrier-terms .card {
+    padding: 16px;
+  }
+}

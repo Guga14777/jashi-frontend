@@ -1,0 +1,488 @@
+/* customer-login.css - Self-contained styles for Customer Login */
+
+.customer-login {
+  /* CSS Variables - Scoped to this component */
+  --brand-primary: #0066FF;
+  --brand-hover: #0052CC;
+  --brand-light: #E6F2FF;
+  
+  --success-color: #10B981;
+  --error-color: #EF4444;
+  --warning-color: #F59E0B;
+  
+  --text-primary: #0F172A;
+  --text-secondary: #475569;
+  --text-muted: #94A3B8;
+  
+  --border-color: #E2E8F0;
+  --background-subtle: #F8FAFB;
+  --background-error: #FEF2F2;
+  
+  --shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+  --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+  --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+  
+  --radius-sm: 8px;
+  --radius-md: 12px;
+  --radius-lg: 16px;
+  
+  --space-1: 4px;
+  --space-2: 8px;
+  --space-3: 12px;
+  --space-4: 16px;
+  --space-5: 20px;
+  --space-6: 24px;
+  --space-7: 28px;
+  --space-8: 32px;
+}
+
+/* Page Layout - Standalone */
+.customer-login.auth-page {
+  min-height: 100vh;
+  background: linear-gradient(135deg, #F8FAFB 0%, #E5E7EB 100%);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: var(--space-6);
+  position: relative;
+}
+
+.customer-login .auth-container {
+  width: 100%;
+  max-width: 480px;
+  position: relative;
+}
+
+.customer-login .auth-card {
+  background: #FFFFFF;
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-lg);
+  overflow: hidden;
+  position: relative;
+}
+
+/* Form Wrapper */
+.customer-login .auth-form-wrapper {
+  padding: var(--space-8);
+  width: 100%;
+  box-sizing: border-box;
+}
+
+/* Header Section */
+.customer-login .auth-form-header {
+  text-align: center;
+  margin-bottom: var(--space-8);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.customer-login .auth-title-icon {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 48px;
+  height: 48px;
+  background: var(--brand-light);
+  border-radius: 50%;
+  margin: 0 auto var(--space-4) auto;
+  color: var(--brand-primary);
+}
+
+.customer-login .auth-form-title {
+  font-size: 30px;
+  font-weight: 800;
+  color: var(--brand-primary);
+  margin: 0 auto var(--space-2) auto;
+  padding: 0;
+  letter-spacing: -0.02em;
+  line-height: 1.2;
+  text-align: center;
+  width: 100%;
+  display: block;
+}
+
+.customer-login .auth-form-subtitle {
+  font-size: 16px;
+  color: var(--text-secondary);
+  line-height: 1.5;
+  margin: 0 auto;
+  padding: 0;
+  max-width: 420px;
+  text-align: center;
+  width: 100%;
+  display: block;
+}
+
+/* Error Banner */
+.customer-login .auth-error-banner {
+  background: var(--background-error);
+  border: 1px solid #FCA5A5;
+  border-radius: var(--radius-md);
+  padding: var(--space-3) var(--space-4);
+  color: var(--error-color);
+  font-size: 14px;
+  font-weight: 500;
+  margin-bottom: var(--space-5);
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+  animation: slideDown 0.3s ease-out;
+}
+
+.customer-login .auth-error-banner::before {
+  content: "⚠";
+  font-size: 16px;
+  flex-shrink: 0;
+}
+
+@keyframes slideDown {
+  from {
+    opacity: 0;
+    transform: translateY(-10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Form Layout */
+.customer-login .auth-form {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-5);
+  width: 100%;
+}
+
+.customer-login .auth-form-group {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+  position: relative;
+  width: 100%;
+}
+
+/* Labels */
+.customer-login .auth-form-label {
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--text-primary);
+  letter-spacing: 0.01em;
+  margin: 0 0 var(--space-1) 0;
+  display: block;
+  text-align: left;
+}
+
+/* Input Fields */
+.customer-login .auth-form-input {
+  width: 100%;
+  height: 48px;
+  padding: 0 var(--space-4);
+  font-size: 15px;
+  border: 1px solid var(--border-color);
+  border-radius: var(--radius-md);
+  background: #FFFFFF;
+  color: var(--text-primary);
+  transition: border-color 0.2s ease;
+  outline: none;
+  box-sizing: border-box;
+}
+
+.customer-login .auth-form-input::placeholder {
+  color: var(--text-muted);
+}
+
+.customer-login .auth-form-input:hover:not(:disabled) {
+  border-color: #CBD5E1;
+}
+
+.customer-login .auth-form-input:focus {
+  border-color: var(--brand-primary);
+  outline: 2px solid transparent;
+  outline-offset: 2px;
+}
+
+.customer-login .auth-form-input:disabled {
+  background: var(--background-subtle);
+  cursor: not-allowed;
+  opacity: 0.6;
+}
+
+.customer-login .auth-form-input.error {
+  border-color: var(--error-color);
+  background: #FFF5F5;
+}
+
+/* Error Messages */
+.customer-login .auth-form-error {
+  font-size: 13px;
+  color: var(--error-color);
+  font-weight: 500;
+  display: block;
+  margin-top: var(--space-1);
+  animation: fadeIn 0.2s ease-out;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(-5px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Password Wrapper */
+.customer-login .auth-password-wrapper {
+  position: relative;
+  width: 100%;
+}
+
+.customer-login .auth-password-wrapper .auth-form-input {
+  padding-right: 52px;
+}
+
+/* Password Toggle */
+.customer-login .auth-password-toggle {
+  position: absolute;
+  right: var(--space-3);
+  top: 50%;
+  transform: translateY(-50%);
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  padding: var(--space-2);
+  color: var(--text-secondary);
+  transition: all 0.2s ease;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: var(--radius-sm);
+  width: 32px;
+  height: 32px;
+}
+
+.customer-login .auth-password-toggle:hover:not(:disabled) {
+  color: var(--text-primary);
+  background: var(--background-subtle);
+}
+
+.customer-login .auth-password-toggle:disabled {
+  cursor: not-allowed;
+  opacity: 0.5;
+}
+
+/* Forgot Password Link */
+.customer-login .auth-forgot-password {
+  text-align: right;
+  margin-top: calc(var(--space-3) * -1);
+  margin-bottom: var(--space-1);
+}
+
+.customer-login .forgot-password-link {
+  font-size: 14px;
+  font-weight: 500;
+  color: var(--text-secondary);
+  text-decoration: none;
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: var(--space-2) 0;
+  display: inline-block;
+  transition: all 0.2s ease;
+}
+
+.customer-login .forgot-password-link:hover {
+  color: var(--brand-primary);
+  text-decoration: underline;
+}
+
+/* Submit Button */
+.customer-login .auth-submit-button {
+  width: 100%;
+  height: 48px;
+  padding: 0 var(--space-6);
+  margin-top: var(--space-5);
+  font-size: 15px;
+  font-weight: 600;
+  color: #FFFFFF;
+  background: var(--brand-primary);
+  border: none;
+  border-radius: var(--radius-md);
+  cursor: pointer;
+  transition: all 0.2s ease;
+  position: relative;
+  overflow: hidden;
+  box-shadow: var(--shadow-sm);
+}
+
+.customer-login .auth-submit-button:hover:not(:disabled) {
+  background: var(--brand-hover);
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(0, 102, 255, 0.25);
+}
+
+.customer-login .auth-submit-button:active:not(:disabled) {
+  transform: translateY(0);
+}
+
+.customer-login .auth-submit-button:disabled {
+  background: #CBD5E1;
+  cursor: not-allowed;
+  transform: none;
+  box-shadow: none;
+  opacity: 0.7;
+}
+
+.customer-login .auth-submit-button span {
+  position: relative;
+  z-index: 1;
+}
+
+/* Loading State */
+.customer-login .auth-submit-button.loading span {
+  visibility: hidden;
+}
+
+.customer-login .auth-submit-button.loading::after {
+  content: "";
+  position: absolute;
+  width: 20px;
+  height: 20px;
+  top: 50%;
+  left: 50%;
+  margin-left: -10px;
+  margin-top: -10px;
+  border: 2px solid #ffffff;
+  border-radius: 50%;
+  border-top-color: transparent;
+  animation: spinner 0.6s linear infinite;
+}
+
+@keyframes spinner {
+  to { transform: rotate(360deg); }
+}
+
+/* Footer Section */
+.customer-login .auth-form-footer {
+  margin-top: var(--space-7);
+  padding-top: var(--space-6);
+  border-top: 1px solid var(--border-color);
+  text-align: center;
+}
+
+.customer-login .auth-footer-text {
+  font-size: 14px;
+  color: var(--text-secondary);
+  margin: 0 0 var(--space-4) 0;
+  line-height: 1.5;
+}
+
+.customer-login .auth-link-button {
+  background: none;
+  border: none;
+  color: var(--brand-primary);
+  font-weight: 600;
+  cursor: pointer;
+  text-decoration: none;
+  padding: 0;
+  font-size: inherit;
+  transition: all 0.2s ease;
+  display: inline-block;
+}
+
+.customer-login .auth-link-button:hover {
+  color: var(--brand-hover);
+  text-decoration: underline;
+}
+
+/* Legal Text */
+.customer-login .auth-legal-text {
+  font-size: 13px;
+  color: var(--text-muted);
+  margin: 0;
+  line-height: 1.5;
+}
+
+.customer-login .auth-legal-text a {
+  color: var(--brand-primary);
+  text-decoration: none;
+  font-weight: 500;
+  transition: color 0.2s ease;
+}
+
+.customer-login .auth-legal-text a:hover {
+  color: var(--brand-hover);
+  text-decoration: underline;
+}
+
+/* Modal-specific styles */
+.modal-body .customer-login .auth-form-wrapper,
+.modal-panel .customer-login .auth-form-wrapper {
+  padding: 0;
+  max-width: 100%;
+}
+
+.modal-body .customer-login .auth-form-header,
+.modal-panel .customer-login .auth-form-header {
+  margin-bottom: 28px;
+}
+
+/* Responsive Design */
+@media (max-width: 640px) {
+  .customer-login.auth-page {
+    padding: var(--space-4);
+  }
+  
+  .customer-login .auth-form-wrapper {
+    padding: var(--space-6) var(--space-5);
+  }
+  
+  .customer-login .auth-form-title {
+    font-size: 26px;
+  }
+  
+  .customer-login .auth-form-subtitle {
+    font-size: 15px;
+  }
+  
+  .customer-login .auth-form-input {
+    height: 46px;
+    font-size: 16px;
+  }
+  
+  .customer-login .auth-submit-button {
+    height: 46px;
+    font-size: 14px;
+  }
+}
+
+@media (max-width: 480px) {
+  .customer-login .auth-container {
+    max-width: 100%;
+  }
+  
+  .customer-login .auth-form-wrapper {
+    padding: var(--space-5) var(--space-4);
+  }
+  
+  .customer-login .auth-form-title {
+    font-size: 24px;
+  }
+}
+
+/* Screen reader only */
+.customer-login .sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border-width: 0;
+}

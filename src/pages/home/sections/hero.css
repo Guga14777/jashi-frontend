@@ -1,0 +1,117 @@
+/* src/pages/home/sections/hero.css - REFINED TYPOGRAPHY */
+
+.hero-section {
+  background: #FFFFFF;
+  padding: 120px 0 0 0;
+  position: relative;
+  width: 100%;
+}
+
+.hero-container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 40px;
+  width: 100%;
+  box-sizing: border-box;
+}
+
+.hero-content {
+  text-align: center;
+  width: 100%;
+  margin: 0 auto;
+}
+
+/* Main headline - Keep strong at 64px */
+.hero-headline {
+  font-size: 64px; /* Perfect H1 size */
+  line-height: 1.1;
+  font-weight: 800;
+  color: #1F2937;
+  margin: 0 auto 30px auto;
+  letter-spacing: -1.5px;
+  max-width: 100%;
+}
+
+/* Blue highlight */
+.hero-highlight {
+  color: #0066FF;
+  font-weight: 800;
+}
+
+/* Subtitle - Slightly smaller for better contrast */
+.hero-subtitle {
+  font-size: 18px; /* Reduced from 20px for better hierarchy */
+  line-height: 1.5;
+  color: #64748B;
+  margin: 0 auto 56px auto;
+  font-weight: 400;
+  max-width: 800px;
+}
+
+/* Bold highlights in subtitle */
+.subtitle-highlight {
+  color: #0066FF;
+  font-weight: 600;
+}
+
+/* Tablet */
+@media (max-width: 1024px) {
+  .hero-section {
+    padding: 100px 0 0 0;
+  }
+  
+  .hero-container {
+    padding: 0 30px;
+  }
+  
+  .hero-headline {
+    font-size: 52px; /* Scaled down proportionally */
+  }
+  
+  .hero-subtitle {
+    font-size: 17px; /* Reduced from 18px */
+    margin-bottom: 40px;
+  }
+}
+
+/* Mobile */
+@media (max-width: 768px) {
+  .hero-section {
+    padding: 80px 0 0 0;
+  }
+  
+  .hero-container {
+    padding: 0 24px;
+  }
+  
+  .hero-headline {
+    font-size: 40px;
+    letter-spacing: -1px;
+  }
+  
+  .hero-subtitle {
+    font-size: 16px; /* Stays at 16px for readability */
+    margin-bottom: 32px;
+  }
+}
+
+/* Small mobile */
+@media (max-width: 480px) {
+  .hero-section {
+    padding: 60px 0 0 0;
+  }
+  
+  .hero-container {
+    padding: 0 20px;
+  }
+  
+  .hero-headline {
+    font-size: 32px;
+    margin-bottom: 20px;
+  }
+  
+  .hero-subtitle {
+    font-size: 15px;
+    margin-bottom: 24px;
+  }
+}

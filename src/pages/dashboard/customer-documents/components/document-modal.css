@@ -1,0 +1,382 @@
+/* ============================================================
+   FILE: src/pages/dashboard/customer-documents/components/document-modal.css
+   Customer Documents - Modal Styles (Fixed overlay - no footer overlap)
+   ============================================================ */
+
+/* Screen reader only */
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}
+
+/* ============================================================
+   MODAL OVERLAY - Fixed positioning above everything
+   ============================================================ */
+
+.docmodal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  width: 100vw;
+  height: 100vh;
+  background: rgba(0, 0, 0, 0.5);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 2147483647; /* Maximum possible z-index */
+  animation: docmodal-fadeIn 0.2s ease-out;
+  padding: 20px;
+  box-sizing: border-box;
+  overflow: auto;
+}
+
+@keyframes docmodal-fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+/* ============================================================
+   MODAL PANEL
+   ============================================================ */
+
+.docmodal {
+  width: 100%;
+  max-width: 500px;
+  max-height: calc(100vh - 40px);
+  background: #ffffff;
+  border-radius: 16px;
+  box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
+  display: flex;
+  flex-direction: column;
+  animation: docmodal-slideUp 0.3s ease-out;
+  position: relative;
+  overflow: hidden;
+}
+
+/* Close button */
+.docmodal-close-btn {
+  position: absolute;
+  top: 16px;
+  right: 16px;
+  width: 36px;
+  height: 36px;
+  border: none;
+  background: #f3f4f6;
+  border-radius: 8px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: background 0.15s ease;
+  z-index: 10;
+  color: #6b7280;
+}
+
+.docmodal-close-btn:hover {
+  background: #e5e7eb;
+  color: #374151;
+}
+
+.docmodal-close-btn:focus-visible {
+  outline: 2px solid #3b82f6;
+  outline-offset: 2px;
+}
+
+@keyframes docmodal-slideUp {
+  from { 
+    opacity: 0;
+    transform: translateY(20px) scale(0.98);
+  }
+  to { 
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+/* ============================================================
+   MODAL HEADER
+   ============================================================ */
+
+.docmodal-header {
+  padding: 24px 24px 16px;
+  border-bottom: 1px solid #e5e7eb;
+  flex-shrink: 0;
+}
+
+.docmodal-title {
+  font-size: 20px;
+  font-weight: 600;
+  color: #111827;
+  margin: 0 0 4px;
+  line-height: 1.3;
+  word-break: break-word;
+}
+
+.docmodal-subtitle {
+  font-size: 14px;
+  color: #6b7280;
+  margin: 0;
+}
+
+/* ============================================================
+   MODAL BODY
+   ============================================================ */
+
+.docmodal-body {
+  flex: 1;
+  overflow-y: auto;
+  padding: 24px;
+}
+
+.docmodal-toaster {
+  padding: 12px 16px;
+  border-radius: 8px;
+  margin-bottom: 16px;
+}
+
+.docmodal-toaster.error {
+  background: #fef2f2;
+  border: 1px solid #fecaca;
+  color: #991b1b;
+}
+
+.docmodal-toaster strong {
+  display: block;
+  font-size: 14px;
+  margin-bottom: 4px;
+}
+
+.docmodal-toaster p {
+  margin: 0;
+  font-size: 13px;
+}
+
+/* ============================================================
+   SECTION STYLES
+   ============================================================ */
+
+.docmodal-section {
+  margin-bottom: 24px;
+}
+
+.docmodal-section:last-child {
+  margin-bottom: 0;
+}
+
+.docmodal-section-title {
+  font-size: 16px;
+  font-weight: 600;
+  color: #111827;
+  margin: 0 0 8px;
+}
+
+.docmodal-description {
+  font-size: 13px;
+  color: #6b7280;
+  margin-bottom: 16px;
+}
+
+/* ============================================================
+   FIELD GROUP (Info Table)
+   ============================================================ */
+
+.docmodal-field-group {
+  background: #f9fafb;
+  border: 1px solid #e5e7eb;
+  border-radius: 12px;
+  overflow: hidden;
+}
+
+.docmodal-field {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 14px 16px;
+  gap: 16px;
+}
+
+.docmodal-separator {
+  height: 1px;
+  background: #e5e7eb;
+  margin: 0 16px;
+}
+
+.docmodal-label {
+  font-size: 14px;
+  color: #6b7280;
+  flex-shrink: 0;
+}
+
+.docmodal-value {
+  font-size: 14px;
+  color: #111827;
+  font-weight: 500;
+  text-align: right;
+  word-break: break-word;
+}
+
+/* ============================================================
+   STATUS BADGE
+   ============================================================ */
+
+.docmodal-status-badge {
+  display: inline-flex;
+  align-items: center;
+  padding: 4px 12px;
+  font-size: 12px;
+  font-weight: 600;
+  border-radius: 20px;
+  text-transform: uppercase;
+  letter-spacing: 0.025em;
+}
+
+.docmodal-status-badge.provided {
+  background: #d1fae5;
+  color: #065f46;
+}
+
+.docmodal-status-badge.pending-review {
+  background: #fef3c7;
+  color: #92400e;
+}
+
+.docmodal-status-badge.rejected {
+  background: #fee2e2;
+  color: #991b1b;
+}
+
+.docmodal-status-badge.missing {
+  background: #f3f4f6;
+  color: #4b5563;
+}
+
+/* Order ID badge */
+.docmodal-orderid-badge {
+  display: inline-flex;
+  align-items: center;
+  padding: 4px 10px;
+  background: #dbeafe;
+  color: #1e40af;
+  border: 1px solid #93c5fd;
+  border-radius: 6px;
+  font-size: 13px;
+  font-weight: 600;
+  font-family: 'SF Mono', 'Monaco', 'Inconsolata', 'Roboto Mono', monospace;
+}
+
+/* ============================================================
+   NOTES
+   ============================================================ */
+
+.docmodal-notes {
+  font-size: 14px;
+  color: #374151;
+  line-height: 1.6;
+  background: #f9fafb;
+  border: 1px solid #e5e7eb;
+  border-radius: 8px;
+  padding: 16px;
+}
+
+/* ============================================================
+   MODAL FOOTER
+   ============================================================ */
+
+.docmodal-footer {
+  padding: 16px 24px 24px;
+  border-top: 1px solid #e5e7eb;
+  flex-shrink: 0;
+  background: #ffffff;
+}
+
+.docmodal-download-btn {
+  width: 100%;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  padding: 14px 24px;
+  font-size: 15px;
+  font-weight: 600;
+  border-radius: 10px;
+  border: none;
+  cursor: pointer;
+  transition: all 0.15s ease;
+  background: #3b82f6;
+  color: #ffffff;
+}
+
+.docmodal-download-btn:hover:not(:disabled) {
+  background: #2563eb;
+}
+
+.docmodal-download-btn:active:not(:disabled) {
+  background: #1d4ed8;
+  transform: scale(0.98);
+}
+
+.docmodal-download-btn:focus-visible {
+  outline: 2px solid #3b82f6;
+  outline-offset: 2px;
+}
+
+.docmodal-download-btn:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+/* ============================================================
+   RESPONSIVE
+   ============================================================ */
+
+@media (max-width: 640px) {
+  .docmodal-overlay {
+    padding: 12px;
+    align-items: flex-end;
+  }
+  
+  .docmodal {
+    max-width: 100%;
+    max-height: calc(100vh - 24px);
+    border-radius: 16px 16px 0 0;
+  }
+  
+  .docmodal-header {
+    padding: 20px 20px 12px;
+  }
+  
+  .docmodal-title {
+    font-size: 18px;
+  }
+  
+  .docmodal-body {
+    padding: 20px;
+  }
+  
+  .docmodal-field {
+    padding: 12px 14px;
+  }
+  
+  .docmodal-footer {
+    padding: 16px 20px 20px;
+  }
+  
+  .docmodal-download-btn {
+    padding: 12px 20px;
+    font-size: 14px;
+  }
+}
+
+/* Prevent body scroll when modal is open */
+body.modal-open {
+  overflow: hidden;
+}

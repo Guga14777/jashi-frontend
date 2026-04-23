@@ -1,0 +1,207 @@
+/* ============================================================
+   FILE: src/components/load-details/styles/status-stepper.css
+   6-step status progress bar styles
+   ✅ UPDATED: Blue/gray color scheme (no yellow/orange)
+   ============================================================ */
+
+.ldm-progress-bar {
+  padding: 16px 0;
+  margin-bottom: 8px;
+}
+
+.ldm-progress-steps {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+}
+
+.ldm-progress-step {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  flex: 0 0 auto;
+  min-width: 56px;
+}
+
+.ldm-progress-circle {
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 11px;
+  font-weight: 600;
+  border: 2px solid #d1d5db;
+  background: white;
+  color: #9ca3af;
+  transition: all 0.3s;
+}
+
+.ldm-progress-step--completed .ldm-progress-circle {
+  background: #059669;
+  border-color: #059669;
+  color: white;
+}
+
+.ldm-progress-step--current .ldm-progress-circle {
+  background: #2563eb;
+  border-color: #2563eb;
+  color: white;
+}
+
+.ldm-progress-step--upcoming .ldm-progress-circle {
+  background: white;
+  border-color: #d1d5db;
+  color: #9ca3af;
+}
+
+.ldm-progress-label {
+  margin-top: 6px;
+  font-size: 10px;
+  font-weight: 500;
+  color: #6b7280;
+  text-align: center;
+  max-width: 60px;
+  line-height: 1.2;
+}
+
+.ldm-progress-step--completed .ldm-progress-label,
+.ldm-progress-step--current .ldm-progress-label {
+  color: #111827;
+  font-weight: 600;
+}
+
+.ldm-progress-timestamp {
+  font-size: 9px;
+  color: #9ca3af;
+  margin-top: 2px;
+  text-align: center;
+}
+
+.ldm-progress-line {
+  flex: 1;
+  height: 2px;
+  background: #d1d5db;
+  margin-top: 13px;
+  min-width: 8px;
+  transition: background 0.3s;
+}
+
+.ldm-progress-line--completed {
+  background: #059669;
+}
+
+/* ============================================================
+   STATUS BADGES - Blue/Gray System
+   ============================================================ */
+
+.ldm-status-badge {
+  padding: 4px 10px;
+  border-radius: 20px;
+  font-size: 11px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.3px;
+}
+
+/* Waiting - Gray */
+.ldm-status--waiting {
+  background: #f1f5f9;
+  color: #475569;
+}
+
+/* Scheduled - Blue */
+.ldm-status--scheduled {
+  background: #dbeafe;
+  color: #1e40af;
+}
+
+/* Assigned - Indigo */
+.ldm-status--assigned {
+  background: #e0e7ff;
+  color: #3730a3;
+}
+
+/* On the Way - Light Blue (NOT yellow) */
+.ldm-status--on-the-way {
+  background: #e0f2fe;
+  color: #0369a1;
+}
+
+/* Arrived - Blue/Indigo (NOT pink) */
+.ldm-status--arrived,
+.ldm-status--at-pickup {
+  background: #e0e7ff;
+  color: #4338ca;
+}
+
+/* In Transit / Picked Up - Green */
+.ldm-status--in-transit,
+.ldm-status--picked-up {
+  background: #d1fae5;
+  color: #065f46;
+}
+
+/* Delivered - Green */
+.ldm-status--delivered {
+  background: #d1fae5;
+  color: #065f46;
+}
+
+/* Cancelled - Gray */
+.ldm-status--cancelled {
+  background: #f3f4f6;
+  color: #6b7280;
+}
+
+/* ============================================================
+   RESPONSIVE
+   ============================================================ */
+
+@media (max-width: 600px) {
+  .ldm-progress-step {
+    min-width: 45px;
+  }
+
+  .ldm-progress-label {
+    font-size: 9px;
+    max-width: 50px;
+  }
+
+  .ldm-progress-circle {
+    width: 24px;
+    height: 24px;
+    font-size: 10px;
+  }
+
+  .ldm-progress-line {
+    margin-top: 11px;
+    min-width: 4px;
+  }
+
+  .ldm-progress-timestamp {
+    font-size: 8px;
+  }
+}
+
+@media (max-width: 400px) {
+  .ldm-progress-step {
+    min-width: 38px;
+  }
+
+  .ldm-progress-label {
+    font-size: 8px;
+    max-width: 42px;
+  }
+
+  .ldm-progress-circle {
+    width: 22px;
+    height: 22px;
+    font-size: 9px;
+  }
+
+  .ldm-progress-line {
+    margin-top: 10px;
+  }
+}

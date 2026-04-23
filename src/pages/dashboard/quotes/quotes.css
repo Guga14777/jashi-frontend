@@ -1,0 +1,205 @@
+.quotes-page {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 100px 20px 40px;
+}
+
+.quotes-header {
+  margin-bottom: 24px;
+}
+
+.quotes-header h1 {
+  font-size: 24px;
+  font-weight: 600;
+  color: #111827;
+  margin: 0 0 8px;
+}
+
+.quotes-subtitle {
+  font-size: 14px;
+  color: #6b7280;
+  margin: 0;
+}
+
+.quotes-loading {
+  text-align: center;
+  padding: 100px 20px;
+  color: #6b7280;
+}
+
+.empty-state {
+  text-align: center;
+  padding: 60px 20px;
+  background: #f9fafb;
+  border-radius: 12px;
+  border: 1px solid #e5e7eb;
+}
+
+.empty-state p {
+  font-size: 16px;
+  color: #6b7280;
+  margin: 0 0 20px;
+}
+
+.quotes-table {
+  background: white;
+  border-radius: 12px;
+  border: 1px solid #e5e7eb;
+  overflow: hidden;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+}
+
+.quotes-table table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.quotes-table thead {
+  background: #f9fafb;
+}
+
+.quotes-table th {
+  text-align: left;
+  padding: 12px 16px;
+  font-size: 11px;
+  font-weight: 700;
+  color: #6b7280;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  border-bottom: 1px solid #e5e7eb;
+}
+
+.quotes-table tbody tr {
+  border-bottom: 1px solid #f3f4f6;
+  transition: background-color 0.2s;
+}
+
+.quotes-table tbody tr:hover {
+  background: #f9fafb;
+}
+
+.quotes-table tbody tr:last-child {
+  border-bottom: none;
+}
+
+.quotes-table td {
+  padding: 16px;
+  font-size: 14px;
+  color: #111827;
+}
+
+.likelihood-badge {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  padding: 4px 10px 6px;
+  font-size: 13px;
+  font-weight: 600;
+  color: #111827;
+  background: transparent;
+}
+
+.likelihood-badge::after {
+  content: '';
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  height: 2px;
+  border-radius: 2px;
+}
+
+.likelihood-high::after {
+  background: #10b981;
+}
+
+.likelihood-medium::after {
+  background: #f59e0b;
+}
+
+.likelihood-low::after {
+  background: #ef4444;
+}
+
+.status-badge {
+  display: inline-flex;
+  padding: 4px 10px;
+  border-radius: 999px;
+  font-size: 12px;
+  font-weight: 600;
+}
+
+.status-waiting {
+  background: #eff6ff;
+  color: #1e40af;
+}
+
+.status-accepted {
+  background: #dcfce7;
+  color: #15803d;
+}
+
+.status-rejected {
+  background: #fee2e2;
+  color: #dc2626;
+}
+
+.view-details-btn {
+  padding: 8px 16px;
+  background: #0066cc;
+  color: white;
+  border: none;
+  border-radius: 6px;
+  font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background-color 0.2s;
+}
+
+.view-details-btn:hover {
+  background: #0052cc;
+}
+
+.btn-primary {
+  padding: 12px 24px;
+  background: #0066cc;
+  color: white;
+  border: none;
+  border-radius: 8px;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background-color 0.2s;
+}
+
+.btn-primary:hover {
+  background: #0052cc;
+}
+
+@media (max-width: 768px) {
+  .quotes-table {
+    overflow-x: auto;
+  }
+
+  .quotes-table table {
+    min-width: 800px;
+  }
+}
+/* ============================================================
+   PAGINATION SECTION
+   ============================================================ */
+
+.quote-history-pagination {
+  padding: 20px 24px;
+  border-top: 1px solid #e5e7eb;
+  display: flex;
+  justify-content: center;
+  background: #fafafa;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .quote-history-pagination {
+    padding: 16px 16px;
+  }
+}

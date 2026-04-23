@@ -1,0 +1,1185 @@
+/* carrier-loads.css - Fixed Header/Controls Layout Version */
+
+/* ============================================
+   CSS CUSTOM PROPERTIES / DESIGN TOKENS
+   ============================================ */
+.cl-wrapper {
+  /* Layout */
+  --cl-max-width: 1400px;
+  --cl-content-padding: 24px;
+  --cl-gap: 16px;
+  --cl-radius: 12px;
+  --cl-grid-min: 340px;
+  
+  /* Header offset - adjust this value to match your site header height */
+  --cl-site-header-height: 72px;
+  
+  /* FIXED: Unified component heights */
+  --cl-control-height: 40px;
+  
+  /* Colors - Primary Scale */
+  --cl-primary: #0066FF;
+  --cl-primary-dark: #0052CC;
+  --cl-primary-light: #60A5FA;
+  --cl-primary-lighter: #DBEAFE;
+  
+  /* Text Colors */
+  --cl-text-primary: #0F172A;
+  --cl-text-secondary: #64748B;
+  --cl-text-muted: #94A3B8;
+  
+  /* Background Colors */
+  --cl-bg-primary: #FFFFFF;
+  --cl-bg-secondary: #F8FAFB;
+  --cl-bg-tertiary: #F1F5F9;
+  
+  /* Border Colors */
+  --cl-border-light: #E5E7EB;
+  --cl-border-medium: #D1D5DB;
+  
+  /* Status Colors */
+  --cl-success: #10B981;
+  --cl-success-bg: #D1FAE5;
+  --cl-success-text: #065F46;
+  
+  --cl-warning: #F59E0B;
+  --cl-warning-bg: #FEF3C7;
+  --cl-warning-text: #92400E;
+  
+  --cl-danger: #DC2626;
+  --cl-danger-bg: #FEE2E2;
+  --cl-danger-text: #991B1B;
+  
+  /* Shadows */
+  --cl-shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.05);
+  --cl-shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+  --cl-shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+  
+  /* Z-Index Layers */
+  --cl-z-content: 1;
+  --cl-z-sticky: 10;
+  --cl-z-modal: 1000;
+  --cl-z-site-header: 1001;
+}
+
+/* ============================================
+   LAYOUT & WRAPPER
+   ============================================ */
+.cl-wrapper {
+  min-height: 100vh;
+  background: var(--cl-bg-secondary);
+  width: 100%;
+  overflow-x: hidden;
+  padding-top: 80px;
+}
+
+.cl-container {
+  max-width: var(--cl-max-width);
+  margin: 0 auto;
+  padding: var(--cl-content-padding);
+  width: 100%;
+  box-sizing: border-box;
+}
+
+/* ============================================
+   FIXED: UNIFIED COVER CONTAINER
+   ============================================ */
+.cl-cover {
+  background: var(--cl-bg-primary);
+  border: 1px solid var(--cl-border-light);
+  border-radius: 16px;
+  margin-bottom: 24px;
+  box-shadow: var(--cl-shadow-sm);
+  position: sticky;
+  top: 24px;
+  z-index: var(--cl-z-sticky);
+  transition: box-shadow 0.2s ease;
+  overflow: hidden;
+}
+
+@media (max-width: 1024px) {
+  .cl-cover {
+    position: static;
+  }
+}
+
+/* ============================================
+   HEADER SECTION (TOP PART OF COVER)
+   ============================================ */
+.cl-header {
+  background: transparent;
+  border: none;
+  border-radius: 0;
+  box-shadow: none;
+  border-radius: 16px 16px 0 0;
+  padding: 20px 24px 16px;
+  margin: 0;
+  position: static;
+  z-index: auto;
+  transition: none;
+}
+
+.cl-title {
+  font-size: 24px;
+  font-weight: 700;
+  color: var(--cl-text-primary);
+  margin: 0 0 12px 0;
+  line-height: 1.2;
+}
+
+/* Interactive Counter Buttons */
+.cl-counters {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+  align-items: center;
+}
+
+.cl-counter {
+  padding: 4px 12px;
+  background: transparent;
+  border: none;
+  border-radius: 16px;
+  font-size: 13px;
+  color: var(--cl-text-secondary);
+  font-weight: 500;
+  cursor: pointer;
+  white-space: nowrap;
+  transition: all 0.2s ease;
+  font-family: inherit;
+  position: relative;
+}
+
+.cl-counter:hover {
+  background: var(--cl-bg-secondary);
+  color: var(--cl-text-primary);
+}
+
+.cl-counter.is-active {
+  background: var(--cl-primary-lighter);
+  color: var(--cl-primary);
+  font-weight: 600;
+}
+
+/* ============================================
+   CONTROLS SECTION (BOTTOM PART OF COVER)
+   ============================================ */
+.cl-controls {
+  background: transparent;
+  border: none;
+  border-radius: 0;
+  box-shadow: none;
+  border-radius: 0 0 16px 16px;
+  padding: 16px 24px 20px;
+  margin: -1px 0 0 0;
+  border-top: 1px solid var(--cl-border-light);
+  display: grid;
+  grid-template-columns: 1fr auto auto auto;
+  gap: 12px;
+  align-items: center;
+}
+
+/* Search Bar */
+.cl-search {
+  position: relative;
+  display: flex;
+  align-items: center;
+  min-width: 0;
+}
+
+.cl-search-icon {
+  position: absolute;
+  left: 12px;
+  width: 18px;
+  height: 18px;
+  color: var(--cl-text-muted);
+  pointer-events: none;
+  z-index: 1;
+}
+
+.cl-search-input {
+  width: 100%;
+  padding: 8px 12px 8px 40px;
+  border: 2px solid var(--cl-border-light);
+  border-radius: 8px;
+  font-size: 14px;
+  color: var(--cl-text-primary);
+  background: var(--cl-bg-primary);
+  transition: all 0.2s ease;
+  height: var(--cl-control-height);
+  box-sizing: border-box;
+  font-family: inherit;
+}
+
+.cl-search-input::placeholder {
+  color: var(--cl-text-muted);
+}
+
+.cl-search-input:focus {
+  outline: none;
+  border-color: var(--cl-primary);
+  box-shadow: 0 0 0 3px var(--cl-primary-lighter);
+}
+
+/* Filter Group */
+.cl-filter-group {
+  display: flex;
+  gap: 8px;
+}
+
+/* Select Dropdowns */
+.cl-filter-select,
+.cl-sort {
+  padding: 8px 32px 8px 12px;
+  border: 2px solid var(--cl-border-light);
+  border-radius: 8px;
+  font-size: 14px;
+  color: var(--cl-text-primary);
+  background: var(--cl-bg-primary);
+  background-image: url("data:image/svg+xml,%3Csvg width='12' height='8' viewBox='0 0 12 8' fill='none' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M1 1.5L6 6.5L11 1.5' stroke='%2364748B' stroke-width='1.5' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 12px center;
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  appearance: none;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  height: var(--cl-control-height);
+  box-sizing: border-box;
+  font-family: inherit;
+  white-space: nowrap;
+}
+
+.cl-filter-select:hover,
+.cl-sort:hover {
+  border-color: var(--cl-border-medium);
+}
+
+.cl-filter-select:focus,
+.cl-sort:focus {
+  outline: none;
+  border-color: var(--cl-primary);
+  box-shadow: 0 0 0 3px var(--cl-primary-lighter);
+}
+
+/* Date inputs */
+.cl-filter-select[type="date"] {
+  background-image: none;
+  padding: 8px 12px;
+}
+
+/* View Toggle */
+.cl-view-toggle {
+  display: flex;
+  background: var(--cl-bg-tertiary);
+  border-radius: 8px;
+  padding: 2px;
+  gap: 2px;
+}
+
+.cl-view-toggle button {
+  padding: 8px 12px;
+  background: transparent;
+  border: none;
+  border-radius: 6px;
+  color: var(--cl-text-secondary);
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.2s ease;
+  height: calc(var(--cl-control-height) - 4px);
+  box-sizing: border-box;
+  font-family: inherit;
+}
+
+.cl-view-toggle button:hover {
+  color: var(--cl-text-primary);
+}
+
+.cl-view-toggle button.is-active {
+  background: var(--cl-bg-primary);
+  color: var(--cl-primary);
+  box-shadow: var(--cl-shadow-sm);
+}
+
+/* Sort Wrapper */
+.cl-sort-wrapper {
+  display: flex;
+}
+
+/* ============================================
+   ACTIVE FILTERS CHIPS
+   ============================================ */
+.cl-active-filters { 
+  display: flex; 
+  gap: 8px; 
+  flex-wrap: wrap; 
+  margin: 8px 0 16px;
+  padding: 0 20px;
+}
+
+.cl-chip {
+  display: inline-flex; 
+  align-items: center; 
+  gap: 6px;
+  padding: 4px 10px; 
+  border-radius: 16px; 
+  background: var(--cl-bg-tertiary);
+  color: var(--cl-text-secondary); 
+  font-size: 12px; 
+  border: 1px solid var(--cl-border-light);
+}
+
+.cl-chip button {
+  background: none; 
+  border: 0; 
+  cursor: pointer; 
+  font-size: 12px; 
+  color: var(--cl-text-muted);
+  display: flex;
+  align-items: center;
+  padding: 2px;
+  border-radius: 50%;
+  transition: all 0.2s ease;
+}
+
+.cl-chip button:hover { 
+  color: var(--cl-text-primary);
+  background: var(--cl-bg-primary);
+}
+
+/* ============================================
+   CONTENT AREA
+   ============================================ */
+.cl-content {
+  min-height: 400px;
+  position: relative;
+}
+
+/* Grid Layout */
+.cl-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(var(--cl-grid-min), 1fr));
+  gap: var(--cl-gap);
+}
+
+/* List Layout */
+.cl-list {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+/* ============================================
+   LOAD ITEM CARD
+   ============================================ */
+.cl-item {
+  background: var(--cl-bg-primary);
+  border: 1px solid var(--cl-border-light);
+  border-radius: var(--cl-radius);
+  padding: 20px;
+  box-shadow: var(--cl-shadow-sm);
+  cursor: pointer;
+  transition: all 0.2s ease;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  position: relative;
+  overflow: hidden;
+}
+
+.cl-item:hover {
+  transform: translateY(-1px);
+  border-color: var(--cl-primary-light);
+  box-shadow: var(--cl-shadow-md);
+}
+
+/* Route Section */
+.cl-route {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+
+.cl-route-line {
+  display: flex;
+  align-items: flex-start;
+  gap: 8px;
+  font-size: 14px;
+  color: var(--cl-text-primary);
+  flex: 1;
+  min-width: 0;
+}
+
+.cl-route-icon {
+  width: 16px;
+  height: 16px;
+  color: var(--cl-text-muted);
+  flex-shrink: 0;
+  margin-top: 2px;
+}
+
+.cl-route-locations {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-wrap: wrap;
+  min-width: 0;
+}
+
+.cl-route-origin,
+.cl-route-destination {
+  font-weight: 500;
+  word-break: break-word;
+}
+
+.cl-route-arrow {
+  color: var(--cl-text-muted);
+  flex-shrink: 0;
+}
+
+/* Status Badge */
+.cl-status {
+  padding: 4px 12px;
+  border-radius: 12px;
+  font-size: 12px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  white-space: nowrap;
+  flex-shrink: 0;
+}
+
+.cl-status.status-scheduled {
+  background: var(--cl-primary-lighter);
+  color: var(--cl-primary);
+}
+
+.cl-status.status-in-transit {
+  background: var(--cl-warning-bg);
+  color: var(--cl-warning-text);
+}
+
+.cl-status.status-delivered {
+  background: var(--cl-success-bg);
+  color: var(--cl-success-text);
+}
+
+.cl-status.status-cancelled {
+  background: var(--cl-danger-bg);
+  color: var(--cl-danger-text);
+}
+
+/* Status Row */
+.cl-status-row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+/* Action Indicators */
+.cl-action-indicator {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  flex-shrink: 0;
+}
+
+.cl-action-indicator--pickup {
+  background: var(--cl-primary-lighter);
+  color: var(--cl-primary);
+}
+
+.cl-action-indicator--deliver {
+  background: var(--cl-success-bg);
+  color: var(--cl-success-text);
+}
+
+/* Dates Section */
+.cl-dates {
+  display: flex;
+  gap: 24px;
+  flex-wrap: wrap;
+}
+
+.cl-date-item {
+  display: flex;
+  align-items: flex-start;
+  gap: 8px;
+  font-size: 14px;
+}
+
+.cl-date-icon {
+  width: 16px;
+  height: 16px;
+  color: var(--cl-text-muted);
+  margin-top: 2px;
+  flex-shrink: 0;
+}
+
+.cl-date-item > div {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.cl-date-label {
+  color: var(--cl-text-muted);
+  font-size: 12px;
+}
+
+.cl-date-value {
+  color: var(--cl-text-primary);
+  font-weight: 500;
+}
+
+/* Price Section */
+.cl-price {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  padding-top: 12px;
+  border-top: 1px solid var(--cl-border-light);
+  flex-wrap: wrap;
+}
+
+.cl-price-main {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.cl-price-icon {
+  width: 20px;
+  height: 20px;
+  color: var(--cl-success);
+  flex-shrink: 0;
+}
+
+.cl-price-value {
+  font-size: 24px;
+  font-weight: 700;
+  color: var(--cl-text-primary);
+}
+
+.cl-price-rate {
+  color: var(--cl-text-secondary);
+  font-size: 14px;
+  font-weight: 500;
+  margin-left: auto;
+  white-space: nowrap;
+}
+
+.cl-view-details {
+  padding: 8px 16px;
+  background: var(--cl-primary);
+  color: white;
+  border: none;
+  border-radius: 8px;
+  font-size: 14px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  white-space: nowrap;
+  font-family: inherit;
+}
+
+.cl-view-details:hover {
+  background: var(--cl-primary-dark);
+}
+
+/* Badges Section */
+.cl-badges {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+.cl-badge {
+  padding: 4px 10px;
+  background: var(--cl-bg-tertiary);
+  color: var(--cl-text-secondary);
+  border-radius: 6px;
+  font-size: 12px;
+  font-weight: 500;
+  white-space: nowrap;
+}
+
+.cl-badge-gatepass {
+  background: var(--cl-warning-bg);
+  color: var(--cl-warning-text);
+}
+
+.cl-badge-photos {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  background: var(--cl-primary-lighter);
+  color: var(--cl-primary);
+}
+
+/* ============================================
+   EMPTY STATE
+   ============================================ */
+.cl-empty {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  min-height: 40vh;
+  color: var(--cl-text-secondary);
+  font-size: 16px;
+  text-align: center;
+  gap: 16px;
+  padding: 40px 20px;
+}
+
+.cl-empty-icon {
+  width: 48px;
+  height: 48px;
+  color: var(--cl-text-muted);
+}
+
+.cl-clear-search {
+  padding: 8px 20px;
+  background: var(--cl-primary);
+  color: white;
+  border: none;
+  border-radius: 8px;
+  font-size: 14px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  font-family: inherit;
+}
+
+.cl-clear-search:hover {
+  background: var(--cl-primary-dark);
+}
+
+/* ============================================
+   ERROR STATE
+   ============================================ */
+.cl-error {
+  background: var(--cl-danger-bg);
+  color: var(--cl-danger-text);
+  padding: 12px 16px;
+  border-radius: 8px;
+  margin-bottom: 20px;
+  font-size: 14px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+/* ============================================
+   LOADING STATE
+   ============================================ */
+.cl-loading {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  min-height: 60vh;
+  color: var(--cl-text-secondary);
+  font-size: 16px;
+  gap: 16px;
+}
+
+.cl-loading-spinner {
+  animation: cl-spin 1s linear infinite;
+}
+
+@keyframes cl-spin {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+/* ============================================
+   PAGINATION
+   ============================================ */
+.cl-pagination {
+  display: flex;
+  justify-content: center;
+  margin-top: 32px;
+  padding-bottom: 20px;
+}
+
+/* ============================================
+   ACCESSIBILITY UTILITIES
+   ============================================ */
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}
+
+/* Focus visible for keyboard navigation */
+.cl-wrapper *:focus-visible {
+  outline: 2px solid var(--cl-primary);
+  outline-offset: 2px;
+}
+
+.cl-counter:focus-visible {
+  outline: 2px solid var(--cl-primary);
+  outline-offset: 2px;
+}
+
+.cl-view-toggle button:focus-visible {
+  outline: 2px solid var(--cl-primary);
+  outline-offset: -2px;
+}
+
+.cl-item:focus-visible {
+  outline: 2px solid var(--cl-primary);
+  outline-offset: 2px;
+}
+
+.cl-view-details:focus-visible {
+  outline: 2px solid var(--cl-primary);
+  outline-offset: 2px;
+}
+
+/* ============================================
+   RESPONSIVE DESIGN
+   ============================================ */
+
+/* Large Tablets */
+@media (max-width: 1200px) {
+  .cl-controls {
+    grid-template-columns: 1fr auto;
+    grid-template-rows: auto auto;
+  }
+  
+  .cl-search {
+    grid-column: 1 / -1;
+  }
+  
+  .cl-filter-group {
+    grid-column: 1;
+  }
+  
+  .cl-view-toggle,
+  .cl-sort-wrapper {
+    grid-column: auto;
+  }
+}
+
+/* Tablets */
+@media (max-width: 1024px) {
+  .cl-wrapper {
+    --cl-content-padding: 16px;
+    padding-top: 16px;
+  }
+  
+  .cl-cover {
+    margin-bottom: 20px;
+  }
+  
+  .cl-header {
+    padding: 16px 20px 12px;
+  }
+  
+  .cl-title {
+    font-size: 22px;
+    margin-bottom: 10px;
+  }
+  
+  .cl-counters {
+    gap: 6px;
+  }
+  
+  .cl-counter {
+    padding: 4px 10px;
+    font-size: 12px;
+  }
+  
+  .cl-controls {
+    grid-template-columns: 1fr 1fr;
+    padding: 12px 20px 16px;
+  }
+  
+  .cl-search {
+    grid-column: 1 / -1;
+  }
+  
+  .cl-filter-group {
+    grid-column: 1 / -1;
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+    gap: 8px;
+  }
+  
+  .cl-view-toggle {
+    justify-self: start;
+  }
+  
+  .cl-sort-wrapper {
+    justify-self: end;
+  }
+}
+
+/* Mobile Landscape */
+@media (max-width: 768px) {
+  .cl-wrapper {
+    padding-top: 12px;
+  }
+  
+  .cl-cover {
+    margin-bottom: 16px;
+  }
+  
+  .cl-header {
+    padding: 14px 16px 10px;
+  }
+  
+  .cl-title {
+    font-size: 20px;
+    margin-bottom: 8px;
+  }
+  
+  .cl-counters {
+    gap: 6px;
+  }
+  
+  .cl-counter {
+    padding: 4px 8px;
+    font-size: 11px;
+  }
+  
+  .cl-controls {
+    grid-template-columns: 1fr;
+    gap: 12px;
+    padding: 12px 16px 16px;
+  }
+  
+  .cl-filter-group {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+  }
+  
+  .cl-filter-select,
+  .cl-sort {
+    width: 100%;
+  }
+  
+  .cl-view-toggle {
+    justify-self: center;
+    width: 100%;
+    max-width: 200px;
+  }
+  
+  .cl-sort-wrapper {
+    width: 100%;
+  }
+  
+  .cl-item {
+    padding: 16px;
+  }
+  
+  .cl-price-value {
+    font-size: 20px;
+  }
+  
+  .cl-dates {
+    flex-direction: column;
+    gap: 12px;
+  }
+  
+  .cl-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+/* Mobile Portrait */
+@media (max-width: 480px) {
+  .cl-wrapper {
+    --cl-content-padding: 12px;
+    padding-top: 8px;
+  }
+  
+  .cl-cover {
+    border-radius: 12px;
+    margin-bottom: 12px;
+  }
+  
+  .cl-header {
+    padding: 12px 16px 8px;
+    border-radius: 12px 12px 0 0;
+  }
+  
+  .cl-title {
+    font-size: 18px;
+    margin-bottom: 8px;
+  }
+  
+  .cl-counters {
+    gap: 4px;
+  }
+  
+  .cl-counter {
+    padding: 3px 8px;
+    font-size: 11px;
+    border-radius: 12px;
+  }
+  
+  .cl-controls {
+    padding: 12px 16px;
+    border-radius: 0 0 12px 12px;
+  }
+  
+  .cl-active-filters {
+    padding: 0 12px;
+    margin: 6px 0 12px;
+  }
+  
+  .cl-route-line {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+  
+  .cl-route-locations {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 4px;
+  }
+  
+  .cl-route-arrow {
+    display: none;
+  }
+  
+  .cl-route {
+    flex-direction: column;
+    gap: 8px;
+  }
+  
+  .cl-status {
+    align-self: flex-start;
+  }
+  
+  .cl-price {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 12px;
+  }
+  
+  .cl-price-rate {
+    margin-left: 0;
+  }
+  
+  .cl-view-details {
+    width: 100%;
+    padding: 12px;
+  }
+  
+  .cl-badges {
+    gap: 6px;
+  }
+  
+  .cl-badge {
+    font-size: 11px;
+    padding: 3px 8px;
+  }
+}
+
+/* ============================================
+   PRINT STYLES
+   ============================================ */
+@media print {
+  .cl-wrapper {
+    background: white;
+    padding-top: 0;
+  }
+  
+  .cl-controls,
+  .cl-pagination,
+  .cl-view-details,
+  .cl-view-toggle,
+  .cl-active-filters {
+    display: none !important;
+  }
+  
+  .cl-cover {
+    position: static;
+    box-shadow: none;
+    border: 1px solid #000;
+    margin-bottom: 20px;
+  }
+  
+  .cl-header {
+    border: none;
+    border-bottom: 1px solid #000;
+  }
+  
+  .cl-counter {
+    background: none !important;
+    color: #000 !important;
+    border: 1px solid #000;
+  }
+  
+  .cl-item {
+    break-inside: avoid;
+    box-shadow: none;
+    border: 1px solid #000;
+    margin-bottom: 10px;
+  }
+  
+  .cl-list {
+    gap: 10px;
+  }
+  
+  .cl-grid {
+    display: block;
+  }
+}
+
+/* ============================================
+   ANIMATIONS
+   ============================================ */
+@media (prefers-reduced-motion: no-preference) {
+  .cl-item,
+  .cl-counter,
+  .cl-view-details,
+  .cl-clear-search,
+  .cl-view-toggle button,
+  .cl-chip button {
+    transition: all 0.2s ease;
+  }
+  
+  .cl-search-input,
+  .cl-filter-select,
+  .cl-sort {
+    transition: border-color 0.2s ease, box-shadow 0.2s ease;
+  }
+  
+  .cl-cover {
+    transition: box-shadow 0.2s ease;
+  }
+}
+
+/* ============================================
+   HIGH CONTRAST MODE SUPPORT
+   ============================================ */
+@media (prefers-contrast: high) {
+  .cl-item,
+  .cl-cover {
+    border-width: 2px;
+  }
+  
+  .cl-counter.is-active {
+    border: 2px solid currentColor;
+  }
+  
+  .cl-status {
+    border: 1px solid currentColor;
+  }
+  
+  .cl-wrapper *:focus-visible {
+    outline-width: 3px;
+  }
+}
+
+/* ============================================
+   OVERRIDE: Light gap between header and filters
+   ============================================ */
+.cl-header {
+  border-radius: 16px;
+  padding-bottom: 16px;
+  margin-bottom: 0;
+}
+
+.cl-controls {
+  border-top: 1px solid var(--cl-border-light);
+  border-radius: 16px;
+  margin-top: 8px;
+  padding: 14px 16px;
+  box-shadow: var(--cl-shadow-sm);
+}
+
+.cl-cover {
+  margin-bottom: 18px;
+}
+
+@media (max-width: 480px) {
+  .cl-controls { 
+    margin-top: 6px; 
+    padding: 12px 16px;
+  }
+  .cl-cover { 
+    margin-bottom: 14px; 
+  }
+}
+
+/* ⭐ Order Number styling */
+.cl-order-number {
+  font-weight: 600;
+  color: var(--cl-primary);
+  margin-right: 8px;
+  font-size: 13px;
+}
+/* ============================================================
+   ADD THESE CSS RULES TO YOUR carrier-loads.css FILE
+   For the new 6-step status flow + waiting fee badge
+   ============================================================ */
+
+/* ✅ NEW: Status - Assigned */
+.cl-status.status-assigned {
+  background-color: #e0f2fe;
+  color: #0369a1;
+}
+
+/* ✅ NEW: Status - On the Way to Pickup */
+.cl-status.status-on-way {
+  background-color: #fef3c7;
+  color: #92400e;
+}
+
+/* ✅ NEW: Status - Arrived at Pickup */
+.cl-status.status-at-pickup {
+  background-color: #fce7f3;
+  color: #9d174d;
+}
+
+/* ✅ NEW: Action indicator - Start trip */
+.cl-action-indicator--start-trip {
+  background-color: #0ea5e9;
+  color: white;
+}
+
+/* ✅ NEW: Action indicator - Mark arrived */
+.cl-action-indicator--arrived {
+  background-color: #f59e0b;
+  color: white;
+}
+
+/* ✅ UPDATED: Action indicator - Ready for pickup (at location) */
+.cl-action-indicator--pickup {
+  background-color: #ec4899;
+  color: white;
+}
+
+/* ✅ NEW: Waiting fee badge */
+.cl-badge.cl-badge-waitfee {
+  background-color: #fef3c7;
+  color: #92400e;
+  border: 1px solid #f59e0b;
+  font-weight: 600;
+}

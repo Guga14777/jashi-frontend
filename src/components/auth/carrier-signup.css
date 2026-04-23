@@ -1,0 +1,514 @@
+/* THEME TOKENS */
+.carrier-signup {
+  --brand-primary: #0066ff;
+  --brand-hover: #0052cc;
+
+  --text-primary: #0f172a;
+  --text-secondary: #475569;
+  --text-muted: #94a3b8;
+
+  --border-color: #e2e8f0;
+  --surface-bg: #ffffff;
+  --surface-muted: #f8fafb;
+  --danger: #ef4444;
+  --danger-bg: #fff5f5;
+
+  --radius-sm: 8px;
+  --radius-md: 12px;
+  --radius-lg: 16px;
+
+  --shadow-card: 0 24px 48px rgba(0, 0, 0, 0.08);
+  --shadow-hover: 0 4px 12px rgba(0, 102, 255, 0.25);
+
+  --space-1: 4px;
+  --space-2: 8px;
+  --space-3: 12px;
+  --space-4: 16px;
+  --space-5: 20px;
+  --space-6: 24px;
+  --space-7: 28px;
+  --space-8: 32px;
+}
+
+/* PAGE WRAPPER */
+.page-wrapper {
+  min-height: 100vh;
+  background: radial-gradient(circle at 20% 20%, #ffffff 0%, #f1f5f9 60%);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: var(--space-6);
+  box-sizing: border-box;
+}
+
+.carrier-page-shell {
+  width: 100%;
+  max-width: 520px;
+}
+
+/* CARD SHELL */
+.carrier-card {
+  background: var(--surface-bg);
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-card);
+  border: 1px solid rgba(15, 23, 42, 0.04);
+  padding: 32px;
+  box-sizing: border-box;
+  width: 100%;
+  position: relative;
+}
+.carrier-card.standalone {
+}
+
+/* HEADER */
+.carrier-card-header {
+  text-align: center;
+  margin-bottom: var(--space-6);
+}
+
+.carrier-card-title {
+  font-size: 28px;           /* match shipper title */
+  font-weight: 800;
+  color: var(--brand-primary);
+  line-height: 1.2;
+  margin: 0 0 var(--space-2) 0;
+  letter-spacing: -0.03em;
+  text-align: center;
+}
+
+.carrier-card-subtitle {
+  font-size: 13px;           /* match shipper subtitle */
+  line-height: 1.4;
+  color: var(--text-secondary);
+  margin: 0;
+  max-width: 400px;
+  text-align: center;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+/* FORM */
+.carrier-form {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-6);
+}
+
+.carrier-error-banner {
+  background: #fef2f2;
+  border: 1px solid #fca5a5;
+  border-radius: var(--radius-md);
+  color: var(--danger);
+  font-size: 14px;
+  font-weight: 500;
+  padding: var(--space-3) var(--space-4);
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+  animation: carrierSlideDown 0.3s ease-out;
+}
+.carrier-error-banner::before {
+  content: "⚠";
+  font-size: 16px;
+}
+@keyframes carrierSlideDown {
+  from {
+    opacity: 0;
+    transform: translateY(-6px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.carrier-fields {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-5);
+}
+
+.carrier-field {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.carrier-label {
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--text-primary);
+  line-height: 1.2;
+  margin: 0;
+}
+
+.carrier-input {
+  width: 100%;
+  height: 48px;
+  line-height: 48px;
+  padding: 0 var(--space-4);
+  font-size: 15px;
+  background: #ffffff;
+  border-radius: var(--radius-md);
+  border: 1px solid var(--border-color);
+  outline: none;
+  box-sizing: border-box;
+  color: var(--text-primary);
+  transition: border-color 0.15s ease;
+  box-shadow: none !important;
+  -webkit-box-shadow: none !important;
+}
+
+.carrier-input::placeholder {
+  color: var(--text-muted);
+}
+
+.carrier-input:hover:not(:disabled) {
+  border-color: #cbd5e1;
+}
+
+.carrier-input:focus {
+  border-color: var(--brand-primary);
+  outline: 2px solid transparent;
+  outline-offset: 2px;
+  box-shadow: none;
+}
+
+.carrier-input:disabled {
+  background: var(--surface-muted);
+  cursor: not-allowed;
+  opacity: 0.6;
+}
+
+.carrier-input.error {
+  border-color: var(--danger);
+  background: var(--danger-bg);
+}
+.carrier-input.error:focus {
+  border-color: var(--danger);
+}
+
+.carrier-field-error {
+  font-size: 13px;
+  line-height: 1.4;
+  font-weight: 500;
+  color: var(--danger);
+  animation: carrierFadeIn 0.2s ease-out;
+}
+@keyframes carrierFadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(-3px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* PASSWORD AREA */
+.carrier-password-wrap {
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+.carrier-password-wrap .carrier-input {
+  padding-right: 52px;
+}
+
+.carrier-toggle {
+  position: absolute;
+  right: var(--space-3);
+  top: 50%;
+  transform: translateY(-50%);
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  padding: var(--space-2);
+  width: 32px;
+  height: 32px;
+  border-radius: var(--radius-sm);
+  color: var(--text-secondary);
+  transition: all 0.15s ease;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.carrier-toggle:hover:not(:disabled) {
+  background: var(--surface-muted);
+  color: var(--text-primary);
+}
+.carrier-toggle:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+/* COMPLIANCE SECTION */
+.carrier-compliance {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-4);
+  margin-top: var(--space-2);
+}
+
+/* label wraps checkbox + text so whole row is clickable */
+.carrier-checkrow {
+  display: flex;
+  align-items: flex-start;
+  gap: var(--space-3);
+  cursor: pointer;
+  user-select: none;
+  border-radius: var(--radius-sm);
+  padding: 4px 0;
+}
+.carrier-checkrow:hover {
+  background: rgba(0, 102, 255, 0.02);
+}
+
+.carrier-checkbox {
+  width: 18px;
+  height: 18px;
+  flex-shrink: 0;
+  margin-top: 2px;
+  border-radius: 4px;
+  accent-color: var(--brand-primary);
+  -webkit-appearance: checkbox !important;
+  appearance: checkbox !important;
+  cursor: pointer;
+}
+
+.carrier-checktext {
+  flex: 1;
+  font-size: 14px;
+  line-height: 1.5;
+  color: var(--text-secondary);
+}
+.carrier-link {
+  color: var(--brand-primary);
+  font-weight: 500;
+  text-decoration: underline;
+  text-underline-offset: 2px;
+  transition: color 0.15s ease;
+}
+.carrier-link:hover {
+  color: var(--brand-hover);
+}
+
+/* SUBMIT */
+.carrier-submit {
+  width: 100%;
+  height: 48px;
+  border-radius: var(--radius-md);
+  border: none;
+  background: var(--brand-primary);
+  color: #ffffff;
+  font-weight: 600;
+  font-size: 15px;
+  cursor: pointer;
+  transition: all 0.15s ease;
+  position: relative;
+  overflow: hidden;
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05);
+}
+.carrier-submit:hover:not(:disabled) {
+  background: var(--brand-hover);
+  transform: translateY(-1px);
+  box-shadow: var(--shadow-hover);
+}
+.carrier-submit:active:not(:disabled) {
+  transform: translateY(0);
+}
+.carrier-submit:disabled {
+  background: #cbd5e1;
+  cursor: not-allowed;
+  box-shadow: none;
+  opacity: 0.7;
+  transform: none;
+}
+.carrier-submit.loading span {
+  visibility: hidden;
+}
+.carrier-submit.loading::after {
+  content: "";
+  position: absolute;
+  width: 20px;
+  height: 20px;
+  top: 50%;
+  left: 50%;
+  margin-top: -10px;
+  margin-left: -10px;
+  border: 2px solid #ffffff;
+  border-top-color: transparent;
+  border-radius: 50%;
+  animation: carrierSpin 0.6s linear infinite;
+}
+@keyframes carrierSpin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+/* FOOTER */
+.carrier-card-footer {
+  text-align: center;
+  margin-top: var(--space-6);
+  padding-top: var(--space-5);
+  border-top: 1px solid var(--border-color);
+}
+
+.carrier-footer-text {
+  font-size: 14px;
+  color: var(--text-secondary);
+  line-height: 1.5;
+  margin: 0;
+}
+.carrier-footer-link {
+  background: none;
+  border: none;
+  padding: 0;
+  font-size: inherit;
+  font-weight: 600;
+  color: var(--brand-primary);
+  cursor: pointer;
+  text-decoration: none;
+  transition: color 0.15s ease;
+}
+.carrier-footer-link:hover {
+  color: var(--brand-hover);
+  text-decoration: underline;
+}
+.carrier-footer-link:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+/* MODAL VARIANT FIX (card lives inside .modal-box already) */
+.carrier-signup-card .carrier-card {
+  background: transparent;
+  box-shadow: none;
+  border-radius: 0;
+  border: 0;
+  padding: 32px 32px 24px;
+}
+.carrier-signup-card .carrier-card-footer {
+  margin-top: 24px;
+  padding-top: 20px;
+  border-top: 1px solid var(--border-color);
+}
+
+/* RESPONSIVE */
+@media (max-width: 640px) {
+  .carrier-card {
+    padding: 24px;
+  }
+
+  .carrier-card-title {
+    font-size: 26px;
+  }
+
+  .carrier-card-subtitle {
+    font-size: 14px;
+  }
+
+  .carrier-input {
+    height: 46px;
+    font-size: 16px;
+  }
+
+  .carrier-submit {
+    height: 46px;
+    font-size: 14px;
+  }
+
+  .carrier-signup-card .carrier-card {
+    padding: 24px 24px 20px;
+  }
+}
+
+@media (max-width: 480px) {
+  .carrier-card {
+    padding: 20px 16px;
+  }
+
+  .carrier-card-title {
+    font-size: 24px;
+  }
+
+  .carrier-card-subtitle {
+    font-size: 13px;
+    line-height: 1.4;
+  }
+
+  .carrier-fields {
+    gap: var(--space-4);
+  }
+
+  .carrier-compliance {
+    gap: var(--space-3);
+  }
+
+  .carrier-checkrow {
+    min-height: 44px;
+    padding: 6px 0;
+  }
+
+  .carrier-card-footer {
+    margin-top: var(--space-5);
+    padding-top: var(--space-4);
+  }
+
+  .carrier-signup-card .carrier-card {
+    padding: 20px 16px 16px;
+  }
+
+  .carrier-signup-card .carrier-card-footer {
+    margin-top: 20px;
+    padding-top: 16px;
+  }
+}
+
+/* INPUT SHADOW KILLERS / AUTOFILL */
+.carrier-signup input,
+.carrier-signup input[type="text"],
+.carrier-signup input[type="email"],
+.carrier-signup input[type="tel"],
+.carrier-signup input[type="password"],
+.carrier-signup input[type="checkbox"],
+.carrier-signup input#phoneNumber,
+.carrier-signup input#dotNumber,
+.carrier-signup input#mcNumber {
+  box-shadow: none !important;
+  -webkit-box-shadow: none !important;
+  filter: none !important;
+  background-image: none !important;
+  text-shadow: none !important;
+  outline-offset: 0 !important;
+  -webkit-appearance: none;
+  appearance: none;
+}
+
+.carrier-signup input[type="checkbox"] {
+  -webkit-appearance: checkbox !important;
+  appearance: checkbox !important;
+}
+
+.carrier-signup input:-webkit-autofill,
+.carrier-signup input:-webkit-autofill:hover,
+.carrier-signup input:-webkit-autofill:focus,
+.carrier-signup input:-webkit-autofill:active {
+  -webkit-box-shadow: 0 0 0px 1000px #ffffff inset !important;
+  box-shadow: 0 0 0px 1000px #ffffff inset !important;
+  -webkit-text-fill-color: var(--text-primary) !important;
+  caret-color: var(--text-primary) !important;
+  transition: background-color 9999s ease-out 0s !important;
+}
+
+/* iOS rounding */
+@supports (-webkit-touch-callout: none) {
+  .carrier-signup input {
+    border-radius: var(--radius-md);
+    outline: none;
+    -webkit-box-shadow: none !important;
+    box-shadow: none !important;
+  }
+}

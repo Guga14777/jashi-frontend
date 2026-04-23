@@ -1,0 +1,307 @@
+/* ===== CSS Variables for Design Tokens ===== */
+:root {
+  --border-color: #e5e7eb;
+  --border-color-hover: #d1d5db;
+  --brand-color: #3b82f6;
+  --brand-color-light: rgba(59, 130, 246, 0.1);
+  --text-primary: #374151;
+  --text-secondary: #475569;
+  --text-muted: #9ca3af;
+  --bg-white: #fff;
+  --bg-disabled: #f9fafb;
+  --bg-hover: #f3f4f6;
+  --focus-ring: 0 0 0 3px var(--brand-color-light);
+  --radius-base: 12px;
+  --radius-small: 4px;
+  --spacing-xs: 4px;
+  --spacing-sm: 8px;
+  --spacing-md: 16px;
+  --spacing-lg: 24px;
+  --font-size-xs: 12px;
+  --font-size-sm: 14px;
+  --font-weight-medium: 500;
+  --font-weight-semibold: 600;
+  --min-touch-target: 44px;
+}
+
+/* ===== Uniform field look ===== */
+.custdocs-label {
+  font-size: var(--font-size-xs);
+  font-weight: var(--font-weight-semibold);
+  color: var(--text-secondary);
+  letter-spacing: 0.02em;
+  margin-bottom: var(--spacing-sm);
+}
+
+.custdocs-filters {
+  /* 4-column layout: Search | Type | Status | Clear */
+  display: grid;
+  grid-template-columns: 2fr 1fr 1fr auto;
+  gap: var(--spacing-lg);
+  align-items: end;
+  background: var(--bg-white);
+  border: 1px solid var(--border-color);
+  border-radius: var(--radius-base);
+  padding: var(--spacing-lg);
+  transition: opacity 0.2s ease;
+}
+
+.custdocs-filters--disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+.custdocs-filters__section {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-sm);
+}
+
+/* ===== Search input ===== */
+.custdocs-filters__search-container {
+  position: relative;
+  width: 100%;
+}
+
+.custdocs-search {
+  width: 100%;
+  min-height: var(--min-touch-target);
+  height: var(--min-touch-target);
+  padding: 0 var(--spacing-md);
+  border: 2px solid var(--border-color);
+  border-radius: var(--radius-base);
+  background: var(--bg-white);
+  color: var(--text-primary);
+  font-size: var(--font-size-sm);
+  font-weight: var(--font-weight-medium);
+  outline: none;
+  transition: border-color 0.2s ease, box-shadow 0.2s ease;
+}
+
+.custdocs-search::placeholder {
+  color: var(--text-muted);
+}
+
+.custdocs-search:hover:not(:disabled) {
+  border-color: var(--border-color-hover);
+}
+
+.custdocs-search:focus {
+  border-color: var(--brand-color);
+  box-shadow: var(--focus-ring);
+}
+
+.custdocs-search:disabled {
+  background-color: var(--bg-disabled);
+  color: var(--text-muted);
+  cursor: not-allowed;
+}
+
+.custdocs-filters__clear-button {
+  position: absolute;
+  right: 12px;
+  top: 50%;
+  transform: translateY(-50%);
+  background: none;
+  border: 0;
+  font-size: 20px;
+  color: var(--text-muted);
+  cursor: pointer;
+  padding: var(--spacing-xs);
+  border-radius: var(--radius-small);
+  min-width: var(--min-touch-target);
+  min-height: var(--min-touch-target);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.2s ease;
+}
+
+.custdocs-filters__clear-button:hover {
+  color: var(--text-primary);
+  background: var(--bg-hover);
+}
+
+.custdocs-filters__clear-button:focus {
+  outline: 2px solid var(--brand-color);
+  outline-offset: 2px;
+}
+
+/* ===== Styled dropdowns ===== */
+.custdocs-select {
+  position: relative;
+}
+
+.custdocs-select select {
+  width: 100%;
+  min-height: var(--min-touch-target);
+  height: var(--min-touch-target);
+  padding: 0 40px 0 14px;
+  border: 2px solid var(--border-color);
+  border-radius: var(--radius-base);
+  background: var(--bg-white);
+  color: var(--text-primary);
+  font-size: var(--font-size-sm);
+  font-weight: var(--font-weight-medium);
+  outline: none;
+  appearance: none;
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  cursor: pointer;
+  transition: border-color 0.2s ease, box-shadow 0.2s ease;
+}
+
+.custdocs-select select:hover:not(:disabled) {
+  border-color: var(--border-color-hover);
+}
+
+.custdocs-select select:focus {
+  border-color: var(--brand-color);
+  box-shadow: var(--focus-ring);
+}
+
+.custdocs-select select:disabled {
+  background-color: var(--bg-disabled);
+  color: var(--text-muted);
+  cursor: not-allowed;
+}
+
+/* Custom chevron */
+.custdocs-select::after {
+  content: "";
+  position: absolute;
+  right: 14px;
+  top: 50%;
+  transform: translateY(-50%);
+  border-style: solid;
+  border-width: 6px 6px 0 6px;
+  border-color: #94a3b8 transparent transparent transparent;
+  pointer-events: none;
+  transition: border-color 0.2s ease;
+}
+
+.custdocs-select:hover::after {
+  border-color: #64748b transparent transparent transparent;
+}
+
+.custdocs-select select:disabled + ::after,
+.custdocs-select:has(select:disabled)::after {
+  border-color: var(--text-muted) transparent transparent transparent;
+}
+
+/* ===== Clear filters button ===== */
+.custdocs-filters__clear {
+  align-self: end;
+  justify-self: end;
+}
+
+.custdocs-clear {
+  align-self: end;
+  justify-self: end;
+  background: none;
+  border: none;
+  color: #2563eb;
+  font-weight: var(--font-weight-semibold);
+  font-size: var(--font-size-sm);
+  cursor: pointer;
+  padding: var(--spacing-xs) var(--spacing-sm);
+  border-radius: var(--radius-small);
+  min-height: var(--min-touch-target);
+  transition: color 0.2s ease, background-color 0.2s ease;
+  white-space: nowrap;
+}
+
+.custdocs-clear:hover:not(:disabled) {
+  color: #1e40af;
+  background-color: var(--brand-color-light);
+}
+
+.custdocs-clear:focus {
+  outline: 2px solid var(--brand-color);
+  outline-offset: 2px;
+}
+
+.custdocs-clear:disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
+  color: var(--text-muted);
+}
+
+/* Screen reader only */
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border-width: 0;
+}
+
+/* ===== High Contrast Mode Support ===== */
+@media (prefers-contrast: high) {
+  .custdocs-search:focus,
+  .custdocs-select select:focus {
+    border-color: Highlight;
+    box-shadow: 0 0 0 2px Highlight;
+  }
+  
+  .custdocs-filters__clear-button:focus {
+    outline: 2px solid Highlight;
+  }
+}
+
+/* ===== Responsive design ===== */
+@media (max-width: 1024px) {
+  .custdocs-filters {
+    grid-template-columns: 1fr;
+    gap: var(--spacing-md);
+  }
+  
+  .custdocs-filters__search-container {
+    order: -1; /* Search first on mobile */
+  }
+  
+  .custdocs-filters__clear {
+    margin-top: var(--spacing-sm);
+    justify-self: start;
+    order: 1; /* Clear button after filters on mobile */
+  }
+}
+
+@media (max-width: 640px) {
+  .custdocs-filters {
+    padding: 20px;
+  }
+  
+  .custdocs-filters__clear-button {
+    right: 8px;
+    min-width: 40px;
+    min-height: 40px;
+  }
+}
+
+/* ===== Focus indicators for keyboard navigation ===== */
+@media (prefers-reduced-motion: no-preference) {
+  .custdocs-search,
+  .custdocs-select select,
+  .custdocs-filters__clear-button {
+    transition: all 0.2s ease;
+  }
+}
+
+/* Ensure touch targets are large enough on mobile */
+@media (max-width: 768px) {
+  .custdocs-search,
+  .custdocs-select select {
+    min-height: 48px;
+    height: 48px;
+  }
+  
+  .custdocs-filters__clear-button {
+    min-width: 48px;
+    min-height: 48px;
+  }
+}

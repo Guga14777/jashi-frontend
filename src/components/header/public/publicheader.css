@@ -1,0 +1,280 @@
+/* src/components/header/public/publicheader.css */
+
+/* ============================================
+   HEADER CONTAINER
+   ============================================ */
+.pub-header {
+  position: fixed;
+  inset: 0 0 auto 0;
+  height: 72px;
+  background: #fff;
+  border-bottom: 1px solid #e5e7eb;
+  z-index: 1000;
+  transition: box-shadow 0.15s ease;
+}
+
+.pub-header[data-scrolled="true"] { 
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.07);
+}
+
+.pub-inner {
+  max-width: 1400px;
+  margin: 0 auto;
+  height: 100%;
+  padding: 0 32px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+/* ============================================
+   BRAND
+   ============================================ */
+.pub-brand {
+  display: inline-flex;
+  align-items: center;
+  gap: 12px;
+  text-decoration: none;
+}
+
+.pub-badge {
+  width: 64px;
+  height: 64px;
+  border-radius: 50%;
+  background: #0a58ff;
+  display: grid;
+  place-items: center;
+  overflow: hidden;
+}
+
+.pub-badge img { 
+  width: 75%; 
+  height: 75%; 
+  object-fit: contain; 
+}
+
+.pub-name {
+  color: #0a58ff;
+  font-weight: 800;
+  font-size: 26px;
+  letter-spacing: 0.2px;
+  text-transform: capitalize;
+}
+
+/* ============================================
+   ACTIONS
+   ============================================ */
+.pub-actions { 
+  display: flex; 
+  align-items: center; 
+  gap: 14px; 
+}
+
+.pub-btn {
+  width: 160px;
+  height: 40px;
+  padding: 0 14px;
+  border-radius: 10px;
+  font-weight: 500;
+  font-size: 14px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  border: 2px solid #0a58ff;
+  cursor: pointer;
+  text-transform: capitalize;
+  white-space: nowrap;
+  transition: all 0.15s ease;
+  font-family: inherit;
+  box-sizing: border-box;
+}
+
+.pub-btn.ghost { 
+  background: #fff; 
+  color: #0a58ff; 
+}
+
+.pub-btn.ghost:hover { 
+  background: #f5f9ff; 
+}
+
+.pub-btn.primary { 
+  background: #0a58ff; 
+  color: #fff; 
+}
+
+.pub-btn.primary:hover { 
+  background: #0848d6; 
+  border-color: #0848d6; 
+}
+
+/* Chevron icon */
+.chev { 
+  width: 12px; 
+  height: 12px; 
+  opacity: 0.9;
+  display: inline-block;
+  stroke: currentColor;
+  flex-shrink: 0;
+}
+
+/* ============================================
+   DROPDOWN
+   ============================================ */
+.pub-dd-wrap { 
+  position: relative; 
+}
+
+.pub-dd {
+  position: absolute;
+  top: 100%;
+  left: 50%;
+  transform: translateX(-50%);
+  min-width: 240px;
+  margin-top: 8px;
+  background: #fff;
+  border: 1px solid #e7ebf0;
+  border-radius: 12px;
+  box-shadow: 0 12px 28px rgba(2, 12, 27, 0.12);
+  padding: 8px;
+  opacity: 0;
+  visibility: hidden;
+  pointer-events: none;
+  transition: opacity 0.15s ease, visibility 0.15s ease;
+  z-index: 1001;
+  overflow: visible;
+}
+
+/* HOVER GAP FIX: Add invisible bridge to prevent hover loss */
+.pub-dd::before {
+  content: "";
+  position: absolute;
+  top: -8px;
+  left: 0;
+  right: 0;
+  height: 8px;
+  background: transparent;
+}
+
+.pub-dd.open {
+  opacity: 1;
+  visibility: visible;
+  pointer-events: auto;
+}
+
+.pub-dd-item {
+  width: 100%;
+  text-align: left;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  background: none;
+  border: 0;
+  padding: 10px 12px;
+  border-radius: 8px;
+  cursor: pointer;
+  font-weight: 500;
+  font-size: 14px;
+  color: #0f172a;
+  text-transform: capitalize;
+  transition: all 0.15s ease;
+  font-family: inherit;
+}
+
+.pub-dd-item:hover { 
+  background: #f5f9ff; 
+  color: #0a58ff; 
+}
+
+/* Icon styles */
+.pub-dd-item .ico {
+  font-size: 18px;
+  width: 18px; 
+  height: 18px;
+  color: #6b7280;
+  vertical-align: middle;
+  display: inline-block;
+  line-height: 1;
+  flex: 0 0 auto;
+}
+
+.pub-dd-item:hover .ico { 
+  color: #0a58ff; 
+}
+
+/* ============================================
+   RESPONSIVE
+   ============================================ */
+@media (max-width: 768px) {
+  .pub-header {
+    height: 64px;
+  }
+
+  .pub-inner { 
+    padding: 0 16px; 
+  }
+  
+  .pub-badge { 
+    width: 56px; 
+    height: 56px; 
+  }
+  
+  .pub-name { 
+    font-size: 22px; 
+  }
+
+  .pub-actions {
+    gap: 10px;
+  }
+
+  .pub-btn {
+    width: 140px;
+    height: 38px;
+    font-size: 13px;
+  }
+}
+
+@media (max-width: 480px) {
+  .pub-header {
+    height: 60px;
+  }
+
+  .pub-badge { 
+    width: 48px; 
+    height: 48px; 
+  }
+  
+  .pub-name { 
+    font-size: 20px; 
+  }
+  
+  .pub-actions { 
+    gap: 8px; 
+  }
+  
+  .pub-btn { 
+    width: 120px;
+    height: 36px;
+    font-size: 12px;
+    padding: 0 10px;
+  }
+
+  .pub-dd {
+    min-width: 200px;
+  }
+
+  .pub-dd-item {
+    font-size: 13px;
+    padding: 9px 10px;
+  }
+}
+
+/* ============================================
+   MODAL STATE OVERRIDE (kills gray rim)
+   ============================================ */
+.has-modal .pub-header,
+.has-open-modal .pub-header {
+  border-bottom-color: transparent !important;
+  box-shadow: none !important;
+}

@@ -1,0 +1,229 @@
+/* src/components/load-details/components/edit-booking-modal.css
+   Matches the shipper-portal card system: rounded-16 surfaces, neutral
+   border, 14px base type, 44px input height. Tokens aligned with
+   src/styles/tokens.css. */
+
+.ebm-backdrop {
+  position: fixed;
+  inset: 0;
+  background: rgba(15, 23, 42, 0.55);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 24px;
+  z-index: 1000;
+  backdrop-filter: blur(2px);
+}
+
+.ebm-modal {
+  background: #FFFFFF;
+  border-radius: 16px;
+  width: 100%;
+  max-width: 560px;
+  max-height: calc(100vh - 48px);
+  display: flex;
+  flex-direction: column;
+  box-shadow: 0 24px 64px rgba(15, 23, 42, 0.24);
+  overflow: hidden;
+}
+
+.ebm-header {
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+  padding: 20px 24px 16px;
+  border-bottom: 1px solid #E5E7EB;
+}
+
+.ebm-header__text {
+  flex: 1;
+  min-width: 0;
+}
+
+.ebm-title {
+  margin: 0 0 4px;
+  font-size: 18px;
+  font-weight: 700;
+  color: #0F172A;
+  letter-spacing: -0.01em;
+}
+
+.ebm-subtitle {
+  margin: 0;
+  font-size: 13px;
+  color: #64748B;
+  line-height: 1.45;
+}
+
+.ebm-close {
+  background: transparent;
+  border: none;
+  width: 32px;
+  height: 32px;
+  border-radius: 8px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  color: #475569;
+  cursor: pointer;
+  transition: background 120ms ease, color 120ms ease;
+  flex-shrink: 0;
+}
+
+.ebm-close:hover {
+  background: #F1F5F9;
+  color: #0F172A;
+}
+
+.ebm-close:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.ebm-body {
+  padding: 20px 24px;
+  overflow-y: auto;
+  display: grid;
+  gap: 18px;
+}
+
+.ebm-section {
+  display: grid;
+  gap: 12px;
+}
+
+.ebm-section__title {
+  margin: 0;
+  font-size: 12px;
+  font-weight: 600;
+  color: #64748B;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+}
+
+.ebm-field {
+  display: grid;
+  gap: 6px;
+}
+
+.ebm-field--row {
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+}
+
+.ebm-label {
+  font-size: 13px;
+  font-weight: 600;
+  color: #0F172A;
+}
+
+.ebm-input,
+.ebm-textarea {
+  border: 1px solid #D1D5DB;
+  border-radius: 10px;
+  padding: 0 12px;
+  font-size: 14px;
+  color: #0F172A;
+  background: #FFFFFF;
+  font-family: inherit;
+  transition: border-color 120ms ease, box-shadow 120ms ease;
+  width: 100%;
+}
+
+.ebm-input {
+  height: 44px;
+}
+
+.ebm-textarea {
+  padding: 10px 12px;
+  resize: vertical;
+  line-height: 1.45;
+  min-height: 72px;
+}
+
+.ebm-input:focus,
+.ebm-textarea:focus {
+  outline: none;
+  border-color: #0066CC;
+  box-shadow: 0 0 0 3px rgba(0, 102, 204, 0.12);
+}
+
+.ebm-input:disabled,
+.ebm-textarea:disabled {
+  background: #F8FAFC;
+  color: #94A3B8;
+  cursor: not-allowed;
+}
+
+.ebm-helper {
+  font-size: 12px;
+  color: #64748B;
+  line-height: 1.4;
+}
+
+.ebm-error {
+  background: #FEF2F2;
+  border: 1px solid #FECACA;
+  color: #B91C1C;
+  border-radius: 10px;
+  padding: 10px 12px;
+  font-size: 13px;
+  line-height: 1.45;
+}
+
+.ebm-footer {
+  display: flex;
+  justify-content: flex-end;
+  gap: 8px;
+  padding: 14px 24px;
+  border-top: 1px solid #E5E7EB;
+  background: #F8FAFC;
+}
+
+.ebm-btn {
+  height: 40px;
+  padding: 0 18px;
+  border-radius: 10px;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background 120ms ease, color 120ms ease, border-color 120ms ease;
+  border: 1px solid transparent;
+}
+
+.ebm-btn--ghost {
+  background: transparent;
+  color: #0F172A;
+  border-color: #D1D5DB;
+}
+
+.ebm-btn--ghost:hover {
+  background: #F1F5F9;
+}
+
+.ebm-btn--primary {
+  background: #0066CC;
+  color: #FFFFFF;
+}
+
+.ebm-btn--primary:hover {
+  background: #0052CC;
+}
+
+.ebm-btn:disabled {
+  opacity: 0.55;
+  cursor: not-allowed;
+}
+
+@media (max-width: 480px) {
+  .ebm-backdrop { padding: 12px; }
+  .ebm-header,
+  .ebm-body,
+  .ebm-footer {
+    padding-left: 16px;
+    padding-right: 16px;
+  }
+  .ebm-field--row {
+    grid-template-columns: 1fr;
+  }
+}

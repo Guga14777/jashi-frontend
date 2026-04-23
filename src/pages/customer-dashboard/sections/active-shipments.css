@@ -1,0 +1,650 @@
+/* Active Shipments Component Styles - RESPONSIVE TO CONTENT */
+
+/* CSS Variables - matching main dashboard */
+:root {
+  --primary-brand: #0A58FF;
+  --hover-brand: #0848D6;
+  --text-primary: #0F172A;
+  --text-secondary: #475569;
+  --text-muted: #64748B;
+  --surface-bg: #FFFFFF;
+  --border-line: #E6E9EF;
+  /* Row hover: subtle blue tint — clearly distinct from the row background but
+     not so strong it competes with the status pill. */
+  --bg-hover: rgba(10, 88, 255, 0.045);
+  --status-accepted: #10B981;
+  --status-waiting: #F59E0B;
+  --shadow-sm: 0 1px 2px rgba(15,23,42,0.04);
+  --radius-md: 10px;
+}
+
+/* Main card container */
+.active-shipments {
+  background: var(--surface-bg);
+  border: 1px solid var(--border-line);
+  border-radius: 12px;
+  overflow: hidden;
+  box-shadow: var(--shadow-sm);
+}
+
+/* Card header */
+.active-shipments .card-header {
+  padding: 24px 24px 20px;
+  border-bottom: 1px solid var(--border-line);
+  background: var(--surface-bg);
+}
+
+.active-shipments .card-header--with-search {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  flex-wrap: wrap;
+}
+
+.active-shipments .card-header-text {
+  min-width: 0;
+  flex: 1 1 220px;
+}
+
+.active-shipments .table-toolbar {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  flex: 1 1 360px;
+  flex-wrap: wrap;
+  justify-content: flex-end;
+  /* Match the control height so the toolbar row never changes size when the
+     clear-search button appears or filters re-render. */
+  min-height: 40px;
+}
+
+.active-shipments .table-filter-select {
+  height: 40px;
+  padding: 0 32px 0 12px;
+  border: 1px solid var(--border-line);
+  border-radius: 8px;
+  background-color: var(--surface-bg);
+  background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24' fill='none' stroke='%2364748B' stroke-width='2.5' stroke-linecap='round' stroke-linejoin='round'><polyline points='6 9 12 15 18 9'/></svg>");
+  background-repeat: no-repeat;
+  background-position: right 10px center;
+  background-size: 12px 12px;
+  font-size: 14px;
+  color: var(--text-primary);
+  cursor: pointer;
+  appearance: none;
+  -webkit-appearance: none;
+  transition: border-color 0.15s ease, box-shadow 0.15s ease, background-color 0.15s ease;
+}
+
+.active-shipments .table-filter-select:focus {
+  outline: none;
+  border-color: var(--primary-brand);
+  box-shadow: 0 0 0 3px rgba(10, 88, 255, 0.12);
+}
+
+.active-shipments .table-filter-select.is-active {
+  border-color: var(--primary-brand);
+  background-color: rgba(10, 88, 255, 0.04);
+  color: var(--primary-brand);
+}
+
+.active-shipments .table-search {
+  position: relative;
+  flex: 1 1 280px;
+  max-width: 420px;
+  display: flex;
+  align-items: center;
+}
+
+.active-shipments .table-search-icon {
+  position: absolute;
+  left: 12px;
+  top: 50%;
+  transform: translateY(-50%);
+  color: var(--text-muted);
+  display: inline-flex;
+  pointer-events: none;
+}
+
+.active-shipments .table-search-input {
+  width: 100%;
+  padding: 10px 36px 10px 36px;
+  border: 1px solid var(--border-line);
+  border-radius: 8px;
+  background: var(--surface-bg);
+  font-size: 14px;
+  color: var(--text-primary);
+  line-height: 1.2;
+  transition: border-color 0.15s ease, box-shadow 0.15s ease;
+}
+
+.active-shipments .table-search-input::placeholder {
+  color: var(--text-muted);
+}
+
+.active-shipments .table-search-input:focus {
+  outline: none;
+  border-color: var(--primary-brand);
+  box-shadow: 0 0 0 3px rgba(10, 88, 255, 0.12);
+}
+
+.active-shipments .table-search-clear {
+  position: absolute;
+  right: 8px;
+  top: 50%;
+  transform: translateY(-50%);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 22px;
+  height: 22px;
+  padding: 0;
+  border: none;
+  border-radius: 50%;
+  background: transparent;
+  color: var(--text-muted);
+  cursor: pointer;
+  transition: background 0.15s ease, color 0.15s ease;
+}
+
+.active-shipments .table-search-clear:hover {
+  background: rgba(15, 23, 42, 0.06);
+  color: var(--text-primary);
+}
+
+.active-shipments .table-empty-row td.table-empty-cell {
+  padding: 48px 24px;
+  text-align: center;
+  color: var(--text-muted);
+  font-size: 14px;
+  background: var(--surface-bg);
+  /* Reserve a minimum empty-state height so the card doesn't visibly collapse
+     and re-expand when the user types into the search box between results. */
+  min-height: 160px;
+}
+
+@media (max-width: 640px) {
+  .active-shipments .table-toolbar {
+    flex: 1 1 100%;
+    justify-content: stretch;
+  }
+  .active-shipments .table-search {
+    max-width: none;
+    flex: 1 1 100%;
+  }
+  .active-shipments .table-filter-select {
+    flex: 1 1 100%;
+  }
+}
+
+.active-shipments .card-title {
+  font-size: 18px;
+  font-weight: 700;
+  color: var(--text-primary);
+  margin: 0 0 4px 0;
+  line-height: 1.3;
+}
+
+.active-shipments .card-subtitle {
+  font-size: 14px;
+  color: var(--text-muted);
+  margin: 0;
+  line-height: 1.4;
+  /* Reserve two lines so the header doesn't twitch between
+     "6 active shipments • Page 1 of 2" and a single-line "No matches". */
+  min-height: 20px;
+}
+
+/* Empty state */
+.active-shipments .empty-state {
+  padding: 60px 24px;
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 16px;
+}
+
+.active-shipments .empty-icon {
+  width: 48px;
+  height: 48px;
+  color: var(--text-muted);
+  margin-bottom: 8px;
+  opacity: 0.6;
+}
+
+.active-shipments .empty-title {
+  font-size: 16px;
+  font-weight: 600;
+  color: var(--text-primary);
+  margin: 0;
+}
+
+.active-shipments .empty-description {
+  font-size: 14px;
+  color: var(--text-muted);
+  margin: 0 0 8px 0;
+  max-width: 320px;
+  line-height: 1.5;
+}
+
+.active-shipments .btn-primary {
+  background: var(--primary-brand);
+  color: white;
+  border: none;
+  border-radius: var(--radius-md);
+  padding: 12px 24px;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  box-shadow: 0 2px 8px rgba(10, 88, 255, 0.15);
+}
+
+.active-shipments .btn-primary:hover {
+  background: var(--hover-brand);
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(10, 88, 255, 0.25);
+}
+
+.active-shipments .btn-primary:focus-visible {
+  outline: 2px solid var(--primary-brand);
+  outline-offset: 2px;
+}
+
+/* ✅ FIXED: Table wrapper - NO fixed height, expands with content */
+.active-shipments .table-wrapper {
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+  border-bottom: none;
+  /* Remove min-height - let content determine height */
+}
+
+/* Data table */
+.active-shipments .data-table {
+  width: 100%;
+  border-collapse: collapse;
+  background: var(--surface-bg);
+  min-width: 800px;
+}
+
+/* Table headers */
+.active-shipments .data-table th {
+  text-align: left;
+  padding: 16px 24px 12px;
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--text-muted);
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  border-bottom: 1px solid var(--border-line);
+  background: var(--surface-bg);
+  white-space: nowrap;
+}
+
+/* Table body rows */
+.active-shipments .data-table td {
+  padding: 20px 24px;
+  font-size: 14px;
+  color: var(--text-primary);
+  border-bottom: 1px solid var(--border-line);
+  vertical-align: middle;
+  /* Cell-level transition for the hover accent bar so it eases in instead of
+     snapping. Matches the row bg transition below. */
+  transition: box-shadow 0.22s cubic-bezier(0.2, 0.9, 0.3, 1);
+}
+
+.active-shipments .table-row {
+  cursor: default;
+  /* Cubic-bezier with a soft stop reads more premium than linear/ease. */
+  transition: background-color 0.22s cubic-bezier(0.2, 0.9, 0.3, 1);
+  position: relative;
+}
+
+.active-shipments .table-row:hover {
+  background: var(--bg-hover);
+}
+
+/* Subtle blue bar on the hovered row — gives the table more product-feel */
+.active-shipments .table-row:hover td:first-child {
+  box-shadow: inset 3px 0 0 0 var(--primary-brand);
+}
+
+.active-shipments .table-row:hover .view-details-btn {
+  background: var(--hover-brand);
+  box-shadow: 0 4px 12px rgba(10, 88, 255, 0.28);
+  transform: translateY(-1px);
+}
+
+.active-shipments .table-row:hover .view-details-btn__arrow {
+  transform: translateX(2px);
+}
+
+.active-shipments .table-row:last-child td {
+  border-bottom: none;
+}
+
+/* Shipment ID styling — tuned to be the anchor of the row */
+.active-shipments .shipment-id {
+  font-weight: 700;
+  color: var(--text-primary);
+  font-size: 15px;
+  letter-spacing: -0.01em;
+  font-feature-settings: "tnum";
+}
+
+/* Route information */
+.active-shipments .route-info {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  min-width: 180px;
+}
+
+.active-shipments .route-from {
+  font-size: 14px;
+  color: var(--text-primary);
+  font-weight: 600;
+  line-height: 1.25;
+  letter-spacing: -0.005em;
+}
+
+.active-shipments .route-to {
+  font-size: 13px;
+  color: var(--text-muted);
+  line-height: 1.25;
+}
+
+/* Vehicle and price cells */
+.active-shipments .vehicle-cell {
+  font-weight: 500;
+  color: var(--text-primary);
+  max-width: 200px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.active-shipments .price-cell {
+  font-weight: 600;
+  color: var(--text-primary);
+  white-space: nowrap;
+  /* Tabular digits keep column width stable when amounts like $1,000 → $850
+     swap in — prevents mid-column shift during filter/search. */
+  font-feature-settings: "tnum";
+  font-variant-numeric: tabular-nums;
+}
+
+/* Status pill — single compact colored badge per row.
+   One modifier class per display bucket (waiting/assigned/picked-up/
+   delivered/cancelled). Pill uses a tinted background + darker text so
+   color meaning stays legible in both hover and non-hover states. */
+.active-shipments .status-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 5px 10px 5px 8px;
+  border-radius: 999px;
+  font-size: 12.5px;
+  font-weight: 600;
+  letter-spacing: 0.01em;
+  line-height: 1;
+  white-space: nowrap;
+  border: 1px solid transparent;
+}
+
+.active-shipments .status-pill__dot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: currentColor;
+  flex-shrink: 0;
+}
+
+.active-shipments .status-pill--waiting {
+  background: rgba(245, 158, 11, 0.12);
+  color: #B45309;
+  border-color: rgba(245, 158, 11, 0.22);
+}
+
+.active-shipments .status-pill--assigned {
+  background: rgba(10, 88, 255, 0.10);
+  color: #0848D6;
+  border-color: rgba(10, 88, 255, 0.22);
+}
+
+.active-shipments .status-pill--picked-up {
+  background: rgba(124, 58, 237, 0.12);
+  color: #6D28D9;
+  border-color: rgba(124, 58, 237, 0.22);
+}
+
+.active-shipments .status-pill--delivered {
+  background: rgba(16, 185, 129, 0.12);
+  color: #047857;
+  border-color: rgba(16, 185, 129, 0.22);
+}
+
+.active-shipments .status-pill--cancelled {
+  background: rgba(220, 38, 38, 0.10);
+  color: #B91C1C;
+  border-color: rgba(220, 38, 38, 0.22);
+}
+
+/* Row actions */
+.active-shipments .row-actions {
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  min-width: 140px;
+}
+
+.active-shipments .view-details-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  padding: 9px 16px;
+  background: var(--primary-brand);
+  color: white;
+  border: none;
+  border-radius: 8px;
+  font-size: 13px;
+  font-weight: 600;
+  letter-spacing: 0.005em;
+  cursor: pointer;
+  transition: background 0.18s ease, transform 0.18s ease, box-shadow 0.18s ease;
+  text-decoration: none;
+  white-space: nowrap;
+  min-height: 36px;
+  font-family: inherit;
+  box-shadow: 0 1px 3px rgba(10, 88, 255, 0.2), inset 0 1px 0 rgba(255,255,255,0.12);
+}
+
+.active-shipments .view-details-btn__arrow {
+  transition: transform 0.18s ease;
+}
+
+.active-shipments .view-details-btn:hover {
+  background: var(--hover-brand);
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(10, 88, 255, 0.28);
+}
+
+.active-shipments .view-details-btn:hover .view-details-btn__arrow {
+  transform: translateX(2px);
+}
+
+.active-shipments .view-details-btn:focus-visible {
+  outline: 2px solid var(--primary-brand);
+  outline-offset: 2px;
+  border-radius: 8px;
+}
+
+.active-shipments .view-details-btn:active {
+  transform: translateY(0);
+  box-shadow: 0 1px 3px rgba(10, 88, 255, 0.2);
+}
+
+/* Shipments footer */
+.active-shipments .shipments-footer {
+  padding: 16px 24px;
+  border-top: 1px solid var(--border-line);
+  background: #FAFBFC;
+}
+
+.active-shipments .tracking-info {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.active-shipments .tracking-text {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 13px;
+  color: var(--text-muted);
+  margin: 0;
+  text-align: center;
+}
+
+.active-shipments .info-icon {
+  width: 16px;
+  height: 16px;
+  color: var(--text-muted);
+  flex-shrink: 0;
+}
+
+/* Responsive design */
+@media (max-width: 1024px) {
+  .active-shipments .data-table {
+    min-width: 700px;
+  }
+  
+  .active-shipments .data-table th,
+  .active-shipments .data-table td {
+    padding: 14px 16px;
+  }
+  
+  .active-shipments .view-details-btn {
+    padding: 6px 12px;
+    font-size: 12px;
+    min-height: 28px;
+  }
+}
+
+@media (max-width: 768px) {
+  .active-shipments .card-header {
+    padding: 20px 16px 16px;
+  }
+  
+  .active-shipments .empty-state {
+    padding: 40px 16px;
+  }
+  
+  .active-shipments .data-table th,
+  .active-shipments .data-table td {
+    padding: 12px 16px;
+  }
+  
+  .active-shipments .data-table {
+    min-width: 650px;
+  }
+  
+  .active-shipments .shipments-footer {
+    padding: 12px 16px;
+  }
+  
+  .active-shipments .tracking-text {
+    font-size: 12px;
+  }
+  
+  .active-shipments .view-details-btn {
+    padding: 6px 10px;
+    font-size: 12px;
+    min-height: 28px;
+  }
+}
+
+@media (max-width: 480px) {
+  .active-shipments .card-header {
+    padding: 16px 12px 12px;
+  }
+  
+  .active-shipments .empty-state {
+    padding: 32px 12px;
+  }
+  
+  .active-shipments .data-table th,
+  .active-shipments .data-table td {
+    padding: 10px 12px;
+  }
+  
+  .active-shipments .data-table {
+    min-width: 600px;
+  }
+  
+  .active-shipments .card-title {
+    font-size: 16px;
+  }
+  
+  .active-shipments .card-subtitle {
+    font-size: 13px;
+  }
+  
+  .active-shipments .empty-title {
+    font-size: 15px;
+  }
+  
+  .active-shipments .empty-description {
+    font-size: 13px;
+  }
+  
+  .active-shipments .view-details-btn {
+    padding: 5px 8px;
+    font-size: 11px;
+    min-height: 26px;
+  }
+}
+
+/* High contrast mode support */
+@media (prefers-contrast: high) {
+  .active-shipments .status-pill {
+    border-color: currentColor;
+  }
+
+  .active-shipments .view-details-btn:focus-visible {
+    outline-width: 3px;
+  }
+
+  .active-shipments .view-details-btn {
+    border: 1px solid rgba(255, 255, 255, 0.2);
+  }
+}
+
+/* Reduced motion support */
+@media (prefers-reduced-motion: reduce) {
+  .active-shipments .table-row,
+  .active-shipments .btn-primary,
+  .active-shipments .view-details-btn {
+    transition: none;
+  }
+}
+
+/* Print styles */
+@media print {
+  .active-shipments .shipments-footer,
+  .active-shipments .row-actions {
+    display: none;
+  }
+  
+  .active-shipments .table-wrapper {
+    overflow: visible;
+  }
+  
+  .active-shipments .data-table {
+    min-width: auto;
+  }
+}

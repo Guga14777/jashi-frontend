@@ -1,0 +1,152 @@
+/* Page base (light theme) */
+.cr-page {
+  min-height: 100vh;
+  background: var(--page-bg, #f6f8fc);
+  color: var(--page-fg, #0f172a);
+}
+
+/* Extra breathing room under fixed header */
+.cr-container {
+  max-width: 1080px;
+  margin: 0 auto;
+  padding: 96px 16px 56px;
+}
+
+/* Header */
+.cr-header h1 {
+  font-size: 40px;
+  line-height: 1.1;
+  letter-spacing: -0.02em;
+  margin: 10px 0 8px;
+  color: #0f172a;
+}
+.cr-subtitle {
+  margin: 0 0 24px;
+  font-size: 16px;
+  color: #64748b;
+}
+
+/* Cards */
+.cr-card {
+  background: #ffffff;
+  border: 1px solid #e5e7eb;
+  border-radius: 14px;
+  padding: 20px;
+  margin-bottom: 20px;
+  box-shadow: 0 6px 20px rgba(15, 23, 42, 0.04);
+}
+
+.cr-h2 {
+  margin: 4px 0 12px;
+  font-weight: 700;
+  font-size: 22px;
+  color: #0f172a;
+}
+.cr-paragraph { margin: 0; }
+
+/* Callout */
+.cr-callout {
+  margin-top: 12px;
+  padding: 12px 14px;
+  border-radius: 12px;
+  background: #eef2ff;
+  border: 1px solid rgba(37, 99, 235, 0.25);
+  color: #334155;
+}
+
+/* Info grid */
+.cr-infogrid {
+  display: grid;
+  gap: 16px;
+  grid-template-columns: 1fr 1fr 1fr;
+}
+.cr-infocard {
+  display: grid;
+  grid-template-columns: 28px 1fr;
+  gap: 12px;
+  padding: 14px;
+  border: 1px solid #e5e7eb;
+  border-radius: 12px;
+  background: #fff;
+}
+.cr-badge {
+  width: 16px;
+  height: 16px;
+  border-radius: 999px;
+  margin-top: 3px;
+  box-shadow: 0 0 0 3px #fff;
+}
+.cr-badge-blue  { background: #2563eb; }
+.cr-badge-amber { background: #f59e0b; }
+.cr-badge-slate { background: #64748b; }
+
+.cr-infocopy h3 {
+  margin: 0 0 6px;
+  font-size: 16px;
+  font-weight: 700;
+}
+.cr-infocopy p {
+  margin: 0;
+  color: #4b5563;
+  font-size: 14px;
+  line-height: 1.5;
+}
+
+/* Bullet lists */
+.cr-list { margin: 0; padding-left: 18px; color: #374151; }
+.cr-list-dots li { margin: 6px 0; }
+
+/* Usage grid */
+.cr-usagegrid {
+  display: grid;
+  gap: 12px;
+  grid-template-columns: 1fr 1fr 1fr;
+}
+.cr-usage {
+  display: grid;
+  grid-template-columns: 10px 1fr;
+  gap: 10px;
+  align-items: start;
+  border: 1px solid #e5e7eb;
+  border-radius: 12px;
+  background: #fff;
+  padding: 14px;
+}
+.cr-usage p { margin: 0; color: #4b5563; font-size: 14px; line-height: 1.5; }
+.cr-pill { width: 10px; height: 10px; border-radius: 999px; background: #2563eb; margin-top: 5px; }
+
+/* FAQs */
+.cr-faqgrid {
+  display: grid;
+  gap: 12px;
+  grid-template-columns: 1fr 1fr;
+}
+.cr-faq {
+  border: 1px solid #e5e7eb;
+  border-radius: 12px;
+  padding: 16px;
+  background: #fff;
+}
+.cr-faq h3 { margin: 0 0 6px; font-size: 16px; font-weight: 700; }
+.cr-faq p  { margin: 0; color: #4b5563; font-size: 14px; line-height: 1.5; }
+
+/* Disclaimer */
+.cr-disclaimer {
+  text-align: center;
+  font-size: 12px;
+  color: #94a3b8;
+  margin: 12px 0 0;
+}
+
+/* Responsive */
+@media (max-width: 980px) {
+  .cr-container { padding-top: 76px; }
+  .cr-infogrid { grid-template-columns: 1fr; }
+  .cr-usagegrid { grid-template-columns: 1fr; }
+  .cr-faqgrid   { grid-template-columns: 1fr; }
+}
+@media (max-width: 768px) {
+  .cr-header h1 { font-size: 32px; }
+  .cr-card { padding: 16px; }
+  .cr-h2   { font-size: 20px; }
+}

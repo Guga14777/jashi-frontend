@@ -1,0 +1,150 @@
+/* src/pages/legal/safety-insurance.css */
+
+/* Tune this once if your sticky CarrierHeader height differs */
+.page-shell.safety-insurance { --sticky-header-h: 72px; }
+
+/* -------- Layout shell -------- */
+.page-shell.safety-insurance .page-main{
+  max-width: 1100px;
+  margin: 0 auto;
+
+  /* KEY FIX: clear sticky header + comfortable spacing */
+  padding: calc(var(--sticky-header-h) + 34px) 16px 84px;
+}
+
+/* Ensure any in-page anchors (any [id]) don't hide under header */
+.page-shell.safety-insurance [id]{
+  scroll-margin-top: calc(var(--sticky-header-h) + 16px);
+}
+
+.page-shell.safety-insurance .page-header{
+  margin-top: 16px;                 /* breathing room under header */
+  margin-bottom: 18px;
+  padding-top: 4px;
+}
+
+.page-shell.safety-insurance .page-header h1{
+  font-size: 40px;
+  letter-spacing: -0.02em;
+  margin: 0 0 6px 0;
+}
+
+.page-shell.safety-insurance .page-header p{
+  color: var(--muted-700, #6B7280);
+  margin: 0;
+}
+
+/* -------- Cards & grid -------- */
+.page-shell.safety-insurance .card{
+  border: 1px solid rgba(16,24,40,.08);
+  border-radius: 14px;
+  padding: 20px;
+  background: rgba(255,255,255,.72);
+  backdrop-filter: blur(2px);
+  box-shadow: 0 2px 16px rgba(16,24,40,.05);
+  margin-bottom: 16px;
+}
+
+.page-shell.safety-insurance .grid.two{
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 16px;
+}
+
+/* -------- Lists -------- */
+.page-shell.safety-insurance .list{ margin: 8px 0 0 18px; }
+.page-shell.safety-insurance .list-ol{ margin: 8px 0 0 22px; }
+.page-shell.safety-insurance h2{ margin: 0 0 8px 0; }
+
+/* -------- Insurance limits row -------- */
+.page-shell.safety-insurance .limits{
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
+  gap: 16px;
+  margin-top: 6px;
+}
+
+.page-shell.safety-insurance .limit .kicker{
+  text-transform: uppercase;
+  font-size: 12px;
+  letter-spacing: .08em;
+  color: #ef4444;
+  font-weight: 700;
+}
+.page-shell.safety-insurance .limit:nth-child(2) .kicker{ color:#0ea5e9; }
+.page-shell.safety-insurance .limit:nth-child(3) .kicker{ color:#ef4444; }
+
+.page-shell.safety-insurance .limit .amount{
+  font-size: 22px;
+  font-weight: 800;
+  margin: 4px 0 4px;
+}
+.page-shell.safety-insurance .limit .sub{
+  color:#6B7280;
+  font-size: 14px;
+}
+
+/* -------- Chips row under limits -------- */
+.page-shell.safety-insurance .actions{ margin-top: 12px; }
+.page-shell.safety-insurance .actions.row{
+  display:flex; gap:12px; flex-wrap:wrap;
+}
+.page-shell.safety-insurance .chip{
+  display:inline-flex; align-items:center; 
+  padding:8px 12px; border-radius:999px;
+  border:1px dashed rgba(37,99,235,.35);
+  color:#2563eb; text-decoration:none; font-weight:600;
+  background: rgba(37,99,235,.06);
+}
+
+/* Notes */
+.page-shell.safety-insurance .note{ color:#6B7280; margin-top:8px; }
+.page-shell.safety-insurance .note.tight{ margin-top:6px; }
+
+/* -------- Buttons (consistent, rounded, white @ 90%) -------- */
+.page-shell.safety-insurance .btn_primary,
+.page-shell.safety-insurance .btn_ghost{
+  appearance:none; border:none; outline:none; text-decoration:none;
+  padding: 12px 16px; border-radius:12px; font-weight:700;
+  display:inline-flex; align-items:center; justify-content:center;
+  transition: box-shadow .15s ease, transform .05s ease, background .15s ease, color .15s ease;
+}
+.page-shell.safety-insurance .btn_round{ border-radius:20px; padding:16px 24px; }
+
+.page-shell.safety-insurance .btn_primary{
+  background: rgba(255,255,255,.9);     /* 90% white */
+  color: var(--brand-blue, #2563ff);
+  box-shadow: 0 8px 20px rgba(16,24,40,.05), 0 0 0 2px rgba(37,99,235,.18) inset;
+  border: 2px solid rgba(37,99,235,.35);
+}
+.page-shell.safety-insurance .btn_primary:hover{
+  transform: translateY(-1px);
+  box-shadow: 0 10px 24px rgba(16,24,40,.07), 0 0 0 2px rgba(37,99,235,.45) inset;
+}
+
+/* Secondary matches primary outline & height/radius */
+.page-shell.safety-insurance .btn_ghost {
+  background: transparent;
+  color: var(--brand-blue, #2563ff);
+  border: 2px solid rgba(37, 99, 235, .35);
+  box-shadow: 0 8px 20px rgba(16,24,40,.05),
+              0 0 0 2px rgba(37,99,235,.18) inset;
+  padding: 16px 24px;
+  border-radius: 20px;
+}
+.page-shell.safety-insurance .btn_ghost:hover {
+  background: rgba(37,99,235,.06);
+  box-shadow: 0 10px 24px rgba(16,24,40,.07),
+              0 0 0 2px rgba(37,99,235,.45) inset;
+}
+
+/* -------- Responsive -------- */
+@media (max-width: 1024px){
+  .page-shell.safety-insurance .grid.two{ grid-template-columns: 1fr; }
+  .page-shell.safety-insurance .limits{ grid-template-columns: 1fr; }
+}
+@media (max-width: 640px){
+  .page-shell.safety-insurance .page-header h1{ font-size: 32px; }
+  .page-shell.safety-insurance .btn_round{ width:100%; justify-content:center; }
+  .page-shell.safety-insurance .actions.row{ gap:10px; }
+}

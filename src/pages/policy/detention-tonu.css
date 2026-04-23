@@ -1,0 +1,139 @@
+/* src/pages/policy/detention-tonu.css */
+
+/* Adjust if your sticky CarrierHeader is taller/shorter */
+.page-shell.detention-tonu {
+  --sticky-header-h: 72px;
+}
+
+/* ---- Layout ---- */
+.page-shell.detention-tonu .page-main {
+  max-width: 1100px;
+  margin: 0 auto;
+
+  /* KEY FIX: keep content clear of the sticky header + extra air */
+  padding: calc(var(--sticky-header-h) + 36px) 16px 72px;
+}
+
+/* Ensure in-page anchors (any element with an id) don't hide under header */
+.page-shell.detention-tonu [id] {
+  scroll-margin-top: calc(var(--sticky-header-h) + 16px);
+}
+
+/* extra breathing room so the H1 never looks cut */
+.page-shell.detention-tonu .page-header {
+  margin: 0 0 24px;
+  padding-top: 12px;
+}
+
+.page-shell.detention-tonu .page-header h1 {
+  margin: 0 0 10px;
+  font-size: clamp(28px, 4.2vw, 40px);
+  line-height: 1.15;
+  letter-spacing: -0.02em;
+  color: var(--ink-900, #0b1220);
+}
+
+.page-shell.detention-tonu .page-header .page-subtitle {
+  margin: 0;
+  font-size: 16px;
+  line-height: 1.5;
+  color: var(--ink-600, #4b5563);
+}
+
+/* ---- Cards ---- */
+.page-shell.detention-tonu .card {
+  background: #ffffff;  /* white card on light theme */
+  border: 1px solid rgba(2, 6, 23, 0.08);
+  border-radius: 12px;
+  padding: 20px;
+  margin-top: 18px;
+  box-shadow: 0 1px 2px rgba(2, 6, 23, 0.04);
+}
+
+.page-shell.detention-tonu .card h2 {
+  margin: 0 0 10px;
+  font-size: 20px;
+  letter-spacing: -0.01em;
+  color: var(--ink-900, #0b1220);
+}
+
+.page-shell.detention-tonu .list {
+  margin: 8px 0 0 18px;
+  color: var(--ink-800, #1f2937);
+  line-height: 1.65;
+}
+
+.page-shell.detention-tonu .steps {
+  margin: 8px 0 0 18px;
+  padding: 0;
+  color: var(--ink-800, #1f2937);
+  line-height: 1.65;
+}
+
+/* ---- Rates table ---- */
+.page-shell.detention-tonu .rates-table-wrap {
+  overflow-x: auto;
+  margin: 6px 0 12px;
+}
+
+.page-shell.detention-tonu .rates-table {
+  width: 100%;
+  border-collapse: separate;
+  border-spacing: 0;
+  min-width: 560px;
+  background: #fff;
+}
+
+.page-shell.detention-tonu .rates-table th,
+.page-shell.detention-tonu .rates-table td {
+  text-align: left;
+  padding: 12px 14px;
+  border-bottom: 1px solid rgba(2, 6, 23, 0.08);
+  color: var(--ink-800, #1f2937);
+  font-size: 14px;
+  line-height: 1.6;
+}
+
+.page-shell.detention-tonu .rates-table thead th {
+  font-weight: 700;
+  color: var(--ink-900, #0b1220);
+  border-bottom: 1px solid rgba(2, 6, 23, 0.16);
+}
+
+/* ---- Examples ---- */
+.page-shell.detention-tonu .examples {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 12px;
+  margin-top: 12px;
+}
+
+.page-shell.detention-tonu .example {
+  background: #f8fafc;
+  border: 1px solid rgba(2, 6, 23, 0.08);
+  border-radius: 10px;
+  padding: 12px;
+}
+
+.page-shell.detention-tonu .example-title {
+  font-weight: 700;
+  margin-bottom: 6px;
+  color: var(--ink-900, #0b1220);
+}
+
+.page-shell.detention-tonu .example p {
+  margin: 0;
+  color: var(--ink-800, #1f2937);
+}
+
+/* ---- Responsive ---- */
+@media (max-width: 1024px) {
+  .page-shell.detention-tonu .examples { grid-template-columns: 1fr 1fr; }
+}
+@media (max-width: 640px) {
+  .page-shell.detention-tonu .page-main {
+    padding: calc(var(--sticky-header-h) + 28px) 14px 64px;
+  }
+  .page-shell.detention-tonu .page-header h1 { font-size: 28px; }
+  .page-shell.detention-tonu .examples { grid-template-columns: 1fr; }
+}

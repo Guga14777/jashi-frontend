@@ -1,0 +1,383 @@
+/* ============================================================
+   FILE: src/components/load-details/delivery-form.css
+   ✅ UPDATED: Added Customer Signature section styles
+   ============================================================ */
+
+/* ─────────────────────────────────────────
+   Container
+───────────────────────────────────────────*/
+.df-container {
+  width: 100%;
+}
+
+/* ─────────────────────────────────────────
+   Form
+───────────────────────────────────────────*/
+.df-form {
+  width: 100%;
+}
+
+/* ─────────────────────────────────────────
+   Header
+───────────────────────────────────────────*/
+.df-header {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 16px;
+  background: #f0fdf4;
+  border: 1px solid #d1fae5;
+  border-radius: 10px;
+  margin-bottom: 20px;
+}
+
+.df-header-icon {
+  width: 44px;
+  height: 44px;
+  border-radius: 10px;
+  background: #10b981;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: white;
+  flex-shrink: 0;
+}
+
+.df-header-text {
+  flex: 1;
+}
+
+.df-title {
+  font-size: 16px;
+  font-weight: 600;
+  color: #111827;
+  margin: 0 0 2px 0;
+}
+
+.df-subtitle {
+  font-size: 13px;
+  color: #6b7280;
+  margin: 0;
+}
+
+/* ─────────────────────────────────────────
+   Instructions
+───────────────────────────────────────────*/
+.df-instructions {
+  padding: 12px 16px;
+  background: #f9fafb;
+  border-radius: 8px;
+  margin-bottom: 20px;
+}
+
+.df-instructions p {
+  font-size: 13px;
+  color: #4b5563;
+  line-height: 1.5;
+  margin: 0;
+}
+
+/* ─────────────────────────────────────────
+   Section
+───────────────────────────────────────────*/
+.df-section {
+  margin-bottom: 20px;
+}
+
+.df-label {
+  display: block;
+  font-size: 14px;
+  font-weight: 600;
+  color: #111827;
+  margin-bottom: 4px;
+}
+
+.df-required {
+  color: #dc2626;
+}
+
+.df-hint {
+  font-size: 12px;
+  color: #6b7280;
+  margin-bottom: 10px;
+}
+
+/* ─────────────────────────────────────────
+   Photo Count
+───────────────────────────────────────────*/
+.df-photo-count {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 10px 14px;
+  background: #f0fdf4;
+  border: 1px solid #d1fae5;
+  border-radius: 8px;
+  font-size: 13px;
+  font-weight: 500;
+  color: #059669;
+  margin-bottom: 20px;
+}
+
+.df-photo-count svg {
+  flex-shrink: 0;
+}
+
+.df-photo-remaining {
+  color: #6b7280;
+  font-weight: 400;
+  margin-left: auto;
+}
+
+/* ─────────────────────────────────────────
+   ✅ NEW: Customer Signature Section
+───────────────────────────────────────────*/
+.df-signature-placeholder {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  padding: 20px;
+  background: #f9fafb;
+  border: 1px dashed #d1d5db;
+  border-radius: 10px;
+}
+
+.df-signature-placeholder-icon {
+  width: 52px;
+  height: 52px;
+  border-radius: 12px;
+  background: #e5e7eb;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #9ca3af;
+  flex-shrink: 0;
+}
+
+.df-signature-placeholder-content {
+  flex: 1;
+}
+
+.df-signature-placeholder-text {
+  font-size: 14px;
+  font-weight: 500;
+  color: #6b7280;
+  margin: 0 0 6px 0;
+}
+
+.df-signature-placeholder-hint {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 12px;
+  color: #9ca3af;
+  margin: 0;
+}
+
+.df-signature-placeholder-hint svg {
+  flex-shrink: 0;
+}
+
+/* ✅ Signature display (when signature is available) */
+.df-signature-display {
+  padding: 16px;
+  background: #f0fdf4;
+  border: 1px solid #bbf7d0;
+  border-radius: 10px;
+}
+
+.df-signature-image-wrapper {
+  background: white;
+  border: 1px solid #d1fae5;
+  border-radius: 8px;
+  padding: 12px;
+  margin-bottom: 12px;
+}
+
+.df-signature-image {
+  max-width: 100%;
+  max-height: 100px;
+  display: block;
+  margin: 0 auto;
+}
+
+.df-signature-info {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.df-signature-name {
+  font-size: 13px;
+  color: #374151;
+  margin: 0;
+}
+
+.df-signature-name strong {
+  color: #111827;
+}
+
+.df-signature-time {
+  font-size: 12px;
+  color: #059669;
+  margin: 0;
+}
+
+/* ─────────────────────────────────────────
+   Error
+───────────────────────────────────────────*/
+.df-error {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 12px 14px;
+  background: #fef2f2;
+  border: 1px solid #fecaca;
+  border-radius: 8px;
+  font-size: 13px;
+  color: #dc2626;
+  margin-bottom: 20px;
+}
+
+.df-error svg {
+  flex-shrink: 0;
+}
+
+/* ─────────────────────────────────────────
+   Actions
+───────────────────────────────────────────*/
+.df-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 10px;
+  margin-bottom: 16px;
+}
+
+.df-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  padding: 10px 20px;
+  border-radius: 8px;
+  font-size: 14px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.15s;
+  min-width: 100px;
+}
+
+.df-btn--secondary {
+  background: white;
+  border: 1px solid #d1d5db;
+  color: #374151;
+}
+
+.df-btn--secondary:hover:not(:disabled) {
+  background: #f3f4f6;
+}
+
+.df-btn--primary {
+  background: #10b981;
+  border: none;
+  color: white;
+}
+
+.df-btn--primary:hover:not(:disabled) {
+  background: #059669;
+}
+
+.df-btn:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+/* ─────────────────────────────────────────
+   Spinner
+───────────────────────────────────────────*/
+.df-spinner {
+  animation: df-spin 1s linear infinite;
+}
+
+@keyframes df-spin {
+  to { transform: rotate(360deg); }
+}
+
+/* ─────────────────────────────────────────
+   Help Text
+───────────────────────────────────────────*/
+.df-help {
+  font-size: 12px;
+  color: #9ca3af;
+  text-align: center;
+  margin: 0;
+  line-height: 1.4;
+}
+
+/* ─────────────────────────────────────────
+   Success State
+───────────────────────────────────────────*/
+.df-success {
+  text-align: center;
+  padding: 40px 24px;
+}
+
+.df-success-icon {
+  width: 56px;
+  height: 56px;
+  border-radius: 50%;
+  background: #d1fae5;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #10b981;
+  margin: 0 auto 16px;
+}
+
+.df-success-icon svg {
+  width: 28px;
+  height: 28px;
+}
+
+.df-success-title {
+  font-size: 18px;
+  font-weight: 600;
+  color: #111827;
+  margin: 0 0 8px 0;
+}
+
+.df-success-text {
+  font-size: 14px;
+  color: #6b7280;
+  margin: 0;
+  line-height: 1.5;
+}
+
+/* ─────────────────────────────────────────
+   Responsive
+───────────────────────────────────────────*/
+@media (max-width: 480px) {
+  .df-header {
+    padding: 14px;
+  }
+
+  .df-actions {
+    flex-direction: column;
+  }
+
+  .df-btn {
+    width: 100%;
+  }
+
+  .df-signature-placeholder {
+    flex-direction: column;
+    text-align: center;
+    padding: 20px 16px;
+  }
+
+  .df-signature-placeholder-hint {
+    justify-content: center;
+  }
+}

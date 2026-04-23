@@ -1,0 +1,176 @@
+/* src/pages/payouts/payouts.css */
+
+/* Tune these two to control space under the sticky header */
+.page-shell.payouts {
+  --sticky-header-h: 72px;   /* your CarrierHeader height */
+  --page-top-extra: 56px;    /* EXTRA breathing room above the H1 */
+}
+
+/* Page shell */
+.page-shell.payouts .page-main {
+  max-width: 1100px;
+  margin: 0 auto;
+
+  /* Space for the sticky header + extra air for the page title */
+  padding: calc(var(--sticky-header-h) + var(--page-top-extra)) 16px 80px;
+}
+
+/* Ensure any in-page anchors (elements with id) don't get hidden */
+.page-shell.payouts [id] {
+  scroll-margin-top: calc(var(--sticky-header-h) + 16px);
+}
+
+/* Header */
+.page-shell.payouts .page-header {
+  margin: 0 0 22px;
+}
+
+.page-shell.payouts .page-header h1 {
+  font-size: 36px;        /* keep your sizing, only spacing changed */
+  line-height: 1.2;
+  letter-spacing: -0.01em;
+  margin: 0 0 8px;
+}
+
+.page-shell.payouts .page-header p {
+  color: var(--text-muted, #6b7280);
+  margin: 0;
+}
+
+/* Cards */
+.page-shell.payouts .card {
+  background: rgba(255, 255, 255, 0.6);
+  backdrop-filter: saturate(120%) blur(6px);
+  border: 1px solid rgba(15, 23, 42, 0.08);
+  border-radius: 14px;
+  padding: 18px;
+  margin: 16px 0;
+  box-shadow: 0 1px 0 rgba(16, 24, 40, .02), 0 8px 24px rgba(16, 24, 40, .04);
+}
+
+.page-shell.payouts .card h2 {
+  font-size: 28px;
+  margin: 4px 2px 14px;
+}
+
+/* Grid features */
+.apps-grid {
+  display: grid;
+  gap: 14px;
+}
+.apps-grid.two { grid-template-columns: 1fr 1fr; }
+.apps-grid.three { grid-template-columns: repeat(3, 1fr); }
+
+@media (max-width: 900px) {
+  .apps-grid.three,
+  .apps-grid.two { grid-template-columns: 1fr; }
+}
+
+.apps-feature {
+  background: #fff;
+  border: 1px solid rgba(15, 23, 42, 0.06);
+  border-radius: 12px;
+  padding: 14px;
+}
+.apps-feature h3 {
+  font-size: 16px;
+  margin: 0 0 6px;
+}
+.apps-feature p {
+  margin: 0 0 8px;
+  color: var(--text-default, #111827);
+}
+.apps-feature ul {
+  margin: 0;
+  padding-left: 18px;
+  color: var(--text-default, #111827);
+}
+
+/* Table */
+.table-wrap { overflow-x: auto; }
+
+.payouts-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 14px;
+}
+.payouts-table th,
+.payouts-table td {
+  padding: 12px 10px;
+  border-top: 1px solid rgba(15, 23, 42, 0.08);
+  vertical-align: middle;
+}
+.payouts-table thead th {
+  background: rgba(2, 132, 199, 0.03);
+  border-top: none;
+  text-align: left;
+}
+.payouts-table .fee {
+  color: #10b981; /* green */
+  white-space: nowrap;
+}
+
+/* Support CTA */
+.support-cta {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+}
+.support-cta .support-copy h3 { margin: 0 0 6px; }
+.support-cta .support-copy p { margin: 0; color: var(--text-default, #111827); }
+
+.support-actions {
+  display: flex;
+  gap: 10px;
+}
+
+/* Buttons */
+.apps-btn {
+  appearance: none;
+  border: 1px solid #cfe0ff;
+  background: #fff;
+  color: var(--color-primary, #0b5adf);
+  font-weight: 600;
+  border-radius: 12px;
+  padding: 10px 14px;
+  text-decoration: none;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 1px 2px rgba(16, 24, 40, .05);
+}
+
+.apps-btn.primary {
+  background: var(--color-primary, #2f66f9);
+  border-color: var(--color-primary, #2f66f9);
+  color: rgba(255, 255, 255, 0.9);
+}
+
+.apps-btn.primary .email-text {
+  color: rgba(255, 255, 255, 0.9);
+}
+
+.apps-btn.ghost {
+  background: #fff;
+  color: var(--color-primary, #0b5adf);
+}
+
+/* Treat the primary email as a non-link pill */
+.apps-btn.not-link {
+  pointer-events: none;
+  cursor: default;
+}
+
+/* Small helper */
+.subtle { color: var(--text-muted, #6b7280); }
+
+/* Responsive padding & title size */
+@media (max-width: 768px) {
+  .page-shell.payouts .page-main {
+    padding: calc(var(--sticky-header-h) + 36px) 14px 64px;
+  }
+  .page-shell.payouts .page-header h1 {
+    font-size: 30px;
+  }
+}

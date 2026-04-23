@@ -1,0 +1,1257 @@
+/* src/components/quote-widget/quote-widget.css - NUCLEAR CENTERING VERSION */
+
+.quote-widget {
+  background: #FFFFFF;
+  border-radius: 12px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+  max-width: 520px;
+  width: 100%;
+  overflow: visible;
+  position: relative;
+  min-height: 720px;
+}
+
+/* Quote Form */
+.quote-form {
+  padding: 24px;
+  min-height: 680px;
+  display: flex;
+  flex-direction: column;
+}
+
+/* Form Groups */
+.form-group {
+  margin-bottom: 24px;
+  flex-shrink: 0;
+}
+
+/* Form Labels */
+.form-label {
+  display: block;
+  font-size: 13px;
+  font-weight: 600;
+  color: #1F2937;
+  margin-bottom: 12px;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+/* Helper text */
+.vehicles-helper {
+  display: block;
+  font-size: 13px;
+  color: #6B7280;
+  font-style: italic;
+  font-weight: 400;
+  margin-bottom: 12px;
+  margin-top: -8px;
+  text-transform: none;
+  letter-spacing: normal;
+}
+
+/* Form Inputs */
+.form-input {
+  width: 100%;
+  padding: 12px 14px;
+  border: 1px solid #D1D5DB;
+  border-radius: 8px;
+  font-size: 15px;
+  color: #111827;
+  background: #FFFFFF;
+  transition: all 0.2s ease;
+  box-sizing: border-box;
+}
+
+.form-input::placeholder {
+  color: #9CA3AF;
+}
+
+.form-input:hover:not(:disabled) {
+  border-color: #9CA3AF;
+}
+
+.form-input:focus {
+  outline: none;
+  border-color: #2563EB;
+  box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.1);
+}
+
+.form-input:disabled {
+  background: #F9FAFB;
+  cursor: not-allowed;
+  color: #9CA3AF;
+}
+
+/* Form Row for ZIP codes */
+.form-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 16px;
+}
+
+.form-field {
+  position: relative;
+}
+
+.field-label {
+  display: block;
+  font-size: 11px;
+  color: #6B7280;
+  margin-top: 6px;
+  text-transform: none;
+  font-weight: 400;
+  letter-spacing: normal;
+}
+
+/* ========================================
+   VEHICLE SELECTION - FIXED CHIPS ROW
+   ======================================== */
+
+/* Vehicle Chips Row Container */
+.vehicle-chips-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+  margin-bottom: 16px;
+}
+
+/* Base QW Chip Style */
+.qw-chip {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 80px;
+  height: 40px;
+  padding: 0 20px;
+  border-radius: 9999px;
+  border: 2px solid #E6EDF5;
+  background: #FFFFFF;
+  color: #1F2937;
+  font-size: 15px;
+  font-weight: 600;
+  cursor: pointer;
+  box-shadow: 0 4px 12px rgba(16, 24, 40, 0.04);
+  transition: all 120ms ease;
+  white-space: nowrap;
+  user-select: none;
+  box-sizing: border-box;
+  gap: 6px;
+  flex-direction: row;
+  font-family: inherit;
+  line-height: 1;
+  flex: 0 0 auto;
+}
+
+.qw-chip-text {
+  color: inherit;
+  font-weight: inherit;
+  font-size: inherit;
+  line-height: 1;
+}
+
+.qw-chip-count {
+  min-width: 18px;
+  height: 18px;
+  padding: 0 4px;
+  background: #EF4444;
+  color: #FFFFFF;
+  border-radius: 9px;
+  font-size: 11px;
+  font-weight: 700;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  margin-left: 4px;
+}
+
+/* QW Chip States */
+.qw-chip:hover:not(.qw-disabled) {
+  background: #F7FAFF;
+  border-color: #0A58FF;
+  box-shadow: 0 6px 16px rgba(16, 24, 40, 0.08);
+  transform: translateY(-1px);
+}
+
+.qw-chip:focus-visible {
+  outline: 3px solid #0A58FF;
+  outline-offset: 2px;
+}
+
+.qw-chip:active:not(.qw-disabled) {
+  transform: translateY(1px);
+  box-shadow: 0 2px 8px rgba(16, 24, 40, 0.04);
+}
+
+.qw-chip.qw-active {
+  background: #0A58FF;
+  border-color: #0A58FF;
+  color: #FFFFFF;
+  box-shadow: 0 4px 12px rgba(10, 88, 255, 0.15);
+}
+
+.qw-chip.qw-disabled {
+  background: #F2F5FA;
+  color: #94A3B8;
+  border-color: #E6EDF5;
+  box-shadow: none;
+  cursor: not-allowed;
+  opacity: 0.6;
+}
+
+/* Vehicle Summary */
+.vehicle-summary {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 12px 0;
+  border-top: 1px solid #E5E7EB;
+  margin-top: 16px;
+}
+
+.summary-text {
+  display: flex;
+  gap: 8px;
+  flex: 1;
+  min-width: 0;
+  align-items: center;
+}
+
+.summary-label {
+  font-weight: 600;
+  color: #374151;
+  font-size: 14px;
+  flex-shrink: 0;
+}
+
+.summary-value {
+  color: #111827;
+  font-size: 14px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.summary-reset {
+  background: none;
+  border: none;
+  color: #2563EB;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  padding: 6px 12px;
+  border-radius: 6px;
+  transition: all 0.2s ease;
+}
+
+.summary-reset:hover {
+  background: #EBF5FF;
+}
+
+.max-message {
+  font-size: 13px;
+  color: #6B7280;
+  font-style: italic;
+  margin-top: 8px;
+}
+
+/* ========================================
+   TRANSPORT TYPE - FIXED PILLS
+   ======================================== */
+
+.transport-pills-container {
+  display: flex;
+  gap: 16px;
+  align-items: stretch;
+  margin: 8px 0 0 0;
+}
+
+.transport-pill {
+  flex: 1;
+  height: 60px;
+  padding: 10px 24px;
+  border-radius: 9999px;
+  border: 2px solid #E6EDF5;
+  background: #FFFFFF;
+  color: #1F2937;
+  font-size: 16px;
+  font-weight: 600;
+  cursor: pointer;
+  box-shadow: 0 6px 20px rgba(16, 24, 40, 0.06);
+  transition: all 120ms ease;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 2px;
+  font-family: inherit;
+  line-height: normal;
+  box-sizing: border-box;
+}
+
+.transport-pill .pill-label {
+  font-size: 16px;
+  font-weight: 600;
+  color: inherit;
+  margin-bottom: 2px;
+  display: block;
+  line-height: 1;
+}
+
+.transport-pill .pill-sublabel {
+  font-size: 11px;
+  font-weight: 500;
+  color: #6B7280;
+  display: block;
+  line-height: 1;
+}
+
+/* Transport Pill States */
+.transport-pill:hover:not(.selected) {
+  background: #F7FAFF;
+  border-color: #0A58FF;
+  box-shadow: 0 8px 24px rgba(16, 24, 40, 0.10);
+  transform: translateY(-1px);
+}
+
+.transport-pill:focus-visible {
+  outline: 3px solid #0A58FF;
+  outline-offset: 2px;
+}
+
+.transport-pill:active {
+  transform: translateY(1px);
+  box-shadow: 0 4px 16px rgba(16, 24, 40, 0.06);
+}
+
+.transport-pill.selected {
+  background: #0A58FF;
+  border-color: #0A58FF;
+  color: #FFFFFF;
+  box-shadow: 0 6px 20px rgba(10, 88, 255, 0.15);
+}
+
+.transport-pill.selected .pill-label,
+.transport-pill.selected .pill-sublabel {
+  color: #FFFFFF;
+}
+
+/* ========================================
+   PRICING SECTION
+   ======================================== */
+
+.form-group:has(.offer-input) {
+  padding-top: 24px;
+  border-top: 1px solid #E5E7EB;
+}
+
+.offer-input {
+  font-size: 18px;
+  font-weight: 600;
+  letter-spacing: 0.5px;
+}
+
+.offer-input.no-arrows::-webkit-outer-spin-button,
+.offer-input.no-arrows::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+
+.offer-input.no-arrows[type=number] {
+  -moz-appearance: textfield;
+  appearance: textfield;
+}
+
+.price-helper {
+  display: block;
+  font-size: 12px;
+  color: #6B7280;
+  font-style: italic;
+  margin-top: 6px;
+}
+
+/* ========================================
+   LIKELIHOOD SECTION
+   ======================================== */
+
+.likelihood-section {
+  margin-bottom: 24px;
+  min-height: 140px;
+}
+
+.likelihood-card {
+  background: #FFFFFF;
+  border: 1px solid #E5E7EB;
+  border-radius: 8px;
+  padding: 16px;
+  height: 100%;
+}
+
+.likelihood-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 12px;
+}
+
+.likelihood-label {
+  font-size: 13px;
+  font-weight: 600;
+  color: #1F2937;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.market-badge {
+  background: #F9FAFB;
+  border: 1px solid #E5E7EB;
+  border-radius: 12px;
+  padding: 4px 12px;
+  font-size: 11px;
+  font-weight: 500;
+  color: #6B7280;
+  white-space: nowrap;
+}
+
+.likelihood-meter-wrapper {
+  margin-bottom: 10px;
+}
+
+.likelihood-placeholder {
+  text-align: center;
+  padding: 20px 0;
+  color: #9CA3AF;
+  font-size: 13px;
+  font-style: italic;
+}
+
+.likelihood-percentage {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 10px;
+}
+
+.percentage-number {
+  font-size: 32px;
+  font-weight: 700;
+  color: #111827;
+  line-height: 1;
+}
+
+.percentage-label {
+  font-size: 10px;
+  font-weight: 600;
+  padding: 4px 8px;
+  border-radius: 4px;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.percentage-label.high {
+  background: #10B981;
+  color: white;
+}
+
+.percentage-label.medium {
+  background: #F59E0B;
+  color: white;
+}
+
+.percentage-label.low {
+  background: #EF4444;
+  color: white;
+}
+
+.likelihood-bar {
+  width: 100%;
+  height: 10px;
+  background: #F3F4F6;
+  border-radius: 5px;
+  overflow: hidden;
+}
+
+.likelihood-bar-fill {
+  height: 100%;
+  border-radius: 5px;
+  transition: width 0.4s cubic-bezier(0.4, 0, 0.2, 1), background 0.3s ease;
+}
+
+.likelihood-bar-fill.high {
+  background: linear-gradient(90deg, #10B981 0%, #059669 100%);
+}
+
+.likelihood-bar-fill.medium {
+  background: linear-gradient(90deg, #FBB040 0%, #F59E0B 100%);
+}
+
+.likelihood-bar-fill.low {
+  background: linear-gradient(90deg, #F87171 0%, #EF4444 100%);
+}
+
+.likelihood-verdict {
+  font-size: 12px;
+  color: #6B7280;
+  text-align: center;
+  margin: 8px 0 4px 0;
+  line-height: 1.4;
+}
+
+.savings-line {
+  font-size: 11px;
+  color: #10B981;
+  text-align: center;
+  margin: 0;
+  font-weight: 500;
+}
+
+.likelihood-empty {
+  background: #F9FAFB;
+  border: 1px solid #E5E7EB;
+  border-radius: 8px;
+  padding: 20px;
+  text-align: center;
+  min-height: 120px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+.empty-message {
+  font-size: 12px;
+  color: #9CA3AF;
+  font-style: italic;
+  margin: 0;
+}
+
+/* ========================================
+   SUBMIT BUTTON
+   ======================================== */
+
+.qw-footer {
+  margin-top: 32px;
+  padding-top: 24px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 12px;
+}
+
+.qw-submit-btn {
+  width: 340px;
+  max-width: 100%;
+  height: 48px;
+  padding: 0 24px;
+  background: #0A58FF;
+  color: #FFFFFF;
+  border: none;
+  border-radius: 12px;
+  font-size: 16px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.15s ease;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  white-space: nowrap;
+  position: relative;
+}
+
+.qw-submit-btn:hover:not(.qw-disabled):not(.qw-loading) {
+  background: #0848D6;
+  box-shadow: 0 6px 16px rgba(10, 88, 255, 0.15);
+  transform: translateY(-1px);
+}
+
+.qw-submit-btn:active:not(.qw-disabled):not(.qw-loading) {
+  background: #073db2;
+  transform: translateY(1px);
+  box-shadow: 0 2px 8px rgba(10, 88, 255, 0.2);
+}
+
+.qw-submit-btn:focus-visible {
+  outline: none;
+  box-shadow: 0 0 0 2px rgba(10, 88, 255, 0.5);
+}
+
+.qw-submit-btn.qw-disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+  background: #94A3B8;
+  transform: none;
+  box-shadow: none;
+}
+
+.qw-submit-btn.qw-loading {
+  cursor: default;
+  background: #0A58FF;
+}
+
+.qw-policy-note {
+  font-size: 12px;
+  color: #6B7280;
+  margin: 0;
+  line-height: 1.4;
+  text-align: center;
+  max-width: 100%;
+}
+
+.qw-spinner {
+  width: 16px;
+  height: 16px;
+  border: 2px solid rgba(255, 255, 255, 0.3);
+  border-top: 2px solid #FFFFFF;
+  border-radius: 50%;
+  animation: qw-spin 1s linear infinite;
+  margin-right: 8px;
+}
+
+@keyframes qw-spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
+/* ========================================
+   OTHER VEHICLE PANEL
+   ======================================== */
+
+.other-panel-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.5);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+  padding: 20px;
+}
+
+.other-panel {
+  background: white;
+  border-radius: 16px;
+  max-width: 450px;
+  width: 100%;
+  max-height: 70vh;
+  display: flex;
+  flex-direction: column;
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.2);
+}
+
+.other-panel-header {
+  padding: 18px 20px;
+  border-bottom: 1px solid #E5E7EB;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.other-panel-header h3 {
+  margin: 0;
+  font-size: 16px;
+  font-weight: 600;
+  color: #111827;
+}
+
+.other-panel-close {
+  background: none;
+  border: none;
+  font-size: 28px;
+  line-height: 1;
+  color: #6B7280;
+  cursor: pointer;
+  padding: 0;
+  width: 32px;
+  height: 32px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 6px;
+  transition: all 0.2s ease;
+}
+
+.other-panel-close:hover {
+  background: #F3F4F6;
+  color: #111827;
+}
+
+.other-panel-content {
+  flex: 1;
+  padding: 20px;
+  overflow-y: auto;
+}
+
+.other-category {
+  margin-bottom: 20px;
+}
+
+.other-category:last-child {
+  margin-bottom: 0;
+}
+
+.other-category-title {
+  font-size: 12px;
+  font-weight: 600;
+  color: #6B7280;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  margin: 0 0 10px 0;
+}
+
+.other-chips-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 8px;
+}
+
+.other-panel-footer {
+  padding: 16px 20px;
+  border-top: 1px solid #E5E7EB;
+}
+
+.qw-other-chip {
+  height: 40px;
+  padding: 0 16px;
+  background: #FFFFFF;
+  border: 1px solid #E6EDF5;
+  border-radius: 9999px;
+  font-size: 14px;
+  color: #1F2937;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 120ms ease;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  position: relative;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  user-select: none;
+  box-shadow: 0 4px 12px rgba(16, 24, 40, 0.04);
+}
+
+.qw-other-chip:hover:not(.qw-disabled) {
+  background: #F7FAFF;
+  border-color: #D5E4FF;
+  box-shadow: 0 6px 16px rgba(16, 24, 40, 0.08);
+}
+
+.qw-other-chip.qw-active {
+  background: #0A58FF;
+  border-color: #0A58FF;
+  color: #FFFFFF;
+  font-weight: 600;
+}
+
+.qw-other-chip.qw-disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+  background: #F2F5FA;
+  color: #94A3B8;
+  border-color: transparent;
+  box-shadow: none;
+}
+
+/* ========================================
+   CONFIRMATION CARD - NUCLEAR CENTERING
+   ======================================== */
+
+.confirmation-card {
+  padding: 40px 24px;
+  text-align: center;
+  min-height: 640px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+.confirmation-icon {
+  width: 60px;
+  height: 60px;
+  margin: 0 auto 20px;
+  background: #10B981;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.confirmation-icon svg {
+  width: 32px;
+  height: 32px;
+  color: white;
+}
+
+.confirmation-title {
+  font-size: 22px;
+  font-weight: 700;
+  color: #111827;
+  margin: 0 0 12px 0;
+}
+
+.confirmation-details {
+  font-size: 20px;
+  color: #111827;
+  margin: 0 0 8px 0;
+}
+
+.confirmation-details strong {
+  color: #111827;
+}
+
+.confirmation-vehicles {
+  font-size: 16px;
+  color: #374151;
+  margin: 0 0 8px 0;
+}
+
+.confirmation-route {
+  font-size: 14px;
+  color: #6B7280;
+  margin: 0 0 8px 0;
+}
+
+.confirmation-transport {
+  font-size: 14px;
+  color: #6B7280;
+  margin: 0 0 16px 0;
+}
+
+.confirmation-message {
+  font-size: 14px;
+  color: #6B7280;
+  margin: 0 0 24px 0;
+}
+
+/* NUCLEAR CENTERING - Multiple fallback approaches */
+.confirmation-actions-wrapper {
+  width: 100% !important;
+  display: flex !important;
+  justify-content: center !important;
+  align-items: center !important;
+  text-align: center !important;
+  margin: 24px auto 0 auto !important;
+  padding: 0 !important;
+  box-sizing: border-box !important;
+}
+
+.centered-cta-button {
+  width: auto !important;
+  min-width: 240px !important;
+  max-width: 300px !important;
+  display: inline-flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  margin: 0 auto !important;
+  padding: 14px 24px !important;
+  background: #2563EB !important;
+  color: white !important;
+  border: none !important;
+  border-radius: 8px !important;
+  font-size: 15px !important;
+  font-weight: 600 !important;
+  cursor: pointer !important;
+  transition: all 0.2s ease !important;
+  text-align: center !important;
+  font-family: inherit !important;
+  line-height: normal !important;
+  box-sizing: border-box !important;
+  position: relative !important;
+  z-index: 1 !important;
+  white-space: nowrap !important;
+  text-decoration: none !important;
+  outline: none !important;
+  appearance: none !important;
+  -webkit-appearance: none !important;
+}
+
+.centered-cta-button:hover {
+  background: #1D4ED8 !important;
+  transform: translateY(-1px) !important;
+  box-shadow: 0 4px 12px rgba(37, 99, 235, 0.25) !important;
+}
+
+.centered-cta-button:active {
+  background: #1E40AF !important;
+  transform: translateY(0) !important;
+  box-shadow: 0 2px 8px rgba(37, 99, 235, 0.25) !important;
+}
+
+.centered-cta-button:focus {
+  outline: 3px solid rgba(37, 99, 235, 0.5) !important;
+  outline-offset: 2px !important;
+}
+
+/* Additional confirmation button styling */
+.confirmation-done-btn {
+  width: 100% !important;
+  padding: 14px 24px !important;
+  background: #2563EB !important;
+  color: white !important;
+  border: none !important;
+  border-radius: 8px !important;
+  font-size: 15px !important;
+  font-weight: 600 !important;
+  cursor: pointer !important;
+  transition: all 0.2s ease !important;
+  font-family: inherit !important;
+  line-height: normal !important;
+  box-sizing: border-box !important;
+}
+
+.confirmation-done-btn:hover {
+  background: #1D4ED8 !important;
+  transform: translateY(-1px) !important;
+  box-shadow: 0 4px 12px rgba(37, 99, 235, 0.25) !important;
+}
+
+/* ========================================
+   MOBILE RESPONSIVE
+   ======================================== */
+
+@media (max-width: 768px) {
+  .quote-widget {
+    min-height: auto;
+    box-shadow: none;
+    border-radius: 0;
+  }
+  
+  .quote-form {
+    padding: 20px;
+    min-height: auto;
+  }
+  
+  .form-group {
+    margin-bottom: 20px;
+  }
+  
+  .form-row {
+    grid-template-columns: 1fr;
+    gap: 20px;
+  }
+  
+  .form-label {
+    font-size: 12px;
+  }
+  
+  .vehicle-chips-row {
+    gap: 10px;
+  }
+  
+  .qw-chip {
+    min-width: 70px;
+    height: 36px;
+    padding: 0 16px;
+    font-size: 14px;
+  }
+  
+  .transport-pills-container {
+    gap: 12px;
+  }
+  
+  .transport-pill {
+    height: 56px;
+    padding: 8px 20px;
+  }
+  
+  .transport-pill .pill-label {
+    font-size: 15px;
+  }
+  
+  .transport-pill .pill-sublabel {
+    font-size: 10px;
+  }
+  
+  .likelihood-section {
+    min-height: 120px;
+  }
+  
+  .likelihood-card {
+    padding: 12px;
+  }
+  
+  .likelihood-header {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 6px;
+  }
+  
+  .market-badge {
+    font-size: 10px;
+    padding: 3px 8px;
+  }
+  
+  .percentage-number {
+    font-size: 26px;
+  }
+  
+  .percentage-label {
+    font-size: 9px;
+    padding: 3px 6px;
+  }
+  
+  .likelihood-verdict {
+    font-size: 11px;
+  }
+  
+  .savings-line {
+    font-size: 10px;
+  }
+  
+  .qw-footer {
+    gap: 12px;
+    padding-top: 20px;
+    margin-top: 24px;
+  }
+  
+  .qw-submit-btn {
+    width: 100%;
+    max-width: 320px;
+    height: 48px;
+  }
+  
+  .qw-policy-note {
+    font-size: 11px;
+  }
+  
+  .other-chips-grid {
+    grid-template-columns: 1fr;
+  }
+  
+  .confirmation-card {
+    min-height: auto;
+    padding: 30px 20px;
+  }
+  
+  .centered-cta-button {
+    width: 100% !important;
+    max-width: 280px !important;
+  }
+  
+  .other-panel {
+    max-height: 85vh;
+  }
+}
+
+@media (max-width: 640px) {
+  .vehicle-chips-row {
+    gap: 8px;
+  }
+  
+  .qw-chip {
+    min-width: 65px;
+    height: 34px;
+    padding: 0 14px;
+    font-size: 13px;
+  }
+}
+
+@media (max-width: 480px) {
+  .transport-pills-container {
+    gap: 8px;
+  }
+  
+  .transport-pill {
+    height: 54px;
+    padding: 6px 16px;
+  }
+  
+  .transport-pill .pill-label {
+    font-size: 14px;
+  }
+  
+  .transport-pill .pill-sublabel {
+    font-size: 9px;
+  }
+  
+  .qw-chip-count {
+    width: 16px;
+    height: 16px;
+    font-size: 10px;
+  }
+}
+
+@media (max-width: 360px) {
+  .transport-pills-container {
+    flex-direction: column;
+    gap: 12px;
+  }
+  
+  .transport-pill {
+    width: 100%;
+  }
+}
+
+/* ========================================
+   NUCLEAR DEFENSIVE OVERRIDES
+   Ensures centering works everywhere
+   ======================================== */
+
+/* Force centering in all possible contexts */
+.quote-widget .confirmation-actions-wrapper,
+.modal-body .confirmation-actions-wrapper,
+.customer-quote-modal-body .confirmation-actions-wrapper,
+.auth-modal .confirmation-actions-wrapper,
+body .confirmation-actions-wrapper,
+html .confirmation-actions-wrapper {
+  width: 100% !important;
+  display: flex !important;
+  justify-content: center !important;
+  align-items: center !important;
+  text-align: center !important;
+  margin: 24px auto 0 auto !important;
+  padding: 0 !important;
+  box-sizing: border-box !important;
+}
+
+.quote-widget .centered-cta-button,
+.modal-body .centered-cta-button,
+.customer-quote-modal-body .centered-cta-button,
+.auth-modal .centered-cta-button,
+body .centered-cta-button,
+html .centered-cta-button {
+  width: auto !important;
+  min-width: 240px !important;
+  max-width: 300px !important;
+  display: inline-flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  margin: 0 auto !important;
+  text-align: center !important;
+}
+
+/* Kill any potential conflicting button styles */
+.quote-widget button.centered-cta-button,
+.modal-body button.centered-cta-button,
+.customer-quote-modal-body button.centered-cta-button,
+button.centered-cta-button {
+  width: auto !important;
+  display: inline-flex !important;
+  margin: 0 auto !important;
+  float: none !important;
+  position: relative !important;
+  left: auto !important;
+  right: auto !important;
+  top: auto !important;
+  bottom: auto !important;
+  transform: none !important;
+}
+
+/* Force all chips to display correctly */
+.quote-widget .qw-chip,
+.quote-widget .transport-pill,
+.quote-widget .qw-other-chip {
+  display: inline-flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  border-radius: 9999px !important;
+  cursor: pointer !important;
+  font-family: inherit !important;
+  line-height: normal !important;
+  box-sizing: border-box !important;
+  margin: 0 !important;
+  opacity: 1 !important;
+  visibility: visible !important;
+  -webkit-appearance: none !important;
+  appearance: none !important;
+}
+
+/* Main vehicle chips specific overrides */
+.quote-widget .qw-chip {
+  min-width: 80px !important;
+  height: 40px !important;
+  padding: 0 20px !important;
+  border: 2px solid #E6EDF5 !important;
+  background: #FFFFFF !important;
+  color: #1F2937 !important;
+  font-size: 15px !important;
+  font-weight: 600 !important;
+  box-shadow: 0 4px 12px rgba(16, 24, 40, 0.04) !important;
+}
+
+/* Active state for vehicle chips */
+.quote-widget .qw-chip.qw-active {
+  background: #0A58FF !important;
+  border-color: #0A58FF !important;
+  color: #FFFFFF !important;
+  box-shadow: 0 4px 12px rgba(10, 88, 255, 0.15) !important;
+}
+
+.quote-widget .qw-chip.qw-active .qw-chip-text {
+  color: #FFFFFF !important;
+}
+
+/* Disabled state for vehicle chips */
+.quote-widget .qw-chip.qw-disabled {
+  background: #F2F5FA !important;
+  border-color: #E6EDF5 !important;
+  color: #94A3B8 !important;
+  box-shadow: none !important;
+  opacity: 0.6 !important;
+  cursor: not-allowed !important;
+}
+
+/* Transport pills specific overrides */
+.quote-widget .transport-pill {
+  flex: 1 !important;
+  height: 60px !important;
+  padding: 10px 24px !important;
+  flex-direction: column !important;
+  gap: 2px !important;
+  border: 2px solid #E6EDF5 !important;
+  background: #FFFFFF !important;
+  color: #1F2937 !important;
+  box-shadow: 0 6px 20px rgba(16, 24, 40, 0.06) !important;
+}
+
+/* Selected state for transport pills */
+.quote-widget .transport-pill.selected {
+  background: #0A58FF !important;
+  border-color: #0A58FF !important;
+  color: #FFFFFF !important;
+  box-shadow: 0 6px 20px rgba(10, 88, 255, 0.15) !important;
+}
+
+.quote-widget .transport-pill.selected .pill-label,
+.quote-widget .transport-pill.selected .pill-sublabel {
+  color: #FFFFFF !important;
+}
+
+/* Hover states with high specificity */
+.quote-widget .qw-chip:hover:not(.qw-disabled):not(.qw-active) {
+  background: #F7FAFF !important;
+  border-color: #0A58FF !important;
+  transform: translateY(-1px) !important;
+}
+
+.quote-widget .transport-pill:hover:not(.selected) {
+  background: #F7FAFF !important;
+  border-color: #0A58FF !important;
+  transform: translateY(-1px) !important;
+}
+
+/* Focus states */
+.quote-widget .qw-chip:focus-visible,
+.quote-widget .transport-pill:focus-visible {
+  outline: 3px solid #0A58FF !important;
+  outline-offset: 2px !important;
+}
+
+/* Ensure the chips row displays correctly */
+.quote-widget .vehicle-chips-row {
+  display: flex !important;
+  flex-wrap: wrap !important;
+  gap: 12px !important;
+}
+
+.quote-widget .transport-pills-container {
+  display: flex !important;
+  gap: 16px !important;
+  align-items: stretch !important;
+}

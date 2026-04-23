@@ -1,0 +1,336 @@
+/* UNIFIED SIGNUP STYLES — visually matches login modal */
+
+.simple-login {
+  padding: 32px;
+  background: #ffffff;
+  width: 100%;
+  max-width: 100%;
+  box-sizing: border-box;
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+}
+
+.simple-title {
+  font-size: 28px;
+  font-weight: 800;
+  color: #0066ff;
+  margin: 0 0 8px 0;
+  text-align: center;
+  letter-spacing: -0.5px;
+  padding: 0;
+}
+
+.simple-subtitle {
+  display: block;
+  font-size: 13px;
+  color: #64748b;
+  line-height: 1.4;
+  font-weight: 400;
+  letter-spacing: -0.2px;
+  margin: 0 0 24px 0;
+  padding: 0;
+  max-width: 400px;
+  text-align: center;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.one-line {
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: clip;
+}
+
+.simple-form {
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+  margin: 0;
+  padding: 0;
+}
+
+.simple-field {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  margin: 0;
+  padding: 0;
+}
+
+.simple-field label {
+  font-size: 14px;
+  font-weight: 600;
+  color: #0f172a;
+  margin: 0;
+  padding: 0;
+}
+
+.simple-field input {
+  width: 100%;
+  height: 48px;
+  padding: 0 16px;
+  font-size: 15px;
+  border: 1px solid #e2e8f0;
+  border-radius: 12px;
+  outline: none;
+  box-sizing: border-box;
+  background: #ffffff;
+  transition: border-color 0.15s ease;
+  margin: 0;
+  box-shadow: none !important;
+  -webkit-box-shadow: none !important;
+}
+
+.simple-field input::placeholder {
+  color: #cbd5e1;
+}
+
+.simple-field input:hover:not(:disabled) {
+  border-color: #cbd5e1;
+}
+
+.simple-field input:focus {
+  border-color: #0066ff;
+  box-shadow: none;
+}
+
+.simple-field input:disabled {
+  background: #f8fafb;
+  cursor: not-allowed;
+  opacity: 0.6;
+}
+
+.simple-field input.error {
+  border-color: #ef4444;
+  background: #fff5f5;
+}
+
+.simple-field input.error:focus {
+  border-color: #ef4444;
+}
+
+/* password row */
+.simple-password {
+  position: relative;
+  display: flex;
+  align-items: center;
+  margin: 0;
+  padding: 0;
+}
+.simple-password input {
+  padding-right: 50px;
+}
+
+.simple-toggle {
+  position: absolute;
+  right: 12px;
+  top: 50%;
+  transform: translateY(-50%);
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  padding: 8px;
+  color: #64748b;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: color 0.15s ease;
+  width: 32px;
+  height: 32px;
+}
+.simple-toggle:hover:not(:disabled) {
+  color: #0f172a;
+}
+.simple-toggle:disabled {
+  cursor: not-allowed;
+  opacity: 0.5;
+}
+
+/* error text */
+.field-error {
+  font-size: 13px;
+  color: #ef4444;
+  font-weight: 500;
+  margin-top: 4px;
+  line-height: 1.3;
+  animation: fadeIn 0.2s ease-out;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(-3px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+/* general API error banner */
+.signup-error-banner {
+  background: #fef2f2;
+  border: 1px solid #fca5a5;
+  border-radius: 12px;
+  padding: 12px 16px;
+  color: #ef4444;
+  font-size: 14px;
+  font-weight: 500;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  animation: slideDown 0.3s ease-out;
+  margin: 0 0 12px 0;
+}
+.signup-error-banner::before {
+  content: "⚠";
+  font-size: 16px;
+  flex-shrink: 0;
+}
+@keyframes slideDown {
+  from { opacity: 0; transform: translateY(-6px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+/* terms row / checkbox block */
+.terms-row {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  margin-top: 4px;
+  margin-bottom: 8px;
+}
+
+/* label wraps checkbox + text so the whole row is clickable */
+.terms-label-click {
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+  line-height: 1.4;
+  color: #64748b;
+  font-size: 14px;
+  cursor: pointer;
+  user-select: none;
+}
+
+.checkbox {
+  width: 18px;
+  height: 18px;
+  accent-color: #0066ff;
+  flex-shrink: 0;
+  cursor: pointer;
+  border-radius: 4px;
+  margin-top: 2px;
+  -webkit-appearance: checkbox !important;
+  appearance: checkbox !important;
+}
+
+.terms-text {
+  flex: 1;
+  color: #64748b;
+  font-size: 14px;
+  line-height: 1.5;
+  margin: 0;
+}
+
+.terms-text a {
+  color: #0066ff;
+  font-weight: 500;
+  text-decoration: underline;
+  text-underline-offset: 2px;
+  cursor: pointer;
+  transition: color 0.15s ease;
+}
+.terms-text a:hover { color: #0052cc; }
+
+/* submit button */
+.simple-submit {
+  width: 100%;
+  height: 48px;
+  border-radius: 12px;
+  border: none;
+  background: #0066ff;
+  color: #ffffff;
+  font-weight: 600;
+  font-size: 15px;
+  cursor: pointer;
+  transition: all 0.15s ease;
+  position: relative;
+  margin: 8px 0 0 0;
+  padding: 0;
+}
+.simple-submit:hover:not(:disabled) {
+  background: #0052cc;
+  transform: translateY(-1px);
+}
+.simple-submit:active:not(:disabled) { transform: translateY(0); }
+.simple-submit:disabled {
+  background: #cbd5e1;
+  cursor: not-allowed;
+  transform: none;
+}
+.simple-submit.loading { color: transparent; position: relative; }
+.simple-submit.loading::after {
+  content: "";
+  position: absolute;
+  width: 20px;
+  height: 20px;
+  top: 50%;
+  left: 50%;
+  margin-left: -10px;
+  margin-top: -10px;
+  border: 2px solid #ffffff;
+  border-radius: 50%;
+  border-top-color: transparent;
+  animation: spinner 0.6s linear infinite;
+}
+@keyframes spinner { to { transform: rotate(360deg); } }
+
+/* footer */
+.simple-footer {
+  text-align: center;
+  font-size: 14px;
+  color: #64748b;
+  margin: 24px 0 0 0;
+  padding: 0;
+  border: none !important;
+  box-shadow: none !important;
+}
+.simple-footer p { margin: 0 0 12px 0; padding: 0; font-size: 14px; color: #64748b; line-height: 1.5; }
+.simple-footer p:last-child { margin-bottom: 0; }
+.simple-footer button {
+  background: none; border: none; color: #0066ff; font-weight: 600; cursor: pointer;
+  padding: 0; font-size: inherit; text-decoration: none; transition: text-decoration 0.15s ease;
+}
+.simple-footer button:hover { text-decoration: underline; }
+.simple-footer button:focus { outline: none; }
+
+/* autofill cleanup */
+input:-webkit-autofill,
+input:-webkit-autofill:hover,
+input:-webkit-autofill:focus,
+input:-webkit-autofill:active {
+  -webkit-box-shadow: 0 0 0px 1000px #ffffff inset !important;
+  box-shadow: 0 0 0px 1000px #ffffff inset !important;
+  -webkit-text-fill-color: #0f172a !important;
+  transition: background-color 9999s ease-out 0s !important;
+  caret-color: #0f172a !important;
+}
+
+/* responsive */
+@media (max-width: 640px) {
+  .simple-login { padding: 24px; }
+  .simple-title { font-size: 26px; }
+  .simple-subtitle { font-size: 14px; margin-bottom: 20px; }
+  .simple-field input { height: 46px; font-size: 16px; }
+  .simple-submit { height: 46px; font-size: 14px; }
+}
+
+@media (max-width: 480px) {
+  .simple-login { padding: 20px 16px; }
+  .simple-title { font-size: 24px; }
+  .simple-form { gap: 16px; }
+  .checkbox { margin-top: 2px; }
+  .terms-text { font-size: 13px; line-height: 1.45; }
+}
+
+/* sr-only helper */
+.sr-only {
+  position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px; overflow: hidden;
+  clip: rect(0, 0, 0, 0); white-space: nowrap; border-width: 0;
+}

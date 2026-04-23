@@ -1,0 +1,516 @@
+/* Customer Dashboard Styles - ABSOLUTE FINAL FIX */
+
+/* Layout Variables */
+:root {
+  --header-height: 72px;
+  --header-height-mobile: 64px;
+  --dashboard-bg: #f8fafc;
+  --content-max-width: 1400px;
+  --content-padding: 32px;
+  --content-padding-mobile: 16px;
+}
+
+/* Main Dashboard Container */
+.customer-dashboard {
+  min-height: 100vh;
+  background: var(--dashboard-bg);
+  display: flex;
+  flex-direction: column;
+}
+
+.customer-dashboard-main {
+  /* Main dashboard layout */
+}
+
+.customer-dashboard-subpage {
+  background: #ffffff;
+}
+
+/* Dashboard Header Section */
+.customer-dashboard-main .dashboard-header-section {
+  background: #fff;
+  border-bottom: 1px solid #e5e7eb;
+  padding: 32px 0;
+  margin-top: var(--header-height);
+}
+
+.customer-dashboard-main .dashboard-header-container {
+  max-width: var(--content-max-width);
+  margin: 0 auto;
+  padding: 0 var(--content-padding);
+}
+
+.customer-dashboard-main .header-main {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 24px;
+}
+
+.customer-dashboard-main .header-text {
+  flex: 1;
+}
+
+.customer-dashboard-main .dashboard-greeting {
+  font-size: 36px;
+  font-weight: 700;
+  color: #0F172A;
+  margin: 0 0 8px 0;
+  line-height: 1.2;
+}
+
+.customer-dashboard-main .dashboard-greeting span {
+  color: #0a58ff;
+}
+
+.customer-dashboard-main .dashboard-subtitle {
+  font-size: 16px;
+  color: #64748B;
+  margin: 0;
+  line-height: 1.5;
+}
+
+.customer-dashboard-main .header-actions {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+
+.customer-dashboard-main .ship-vehicle-btn {
+  background: #0a58ff;
+  color: #fff;
+  border: none;
+  border-radius: 8px;
+  padding: 12px 24px;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.15s ease;
+  white-space: nowrap;
+  min-height: 48px;
+}
+
+.customer-dashboard-main .ship-vehicle-btn:hover {
+  background: #0848d6;
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(10, 88, 255, 0.25);
+}
+
+.customer-dashboard-main .ship-vehicle-btn:active {
+  transform: translateY(0);
+  box-shadow: 0 2px 6px rgba(10, 88, 255, 0.2);
+}
+
+/* ⭐ CRITICAL FIX: Dashboard Content Section with proper spacing */
+.customer-dashboard-main .dashboard-content-section {
+  flex: 1;
+  padding: 48px 0; /* ⭐ INCREASED from 40px to 48px for more breathing room */
+  padding-bottom: 96px;
+}
+
+.customer-dashboard-main .dashboard-container {
+  max-width: var(--content-max-width);
+  margin: 0 auto;
+  padding: 0 var(--content-padding);
+}
+
+/* ⭐ CRITICAL FIX: Grid layout */
+.customer-dashboard-main .dashboard-grid.dashboard-main-grid {
+  display: flex;
+  flex-direction: column;
+  gap: 32px; /* ⭐ INCREASED from 28px to 32px */
+  width: 100%;
+}
+
+/* ⭐ NEW: Section wrapper styling */
+.customer-dashboard-main .section-wrapper {
+  width: 100%;
+  /* This creates scroll anchor point */
+  scroll-margin-top: 110px; /* header (72px) + spacing (38px) */
+}
+
+/* Dashboard card styles */
+.customer-dashboard-main .dashboard-card {
+  background: #fff;
+  border-radius: 12px;
+  border: 1px solid #e5e7eb;
+  overflow: hidden;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+  width: 100%;
+}
+
+/* Section width rules */
+.customer-dashboard-main .dashboard-card,
+.customer-dashboard-main [data-testid="active-shipments"] {
+  width: 100%;
+  max-width: none;
+  flex: none;
+}
+
+/* Subpage Content Area */
+.dashboard-subpage-content {
+  flex: 1;
+  padding-top: calc(var(--header-height) + 20px);
+  min-height: calc(100vh - var(--header-height));
+  background: #ffffff;
+}
+
+.subpage-content-wrapper {
+  width: 100%;
+  min-height: 0;
+  display: block;
+  position: relative;
+}
+
+/* Loading Skeleton */
+.customer-dashboard-main .skeleton-line {
+  background: linear-gradient(90deg, #f1f5f9 0%, #e2e8f0 50%, #f1f5f9 100%);
+  background-size: 200% 100%;
+  animation: shimmer 1.5s infinite;
+  border-radius: 6px;
+}
+
+@keyframes shimmer {
+  0% { background-position: -200% 0; }
+  100% { background-position: 200% 0; }
+}
+
+/* Error State */
+.customer-dashboard-main .error-state {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  padding: 80px 20px;
+  max-width: 400px;
+  margin: 0 auto;
+}
+
+.customer-dashboard-main .error-icon {
+  width: 64px;
+  height: 64px;
+  color: #EF4444;
+  margin-bottom: 24px;
+}
+
+.customer-dashboard-main .error-title {
+  font-size: 24px;
+  font-weight: 600;
+  color: #0F172A;
+  margin: 0 0 12px 0;
+}
+
+.customer-dashboard-main .error-message {
+  font-size: 16px;
+  color: #64748B;
+  margin: 0 0 32px 0;
+  line-height: 1.5;
+}
+
+.customer-dashboard-main .btn-primary {
+  background: #0a58ff;
+  color: #fff;
+  border: none;
+  border-radius: 8px;
+  padding: 12px 24px;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.15s ease;
+}
+
+.customer-dashboard-main .btn-primary:hover {
+  background: #0848d6;
+}
+
+.customer-dashboard-main .btn-primary:active {
+  transform: scale(0.98);
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+  :root {
+    --content-padding: 16px;
+  }
+
+  .customer-dashboard-main .dashboard-header-section {
+    padding: 24px 0;
+    margin-top: var(--header-height-mobile);
+  }
+
+  .customer-dashboard-main .header-main {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 20px;
+  }
+
+  .customer-dashboard-main .dashboard-greeting {
+    font-size: 28px;
+  }
+
+  .customer-dashboard-main .dashboard-subtitle {
+    font-size: 15px;
+  }
+
+  .customer-dashboard-main .header-actions {
+    justify-content: flex-start;
+  }
+
+  .customer-dashboard-main .ship-vehicle-btn {
+    padding: 14px 20px;
+    font-size: 15px;
+    width: 100%;
+    max-width: 200px;
+  }
+
+  .customer-dashboard-main .dashboard-content-section {
+    padding: 32px 0; /* ⭐ Adjusted for mobile */
+    padding-bottom: 72px;
+  }
+
+  .customer-dashboard-main .dashboard-grid.dashboard-main-grid {
+    gap: 24px;
+  }
+
+  .customer-dashboard-main .section-wrapper {
+    scroll-margin-top: 88px; /* mobile header (64px) + spacing (24px) */
+  }
+
+  .dashboard-subpage-content {
+    padding-top: calc(var(--header-height-mobile) + 16px);
+    min-height: calc(100vh - var(--header-height-mobile));
+  }
+}
+
+@media (max-width: 480px) {
+  :root {
+    --content-padding: 12px;
+  }
+
+  .customer-dashboard-main .dashboard-header-section {
+    padding: 20px 0;
+  }
+
+  .customer-dashboard-main .header-main {
+    gap: 16px;
+  }
+
+  .customer-dashboard-main .dashboard-greeting {
+    font-size: 24px;
+  }
+
+  .customer-dashboard-main .dashboard-subtitle {
+    font-size: 14px;
+  }
+
+  .customer-dashboard-main .ship-vehicle-btn {
+    padding: 12px 18px;
+    font-size: 14px;
+    width: 100%;
+    max-width: none;
+  }
+
+  .customer-dashboard-main .dashboard-content-section {
+    padding: 24px 0; /* ⭐ Adjusted for small mobile */
+    padding-bottom: 64px;
+  }
+
+  .customer-dashboard-main .dashboard-grid.dashboard-main-grid {
+    gap: 20px;
+  }
+
+  .customer-dashboard-main .error-state {
+    padding: 60px 16px;
+  }
+
+  .customer-dashboard-main .error-title {
+    font-size: 20px;
+  }
+
+  .customer-dashboard-main .error-message {
+    font-size: 14px;
+  }
+
+  .dashboard-subpage-content {
+    padding-top: calc(var(--header-height-mobile) + 12px);
+  }
+}
+
+/* High Contrast Mode */
+@media (prefers-contrast: high) {
+  .customer-dashboard-main .dashboard-card {
+    border-width: 2px;
+  }
+
+  .customer-dashboard-main .ship-vehicle-btn:focus {
+    outline: 3px solid #fff;
+    outline-offset: 2px;
+  }
+
+  .customer-dashboard-main .btn-primary:focus {
+    outline: 3px solid #0a58ff;
+    outline-offset: 2px;
+  }
+}
+
+/* Reduced Motion */
+@media (prefers-reduced-motion: reduce) {
+  .customer-dashboard-main .ship-vehicle-btn,
+  .customer-dashboard-main .btn-primary {
+    transition: none;
+  }
+
+  .customer-dashboard-main .ship-vehicle-btn:hover {
+    transform: none;
+  }
+
+  .customer-dashboard-main .ship-vehicle-btn:active {
+    transform: none;
+  }
+
+  .customer-dashboard-main .shimmer {
+    animation: none;
+  }
+  
+  /* Disable smooth scroll */
+  * {
+    scroll-behavior: auto !important;
+  }
+}
+
+/* Print Styles */
+@media print {
+  .dashboard-subpage-content {
+    padding-top: 0 !important;
+  }
+
+  .customer-dashboard-main .ship-vehicle-btn {
+    display: none;
+  }
+}
+
+/* Success Toast */
+.success-toast-wrapper {
+  position: fixed;
+  top: 80px;
+  right: 24px;
+  z-index: 9999;
+  animation: slideInRight 0.3s ease-out;
+}
+
+@keyframes slideInRight {
+  from {
+    transform: translateX(400px);
+    opacity: 0;
+  }
+  to {
+    transform: translateX(0);
+    opacity: 1;
+  }
+}
+
+.success-toast {
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+  padding: 16px 20px;
+  background: white;
+  border-radius: 12px;
+  box-shadow: 0 10px 40px rgba(0, 0, 0, 0.15);
+  border-left: 4px solid #10b981;
+  min-width: 320px;
+  max-width: 450px;
+}
+
+.success-toast-icon {
+  font-size: 24px;
+  line-height: 1;
+  flex-shrink: 0;
+}
+
+.success-toast-content {
+  flex: 1;
+}
+
+.success-toast-content h4 {
+  margin: 0 0 4px 0;
+  font-size: 15px;
+  font-weight: 600;
+  color: #111827;
+}
+
+.success-toast-content p {
+  margin: 0;
+  font-size: 13px;
+  line-height: 1.5;
+  color: #6b7280;
+}
+
+.success-toast-close {
+  background: none;
+  border: none;
+  font-size: 24px;
+  line-height: 1;
+  color: #9ca3af;
+  cursor: pointer;
+  padding: 0;
+  width: 24px;
+  height: 24px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: color 0.2s;
+  flex-shrink: 0;
+}
+
+.success-toast-close:hover {
+  color: #6b7280;
+}/* ⭐ FIXED: No smooth scroll for instant pagination */
+html {
+  scroll-behavior: auto !important;
+}
+
+/* Ensure no element blocks scroll */
+body, #root, .app-wrapper, .customer-dashboard {
+  overflow-x: hidden !important;
+  overflow-y: visible !important;
+}
+
+/* ============================================================
+   REACTIVATION TOAST - Clickable style
+   ============================================================ */
+
+.clickable-toast {
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.clickable-toast:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 24px rgba(37, 99, 235, 0.15);
+}
+
+.clickable-toast:active {
+  transform: translateY(0);
+}
+
+.clickable-toast .success-toast-content {
+  user-select: none;
+}
+
+/* Make it clear it's clickable */
+.clickable-toast::after {
+  content: '→';
+  position: absolute;
+  right: 50px;
+  top: 50%;
+  transform: translateY(-50%);
+  font-size: 20px;
+  color: #2563eb;
+  opacity: 0.7;
+  transition: opacity 0.2s ease;
+}
+
+.clickable-toast:hover::after {
+  opacity: 1;
+}

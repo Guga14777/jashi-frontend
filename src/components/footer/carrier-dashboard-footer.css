@@ -1,0 +1,134 @@
+.footer {
+  background: linear-gradient(180deg, #1E293B 0%, #1a2332 100%);
+  padding: 40px 0;
+  margin-top: 0;
+  width: 100%;
+  position: relative;
+  z-index: 1;
+  border-top: 1px solid rgba(255, 255, 255, 0.05);
+  margin-left: 0;
+  margin-right: 0;
+}
+
+.footer-container {
+  max-width: 1280px;
+  margin: 0 auto;
+  padding: 0 32px;
+}
+
+/* Main 4-Column Grid */
+.footer-main {
+  display: grid;
+  grid-template-columns: 1.5fr 1fr 1fr 1.2fr;
+  gap: 48px;
+  margin-bottom: 40px;
+  align-items: start;
+}
+
+/* Column 1 - Brand */
+.footer-brand-column { display: flex; flex-direction: column; }
+.footer-brand { display: flex; align-items: center; gap: 12px; margin-bottom: 16px; }
+.footer-logo { height: 72px; width: auto; display: block; }
+.footer-brand-name { font-size: 32px; font-weight: 500; color: #FFFFFF; letter-spacing: -0.02em; line-height: 1; }
+.footer-tagline { font-size: 14px; font-weight: 400; color: #8EA2C2; margin-bottom: 24px; line-height: 1.5; }
+.footer-social { display: flex; align-items: center; gap: 12px; }
+.footer-social-link { display: flex; align-items: center; justify-content: center; color: #8EA2C2; text-decoration: none; transition: color 0.2s ease; padding: 8px; }
+.footer-social-link:hover { color: #4EA8FF; }
+.footer-social-link svg { width: 16px; height: 16px; }
+
+/* Columns 2-4 */
+.footer-links-column, .footer-why-column, .footer-contact-column { display: flex; flex-direction: column; }
+
+/* Section Headings with Blue Accent */
+.footer-heading {
+  font-size: 13px; font-weight: 700; text-transform: uppercase;
+  letter-spacing: 0.08em; color: #FFFFFF; margin-bottom: 20px;
+  position: relative; display: inline-block;
+}
+.footer-heading-accent { display: block; width: 40px; height: 3px; background: linear-gradient(90deg, #1677FF 0%, #0DB2FF 100%); margin-top: 8px; border-radius: 2px; }
+
+/* Footer Links */
+.footer-links, .footer-features {
+  list-style: none; padding: 0; margin: 0; display: flex; flex-direction: column; gap: 16px;
+}
+.footer-links a, .footer-features a {
+  font-size: 14px; font-weight: 400; color: #C8D3E5; text-decoration: none; transition: color 0.2s ease; display: block; line-height: 1.5;
+}
+.footer-links a:hover, .footer-features a:hover { color: #4EA8FF; }
+
+/* Support Contact Info */
+.footer-contact { list-style: none; padding: 0; margin: 0; display: flex; flex-direction: column; gap: 12px; }
+.footer-contact li { display: flex; align-items: center; gap: 10px; font-size: 14px; color: #C8D3E5; line-height: 1.5; }
+.footer-icon { width: 16px; height: 16px; flex-shrink: 0; stroke: #4EA8FF; stroke-width: 2; }
+
+/* Anchored contact (if any other links appear later) */
+.footer-contact a { color: #C8D3E5; text-decoration: none; transition: all 0.2s ease; }
+.footer-contact a:hover { color: #E6EEF7; text-decoration: underline; }
+
+/* >>> New: unclickable text style for phone & email <<< */
+.footer-contact-text {
+  color: #C8D3E5;
+  user-select: text;    /* allow copy */
+  cursor: default;      /* not clickable */
+  white-space: nowrap;
+}
+
+/* Bottom Row */
+.footer-bottom { padding-top: 24px; border-top: 1px solid rgba(255, 255, 255, 0.08); }
+.footer-bottom-content { display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 16px; }
+.footer-copyright { font-size: 13px; color: #8EA2C2; }
+.footer-legal { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; }
+.footer-legal a { font-size: 13px; color: #8EA2C2; text-decoration: none; transition: color 0.2s ease; white-space: nowrap; }
+.footer-legal a:hover { color: #4EA8FF; }
+.footer-separator { color: #4a5568; font-size: 13px; margin: 0 4px; }
+
+/* Focus States */
+.footer a:focus-visible { outline: 2px solid #4EA8FF; outline-offset: 2px; border-radius: 4px; }
+
+/* Tablet */
+@media (max-width: 1024px) and (min-width: 768px) {
+  .footer-main { grid-template-columns: 1fr 1fr; gap: 40px; }
+  .footer-brand-column { grid-column: 1 / -1; align-items: center; text-align: center; margin-bottom: 24px; padding-bottom: 24px; border-bottom: 1px solid rgba(255, 255, 255, 0.08); }
+  .footer-brand { justify-content: center; margin-bottom: 12px; }
+  .footer-tagline { text-align: center; margin-bottom: 16px; }
+  .footer-social { justify-content: center; }
+  .footer-links-column { order: 1; }
+  .footer-why-column { order: 2; }
+  .footer-contact-column { order: 3; grid-column: 1 / -1; margin-top: 16px; padding-top: 24px; border-top: 1px solid rgba(255, 255, 255, 0.08); }
+}
+
+/* Mobile */
+@media (max-width: 768px) {
+  .footer { padding: 32px 0; margin-top: 0; }
+  .footer-container { padding: 0 20px; }
+  .footer-main { grid-template-columns: 1fr; gap: 32px; margin-bottom: 32px; }
+  .footer-brand-column { order: 1; align-items: center; text-align: center; margin-bottom: 16px; padding-bottom: 16px; border-bottom: 1px solid rgba(255, 255, 255, 0.08); }
+  .footer-brand { justify-content: center; margin-bottom: 12px; }
+  .footer-tagline { text-align: center; margin-bottom: 16px; }
+  .footer-social { justify-content: center; }
+  .footer-links-column { order: 2; }
+  .footer-why-column { order: 3; }
+  .footer-contact-column { order: 4; }
+  .footer-logo { height: 56px; }
+  .footer-brand-name { font-size: 28px; }
+  .footer-tagline { font-size: 13px; }
+  .footer-heading { font-size: 12px; }
+  .footer-links a, .footer-features a, .footer-contact li { font-size: 13px; }
+  .footer-links, .footer-features { gap: 14px; }
+  .footer-bottom-content { flex-direction: column; gap: 16px; text-align: center; justify-content: center; }
+  .footer-legal { justify-content: center; }
+}
+
+/* Small Mobile */
+@media (max-width: 480px) {
+  .footer { padding: 28px 0; margin-top: 0; }
+  .footer-container { padding: 0 16px; }
+  .footer-main { gap: 24px; }
+  .footer-logo { height: 48px; }
+  .footer-brand-name { font-size: 24px; }
+  .footer-tagline { font-size: 12px; }
+  .footer-links, .footer-features { gap: 12px; }
+  .footer-copyright, .footer-legal a { font-size: 12px; }
+  .footer-legal { flex-direction: column; gap: 8px; align-items: center; }
+  .footer-separator { display: none; }
+}

@@ -1,0 +1,126 @@
+/* If your sticky CarrierHeader height differs, tweak this once */
+.page-shell.claims { --sticky-header-h: 72px; }
+
+/* -------- Layout / spacing -------- */
+.page-shell.claims .page-main {
+  max-width: 1100px;
+  margin: 0 auto;
+  /* keep content clear of sticky header + comfy spacing */
+  padding: calc(var(--sticky-header-h) + 36px) 16px 56px;
+}
+
+/* Ensure in-page anchors (any [id]) don't hide under the header */
+.page-shell.claims [id] {
+  scroll-margin-top: calc(var(--sticky-header-h) + 16px);
+}
+
+/* Header */
+.page-shell.claims .page-header {
+  margin: 8px 0 22px;
+  padding-top: 12px;
+}
+.page-shell.claims .page-header h1 {
+  font-size: 32px;
+  line-height: 1.2;
+  margin: 0 0 8px;
+}
+
+/* -------- Grid & cards -------- */
+.page-shell.claims .grid.two {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 16px;
+  margin-bottom: 16px;
+}
+@media (max-width: 860px) {
+  .page-shell.claims .grid.two { grid-template-columns: 1fr; }
+}
+
+.page-shell.claims .card {
+  background: rgba(255,255,255,.02);
+  border: 1px solid rgba(16,24,40,.08);
+  border-radius: 12px;
+  padding: 20px;
+  box-shadow: 0 2px 8px rgba(16,24,40,.05);
+}
+.page-shell.claims .card h2,
+.page-shell.claims .card h3 {
+  margin: 0 0 10px;
+  font-weight: 700;
+}
+
+/* -------- Lists -------- */
+.page-shell.claims .list      { margin: 8px 0 0 18px; }
+.page-shell.claims .list-ol   { margin: 8px 0 0 22px; }
+.page-shell.claims .hint      { margin-top: 8px; opacity: .7; }
+
+/* -------- CTA row -------- */
+.page-shell.claims .cta-row {
+  display: flex;
+  gap: 12px;
+  align-items: center;
+  flex-wrap: wrap;            /* allow button and pill to wrap to next row */
+  margin-top: 14px;
+}
+
+/* Primary button — keep white text @ 90% opacity */
+.page-shell.claims .btn_primary,
+.page-shell.claims .btn_primary:link,
+.page-shell.claims .btn_primary:visited {
+  appearance: none;
+  border: 1px solid rgba(255,255,255,0.90);
+  border-radius: 12px;
+  padding: 10px 16px;
+  font-weight: 600;
+  background: #2563eb;
+  color: rgba(255,255,255,0.90) !important;
+  text-decoration: none;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 1px 5px rgba(16,24,40,.05), 0 0 0 1px rgba(16,24,40,.15) inset;
+  transition: transform .05s ease, box-shadow .15s ease, opacity .15s ease;
+}
+.page-shell.claims .btn_primary:hover,
+.page-shell.claims .btn_primary:focus,
+.page-shell.claims .btn_primary:active {
+  color: #fff !important;
+  background: #1f54c8;
+  border-color: #ffffff;
+  transform: translateY(-1px);
+}
+
+/* Email pill — NON-clickable, forced to its own line and one single line of text */
+.page-shell.claims .btn_email {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 12px;
+  padding: 10px 16px;
+  font-weight: 600;
+  background: #eef3ff;
+  color: #2563eb;
+  border: 1px solid #d6e4ff;
+
+  /* key: make it occupy the full next row under the button */
+  flex: 1 1 100%;
+  width: 100%;
+  text-align: center;
+
+  /* key: prevent breaking at hyphen or anywhere; keep one line */
+  white-space: nowrap;
+  word-break: keep-all;
+  overflow-wrap: normal;
+
+  user-select: text;     /* allow copy */
+  cursor: default;       /* not a link */
+}
+
+/* -------- Responsive tweaks -------- */
+@media (max-width: 640px) {
+  .page-shell.claims .page-main {
+    padding: calc(var(--sticky-header-h) + 28px) 14px 48px;
+  }
+  /* slightly reduce font size on small screens to guarantee single-line fit */
+  .page-shell.claims .btn_email { font-size: 14px; padding: 9px 14px; }
+}

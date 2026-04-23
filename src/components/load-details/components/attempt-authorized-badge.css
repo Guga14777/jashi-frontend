@@ -1,0 +1,562 @@
+/* ============================================================
+   FILE: src/components/load-details/components/attempt-authorized-badge.css
+   Styles for Attempt Authorized badge component
+   ============================================================ */
+
+/* ============================================================
+   CSS Variables
+   ============================================================ */
+.aab-container {
+  --aab-green-50: #f0fdf4;
+  --aab-green-100: #dcfce7;
+  --aab-green-500: #22c55e;
+  --aab-green-600: #16a34a;
+  --aab-green-700: #15803d;
+  
+  --aab-blue-50: #eff6ff;
+  --aab-blue-100: #dbeafe;
+  --aab-blue-500: #3b82f6;
+  --aab-blue-600: #2563eb;
+  --aab-blue-700: #1d4ed8;
+  
+  --aab-red-50: #fef2f2;
+  --aab-red-100: #fee2e2;
+  --aab-red-500: #ef4444;
+  --aab-red-600: #dc2626;
+  --aab-red-700: #b91c1c;
+  
+  --aab-gray-50: #f9fafb;
+  --aab-gray-100: #f3f4f6;
+  --aab-gray-200: #e5e7eb;
+  --aab-gray-400: #9ca3af;
+  --aab-gray-500: #6b7280;
+  --aab-gray-600: #4b5563;
+  --aab-gray-700: #374151;
+  --aab-gray-800: #1f2937;
+}
+
+/* ============================================================
+   Container Styles
+   ============================================================ */
+.aab-container {
+  background: var(--aab-gray-50);
+  border: 1px solid var(--aab-gray-200);
+  border-radius: 12px;
+  overflow: hidden;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+}
+
+.aab-container--yes {
+  background: var(--aab-green-50);
+  border-color: var(--aab-green-100);
+}
+
+.aab-container--protected {
+  background: var(--aab-blue-50);
+  border-color: var(--aab-blue-100);
+}
+
+.aab-container--no {
+  background: var(--aab-red-50);
+  border-color: var(--aab-red-100);
+}
+
+/* ============================================================
+   Header (Clickable)
+   ============================================================ */
+.aab-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: 100%;
+  padding: 14px 16px;
+  background: transparent;
+  border: none;
+  cursor: default;
+  text-align: left;
+  gap: 12px;
+}
+
+.aab-header--expandable {
+  cursor: pointer;
+}
+
+.aab-header--expandable:hover {
+  background: rgba(0, 0, 0, 0.02);
+}
+
+.aab-header--expandable:focus {
+  outline: none;
+  background: rgba(0, 0, 0, 0.03);
+}
+
+.aab-header__left {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.aab-header__text {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+/* ============================================================
+   Icon Styles
+   ============================================================ */
+.aab-icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 36px;
+  height: 36px;
+  border-radius: 10px;
+  flex-shrink: 0;
+}
+
+.aab-icon--yes {
+  background: var(--aab-green-100);
+  color: var(--aab-green-600);
+}
+
+.aab-icon--protected {
+  background: var(--aab-blue-100);
+  color: var(--aab-blue-600);
+}
+
+.aab-icon--no {
+  background: var(--aab-red-100);
+  color: var(--aab-red-600);
+}
+
+.aab-icon svg {
+  width: 20px;
+  height: 20px;
+}
+
+/* ============================================================
+   Status Label & Value
+   ============================================================ */
+.aab-status-label {
+  font-size: 12px;
+  font-weight: 500;
+  color: var(--aab-gray-500);
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.aab-status-value {
+  font-size: 16px;
+  font-weight: 700;
+  letter-spacing: -0.01em;
+}
+
+.aab-status-value--yes {
+  color: var(--aab-green-700);
+}
+
+.aab-status-value--protected {
+  color: var(--aab-blue-700);
+}
+
+.aab-status-value--no {
+  color: var(--aab-red-700);
+}
+
+/* ============================================================
+   Chevron
+   ============================================================ */
+.aab-chevron {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 24px;
+  height: 24px;
+  color: var(--aab-gray-400);
+  transition: transform 0.2s ease;
+}
+
+.aab-chevron--open {
+  transform: rotate(180deg);
+}
+
+/* ============================================================
+   Primary Reason
+   ============================================================ */
+.aab-primary-reason {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 10px 16px;
+  border-top: 1px solid rgba(0, 0, 0, 0.05);
+  font-size: 13px;
+  color: var(--aab-gray-600);
+}
+
+.aab-primary-reason svg {
+  flex-shrink: 0;
+  opacity: 0.6;
+}
+
+.aab-container--yes .aab-primary-reason {
+  color: var(--aab-green-700);
+}
+
+.aab-container--protected .aab-primary-reason {
+  color: var(--aab-blue-700);
+}
+
+.aab-container--no .aab-primary-reason {
+  color: var(--aab-red-700);
+}
+
+/* ============================================================
+   Expanded Details
+   ============================================================ */
+.aab-details {
+  padding: 0 16px 16px;
+  border-top: 1px solid rgba(0, 0, 0, 0.05);
+}
+
+/* ============================================================
+   Reason Groups
+   ============================================================ */
+.aab-reason-group {
+  margin-top: 12px;
+  padding: 12px;
+  border-radius: 8px;
+}
+
+.aab-reason-group--blocking {
+  background: var(--aab-red-50);
+  border: 1px solid var(--aab-red-100);
+}
+
+.aab-reason-group--protection {
+  background: var(--aab-blue-50);
+  border: 1px solid var(--aab-blue-100);
+}
+
+.aab-reason-group--success {
+  background: var(--aab-green-50);
+  border: 1px solid var(--aab-green-100);
+}
+
+.aab-reason-group__title {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  margin: 0 0 8px;
+  font-size: 12px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.aab-reason-group--blocking .aab-reason-group__title {
+  color: var(--aab-red-700);
+}
+
+.aab-reason-group--protection .aab-reason-group__title {
+  color: var(--aab-blue-700);
+}
+
+.aab-reason-group--success .aab-reason-group__title {
+  color: var(--aab-green-700);
+}
+
+.aab-reason-group__title svg {
+  width: 14px;
+  height: 14px;
+}
+
+/* ============================================================
+   Reason List
+   ============================================================ */
+.aab-reason-list {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.aab-reason-item {
+  position: relative;
+  padding: 6px 0 6px 16px;
+  font-size: 13px;
+  line-height: 1.4;
+}
+
+.aab-reason-item::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+}
+
+.aab-reason-item--blocking {
+  color: var(--aab-red-700);
+}
+
+.aab-reason-item--blocking::before {
+  background: var(--aab-red-500);
+}
+
+.aab-reason-item--protection {
+  color: var(--aab-blue-700);
+}
+
+.aab-reason-item--protection::before {
+  background: var(--aab-blue-500);
+}
+
+.aab-reason-item--success {
+  color: var(--aab-green-700);
+}
+
+.aab-reason-item--success::before {
+  background: var(--aab-green-500);
+}
+
+/* ============================================================
+   Protection Note
+   ============================================================ */
+.aab-protection-note {
+  margin: 10px 0 0;
+  padding: 8px 10px;
+  background: rgba(255, 255, 255, 0.6);
+  border-radius: 6px;
+  font-size: 12px;
+  color: var(--aab-blue-600);
+  line-height: 1.4;
+}
+
+/* ============================================================
+   Metadata
+   ============================================================ */
+.aab-metadata {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-top: 12px;
+  padding-top: 12px;
+  border-top: 1px dashed rgba(0, 0, 0, 0.1);
+}
+
+.aab-metadata__item {
+  display: inline-flex;
+  align-items: center;
+  padding: 4px 8px;
+  background: white;
+  border: 1px solid var(--aab-gray-200);
+  border-radius: 4px;
+  font-size: 11px;
+  color: var(--aab-gray-600);
+}
+
+.aab-metadata__item strong {
+  margin-left: 4px;
+  color: var(--aab-gray-800);
+  text-transform: capitalize;
+}
+
+.aab-metadata__item--check {
+  background: var(--aab-green-50);
+  border-color: var(--aab-green-100);
+  color: var(--aab-green-700);
+}
+
+.aab-metadata__item--warn {
+  background: #fef3c7;
+  border-color: #fde68a;
+  color: #92400e;
+}
+
+/* ============================================================
+   Compact Badge
+   ============================================================ */
+.aab-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 4px 10px;
+  border-radius: 6px;
+  font-size: 12px;
+  font-weight: 600;
+  white-space: nowrap;
+}
+
+.aab-badge--yes {
+  background: var(--aab-green-100);
+  color: var(--aab-green-700);
+}
+
+.aab-badge--protected {
+  background: var(--aab-blue-100);
+  color: var(--aab-blue-700);
+}
+
+.aab-badge--no {
+  background: var(--aab-red-100);
+  color: var(--aab-red-700);
+}
+
+.aab-badge svg {
+  width: 14px;
+  height: 14px;
+}
+
+.aab-badge--compact {
+  padding: 2px 6px;
+  font-size: 11px;
+}
+
+.aab-badge--compact svg {
+  width: 12px;
+  height: 12px;
+}
+
+/* ============================================================
+   Inline Status (for buttons)
+   ============================================================ */
+.aab-inline {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 18px;
+  height: 18px;
+  border-radius: 50%;
+}
+
+.aab-inline--yes {
+  background: var(--aab-green-500);
+  color: white;
+}
+
+.aab-inline--protected {
+  background: var(--aab-blue-500);
+  color: white;
+}
+
+.aab-inline--no {
+  background: var(--aab-red-500);
+  color: white;
+}
+
+.aab-inline svg {
+  width: 12px;
+  height: 12px;
+}
+
+/* ============================================================
+   Text Status
+   ============================================================ */
+.aab-text {
+  font-size: 13px;
+  font-weight: 600;
+}
+
+.aab-text--yes {
+  color: var(--aab-green-600);
+}
+
+.aab-text--protected {
+  color: var(--aab-blue-600);
+}
+
+.aab-text--no {
+  color: var(--aab-red-600);
+}
+
+/* ============================================================
+   Responsive Adjustments
+   ============================================================ */
+@media (max-width: 480px) {
+  .aab-header {
+    padding: 12px;
+  }
+  
+  .aab-icon {
+    width: 32px;
+    height: 32px;
+  }
+  
+  .aab-icon svg {
+    width: 16px;
+    height: 16px;
+  }
+  
+  .aab-status-label {
+    font-size: 11px;
+  }
+  
+  .aab-status-value {
+    font-size: 14px;
+  }
+  
+  .aab-primary-reason {
+    font-size: 12px;
+    padding: 8px 12px;
+  }
+  
+  .aab-details {
+    padding: 0 12px 12px;
+  }
+  
+  .aab-reason-group {
+    padding: 10px;
+  }
+  
+  .aab-reason-item {
+    font-size: 12px;
+  }
+  
+  .aab-metadata {
+    gap: 6px;
+  }
+  
+  .aab-metadata__item {
+    font-size: 10px;
+    padding: 3px 6px;
+  }
+}
+
+/* ============================================================
+   Animation
+   ============================================================ */
+.aab-details {
+  animation: aab-slideDown 0.2s ease-out;
+}
+
+@keyframes aab-slideDown {
+  from {
+    opacity: 0;
+    transform: translateY(-8px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* ============================================================
+   Print Styles
+   ============================================================ */
+@media print {
+  .aab-container {
+    border: 1px solid #ccc !important;
+    background: white !important;
+  }
+  
+  .aab-chevron {
+    display: none;
+  }
+  
+  .aab-details {
+    display: block !important;
+  }
+}

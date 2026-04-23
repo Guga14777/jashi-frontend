@@ -1,0 +1,102 @@
+<!doctype html>
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <title>Google Routes API — Distance & ETA</title>
+    <style>
+      body{font-family:system-ui,Segoe UI,Roboto,Arial,sans-serif;margin:32px;max-width:600px}
+      h1{margin-bottom:8px}
+      .row{display:flex;gap:8px;align-items:center;margin:16px 0}
+      input{font-size:16px;padding:10px;border:1px solid #ddd;border-radius:8px;flex:1}
+      button{font-size:16px;padding:10px 20px;background:#0d6efd;color:white;border:none;border-radius:8px;cursor:pointer}
+      button:hover{background:#0b5ed7}
+      pre{background:#f6f8fa;padding:14px;border-radius:8px;white-space:pre-wrap;overflow-x:auto}
+      .error{color:#dc3545;margin:8px 0}
+      .success{color:#198754}
+    </style>
+  </head>
+  <body>
+    <h1>Distance & ETA Calculator</h1>
+    <p style="color:#666;font-size:14px">Using Google Routes API</p>
+
+    <div class="row">
+      <input id="from" placeholder="e.g., New York, NY" value="New York, NY">
+      <input id="to" placeholder="e.g., Miami, FL" value="Miami, FL">
+      <button id="go">Compute</button>
+    </div>
+
+    <div id="msg"></div>
+    <pre id="out">Enter two locations and click Compute.</pre>
+
+    <script>
+      const API_KEY = "AIzaSyCdYWsEskv-LXPphXpyH90qsVNBcuJWU_g"; // ← Replace with your Google Cloud API key
+
+      async function computeRoute(origin, destination) {
+        const url = `https://routes.googleapis.com/directions/v2:computeRoutes?key=${encodeURIComponent(API_KEY)}`;
+        const res = await fetch(url, {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            "X-Goog-FieldMask": "routes.distanceMeters,routes.duration"
+          },
+          body: JSON.stringify({
+            origin: { address: String(origin) },
+            destination: { address: String(destination) },
+            travelMode: "DRIVE",
+            routingPreference: "TRAFFIC_AWARE"
+          })
+        });
+        return res.json();
+      }
+
+      document.getElementById("go").addEventListener("click", async () => {
+        const from = document.getElementById("from").value.trim();
+        const to = document.getElementById("to").value.trim();
+        const out = document.getElementById("out");
+        const msg = document.getElementById("msg");
+
+        if (!from || !to) {
+          msg.textContent = "Please enter both locations.";
+          msg.className = "error";
+          return;
+        }
+
+        msg.textContent = "";
+        out.textContent = "Loading…";
+
+        try {
+          const data = await computeRoute(from, to);
+
+          if (data.error) {
+            out.textContent = `Error: ${data.error.message}`;
+            msg.textContent = data.error.message;
+            msg.className = "error";
+            return;
+          }
+
+          const r = data.routes && data.routes[0];
+          if (!r) {
+            out.textContent = "No routes found.";
+            return;
+          }
+
+          const miles = (r.distanceMeters / 1609.344).toFixed(1);
+          const duration = r.duration || "N/A";
+
+          out.textContent =
+            `From: ${from}\nTo:   ${to}\n\n` +
+            `Distance: ${miles} miles\n` +
+            `Duration: ${duration}\n\n` +
+            `Raw response:\n${JSON.stringify(r, null, 2)}`;
+
+          msg.textContent = "✓ Route computed successfully!";
+          msg.className = "success";
+        } catch (err) {
+          out.textContent = `Error: ${err.message}`;
+          msg.textContent = err.message;
+          msg.className = "error";
+        }
+      });
+    </script>
+  </body>
+</html>

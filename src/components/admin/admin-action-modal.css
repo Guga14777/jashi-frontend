@@ -1,0 +1,168 @@
+/* src/components/admin/admin-action-modal.css */
+
+.admin-action-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(15, 23, 42, 0.55);
+  z-index: 10001;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 24px;
+  backdrop-filter: blur(2px);
+}
+
+.admin-action-panel {
+  width: min(480px, 100%);
+  background: #fff;
+  border-radius: 12px;
+  box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.35);
+  display: flex;
+  flex-direction: column;
+  max-height: 90vh;
+  overflow: hidden;
+}
+
+.admin-action-header {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 16px 20px;
+  border-bottom: 1px solid #e2e8f0;
+}
+.admin-action-header h3 {
+  margin: 0;
+  flex: 1;
+  font-size: 16px;
+  font-weight: 600;
+  color: #0f172a;
+}
+.admin-action-warn-icon {
+  color: #d97706;
+  flex-shrink: 0;
+}
+.admin-action-close {
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  color: #64748b;
+  padding: 4px;
+  display: inline-flex;
+}
+.admin-action-close:hover { color: #0f172a; }
+
+.admin-action-desc {
+  padding: 12px 20px;
+  font-size: 14px;
+  color: #475569;
+  margin: 0;
+}
+
+.admin-action-fields {
+  padding: 12px 20px 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  overflow-y: auto;
+}
+.admin-action-field {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+.admin-action-field > span {
+  font-size: 12px;
+  font-weight: 500;
+  color: #334155;
+}
+.admin-action-field > span em {
+  color: #dc2626;
+  font-style: normal;
+  margin-left: 2px;
+}
+.admin-action-field input,
+.admin-action-field select,
+.admin-action-field textarea {
+  width: 100%;
+  padding: 9px 12px;
+  border: 1px solid #e2e8f0;
+  border-radius: 6px;
+  font-size: 14px;
+  color: #0f172a;
+  background: #fff;
+  font-family: inherit;
+}
+.admin-action-field input:focus,
+.admin-action-field select:focus,
+.admin-action-field textarea:focus {
+  outline: none;
+  border-color: #0a58ff;
+  box-shadow: 0 0 0 3px rgba(10, 88, 255, 0.15);
+}
+.admin-action-field textarea {
+  resize: vertical;
+  min-height: 68px;
+}
+.admin-action-field small {
+  font-size: 11px;
+  color: #94a3b8;
+}
+
+.admin-action-error {
+  padding: 10px 20px;
+  background: #fef2f2;
+  border-top: 1px solid #fecaca;
+  border-bottom: 1px solid #fecaca;
+  color: #dc2626;
+  font-size: 13px;
+}
+
+.admin-action-footer {
+  padding: 14px 20px;
+  border-top: 1px solid #e2e8f0;
+  display: flex;
+  justify-content: flex-end;
+  gap: 8px;
+  background: #f8fafc;
+}
+
+.admin-action-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 8px 16px;
+  border-radius: 6px;
+  font-size: 13px;
+  font-weight: 500;
+  border: 1px solid transparent;
+  cursor: pointer;
+  transition: all 0.15s;
+}
+.admin-action-btn.ghost {
+  background: transparent;
+  border-color: #e2e8f0;
+  color: #334155;
+}
+.admin-action-btn.ghost:hover { background: #f1f5f9; }
+.admin-action-btn.primary {
+  background: #0a58ff;
+  color: #fff;
+  border-color: #0a58ff;
+}
+.admin-action-btn.primary:hover { background: #0848d6; }
+.admin-action-btn.danger {
+  background: #dc2626;
+  color: #fff;
+  border-color: #dc2626;
+}
+.admin-action-btn.danger:hover { background: #b91c1c; }
+.admin-action-btn.warn {
+  background: #d97706;
+  color: #fff;
+  border-color: #d97706;
+}
+.admin-action-btn.warn:hover { background: #b45309; }
+.admin-action-btn:disabled { opacity: 0.6; cursor: not-allowed; }
+
+.admin-action-btn .spin { animation: spin 1s linear infinite; }
+@keyframes spin { to { transform: rotate(360deg); } }

@@ -1,0 +1,215 @@
+/* src/pages/home/home.css - FINAL FIXED VERSION */
+
+/* ============================================
+   CRITICAL: PREVENT HORIZONTAL SCROLL
+   ============================================ */
+html, body {
+  overflow-x: hidden !important;
+  max-width: 100% !important;
+  margin: 0;
+  padding: 0;
+}
+
+.home-page {
+  width: 100%;
+  min-height: 100vh;
+  overflow-x: hidden;
+  background: #FFFFFF;
+  margin: 0;
+  padding: 0;
+  position: relative;
+}
+
+/* ============================================
+   MAIN CONTENT WRAPPER
+   ============================================ */
+.home-main-content {
+  width: 100%;
+  background: #FFFFFF;
+  /* No overflow hidden to prevent content cutoff */
+}
+
+/* ============================================
+   SECTION WRAPPERS FOR SPACING CONTROL
+   ============================================ */
+.hero-wrapper {
+  width: 100%;
+  padding-bottom: 0; /* Let hero section handle its own padding */
+  background: #FFFFFF;
+  margin-bottom: 60px; /* ADDED: Space after hero wrapper */
+}
+
+.quote-wrapper {
+  width: 100%;
+  background: #FFFFFF;
+  padding-top: 40px; /* ADDED: Extra top padding for quote section */
+  position: relative;
+}
+
+.features-wrapper {
+  width: 100%;
+  background: linear-gradient(135deg, #0066FF 0%, #0052CC 100%);
+}
+
+/* ============================================
+   ENSURE QUOTE SECTION HAS PROPER SPACING
+   ============================================ */
+.home-page .quote-section {
+  padding-top: 20px; /* Additional top padding */
+  padding-bottom: 80px;
+  background: #FFFFFF;
+  width: 100%;
+  overflow: visible; /* IMPORTANT: Allow content to be visible */
+  position: relative;
+  margin-top: 0;
+}
+
+/* Ensure timeline is not cut off */
+.home-page .qs-timeline {
+  margin-top: 0; /* No negative margin */
+  position: relative;
+}
+
+.home-page .qs-timeline-item:first-child {
+  margin-top: 0; /* No negative margin on first item */
+}
+
+/* ============================================
+   FEATURES SECTION
+   ============================================ */
+.home-page .features-section {
+  padding-top: 60px;
+  padding-bottom: 60px;
+  margin-bottom: 0 !important;
+  width: 100% !important;
+  margin-left: 0 !important;
+  margin-right: 0 !important;
+  background: linear-gradient(135deg, #0066FF 0%, #0052CC 100%);
+  overflow: hidden;
+  position: relative;
+}
+
+/* ============================================
+   CONTAINER SYSTEM
+   ============================================ */
+.home-page section .container,
+.home-page section .hero-container,
+.home-page section .quote-container {
+  max-width: 1400px;
+  margin: 0 auto;
+  padding-left: 24px;
+  padding-right: 24px;
+  width: 100%;
+  box-sizing: border-box;
+}
+
+/* ============================================
+   RESPONSIVE DESIGN - TABLET
+   ============================================ */
+@media (max-width: 1024px) {
+  .hero-wrapper {
+    margin-bottom: 40px; /* Reduced spacing on tablet */
+  }
+  
+  .quote-wrapper {
+    padding-top: 30px; /* Reduced top padding on tablet */
+  }
+  
+  .home-page .quote-section {
+    padding-top: 15px;
+    padding-bottom: 60px;
+  }
+  
+  .home-page section .container,
+  .home-page section .hero-container,
+  .home-page section .quote-container {
+    padding-left: 20px;
+    padding-right: 20px;
+  }
+}
+
+/* ============================================
+   RESPONSIVE DESIGN - MOBILE
+   ============================================ */
+@media (max-width: 768px) {
+  .hero-wrapper {
+    margin-bottom: 30px; /* Reduced spacing on mobile */
+  }
+  
+  .quote-wrapper {
+    padding-top: 20px; /* Reduced top padding on mobile */
+  }
+  
+  .home-page .quote-section {
+    padding-top: 10px;
+    padding-bottom: 40px;
+  }
+  
+  .home-page section .container,
+  .home-page section .hero-container,
+  .home-page section .quote-container {
+    padding-left: 16px;
+    padding-right: 16px;
+  }
+}
+
+/* ============================================
+   RESPONSIVE DESIGN - SMALL MOBILE
+   ============================================ */
+@media (max-width: 480px) {
+  .hero-wrapper {
+    margin-bottom: 20px; /* Minimal spacing on small mobile */
+  }
+  
+  .quote-wrapper {
+    padding-top: 15px; /* Minimal top padding on small mobile */
+  }
+  
+  .home-page .quote-section {
+    padding-top: 5px;
+    padding-bottom: 32px;
+  }
+  
+  .home-page section .container,
+  .home-page section .hero-container,
+  .home-page section .quote-container {
+    padding-left: 12px;
+    padding-right: 12px;
+  }
+}
+
+/* ============================================
+   UTILITY CLASSES
+   ============================================ */
+@media (max-width: 768px) {
+  .hide-mobile {
+    display: none !important;
+  }
+}
+
+@media (min-width: 769px) {
+  .hide-desktop {
+    display: none !important;
+  }
+}
+
+/* ============================================
+   CSS VARIABLES
+   ============================================ */
+:root {
+  --bg-primary: #FFFFFF;
+  --bg-secondary: #F8FAFB;
+  --bg-tertiary: #F1F5F9;
+  --text-primary: #0F172A;
+  --text-secondary: #374151;
+  --text-muted: #64748B;
+  --border-color: #E2E8F0;
+  --border-radius-lg: 12px;
+  --transition-base: all 0.2s ease;
+  --shadow-lg: 0 10px 25px rgba(0, 0, 0, 0.1);
+  --spacing-md: 16px;
+  --spacing-lg: 24px;
+  --spacing-xl: 40px;
+  --spacing-2xl: 60px;
+  --spacing-3xl: 80px;
+}

@@ -1,0 +1,1026 @@
+/* ============================================================
+   FILE: src/components/load-details/styles/actions.css
+   Styles for carrier action buttons with inline helper text
+   ✅ REDESIGNED: Clean inline helper text (no big banners)
+   ✅ ADDED: Toast notification styles
+   ✅ UPDATED: Soft disabled state for time-restricted buttons
+   ============================================================ */
+
+/* ============================================================
+   CARRIER ACTION BUTTONS - CLEAN DESIGN
+   ============================================================ */
+
+.carrier-actions {
+  margin-bottom: 1rem;
+}
+
+.carrier-actions__buttons {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+/* Button wrapper with helper text */
+.carrier-actions__button-wrapper {
+  display: flex;
+  flex-direction: column;
+  gap: 0.375rem;
+}
+
+.carrier-actions__btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.625rem;
+  padding: 1rem 1.5rem;
+  border: none;
+  border-radius: 10px;
+  font-size: 0.9375rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  width: 100%;
+  letter-spacing: 0.01em;
+}
+
+.carrier-actions__btn:disabled {
+  cursor: not-allowed;
+}
+
+.carrier-actions__btn svg {
+  width: 18px;
+  height: 18px;
+  flex-shrink: 0;
+}
+
+/* Primary Button - Blue (Start Trip) */
+.carrier-actions__btn--primary {
+  background: #2563eb;
+  color: white;
+  box-shadow: 0 2px 4px rgba(37, 99, 235, 0.2);
+}
+
+.carrier-actions__btn--primary:hover:not(:disabled) {
+  background: #1d4ed8;
+  box-shadow: 0 4px 12px rgba(37, 99, 235, 0.3);
+  transform: translateY(-1px);
+}
+
+.carrier-actions__btn--primary:disabled {
+  opacity: 0.6;
+}
+
+/* Secondary Blue Button (Mark Arrived - enabled) */
+.carrier-actions__btn--teal,
+.carrier-actions__btn--secondary {
+  background: #3b82f6;
+  color: white;
+  box-shadow: 0 2px 4px rgba(59, 130, 246, 0.2);
+}
+
+.carrier-actions__btn--teal:hover:not(:disabled),
+.carrier-actions__btn--secondary:hover:not(:disabled) {
+  background: #2563eb;
+  box-shadow: 0 4px 12px rgba(59, 130, 246, 0.3);
+  transform: translateY(-1px);
+}
+
+/* Soft Disabled - Time not yet reached (still clickable for toast) */
+.carrier-actions__btn--disabled-soft {
+  background: #e2e8f0;
+  color: #64748b;
+  box-shadow: none;
+  cursor: pointer; /* Still clickable to show toast */
+}
+
+.carrier-actions__btn--disabled-soft:hover {
+  background: #cbd5e1;
+}
+
+/* Muted Disabled - Missing data (not clickable) */
+.carrier-actions__btn--disabled-muted {
+  background: #f1f5f9;
+  color: #94a3b8;
+  box-shadow: none;
+  cursor: not-allowed;
+}
+
+/* Legacy disabled-date class */
+.carrier-actions__btn--disabled-date {
+  background: #e2e8f0;
+  color: #64748b;
+  cursor: pointer;
+  box-shadow: none;
+}
+
+.carrier-actions__btn--disabled-date:hover {
+  background: #cbd5e1;
+}
+
+/* Indigo Button (Mark Picked Up) */
+.carrier-actions__btn--orange,
+.carrier-actions__btn--pickup {
+  background: #6366f1;
+  color: white;
+  box-shadow: 0 2px 4px rgba(99, 102, 241, 0.2);
+}
+
+.carrier-actions__btn--orange:hover:not(:disabled),
+.carrier-actions__btn--pickup:hover:not(:disabled) {
+  background: #4f46e5;
+  box-shadow: 0 4px 12px rgba(99, 102, 241, 0.3);
+  transform: translateY(-1px);
+}
+
+/* Success Button - Green (Mark Delivered) */
+.carrier-actions__btn--success {
+  background: #16a34a;
+  color: white;
+  box-shadow: 0 2px 4px rgba(22, 163, 74, 0.2);
+}
+
+.carrier-actions__btn--success:hover:not(:disabled) {
+  background: #15803d;
+  box-shadow: 0 4px 12px rgba(22, 163, 74, 0.3);
+  transform: translateY(-1px);
+}
+
+/* Spinner */
+.carrier-actions__spinner {
+  width: 16px;
+  height: 16px;
+  border: 2px solid rgba(255, 255, 255, 0.3);
+  border-top-color: white;
+  border-radius: 50%;
+  animation: carrier-spin 0.8s linear infinite;
+}
+
+@keyframes carrier-spin {
+  to { transform: rotate(360deg); }
+}
+
+/* ============================================================
+   INLINE HELPER TEXT - Clean, minimal
+   ============================================================ */
+
+.carrier-actions__helper-text {
+  display: flex;
+  align-items: center;
+  gap: 0.375rem;
+  font-size: 0.75rem;
+  color: #64748b;
+  padding: 0 0.25rem;
+  line-height: 1.4;
+}
+
+.carrier-actions__helper-text svg {
+  width: 14px;
+  height: 14px;
+  flex-shrink: 0;
+  color: #94a3b8;
+}
+
+.carrier-actions__helper-text--muted {
+  color: #94a3b8;
+}
+
+.carrier-actions__helper-text--warning {
+  color: #dc2626;
+}
+
+.carrier-actions__helper-text--warning svg {
+  color: #dc2626;
+}
+
+/* Helper badge (e.g., "Available in 2h") */
+.carrier-actions__helper-badge {
+  display: inline-flex;
+  align-items: center;
+  padding: 0.125rem 0.5rem;
+  background: #f1f5f9;
+  border-radius: 4px;
+  font-size: 0.6875rem;
+  font-weight: 600;
+  color: #475569;
+  margin-left: 0.375rem;
+}
+
+/* ============================================================
+   TOAST NOTIFICATIONS - Themed, minimal
+   ============================================================ */
+
+.carrier-toast {
+  position: fixed;
+  bottom: 24px;
+  left: 50%;
+  transform: translateX(-50%);
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  padding: 0.875rem 1.25rem;
+  background: #1e293b;
+  color: white;
+  border-radius: 10px;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
+  font-size: 0.875rem;
+  font-weight: 500;
+  z-index: 10000;
+  animation: toast-slide-up 0.3s ease;
+  max-width: calc(100vw - 48px);
+}
+
+@keyframes toast-slide-up {
+  from {
+    opacity: 0;
+    transform: translateX(-50%) translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(-50%) translateY(0);
+  }
+}
+
+.carrier-toast--info {
+  background: #1e293b;
+}
+
+.carrier-toast--success {
+  background: #166534;
+}
+
+.carrier-toast--warning {
+  background: #1e293b;
+  border-left: 3px solid #f59e0b;
+}
+
+.carrier-toast--error {
+  background: #991b1b;
+}
+
+.carrier-toast__message {
+  flex: 1;
+}
+
+.carrier-toast__close {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 24px;
+  height: 24px;
+  background: transparent;
+  border: none;
+  color: rgba(255, 255, 255, 0.7);
+  font-size: 1.25rem;
+  cursor: pointer;
+  border-radius: 4px;
+  transition: all 0.15s ease;
+}
+
+.carrier-toast__close:hover {
+  background: rgba(255, 255, 255, 0.1);
+  color: white;
+}
+
+/* ============================================================
+   DETENTION PANEL - CLEAN DESIGN
+   ============================================================ */
+
+.detention-panel {
+  background: #f8fafc;
+  border: 1px solid #e2e8f0;
+  border-radius: 12px;
+  padding: 1rem 1.25rem;
+  margin-top: 0.75rem;
+}
+
+.detention-panel__header {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  margin-bottom: 0.875rem;
+}
+
+.detention-panel__header svg {
+  width: 20px;
+  height: 20px;
+  color: #475569;
+}
+
+.detention-panel__title {
+  font-size: 0.875rem;
+  font-weight: 600;
+  color: #334155;
+  flex: 1;
+}
+
+.detention-panel__live {
+  font-size: 0.625rem;
+  font-weight: 700;
+  color: #dc2626;
+  background: #fee2e2;
+  padding: 0.125rem 0.5rem;
+  border-radius: 4px;
+  letter-spacing: 0.05em;
+  animation: pulse-live 2s ease-in-out infinite;
+}
+
+@keyframes pulse-live {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.6; }
+}
+
+/* Time Display */
+.detention-panel__time-display {
+  display: flex;
+  align-items: baseline;
+  gap: 0.375rem;
+  margin-bottom: 1rem;
+}
+
+.detention-panel__time-value {
+  font-size: 2rem;
+  font-weight: 700;
+  color: #0f172a;
+  font-variant-numeric: tabular-nums;
+  line-height: 1;
+}
+
+.detention-panel__time-unit {
+  font-size: 1rem;
+  font-weight: 600;
+  color: #475569;
+}
+
+.detention-panel__time-label {
+  font-size: 0.8125rem;
+  color: #64748b;
+  margin-left: 0.25rem;
+}
+
+/* Progress Bar */
+.detention-panel__progress {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.detention-panel__progress-bar {
+  height: 6px;
+  background: #e2e8f0;
+  border-radius: 3px;
+  overflow: hidden;
+}
+
+.detention-panel__progress-fill {
+  height: 100%;
+  background: linear-gradient(90deg, #3b82f6 0%, #2563eb 100%);
+  border-radius: 3px;
+  transition: width 1s ease;
+}
+
+.detention-panel__progress-text {
+  font-size: 0.75rem;
+  color: #64748b;
+}
+
+/* Fee Eligible State */
+.detention-panel__fee-eligible {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
+.detention-panel__fee-notice {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.625rem 0.875rem;
+  background: #ecfdf5;
+  border: 1px solid #a7f3d0;
+  border-radius: 8px;
+}
+
+.detention-panel__fee-notice svg {
+  width: 18px;
+  height: 18px;
+  color: #059669;
+}
+
+.detention-panel__fee-notice span {
+  font-size: 0.8125rem;
+  font-weight: 500;
+  color: #047857;
+}
+
+.detention-panel__fee-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  padding: 0.875rem 1rem;
+  background: #16a34a;
+  color: white;
+  border: none;
+  border-radius: 8px;
+  font-size: 0.875rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.detention-panel__fee-btn:hover:not(:disabled) {
+  background: #15803d;
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(22, 163, 74, 0.3);
+}
+
+.detention-panel__fee-btn:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+.detention-panel__fee-btn svg {
+  width: 16px;
+  height: 16px;
+}
+
+.detention-panel__spinner {
+  width: 14px;
+  height: 14px;
+  border: 2px solid rgba(255, 255, 255, 0.3);
+  border-top-color: white;
+  border-radius: 50%;
+  animation: carrier-spin 0.8s linear infinite;
+}
+
+/* Fee Applied State */
+.detention-panel__fee-applied {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.75rem;
+  padding: 0.875rem 1rem;
+  background: #f0fdf4;
+  border: 1px solid #86efac;
+  border-radius: 8px;
+}
+
+.detention-panel__fee-applied svg {
+  width: 20px;
+  height: 20px;
+  color: #16a34a;
+  flex-shrink: 0;
+  margin-top: 0.125rem;
+}
+
+.detention-panel__fee-applied-text {
+  display: flex;
+  flex-direction: column;
+  gap: 0.125rem;
+}
+
+.detention-panel__fee-applied-title {
+  font-size: 0.875rem;
+  font-weight: 600;
+  color: #166534;
+}
+
+.detention-panel__fee-applied-amount {
+  font-size: 1.125rem;
+  font-weight: 700;
+  color: #15803d;
+}
+
+.detention-panel__fee-applied-date {
+  font-size: 0.75rem;
+  color: #16a34a;
+}
+
+/* ============================================================
+   LEGACY SUPPORT - Keep old class names working
+   ============================================================ */
+
+/* Old date notice/warning classes - now using helper text instead */
+.carrier-actions__date-warning,
+.carrier-actions__date-notice {
+  display: none; /* Hidden - using inline helper text now */
+}
+
+.ldm-action-buttons {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
+.ldm-action-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.625rem;
+  padding: 1rem 1.5rem;
+  border: none;
+  border-radius: 10px;
+  font-size: 0.9375rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  width: 100%;
+}
+
+.ldm-action-btn:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+.ldm-action-btn svg {
+  width: 18px;
+  height: 18px;
+  flex-shrink: 0;
+}
+
+.ldm-action-btn--start-trip {
+  background: #2563eb;
+  color: white;
+}
+
+.ldm-action-btn--start-trip:hover:not(:disabled) {
+  background: #1d4ed8;
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(37, 99, 235, 0.3);
+}
+
+.ldm-action-btn--arrived {
+  background: #3b82f6;
+  color: white;
+}
+
+.ldm-action-btn--arrived:hover:not(:disabled) {
+  background: #2563eb;
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(59, 130, 246, 0.3);
+}
+
+.ldm-action-btn--pickup {
+  background: #6366f1;
+  color: white;
+}
+
+.ldm-action-btn--pickup:hover:not(:disabled) {
+  background: #4f46e5;
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(99, 102, 241, 0.3);
+}
+
+.ldm-action-btn--deliver {
+  background: #16a34a;
+  color: white;
+}
+
+.ldm-action-btn--deliver:hover:not(:disabled) {
+  background: #15803d;
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(22, 163, 74, 0.3);
+}
+
+.ldm-action-btn__spinner {
+  width: 16px;
+  height: 16px;
+  border: 2px solid rgba(255, 255, 255, 0.3);
+  border-top-color: white;
+  border-radius: 50%;
+  animation: carrier-spin 0.8s linear infinite;
+}
+
+/* ============================================================
+   RESPONSIVE
+   ============================================================ */
+
+@media (max-width: 480px) {
+  .carrier-actions__btn {
+    padding: 0.875rem 1rem;
+    font-size: 0.875rem;
+  }
+  
+  .carrier-actions__helper-text {
+    font-size: 0.6875rem;
+  }
+  
+  .carrier-toast {
+    bottom: 16px;
+    left: 16px;
+    right: 16px;
+    transform: none;
+    max-width: none;
+  }
+  
+  @keyframes toast-slide-up {
+    from {
+      opacity: 0;
+      transform: translateY(20px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+  
+  .detention-panel {
+    padding: 0.875rem 1rem;
+  }
+  
+  .detention-panel__time-value {
+    font-size: 1.75rem;
+  }
+}
+/* ============================================================
+   FILE: src/components/load-details/styles/actions.css
+   Styles for carrier action buttons with authorization states
+   ============================================================ */
+
+/* ============================================================
+   Container
+   ============================================================ */
+.ca-container {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  padding: 16px;
+  background: #f8fafc;
+  border-radius: 12px;
+  border: 1px solid #e2e8f0;
+}
+
+/* ============================================================
+   Authorization Section
+   ============================================================ */
+.ca-authorization-section {
+  margin-bottom: 4px;
+}
+
+/* ============================================================
+   Actions Row
+   ============================================================ */
+.ca-actions {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+/* ============================================================
+   Button Base Styles
+   ============================================================ */
+.ca-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  width: 100%;
+  padding: 14px 20px;
+  border: none;
+  border-radius: 10px;
+  font-size: 15px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  position: relative;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+}
+
+.ca-btn:focus {
+  outline: none;
+  box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.3);
+}
+
+.ca-btn:disabled {
+  cursor: not-allowed;
+  opacity: 0.7;
+}
+
+.ca-btn svg {
+  flex-shrink: 0;
+}
+
+/* ============================================================
+   Button Variants
+   ============================================================ */
+.ca-btn--primary {
+  background: linear-gradient(135deg, #3b82f6, #2563eb);
+  color: white;
+  box-shadow: 0 2px 8px rgba(37, 99, 235, 0.25);
+}
+
+.ca-btn--primary:hover:not(:disabled) {
+  background: linear-gradient(135deg, #2563eb, #1d4ed8);
+  box-shadow: 0 4px 12px rgba(37, 99, 235, 0.35);
+  transform: translateY(-1px);
+}
+
+.ca-btn--primary:active:not(:disabled) {
+  transform: translateY(0);
+  box-shadow: 0 2px 4px rgba(37, 99, 235, 0.2);
+}
+
+.ca-btn--secondary {
+  background: white;
+  color: #374151;
+  border: 2px solid #e5e7eb;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+}
+
+.ca-btn--secondary:hover:not(:disabled) {
+  background: #f9fafb;
+  border-color: #d1d5db;
+}
+
+.ca-btn--success {
+  background: linear-gradient(135deg, #22c55e, #16a34a);
+  color: white;
+  box-shadow: 0 2px 8px rgba(22, 163, 74, 0.25);
+}
+
+.ca-btn--success:hover:not(:disabled) {
+  background: linear-gradient(135deg, #16a34a, #15803d);
+  box-shadow: 0 4px 12px rgba(22, 163, 74, 0.35);
+  transform: translateY(-1px);
+}
+
+/* ============================================================
+   Blocked Button State
+   ============================================================ */
+.ca-btn--blocked {
+  background: #f1f5f9 !important;
+  color: #94a3b8 !important;
+  border: 2px dashed #cbd5e1 !important;
+  box-shadow: none !important;
+}
+
+.ca-btn--blocked:hover {
+  transform: none !important;
+  cursor: not-allowed;
+}
+
+.ca-btn--blocked svg {
+  opacity: 0.6;
+}
+
+/* ============================================================
+   Button Badge (Protected indicator)
+   ============================================================ */
+.ca-btn__badge {
+  display: inline-flex;
+  align-items: center;
+  padding: 2px 8px;
+  border-radius: 10px;
+  font-size: 11px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.3px;
+  margin-left: 4px;
+}
+
+.ca-btn__badge--protected {
+  background: rgba(255, 255, 255, 0.25);
+  color: rgba(255, 255, 255, 0.95);
+}
+
+.ca-btn--secondary .ca-btn__badge--protected {
+  background: #dbeafe;
+  color: #1d4ed8;
+}
+
+/* ============================================================
+   Arrived Wrapper (for helper text)
+   ============================================================ */
+.ca-arrived-wrapper {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+/* ============================================================
+   Time Hint
+   ============================================================ */
+.ca-time-hint {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 8px 12px;
+  background: #fef3c7;
+  border: 1px solid #fde68a;
+  border-radius: 8px;
+  font-size: 13px;
+  color: #92400e;
+}
+
+.ca-time-hint svg {
+  flex-shrink: 0;
+  opacity: 0.8;
+}
+
+/* ============================================================
+   Blocked Info Banner
+   ============================================================ */
+.ca-blocked-info {
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+  padding: 14px 16px;
+  background: #fef2f2;
+  border: 1px solid #fecaca;
+  border-radius: 10px;
+  margin-top: 4px;
+}
+
+.ca-blocked-info__icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 36px;
+  height: 36px;
+  background: #fee2e2;
+  border-radius: 8px;
+  color: #dc2626;
+  flex-shrink: 0;
+}
+
+.ca-blocked-info__icon svg {
+  width: 18px;
+  height: 18px;
+}
+
+.ca-blocked-info__content {
+  flex: 1;
+  min-width: 0;
+}
+
+.ca-blocked-info__content strong {
+  display: block;
+  font-size: 14px;
+  font-weight: 600;
+  color: #991b1b;
+  margin-bottom: 2px;
+}
+
+.ca-blocked-info__content p {
+  margin: 0;
+  font-size: 13px;
+  color: #b91c1c;
+  line-height: 1.4;
+}
+
+.ca-blocked-info__content p span {
+  opacity: 0.7;
+}
+
+/* ============================================================
+   Spinner Animation
+   ============================================================ */
+.ca-spinner {
+  animation: ca-spin 1s linear infinite;
+}
+
+@keyframes ca-spin {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+/* ============================================================
+   Responsive Adjustments
+   ============================================================ */
+@media (max-width: 480px) {
+  .ca-container {
+    padding: 12px;
+    gap: 12px;
+  }
+  
+  .ca-btn {
+    padding: 12px 16px;
+    font-size: 14px;
+    gap: 8px;
+  }
+  
+  .ca-btn svg {
+    width: 16px;
+    height: 16px;
+  }
+  
+  .ca-btn__badge {
+    font-size: 10px;
+    padding: 2px 6px;
+  }
+  
+  .ca-time-hint {
+    font-size: 12px;
+    padding: 6px 10px;
+  }
+  
+  .ca-blocked-info {
+    padding: 12px;
+    gap: 10px;
+  }
+  
+  .ca-blocked-info__icon {
+    width: 32px;
+    height: 32px;
+  }
+  
+  .ca-blocked-info__content strong {
+    font-size: 13px;
+  }
+  
+  .ca-blocked-info__content p {
+    font-size: 12px;
+  }
+}
+
+/* ============================================================
+   Touch Device Optimizations
+   ============================================================ */
+@media (hover: none) {
+  .ca-btn:hover:not(:disabled) {
+    transform: none;
+  }
+  
+  .ca-btn:active:not(:disabled) {
+    transform: scale(0.98);
+  }
+}
+
+/* ============================================================
+   High Contrast Mode
+   ============================================================ */
+@media (prefers-contrast: high) {
+  .ca-btn {
+    border: 2px solid currentColor;
+  }
+  
+  .ca-btn--blocked {
+    border-style: solid !important;
+  }
+}
+
+/* ============================================================
+   Reduced Motion
+   ============================================================ */
+@media (prefers-reduced-motion: reduce) {
+  .ca-btn {
+    transition: none;
+  }
+  
+  .ca-spinner {
+    animation: none;
+  }
+}
+
+/* ============================================================
+   Dark Mode Support (future)
+   ============================================================ */
+@media (prefers-color-scheme: dark) {
+  .ca-container {
+    background: #1e293b;
+    border-color: #334155;
+  }
+  
+  .ca-btn--secondary {
+    background: #334155;
+    color: #e2e8f0;
+    border-color: #475569;
+  }
+  
+  .ca-btn--secondary:hover:not(:disabled) {
+    background: #475569;
+  }
+  
+  .ca-btn--blocked {
+    background: #1e293b !important;
+    color: #64748b !important;
+    border-color: #475569 !important;
+  }
+  
+  .ca-time-hint {
+    background: #422006;
+    border-color: #854d0e;
+    color: #fef3c7;
+  }
+  
+  .ca-blocked-info {
+    background: #450a0a;
+    border-color: #7f1d1d;
+  }
+  
+  .ca-blocked-info__icon {
+    background: #7f1d1d;
+    color: #fecaca;
+  }
+  
+  .ca-blocked-info__content strong {
+    color: #fecaca;
+  }
+  
+  .ca-blocked-info__content p {
+    color: #fca5a5;
+  }
+}

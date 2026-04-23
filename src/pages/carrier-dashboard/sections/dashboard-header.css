@@ -1,0 +1,68 @@
+/* src/pages/carrier-dashboard/sections/dashboard-header.css */
+
+/* 
+  This file only handles the dashboard "welcome" heading and header spacing.
+  It avoids overlapping concerns with Available Loads and the main carrier-dashboard.css.
+*/
+
+.carrier-dashboard {
+  /* Tweakable tokens for the welcome heading (can be overridden upstream if needed) */
+  --dashHeading-font: "Plus Jakarta Sans", Inter, ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+  --dashHeading-color: #0F172A;
+  --dashHeading-letterSpacing: -0.015em;
+  /* Fluid font-size from 21px → 30px across viewport widths; adjust min/max as needed */
+  --dashHeading-size: clamp(21px, 2.2vw + 12px, 30px);
+  --dashHeading-lineHeight: 1.2;
+  --dashHeading-mt: 12px;   /* top margin */
+  --dashHeading-mb: 28px;   /* bottom margin; matches card gutters */
+}
+
+/* ========== Dashboard Header Container (no visual dividers) ========== */
+.carrier-dashboard :where(.dashboard-header) {
+  border: 0;
+  box-shadow: none;
+  background: transparent;
+  padding-left: 0;
+  padding-right: 0;
+  padding-bottom: 0;
+}
+
+.carrier-dashboard :where(.header-content) {
+  border: 0;
+  box-shadow: none;
+  padding: 0;
+}
+
+/* Remove any pseudo-element lines if present */
+.carrier-dashboard :where(.dashboard-header)::before,
+.carrier-dashboard :where(.dashboard-header)::after,
+.carrier-dashboard :where(.header-content)::before,
+.carrier-dashboard :where(.header-content)::after {
+  content: none;
+  display: none;
+}
+
+/* ========== Welcome Heading ========== */
+.carrier-dashboard :where(.dashboard-greeting) {
+  font-family: var(--dashHeading-font);
+  font-weight: 800;
+  color: var(--dashHeading-color);
+  letter-spacing: var(--dashHeading-letterSpacing);
+  line-height: var(--dashHeading-lineHeight);
+  font-size: var(--dashHeading-size);
+  margin: var(--dashHeading-mt) 0 var(--dashHeading-mb) 0;
+  max-width: 70ch;  /* 70 characters for good measure on desktop */
+  white-space: normal; /* allow wrapping on small screens */
+}
+
+/* Accent for the highlighted name inside the greeting.
+   (Matches brand accent defined elsewhere) */
+.carrier-dashboard :where(.dashboard-greeting span) {
+  color: var(--brand, #0066FF);
+  font-weight: 800;
+}
+
+/* ========== Keep Loads Section styling out of here ==========
+   Avoid styling .available-loads from this header file to prevent cross-concerns.
+   Those rules now live in available-loads.css.
+*/

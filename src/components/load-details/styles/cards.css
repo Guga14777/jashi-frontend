@@ -1,0 +1,452 @@
+/* ============================================================
+   FILE: src/components/load-details/styles/cards.css
+   Box, grid, field, and card styles
+   ✅ UPDATED: Location type badges now gray (not yellow)
+   ============================================================ */
+
+/* Box */
+.ldm-box {
+  background: #f9fafb;
+  border: 1px solid #e5e7eb;
+  border-radius: 8px;
+  padding: 14px;
+}
+
+.ldm-box--accent {
+  background: linear-gradient(135deg, #f0f9ff 0%, #e0f2fe 100%);
+  border-color: #bae6fd;
+}
+
+/* Grid */
+.ldm-grid {
+  display: grid;
+  gap: 12px;
+}
+
+.ldm-grid--2 {
+  grid-template-columns: repeat(2, 1fr);
+}
+
+.ldm-grid--3 {
+  grid-template-columns: repeat(3, 1fr);
+}
+
+.ldm-grid--route {
+  grid-template-columns: 1fr 1fr auto;
+}
+
+@media (max-width: 600px) {
+  .ldm-grid--2,
+  .ldm-grid--3,
+  .ldm-grid--route {
+    grid-template-columns: 1fr;
+  }
+}
+
+/* Field */
+.ldm-field {
+  min-width: 0;
+}
+
+.ldm-field--full {
+  grid-column: 1 / -1;
+}
+
+.ldm-field__label {
+  display: block;
+  font-size: 11px;
+  font-weight: 500;
+  color: #6b7280;
+  margin-bottom: 2px;
+  text-transform: uppercase;
+  letter-spacing: 0.3px;
+}
+
+.ldm-field__value {
+  font-size: 14px;
+  font-weight: 500;
+  color: #111;
+  word-break: break-word;
+}
+
+.ldm-field__value--lg {
+  font-size: 20px;
+  font-weight: 700;
+}
+
+.ldm-field__value--primary {
+  color: #2563eb;
+}
+
+.ldm-field__value--success {
+  color: #059669;
+}
+
+.ldm-field__value--mono {
+  font-family: 'SF Mono', 'Monaco', 'Consolas', monospace;
+  font-size: 13px;
+  letter-spacing: 0.5px;
+  background: #e5e7eb;
+  padding: 4px 8px;
+  border-radius: 4px;
+  display: inline-block;
+}
+
+.ldm-field__sub {
+  display: block;
+  font-size: 12px;
+  color: #6b7280;
+  margin-top: 2px;
+}
+
+.ldm-price-per-mile {
+  font-weight: 500;
+}
+
+.ldm-timestamp {
+  font-style: italic;
+}
+
+/* Schedule Value */
+.ldm-schedule-value {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+/* Time Pill */
+.ldm-time {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  background: #e5e7eb;
+  color: #374151;
+  padding: 2px 8px;
+  border-radius: 12px;
+  font-size: 11px;
+  font-weight: 500;
+}
+
+/* ============================================================
+   LOCATION TYPE BADGES - Now all gray/neutral
+   ============================================================ */
+
+.ldm-location-type-row {
+  margin-top: 8px;
+}
+
+.ldm-location-type {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  padding: 4px 10px;
+  border-radius: 16px;
+  font-size: 11px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.3px;
+}
+
+/* AUCTION - Gray (was yellow) */
+.ldm-location-type--auction {
+  background: #f1f5f9;
+  color: #475569;
+  border: 1px solid #cbd5e1;
+}
+
+/* DEALERSHIP - Blue outline */
+.ldm-location-type--dealership {
+  background: #f0f9ff;
+  color: #0369a1;
+  border: 1px solid #bae6fd;
+}
+
+/* PRIVATE / RESIDENTIAL - Gray (was also sometimes yellow) */
+.ldm-location-type--private,
+.ldm-location-type--residential {
+  background: #f8fafc;
+  color: #64748b;
+  border: 1px solid #e2e8f0;
+}
+
+/* BUSINESS - Gray */
+.ldm-location-type--business {
+  background: #f1f5f9;
+  color: #475569;
+  border: 1px solid #cbd5e1;
+}
+
+/* PORT - Blue outline */
+.ldm-location-type--port {
+  background: #f0f9ff;
+  color: #0369a1;
+  border: 1px solid #bae6fd;
+}
+
+/* Links */
+.ldm-link {
+  color: #2563eb;
+  text-decoration: none;
+  font-size: 14px;
+  font-weight: 500;
+}
+
+.ldm-link:hover {
+  text-decoration: underline;
+}
+
+/* Document Link */
+.ldm-doc-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  color: #2563eb;
+  font-size: 13px;
+  font-weight: 500;
+  text-decoration: none;
+  margin-top: 8px;
+  padding: 6px 10px;
+  background: #eff6ff;
+  border-radius: 6px;
+  transition: all 0.15s;
+}
+
+.ldm-doc-link:hover {
+  background: #dbeafe;
+  text-decoration: none;
+}
+
+/* Notes */
+.ldm-notes-text {
+  font-size: 14px;
+  color: #374151;
+  line-height: 1.5;
+  margin: 0;
+  white-space: pre-wrap;
+}
+
+.ldm-notes-sub {
+  margin-top: 12px;
+  padding-top: 12px;
+  border-top: 1px solid #e5e7eb;
+}
+
+.ldm-notes-sub-label {
+  font-size: 11px;
+  font-weight: 600;
+  color: #6b7280;
+  margin-bottom: 4px;
+  text-transform: uppercase;
+}
+
+/* Multi-Vehicle Card Styles */
+.ldm-vehicle-list {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.ldm-vehicle-card {
+  background: #fff;
+  border: 1px solid #e5e7eb;
+  border-radius: 10px;
+  overflow: hidden;
+  transition: all 0.2s;
+}
+
+.ldm-vehicle-card:hover {
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
+}
+
+.ldm-vehicle-card--expanded {
+  border-color: #3b82f6;
+  box-shadow: 0 2px 8px rgba(59, 130, 246, 0.15);
+}
+
+.ldm-vehicle-card__header {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 12px 14px;
+  background: #f9fafb;
+  cursor: pointer;
+  transition: background 0.15s;
+}
+
+.ldm-vehicle-card__header:hover {
+  background: #f3f4f6;
+}
+
+.ldm-vehicle-card__index {
+  width: 28px;
+  height: 28px;
+  border-radius: 6px;
+  background: #3b82f6;
+  color: white;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 13px;
+  font-weight: 700;
+  flex-shrink: 0;
+}
+
+.ldm-vehicle-card__info {
+  flex: 1;
+  min-width: 0;
+}
+
+.ldm-vehicle-card__name {
+  display: block;
+  font-size: 14px;
+  font-weight: 600;
+  color: #111827;
+  margin-bottom: 2px;
+}
+
+.ldm-vehicle-card__meta {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+
+.ldm-vehicle-card__vin {
+  font-size: 11px;
+  color: #6b7280;
+  font-family: 'SF Mono', 'Monaco', 'Consolas', monospace;
+}
+
+.ldm-vehicle-card__condition {
+  font-size: 10px;
+  font-weight: 600;
+  padding: 2px 6px;
+  border-radius: 4px;
+  text-transform: uppercase;
+}
+
+.ldm-vehicle-card__condition--operable {
+  background: #d1fae5;
+  color: #065f46;
+}
+
+.ldm-vehicle-card__condition--inoperable {
+  background: #fee2e2;
+  color: #991b1b;
+}
+
+.ldm-vehicle-card__toggle {
+  color: #9ca3af;
+  flex-shrink: 0;
+  transition: transform 0.2s;
+}
+
+.ldm-vehicle-card--expanded .ldm-vehicle-card__toggle {
+  color: #3b82f6;
+}
+
+.ldm-vehicle-card__details {
+  padding: 14px;
+  border-top: 1px solid #e5e7eb;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  background: #fff;
+}
+
+.ldm-vehicle-card__stop {
+  padding: 10px 12px;
+  border-radius: 6px;
+  background: #f9fafb;
+}
+
+.ldm-vehicle-card__stop--pickup {
+  border-left: 3px solid #10b981;
+}
+
+.ldm-vehicle-card__stop--dropoff {
+  border-left: 3px solid #ef4444;
+}
+
+.ldm-vehicle-card__stop-header {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 6px;
+}
+
+.ldm-vehicle-card__stop-badge {
+  padding: 2px 8px;
+  border-radius: 4px;
+  font-size: 10px;
+  font-weight: 600;
+  text-transform: uppercase;
+}
+
+.ldm-vehicle-card__stop-badge--pickup {
+  background: #d1fae5;
+  color: #065f46;
+}
+
+.ldm-vehicle-card__stop-badge--dropoff {
+  background: #fee2e2;
+  color: #991b1b;
+}
+
+.ldm-vehicle-card__stop-address {
+  display: flex;
+  align-items: flex-start;
+  gap: 6px;
+  font-size: 13px;
+  color: #374151;
+  margin-bottom: 4px;
+}
+
+.ldm-vehicle-card__stop-address svg {
+  flex-shrink: 0;
+  margin-top: 2px;
+  color: #9ca3af;
+}
+
+.ldm-vehicle-card__auction {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  font-size: 12px;
+  color: #6b7280;
+  margin-top: 4px;
+}
+
+.ldm-vehicle-card__auction strong {
+  color: #111827;
+}
+
+.ldm-vehicle-card__contact {
+  font-size: 12px;
+  color: #6b7280;
+  margin-top: 4px;
+}
+
+.ldm-vehicle-card__gatepasses {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  padding-top: 8px;
+  border-top: 1px solid #e5e7eb;
+}
+
+.ldm-vehicle-card__gatepasses .ldm-doc-link {
+  margin-top: 0;
+}
+
+/* Responsive */
+@media (max-width: 600px) {
+  .ldm-vehicle-card__header {
+    padding: 10px 12px;
+  }
+
+  .ldm-vehicle-card__details {
+    padding: 12px;
+  }
+}

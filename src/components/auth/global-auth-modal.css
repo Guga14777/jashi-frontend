@@ -1,0 +1,439 @@
+/* ============================================================================
+   GLOBAL AUTH MODAL – POLISHED VERSION (CLEAR BACKGROUND)
+   =========================================================================== */
+
+.global-auth-modal-overlay {
+  position: fixed;
+  inset: 0;
+  /* lighter, clearer overlay */
+  background: rgba(15, 23, 42, 0.35);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 9999;
+  padding: 16px;
+  animation: auth-fade-in 0.18s ease-out;
+}
+
+@keyframes auth-fade-in {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+.global-auth-modal-container {
+  position: relative;
+  background: #ffffff;
+  border-radius: 18px;
+  box-shadow: 0 22px 70px rgba(15, 23, 42, 0.2);
+  max-width: 540px;
+  width: 100%;
+  max-height: 90vh;
+  overflow-y: auto;
+  animation: auth-slide-up 0.23s ease-out;
+}
+
+/* Accent bar at top */
+.global-auth-modal-container::before {
+  content: "";
+  position: absolute;
+  inset: 0 0 auto 0;
+  height: 4px;
+  border-radius: 18px 18px 0 0;
+  background: linear-gradient(90deg, #0066cc, #00b4d8);
+}
+
+/* Smooth reveal */
+@keyframes auth-slide-up {
+  from {
+    transform: translateY(16px);
+    opacity: 0;
+  }
+  to {
+    transform: translateY(0);
+    opacity: 1;
+  }
+}
+
+/* Close button */
+.auth-modal-close-btn {
+  position: absolute;
+  top: 18px;
+  right: 18px;
+  background: none;
+  border: none;
+  font-size: 26px;
+  line-height: 1;
+  cursor: pointer;
+  color: #a0aec0;
+  padding: 0;
+  width: 34px;
+  height: 34px;
+  border-radius: 999px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: background-color 0.15s ease, color 0.15s ease,
+    transform 0.08s ease;
+  z-index: 10;
+}
+
+.auth-modal-close-btn:hover {
+  background-color: #edf2f7;
+  color: #4a5568;
+}
+
+.auth-modal-close-btn:active {
+  transform: scale(0.96);
+}
+
+/* ============================================================================
+   CONTENT LAYOUT
+   =========================================================================== */
+
+.auth-modal-content {
+  padding: 40px 40px 32px 40px;
+  /* clean, solid white background (no gradient) */
+  background: #ffffff;
+  text-align: left;
+}
+
+/* Header: eyebrow + title + subtitle */
+.auth-modal-header {
+  margin-bottom: 24px;
+  text-align: left;
+}
+
+.auth-modal-eyebrow {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 4px 10px;
+  border-radius: 999px;
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: #1e40af;
+  background: rgba(37, 99, 235, 0.06);
+  margin-bottom: 10px;
+}
+
+.auth-modal-title {
+  font-size: 26px;
+  font-weight: 700;
+  color: #0f172a;
+  margin: 0 0 8px 0;
+  line-height: 1.25;
+}
+
+.auth-modal-subtitle {
+  font-size: 14px;
+  font-weight: 400;
+  color: #64748b;
+  margin: 0;
+  line-height: 1.6;
+  max-width: 95%;
+}
+
+/* Body: form area */
+.auth-modal-body {
+  margin-top: 8px;
+  max-width: 440px;
+  padding-bottom: 4px;
+}
+
+/* Ensure the form block uses the modal background (not its own card) */
+.auth-modal-body .simple-login {
+  padding: 0;
+  margin: 0;
+  background: transparent;
+  box-shadow: none;
+}
+
+/* ============================================================================
+   FORM STYLING OVERRIDES (inside modal)
+   =========================================================================== */
+
+.auth-modal-content .simple-form {
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+  text-align: left;
+}
+
+.auth-modal-content .simple-field {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.auth-modal-content .simple-field label {
+  font-size: 13px;
+  font-weight: 600;
+  color: #0f172a;
+  margin: 0;
+}
+
+.auth-modal-content .simple-field input,
+.auth-modal-content .simple-password input {
+  font-size: 15px;
+  padding: 11px 14px;
+  border-radius: 10px;
+  border: 1px solid #dde3ee;
+  background: #ffffff;
+  color: #111827;
+  box-sizing: border-box;
+  transition: border-color 0.15s ease, box-shadow 0.15s ease,
+    background-color 0.15s ease;
+}
+
+.auth-modal-content .simple-field input::placeholder,
+.auth-modal-content .simple-password input::placeholder {
+  color: #cbd5df;
+}
+
+.auth-modal-content .simple-field input:hover,
+.auth-modal-content .simple-password input:hover {
+  border-color: #c3d0e6;
+}
+
+.auth-modal-content .simple-field input:focus,
+.auth-modal-content .simple-password input:focus {
+  outline: none;
+  border-color: #2563eb;
+  box-shadow: 0 0 0 1px #2563eb1a;
+  background-color: #f9fbff;
+}
+
+.auth-modal-content .simple-field input.error,
+.auth-modal-content .simple-password input.error {
+  border-color: #e11d48;
+  background: #fff5f7;
+}
+
+.auth-modal-content .field-error {
+  font-size: 13px;
+  color: #e11d48;
+  margin-top: 2px;
+}
+
+/* Password visibility button */
+.auth-modal-content .simple-password {
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+
+.auth-modal-content .simple-password input {
+  padding-right: 44px;
+}
+
+.auth-modal-content .simple-toggle {
+  position: absolute;
+  right: 10px;
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 4px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #94a3b8;
+  transition: color 0.15s ease;
+}
+
+.auth-modal-content .simple-toggle:hover {
+  color: #475569;
+}
+
+.auth-modal-content .simple-toggle:disabled {
+  cursor: not-allowed;
+  color: #cbd5e1;
+}
+
+/* Terms */
+.auth-modal-content .terms-row {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  margin-top: 4px;
+}
+
+.auth-modal-content .terms-label-click {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  cursor: pointer;
+}
+
+.auth-modal-content .terms-label-click .checkbox {
+  width: 18px;
+  height: 18px;
+  margin-top: 2px;
+  flex-shrink: 0;
+  cursor: pointer;
+}
+
+.auth-modal-content .terms-text {
+  font-size: 13px;
+  color: #64748b;
+  line-height: 1.6;
+}
+
+.auth-modal-content .terms-text a {
+  color: #2563eb;
+  text-decoration: none;
+  font-weight: 500;
+}
+
+.auth-modal-content .terms-text a:hover {
+  text-decoration: underline;
+}
+
+/* Submit button */
+.auth-modal-content .simple-submit {
+  width: 100%;
+  margin-top: 10px;
+  height: 46px;
+  border-radius: 999px;
+  border: none;
+  background: linear-gradient(135deg, #2563eb, #1d4ed8);
+  color: #ffffff;
+  font-size: 15px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: transform 0.08s ease, box-shadow 0.15s ease,
+    background 0.15s ease;
+}
+
+.auth-modal-content .simple-submit:hover:not(:disabled) {
+  transform: translateY(-1px);
+  box-shadow: 0 12px 26px rgba(37, 99, 235, 0.25);
+}
+
+.auth-modal-content .simple-submit:active:not(:disabled) {
+  transform: translateY(0);
+  box-shadow: 0 8px 18px rgba(37, 99, 235, 0.22);
+}
+
+.auth-modal-content .simple-submit:disabled {
+  background: #cbd5e1;
+  cursor: not-allowed;
+  box-shadow: none;
+}
+
+/* Error banner (top of form) */
+.auth-modal-content .signup-error-banner {
+  background: #fff1f2;
+  border: 1px solid #fecdd3;
+  border-radius: 10px;
+  padding: 10px 12px;
+  font-size: 13px;
+  color: #be123c;
+  margin-bottom: 12px;
+}
+
+/* Hide footer inside the form when used in modal */
+.auth-modal-content .simple-login > .simple-footer {
+  display: none;
+}
+
+/* ============================================================================
+   MODAL FOOTER (single link)
+   =========================================================================== */
+
+.auth-modal-footer {
+  border-top: 1px solid #e5e7eb;
+  margin-top: 24px;
+  padding-top: 16px;
+  text-align: center;
+}
+
+.auth-modal-footer p {
+  margin: 0;
+  font-size: 14px;
+  color: #64748b;
+}
+
+.auth-toggle-link {
+  background: none;
+  border: none;
+  color: #2563eb;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  padding: 0;
+  margin: 0;
+  text-decoration: none;
+  transition: color 0.15s ease, text-decoration 0.15s ease;
+}
+
+.auth-toggle-link:hover {
+  color: #1d4ed8;
+  text-decoration: underline;
+}
+
+.auth-toggle-link:active {
+  color: #1e40af;
+}
+
+.auth-toggle-link:disabled {
+  color: #9ca3af;
+  cursor: not-allowed;
+}
+
+/* ============================================================================
+   RESPONSIVE
+   =========================================================================== */
+
+@media (max-width: 600px) {
+  .global-auth-modal-overlay {
+    padding: 12px;
+  }
+
+  .global-auth-modal-container {
+    border-radius: 14px;
+  }
+
+  .auth-modal-content {
+    padding: 32px 22px 26px 22px;
+  }
+
+  .auth-modal-header {
+    margin-bottom: 20px;
+  }
+
+  .auth-modal-title {
+    font-size: 22px;
+  }
+
+  .auth-modal-subtitle {
+    font-size: 13px;
+  }
+
+  .auth-modal-body {
+    max-width: 100%;
+  }
+}
+
+/* Scrollbar styling for long forms */
+.global-auth-modal-container::-webkit-scrollbar {
+  width: 8px;
+}
+
+.global-auth-modal-container::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.global-auth-modal-container::-webkit-scrollbar-thumb {
+  background: #cbd5e1;
+  border-radius: 4px;
+}
+
+.global-auth-modal-container::-webkit-scrollbar-thumb:hover {
+  background: #94a3b8;
+}

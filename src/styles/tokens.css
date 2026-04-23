@@ -1,0 +1,368 @@
+/* Design System Tokens - Complete and consistent - FIXED: No card shaking */
+
+:root {
+  /* Brand Colors - Primary Blue System */
+  --color-primary: #0066CC;
+  --color-primary-hover: #0052CC;
+  --color-primary-dark: #0041A8;
+  --color-primary-light: #E0F2FE;
+  --color-primary-lighter: #F0F7FF;
+  
+  /* Primary Button Disabled - NEW */
+  --color-primary-disabled: #6BA6CD;
+  --btn-disabled-bg: var(--bg-disabled);
+  --btn-disabled-text: var(--text-muted);
+  --btn-disabled-border: var(--border-default);
+  
+  /* Legacy aliases for backwards compatibility */
+  --brand: var(--color-primary);
+  --brand-hover: var(--color-primary-hover);
+  --brand-10: rgba(0, 102, 204, 0.1);
+  --brand-light: var(--color-primary-light);
+  --primary: var(--color-primary);
+  --primary-hover: var(--color-primary-hover);
+  --primary-light: var(--color-primary-light);
+  --primary-lighter: var(--color-primary-lighter);
+  --primary-dark: var(--color-primary-dark);
+  
+  /* Semantic Colors */
+  --color-success: #16A34A;
+  --color-success-light: #ECFDF5;
+  --color-success-dark: #15803D;
+  
+  --color-warning: #F59E0B;
+  --color-warning-light: #FFFBEB;
+  --color-warning-dark: #D97706;
+  
+  /* Warning Notice - NEW */
+  --warning-bg: #FFFBEB;
+  --warning-border: #FED7AA;
+  
+  --color-info: #0066CC;
+  --color-info-light: #E0F2FE;
+  --color-info-dark: #0052CC;
+  
+  /* Danger/Error Colors */
+  --color-danger: #dc2626;
+  --color-danger-hover: #b91c1c;
+  --color-danger-light: #fef2f2;
+  --color-danger-border: #fecaca;
+  --danger: var(--color-danger);
+  --danger-hover: var(--color-danger-hover);
+  --danger-bg: var(--color-danger-light);
+  --danger-border: var(--color-danger-border);
+  
+  /* Status Colors */
+  --color-cancel: #3F4A5A;
+  --color-cancel-light: #EEF2F6;
+  --color-cancel-dark: #2B3442;
+  
+  /* Text Colors */
+  --text-primary: #0F172A;
+  --text-secondary: #475569;
+  --text-tertiary: #64748B;
+  --text-muted: #64748B;
+  --text-white: #FFFFFF;
+  --text-brand: var(--color-primary);
+  --text-strong: var(--text-primary);
+  --text-dark: var(--text-primary);
+  
+  /* Surface & Backgrounds */
+  --bg-primary: #FFFFFF;
+  --bg-secondary: #F8FAFC;
+  --bg-tertiary: #F1F5F9;
+  --bg-hover: #F0F7FF;
+  --bg-selected: #EFF6FF;
+  --bg-page: #ffffff;
+  --bg-card: #ffffff;
+  --bg-subtle: #f9fafb;
+  --bg-disabled: #f9fafb;
+  --surface: #FFFFFF;
+  
+  /* Success/Error backgrounds */
+  --success-bg: #dcfce7;
+  --success-text: #166534;
+  --success-border: #bbf7d0;
+  
+  --error-bg: #fef2f2;
+  --error-text: #dc2626;
+  --error-border: #fecaca;
+  
+  /* Borders */
+  --border-default: #E5E7EB;
+  --border-light: #F1F5F9;
+  --border-strong: #D0D7E2;
+  --border-hover: #CBD5E1;
+  --border-focus: var(--color-primary);
+  --border-selected: var(--color-primary);
+  
+  /* Input Field States - NEW */
+  --input-height: 44px;
+  --input-radius: var(--radius-base);
+  --input-border: var(--border-default);
+  --input-border-hover: var(--border-hover);
+  --input-border-focus: var(--border-focus);
+  --input-border-error: var(--color-danger);
+  
+  /* Focus Ring - UPDATED */
+  --focus-ring: rgba(0, 102, 204, 0.1);
+  --focus-ring-width: 3px;
+  --focus-ring-color: var(--focus-ring);
+  
+  /* Toggle States - NEW */
+  --toggle-height: 24px;
+  --toggle-knob-size: 20px;
+  --toggle-track-bg: var(--border-light);
+  --toggle-track-bg-checked: var(--color-primary);
+  --toggle-knob-bg: var(--bg-primary);
+  --toggle-shadow: var(--shadow-xs);
+  
+  /* Modal/Overlay Consistency - NEW */
+  --overlay-scrim: rgba(0, 0, 0, 0.45);
+  --modal-radius: var(--radius-2xl);
+  --modal-shadow: var(--shadow-xl);
+  
+  /* Section/Card Layout - NEW */
+  --card-radius: var(--radius-lg);
+  --card-shadow: var(--shadow-sm);
+  --section-padding: 24px;
+  --section-padding-tablet: 20px;
+  --section-padding-mobile: 16px;
+  
+  /* Badge System */
+  --badge-paid-bg: var(--color-success-light);
+  --badge-paid-text: var(--color-success-dark);
+  --badge-paid-border: #86EFAC;
+  
+  --badge-pending-bg: #F0F4F8;
+  --badge-pending-text: #334155;
+  --badge-pending-border: #CBD5E1;
+  
+  --badge-cancelled-bg: var(--color-cancel-light);
+  --badge-cancelled-text: var(--color-cancel-dark);
+  --badge-cancelled-border: var(--border-default);
+  
+  /* Component Specific */
+  --chip-bg: var(--bg-tertiary);
+  --chip-text: var(--text-secondary);
+  --chip-border: var(--border-default);
+  --chip-neutral-bg: #FAFBFC;
+  
+  /* Pagination */
+  --pagination-active-bg: var(--color-primary);
+  --pagination-active-text: #FFFFFF;
+  --pagination-active-border: var(--color-primary);
+  --pagination-hover-bg: #E0F2FE;
+  --pagination-hover-border: var(--color-primary);
+  
+  /* Table & Cards */
+  --table-head-bg: #FAFBFC;
+  
+  /* Focus & Interactive States */
+  --focus-border: var(--border-focus);
+  --focus-ring-shadow: 0 0 0 2px rgba(0, 102, 204, 0.12);
+  
+  /* Loading States */
+  --skeleton-base: #F1F5F9;
+  --skeleton-shine: #E2E8F0;
+  
+  /* Typography Scales */
+  --text-xs: 11px;
+  --text-sm: 13px;
+  --text-base: 14px;
+  --text-md: 16px;
+  --text-lg: 18px;
+  --text-xl: 20px;
+  --text-2xl: 24px;
+  --text-3xl: 26px;
+  --text-4xl: 32px;
+  
+  /* Font Weights */
+  --font-normal: 400;
+  --font-medium: 500;
+  --font-semibold: 600;
+  --font-bold: 700;
+  
+  /* Line Heights */
+  --leading-tight: 1.2;
+  --leading-snug: 1.375;
+  --leading-normal: 1.5;
+  --leading-relaxed: 1.625;
+  --leading-loose: 2;
+  
+  /* Font Families */
+  --font-mono: ui-monospace, SFMono-Regular, Menlo, Monaco, "Courier New", monospace;
+  
+  /* Spacing Scale */
+  --space-4: 4px;
+  --space-8: 8px;
+  --space-12: 12px;
+  --space-16: 16px;
+  --space-20: 20px;
+  --space-24: 24px;
+  --space-28: 28px;
+  --space-32: 32px;
+  --space-40: 40px;
+  --space-48: 48px;
+  --space-64: 64px;
+  
+  /* Border Radius Scale */
+  --radius-sm: 6px;
+  --radius-base: 8px;
+  --radius-md: 10px;
+  --radius-lg: 12px;
+  --radius-xl: 14px;
+  --radius-2xl: 16px;
+  --radius-full: 9999px;
+  --radius-pill: 9999px;
+  
+  /* Box Shadows (Elevations) */
+  --shadow-xs: 0 1px 2px rgba(15, 23, 42, 0.04);
+  --shadow-sm: 0 2px 4px rgba(15, 23, 42, 0.05);
+  --shadow-md: 0 4px 24px rgba(15, 23, 42, 0.06);
+  --shadow-lg: 0 10px 40px rgba(15, 23, 42, 0.08);
+  --shadow-xl: 0 20px 60px rgba(15, 23, 42, 0.12);
+  --shadow-brand: 0 4px 24px rgba(0, 102, 204, 0.15);
+  --elev-1: 0 2px 8px rgba(2, 13, 45, 0.08);
+  
+  /* Transitions - FIXED: Safe values that don't cause global issues */
+  --transition-fast: 150ms ease;
+  --transition-base: 200ms ease;
+  --transition-slow: 300ms ease;
+  
+  /* Z-index Scale */
+  --z-base: 0;
+  --z-dropdown: 100;
+  --z-header: 200;
+  --z-sticky: 300;
+  --z-overlay: 400;
+  --z-modal: 500;
+  --z-popover: 600;
+  --z-tooltip: 700;
+  --z-notification: 800;
+  --z-max: 9999;
+  
+  /* Layout Constants */
+  --header-height: 72px;
+  --header-height-mobile: 64px;
+  --sidebar-width: 340px;
+  --container-max: 1280px;
+  
+  /* Page Layout Tokens */
+  --page-max-width: 1200px;
+  --page-gutter: 24px;
+  --page-gutter-tablet: 20px;
+  --page-gutter-mobile: 16px;
+  
+  /* Gradients */
+  --gradient-primary: linear-gradient(135deg, #0066CC 0%, #0052CC 100%);
+  --gradient-hero: linear-gradient(135deg, #0066CC 0%, #0052CC 60%, #0041A8 100%);
+  --gradient-success: linear-gradient(135deg, #16A34A 0%, #15803D 100%);
+  --gradient-warning: linear-gradient(135deg, #F59E0B 0%, #D97706 100%);
+  --bg-gradient: linear-gradient(180deg, #F3F7FF 0%, #FFFFFF 100%);
+
+  /* Color Scheme */
+  color-scheme: light;
+}
+
+/* Responsive Section Padding - NEW */
+@media (max-width: 768px) {
+  :root {
+    --section-padding: var(--section-padding-tablet);
+  }
+}
+
+@media (max-width: 480px) {
+  :root {
+    --section-padding: var(--section-padding-mobile);
+  }
+}
+
+/* Dark Mode Support (Ready for future implementation) */
+@media (prefers-color-scheme: dark) {
+  :root {
+    /* Dark mode tokens would go here when implemented */
+  }
+}
+
+/* ============================================
+   CRITICAL FIX: REMOVED GLOBAL ANIMATIONS
+   ============================================ */
+
+/* REMOVED: Any global * selectors with transitions that cause shaking */
+/* REMOVED: Global animation keyframes that were applied to all elements */
+
+/* SAFE: Only define animation keyframes, don't apply them globally */
+@keyframes spin {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes slideIn {
+  from {
+    transform: translateY(-10px);
+    opacity: 0;
+  }
+  to {
+    transform: translateY(0);
+    opacity: 1;
+  }
+}
+
+@keyframes slideOut {
+  from {
+    transform: translateY(0);
+    opacity: 1;
+  }
+  to {
+    transform: translateY(-10px);
+    opacity: 0;
+  }
+}
+
+/* FIXED: Skeleton animation that doesn't affect real content */
+@keyframes skeleton-pulse {
+  0%, 100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.5;
+  }
+}
+
+/* Apply skeleton animation ONLY to skeleton elements */
+.skeleton,
+.skeleton * {
+  animation: skeleton-pulse 1.2s ease-in-out infinite;
+}
+
+/* CRITICAL: Ensure real cards never get skeleton animations */
+.card:not(.skeleton),
+.stat-card:not(.skeleton),
+.dashboard-card:not(.skeleton) {
+  animation: none !important;
+  transform: none !important;
+}
+
+/*
+Animation Standards (for reference - use consistent naming):
+- Spinner: Use "spin" keyframe name across all components
+- Fade: Use "fadeIn"/"fadeOut" keyframe names
+- Slide: Use "slideIn"/"slideOut" keyframe names
+- Do not duplicate animation keyframes in multiple files
+- NEVER apply animations globally with * selectors
+- Always scope animations to specific classes that need them
+*/

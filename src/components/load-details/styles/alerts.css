@@ -1,0 +1,267 @@
+/* ============================================================
+   FILE: src/components/load-details/styles/alerts.css
+   Banner and alert styles - REDESIGNED: Blue/Gray system
+   ✅ Removed all yellow/orange styling
+   ✅ Clean, professional info banners
+   ============================================================ */
+
+/* ============================================================
+   ON THE WAY BANNER - Blue info style
+   ============================================================ */
+.ldm-on-the-way-banner {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 14px 16px;
+  background: #f0f9ff;
+  border: 1px solid #bae6fd;
+  border-radius: 10px;
+  color: #0369a1;
+  font-size: 14px;
+  font-weight: 500;
+}
+
+.ldm-on-the-way-banner svg {
+  width: 20px;
+  height: 20px;
+  color: #0284c7;
+  flex-shrink: 0;
+}
+
+.ldm-on-the-way-date {
+  font-weight: 500;
+  color: #0284c7;
+  margin-left: auto;
+  font-size: 13px;
+}
+
+/* ============================================================
+   ARRIVED AT PICKUP BANNER - Blue/Indigo style
+   ============================================================ */
+.ldm-arrived-banner {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 14px 16px;
+  background: #eef2ff;
+  border: 1px solid #c7d2fe;
+  border-radius: 10px;
+  color: #4338ca;
+  font-size: 14px;
+  font-weight: 500;
+  margin-bottom: 12px;
+}
+
+.ldm-arrived-banner svg {
+  width: 20px;
+  height: 20px;
+  color: #6366f1;
+  flex-shrink: 0;
+}
+
+.ldm-arrived-date {
+  font-weight: 500;
+  color: #6366f1;
+  margin-left: auto;
+  font-size: 13px;
+}
+
+/* ============================================================
+   DELIVERED BANNER - Green success style (keep green for success)
+   ============================================================ */
+.ldm-delivered-banner {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 14px 16px;
+  background: #f0fdf4;
+  border: 1px solid #bbf7d0;
+  border-radius: 10px;
+  color: #166534;
+  font-size: 14px;
+  font-weight: 500;
+}
+
+.ldm-delivered-banner svg {
+  width: 20px;
+  height: 20px;
+  color: #22c55e;
+  flex-shrink: 0;
+}
+
+.ldm-delivered-date {
+  font-weight: 500;
+  color: #15803d;
+  margin-left: 4px;
+}
+
+/* ============================================================
+   CANCELLED NOTICE - Neutral gray
+   ============================================================ */
+.ldm-cancelled-notice {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  padding: 12px 16px;
+  background: #f8fafc;
+  border: 1px solid #e2e8f0;
+  border-radius: 10px;
+  color: #64748b;
+  font-size: 14px;
+  font-weight: 500;
+}
+
+/* ============================================================
+   INFO NOTICE - Generic blue info box
+   ============================================================ */
+.ldm-info-notice {
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+  padding: 14px 16px;
+  background: #f8fafc;
+  border: 1px solid #e2e8f0;
+  border-radius: 10px;
+  color: #475569;
+  font-size: 13px;
+  line-height: 1.5;
+}
+
+.ldm-info-notice svg {
+  width: 18px;
+  height: 18px;
+  color: #64748b;
+  flex-shrink: 0;
+  margin-top: 1px;
+}
+
+.ldm-info-notice--blue {
+  background: #f0f9ff;
+  border-color: #bae6fd;
+  color: #0369a1;
+}
+
+.ldm-info-notice--blue svg {
+  color: #0284c7;
+}
+
+/* ============================================================
+   SCHEDULE INFO BANNER - Neutral/Blue
+   For "Pickup not available yet" type messages
+   ============================================================ */
+.ldm-schedule-info {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 14px 16px;
+  background: #f8fafc;
+  border: 1px solid #e2e8f0;
+  border-radius: 10px;
+}
+
+.ldm-schedule-info__icon {
+  width: 36px;
+  height: 36px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: #f1f5f9;
+  border-radius: 8px;
+  color: #64748b;
+  flex-shrink: 0;
+}
+
+.ldm-schedule-info__icon svg {
+  width: 20px;
+  height: 20px;
+}
+
+.ldm-schedule-info__content {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.ldm-schedule-info__title {
+  font-size: 13px;
+  font-weight: 600;
+  color: #334155;
+}
+
+.ldm-schedule-info__text {
+  font-size: 12px;
+  color: #64748b;
+}
+
+.ldm-schedule-info__text strong {
+  color: #334155;
+  font-weight: 600;
+}
+
+.ldm-schedule-info__action {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 36px;
+  height: 36px;
+  background: transparent;
+  border: 1px solid #e2e8f0;
+  border-radius: 8px;
+  color: #64748b;
+  cursor: pointer;
+  transition: all 0.15s ease;
+  flex-shrink: 0;
+}
+
+.ldm-schedule-info__action:hover {
+  background: #f1f5f9;
+  border-color: #cbd5e1;
+  color: #334155;
+}
+
+.ldm-schedule-info__action svg {
+  width: 18px;
+  height: 18px;
+}
+
+/* ============================================================
+   RESPONSIVE
+   ============================================================ */
+@media (max-width: 480px) {
+  .ldm-on-the-way-banner,
+  .ldm-arrived-banner,
+  .ldm-delivered-banner {
+    padding: 12px 14px;
+    font-size: 13px;
+    gap: 10px;
+  }
+
+  .ldm-on-the-way-banner svg,
+  .ldm-arrived-banner svg,
+  .ldm-delivered-banner svg {
+    width: 18px;
+    height: 18px;
+  }
+
+  .ldm-on-the-way-date,
+  .ldm-arrived-date {
+    font-size: 12px;
+  }
+
+  .ldm-schedule-info {
+    padding: 12px;
+    gap: 10px;
+  }
+
+  .ldm-schedule-info__icon {
+    width: 32px;
+    height: 32px;
+  }
+
+  .ldm-schedule-info__icon svg {
+    width: 18px;
+    height: 18px;
+  }
+}

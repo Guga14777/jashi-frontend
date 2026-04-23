@@ -1,0 +1,337 @@
+/* ============================================================
+   FILE: src/components/load-details/pickup-modal.css
+   ✅ UPDATED: Added styles for existing photos info banner
+   ============================================================ */
+
+.pickup-modal-backdrop {
+  position: fixed;
+  inset: 0;
+  background-color: rgba(0, 0, 0, 0.5);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 9999;
+  padding: 1rem;
+}
+
+.pickup-modal {
+  background: white;
+  border-radius: 12px;
+  width: 100%;
+  max-width: 520px;
+  max-height: 90vh;
+  display: flex;
+  flex-direction: column;
+  box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+}
+
+.pickup-modal__header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  padding: 1.25rem 1.5rem;
+  border-bottom: 1px solid #e5e7eb;
+}
+
+.pickup-modal__title {
+  font-size: 1.25rem;
+  font-weight: 600;
+  color: #111827;
+  margin: 0;
+}
+
+.pickup-modal__subtitle {
+  font-size: 0.875rem;
+  color: #6b7280;
+  margin: 0.25rem 0 0;
+}
+
+.pickup-modal__close {
+  background: none;
+  border: none;
+  padding: 0.5rem;
+  cursor: pointer;
+  color: #6b7280;
+  border-radius: 6px;
+  transition: all 0.15s;
+}
+
+.pickup-modal__close:hover {
+  background: #f3f4f6;
+  color: #111827;
+}
+
+.pickup-modal__content {
+  flex: 1;
+  overflow-y: auto;
+  padding: 1.5rem;
+}
+
+/* ✅ NEW: Existing photos info banner */
+.pickup-modal__existing-info {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.75rem 1rem;
+  background: #ecfdf5;
+  border: 1px solid #a7f3d0;
+  border-radius: 8px;
+  margin-bottom: 1rem;
+  font-size: 0.875rem;
+  color: #047857;
+}
+
+.pickup-modal__existing-info svg {
+  flex-shrink: 0;
+}
+
+.pickup-modal__instructions {
+  font-size: 0.875rem;
+  color: #6b7280;
+  margin: 0 0 1rem;
+  line-height: 1.5;
+}
+
+.pickup-modal__dropzone {
+  border: 2px dashed #d1d5db;
+  border-radius: 12px;
+  padding: 2rem;
+  text-align: center;
+  cursor: pointer;
+  transition: all 0.2s;
+  background: #fafafa;
+}
+
+.pickup-modal__dropzone:hover {
+  border-color: #3b82f6;
+  background: #eff6ff;
+}
+
+.pickup-modal__dropzone--active {
+  border-color: #3b82f6;
+  background: #eff6ff;
+}
+
+.pickup-modal__dropzone-icon {
+  width: 40px;
+  height: 40px;
+  color: #9ca3af;
+  margin-bottom: 0.75rem;
+}
+
+.pickup-modal__dropzone:hover .pickup-modal__dropzone-icon,
+.pickup-modal__dropzone--active .pickup-modal__dropzone-icon {
+  color: #3b82f6;
+}
+
+.pickup-modal__dropzone-text {
+  font-size: 0.9375rem;
+  color: #374151;
+  margin: 0 0 0.25rem;
+  font-weight: 500;
+}
+
+.pickup-modal__dropzone-hint {
+  font-size: 0.8125rem;
+  color: #9ca3af;
+  margin: 0;
+}
+
+.pickup-modal__uploading {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  padding: 0.75rem;
+  margin-top: 1rem;
+  background: #f3f4f6;
+  border-radius: 8px;
+  font-size: 0.875rem;
+  color: #6b7280;
+}
+
+.pickup-modal__spinner {
+  animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+  from { transform: rotate(0deg); }
+  to { transform: rotate(360deg); }
+}
+
+.pickup-modal__files {
+  margin-top: 1.25rem;
+}
+
+.pickup-modal__files-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 0.75rem;
+}
+
+.pickup-modal__files-label {
+  font-size: 0.875rem;
+  font-weight: 500;
+  color: #374151;
+  margin: 0;
+}
+
+.pickup-modal__files-total {
+  font-weight: 400;
+  color: #6b7280;
+}
+
+.pickup-modal__files-remaining {
+  font-size: 0.75rem;
+  color: #6b7280;
+}
+
+.pickup-modal__files-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(80px, 1fr));
+  gap: 0.75rem;
+}
+
+.pickup-modal__file {
+  position: relative;
+  aspect-ratio: 1;
+  border-radius: 8px;
+  overflow: hidden;
+  background: #f3f4f6;
+}
+
+.pickup-modal__file-preview {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.pickup-modal__file-placeholder {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  height: 100%;
+  color: #9ca3af;
+}
+
+.pickup-modal__file-remove {
+  position: absolute;
+  top: 4px;
+  right: 4px;
+  width: 22px;
+  height: 22px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(0, 0, 0, 0.6);
+  border: none;
+  border-radius: 50%;
+  cursor: pointer;
+  color: white;
+  transition: all 0.15s;
+}
+
+.pickup-modal__file-remove:hover {
+  background: rgba(0, 0, 0, 0.8);
+}
+
+.pickup-modal__file-check {
+  position: absolute;
+  bottom: 4px;
+  right: 4px;
+  width: 22px;
+  height: 22px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: #10b981;
+  border-radius: 50%;
+  color: white;
+}
+
+.pickup-modal__error {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.75rem 1rem;
+  background: #fef2f2;
+  border: 1px solid #fecaca;
+  border-radius: 8px;
+  margin-top: 1rem;
+  font-size: 0.875rem;
+  color: #dc2626;
+}
+
+.pickup-modal__footer {
+  display: flex;
+  justify-content: flex-end;
+  gap: 0.75rem;
+  padding: 1rem 1.5rem;
+  border-top: 1px solid #e5e7eb;
+  background: #f9fafb;
+  border-radius: 0 0 12px 12px;
+}
+
+.pickup-modal__btn {
+  padding: 0.625rem 1.25rem;
+  font-size: 0.9375rem;
+  font-weight: 500;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: all 0.15s;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.pickup-modal__btn--secondary {
+  background: white;
+  border: 1px solid #d1d5db;
+  color: #374151;
+}
+
+.pickup-modal__btn--secondary:hover:not(:disabled) {
+  background: #f9fafb;
+  border-color: #9ca3af;
+}
+
+.pickup-modal__btn--primary {
+  background: #3b82f6;
+  border: none;
+  color: white;
+}
+
+.pickup-modal__btn--primary:hover:not(:disabled) {
+  background: #2563eb;
+}
+
+.pickup-modal__btn:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.pickup-modal__btn-spinner {
+  width: 16px;
+  height: 16px;
+  animation: spin 1s linear infinite;
+}
+
+/* Responsive */
+@media (max-width: 640px) {
+  .pickup-modal {
+    max-width: none;
+    max-height: none;
+    height: 100%;
+    border-radius: 0;
+  }
+
+  .pickup-modal__footer {
+    border-radius: 0;
+  }
+
+  .pickup-modal__files-grid {
+    grid-template-columns: repeat(3, 1fr);
+  }
+}

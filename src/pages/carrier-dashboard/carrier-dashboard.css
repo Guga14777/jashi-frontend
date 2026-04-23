@@ -1,0 +1,584 @@
+/* src/pages/carrier-dashboard/carrier-dashboard.css */
+
+/* Import Google Fonts - Plus Jakarta Sans for headlines, Inter for body */
+@import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@800&family=Inter:wght@400;500;600;700&display=swap');
+
+/* ============================================
+   DESIGN SYSTEM VARIABLES - SCOPED TO DASHBOARD
+   ============================================ */
+.carrier-dashboard {
+  /* Brand colors */
+  --brand: #0066FF;
+  --brand-dark: #0052CC;
+  --brand-light: #E6F0FF;
+  --brand-lighter: #F0F7FF;
+  --brand-grad: linear-gradient(135deg, #0066FF 0%, #0052CC 100%);
+  
+  /* Text colors */
+  --text-primary: #0F172A;
+  --text-secondary: #475569;
+  --text-muted: #64748B;
+  --text-light: #94A3B8;
+  
+  /* Surface colors */
+  --bg-white: #FFFFFF;
+  --bg-gray: #F8FAFC;
+  --bg-secondary: #F1F5F9;
+  --bg-icon: #F6F8FB;  /* Very light background for icon containers */
+  
+  /* Borders */
+  --border-color: #E2E8F0;
+  --border-light: #F1F5F9;
+  
+  /* Shadows */
+  --shadow-xs: 0 1px 2px rgba(0, 0, 0, 0.04);
+  --shadow-sm: 0 2px 4px rgba(0, 0, 0, 0.06);
+  --shadow-md: 0 4px 12px rgba(0, 0, 0, 0.08);
+  --shadow-lg: 0 8px 24px rgba(0, 0, 0, 0.12);
+  
+  /* Layout - UPDATED: Removed max-width constraint */
+  --header-height: 72px;
+  
+  /* Status colors */
+  --color-success: #10B981;
+  --color-success-light: #D1FAE5;
+  --color-error: #EF4444;
+  --color-warning: #F59E0B;
+  --color-info: #3B82F6;
+  
+  /* Spacing */
+  --spacing-xs: 4px;
+  --spacing-sm: 8px;
+  --spacing-md: 16px;
+  --spacing-lg: 24px;
+  --spacing-xl: 32px;
+  
+  /* Border radius */
+  --radius-sm: 6px;
+  --radius-md: 10px;
+  --radius-lg: 14px;
+}
+
+/* ============================================
+   SKIP LINK FOR ACCESSIBILITY
+   ============================================ */
+.skip-link {
+  position: absolute;
+  left: -9999px;
+  top: auto;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+  font-weight: 600;
+  text-decoration: none;
+}
+
+.skip-link:focus {
+  position: fixed;
+  left: 12px;
+  top: calc(var(--header-height) + 12px);
+  width: auto;
+  height: auto;
+  padding: 8px 12px;
+  background: #111827;
+  color: #fff;
+  border-radius: 6px;
+  z-index: 2000;
+  outline: 2px solid #fff;
+  outline-offset: 2px;
+}
+
+/* ============================================
+   OVERRIDE AVAILABLE LOADS SPACING
+   ============================================ */
+.carrier-dashboard .available-loads {
+  margin-top: 0 !important;
+  padding-top: 0 !important;
+}
+
+.carrier-dashboard .loads-header {
+  margin-top: 0 !important;
+  padding-top: 14px !important;
+}
+
+.carrier-dashboard .available-loads::before {
+  display: none !important;
+}
+
+/* ============================================
+   GLOBAL CONTAINER OVERRIDE - ADDS BREATHING ROOM
+   ============================================ */
+/* Remove global container cap inside the carrier dashboard */
+.carrier-dashboard .container,
+.carrier-dashboard .dashboard-container {
+  max-width: none !important;
+  width: 100% !important;
+  padding-inline: 24px !important; /* More breathing room on sides */
+}
+
+/* ============================================
+   PAGE WRAPPER - FLEX COLUMN LAYOUT - REMOVED ANIMATION
+   ============================================ */
+.carrier-dashboard {
+  background: linear-gradient(180deg, #F8FAFC 0%, #F1F5F9 100%);
+  min-height: 100dvh;
+  display: flex;
+  flex-direction: column;
+  padding-top: calc(var(--header-height) + 48px) !important;
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+}
+
+/* ============================================
+   MAIN CONTAINER - FULL WIDTH - REMOVED FADE ANIMATION
+   ============================================ */
+.dashboard-container {
+  max-width: none;  /* UPDATED: Remove width constraint */
+  width: 100%;      /* UPDATED: Use full width */
+  margin: 0 auto;
+  flex: 1 1 auto;
+  padding: 0 24px 40px 24px;  /* UPDATED: More breathing room */
+  /* REMOVED: animation: fadeIn 0.4s ease-out; - This was causing the shake */
+}
+
+/* ============================================
+   DASHBOARD HEADER - Premium Typography
+   ============================================ */
+.dashboard-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  margin-bottom: 28px;  /* Optimal spacing */
+  padding: 0;
+  border: none;
+}
+
+.header-content {
+  flex: 1;
+}
+
+/* ============================================
+   HERO SECTION - STACK LIKE CUSTOMER DASHBOARD
+   ============================================ */
+/* Stack like customer dashboard */
+.dash-welcome {
+  display: flex !important;
+  flex-direction: column !important;
+  align-items: flex-start !important;
+}
+
+/* Match customer sizes/weights/colors */
+.dash-welcome .dashboard-greeting {
+  font-family: 'Plus Jakarta Sans', -apple-system, sans-serif;
+  font-size: 36px;          /* same as customer */
+  font-weight: 700;
+  color: var(--text-primary);
+  letter-spacing: -0.02em;
+  line-height: 1.1;
+  margin: 0 0 10px 0;       /* space before subtitle */
+}
+
+.dash-welcome .dashboard-greeting span {
+  color: var(--brand);      /* same accent as customer */
+  font-weight: 700;
+}
+
+.dash-welcome .dashboard-subtitle {
+  display: block !important; /* ensure it drops under */
+  font-size: 18px;
+  font-weight: 500;
+  color: var(--text-muted);
+  margin: 0;                /* already spaced by h1 margin-bottom */
+  line-height: 1.4;
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+}
+
+/* ============================================
+   MAIN GRID LAYOUT
+   ============================================ */
+.dashboard-grid {
+  display: grid;
+  grid-template-columns: 1fr 380px;
+  gap: 24px;
+  align-items: start;
+}
+
+.main-content {
+  min-width: 0;
+  padding-top: 0 !important;
+  margin-top: 0 !important;
+}
+
+.sidebar-content {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  position: sticky;
+  top: calc(var(--header-height) + 24px);
+}
+
+/* ============================================
+   STAT CARD - REMOVED SHAKE-CAUSING ANIMATIONS
+   ============================================ */
+.stat-card {
+  background: var(--bg-white);
+  border-radius: var(--radius-lg);
+  border: 1px solid var(--border-light);
+  padding: 0;
+  box-shadow: var(--shadow-sm);
+  /* REMOVED: transition and transform that caused shaking */
+  overflow: hidden;
+}
+
+/* FIXED: Only apply hover effects on actual hover */
+.stat-card:hover {
+  box-shadow: var(--shadow-lg);
+  transform: translateY(-2px);
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.card-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 18px 20px;
+  border-bottom: 1px solid var(--border-light);
+  background: linear-gradient(180deg, #FFFFFF 0%, #FAFBFC 100%);
+}
+
+.card-title {
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+  font-size: 16px;
+  font-weight: 700;
+  color: var(--text-primary);
+  margin: 0;
+  letter-spacing: -0.01em;
+}
+
+.time-badge {
+  display: inline-flex;
+  align-items: center;
+  padding: 4px 10px;
+  background: var(--brand-lighter);
+  color: var(--brand);
+  border-radius: var(--radius-sm);
+  font-size: 12px;
+  font-weight: 600;
+  letter-spacing: 0.025em;
+}
+
+.view-all-btn {
+  padding: 5px 10px;
+  background: transparent;
+  color: var(--brand);
+  border: none;
+  border-radius: var(--radius-sm);
+  font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+}
+
+.view-all-btn:hover {
+  background: var(--brand-lighter);
+  transition: background-color 0.2s ease;
+}
+
+/* ============================================
+   STATS GRID - Premium Icon Design
+   ============================================ */
+.performance-card .stats-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 0;
+  padding: 18px;
+}
+
+.stat-item {
+  display: flex;
+  align-items: flex-start;
+  gap: 14px;
+  padding: 14px;
+  border-radius: var(--radius-md);
+  cursor: default;
+}
+
+.stat-item:hover {
+  background: var(--bg-gray);
+  transition: background-color 0.2s ease;
+}
+
+/* Premium icon containers */
+.stat-icon {
+  width: 42px;
+  height: 42px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 11px;
+  flex-shrink: 0;
+  background: var(--bg-icon);  /* Very light background */
+  color: var(--text-muted);  /* #64748B default */
+}
+
+.stat-item:hover .stat-icon {
+  background: #EFF3F8;
+  color: var(--text-primary);  /* #0F172A on hover */
+  transition: all 0.2s ease;
+}
+
+.stat-content {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  flex: 1;
+}
+
+/* Consistent label styling */
+.stat-label {
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+  font-size: 12px;
+  color: var(--text-muted);
+  font-weight: 600;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+}
+
+/* Tabular numerals for stable number display */
+.stat-value {
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+  font-size: 22px;
+  font-weight: 700;
+  color: var(--text-primary);
+  line-height: 1;
+  font-variant-numeric: tabular-nums;  /* Prevents number wobble */
+  letter-spacing: -0.02em;
+}
+
+/* ============================================
+   QUICK ACTIONS
+   ============================================ */
+.quick-actions {
+  padding: 14px 20px;
+  background: var(--bg-gray);
+  border-top: 1px solid var(--border-light);
+}
+
+.quick-action-btn {
+  width: 100%;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 11px 14px;
+  background: var(--bg-white);
+  color: var(--text-secondary);
+  border: 1px solid var(--border-color);
+  border-radius: var(--radius-md);
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+}
+
+.quick-action-btn:hover {
+  background: var(--brand);
+  color: white;
+  border-color: var(--brand);
+  transform: translateX(2px);
+  transition: all 0.2s ease;
+}
+
+.quick-action-btn svg {
+  transition: transform 0.2s ease;
+}
+
+.quick-action-btn:hover svg {
+  transform: translateX(4px);
+}
+
+/* ============================================
+   SHIPMENTS CARD
+   ============================================ */
+.shipments-card {
+  max-height: 400px;
+  display: flex;
+  flex-direction: column;
+}
+
+.shipments-card .card-content {
+  padding: 20px;
+  overflow-y: auto;
+  flex: 1;
+}
+
+/* Custom Scrollbar */
+.shipments-card .card-content::-webkit-scrollbar {
+  width: 5px;
+}
+
+.shipments-card .card-content::-webkit-scrollbar-track {
+  background: var(--bg-gray);
+  border-radius: 3px;
+}
+
+.shipments-card .card-content::-webkit-scrollbar-thumb {
+  background: #CBD5E1;
+  border-radius: 3px;
+}
+
+.shipments-card .card-content::-webkit-scrollbar-thumb:hover {
+  background: var(--text-muted);
+}
+
+/* ============================================
+   REMOVED FADE-IN ANIMATION THAT CAUSED SHAKING
+   ============================================ */
+/* REMOVED: @keyframes fadeIn - This was causing cards to shake on page load */
+
+/* ============================================
+   RESPONSIVE DESIGN - UPDATED WITH FULL WIDTH
+   ============================================ */
+@media (max-width: 1280px) {
+  .dashboard-grid {
+    grid-template-columns: 1fr 360px;
+  }
+  
+  .dashboard-container {
+    padding: 0 20px 40px 20px;  /* Good breathing room on medium screens */
+  }
+  
+  .dash-welcome .dashboard-greeting {
+    font-size: 32px;
+  }
+  
+  .dash-welcome .dashboard-subtitle {
+    font-size: 17px;
+  }
+}
+
+@media (max-width: 1024px) {
+  .carrier-dashboard {
+    padding-top: calc(var(--header-height) + 40px) !important;
+  }
+  
+  .dashboard-grid {
+    grid-template-columns: 1fr;
+  }
+  
+  .sidebar-content {
+    position: static;
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(340px, 1fr));
+    gap: 20px;
+  }
+  
+  .dash-welcome .dashboard-greeting {
+    font-size: 30px;
+  }
+  
+  .dash-welcome .dashboard-subtitle {
+    font-size: 16px;
+  }
+}
+
+@media (max-width: 768px) {
+  .carrier-dashboard {
+    padding-top: calc(var(--header-height) + 32px) !important;
+  }
+  
+  .dashboard-container {
+    padding: 0 16px 32px 16px;  /* Balanced padding on mobile */
+  }
+  
+  .dashboard-header {
+    margin-bottom: 24px;
+  }
+  
+  .dash-welcome .dashboard-greeting { 
+    font-size: 28px; 
+    margin-bottom: 8px; 
+  }
+  
+  .dash-welcome .dashboard-subtitle { 
+    font-size: 15px; 
+  }
+  
+  .sidebar-content {
+    grid-template-columns: 1fr;
+  }
+  
+  .performance-card .stats-grid {
+    grid-template-columns: 1fr;
+    padding: 14px;
+  }
+  
+  .stat-icon {
+    width: 40px;
+    height: 40px;
+  }
+  
+  .stat-value {
+    font-size: 20px;
+  }
+  
+  .card-header {
+    padding: 16px 18px;
+  }
+  
+  .card-title {
+    font-size: 15px;
+  }
+}
+
+@media (max-width: 480px) {
+  .carrier-dashboard {
+    padding-top: calc(var(--header-height) + 24px) !important;
+  }
+  
+  .dashboard-container {
+    padding: 0 12px 28px 12px;  /* Minimal but safe padding on very small screens */
+  }
+  
+  .dash-welcome .dashboard-greeting { 
+    font-size: 24px; 
+  }
+  
+  .dash-welcome .dashboard-subtitle { 
+    font-size: 14px; 
+  }
+  
+  .dashboard-header {
+    margin-bottom: 20px;
+  }
+  
+  .stat-item {
+    padding: 12px;
+    gap: 12px;
+  }
+  
+  .stat-icon {
+    width: 38px;
+    height: 38px;
+  }
+  
+  .stat-value {
+    font-size: 19px;
+  }
+  
+  .stat-label {
+    font-size: 11px;
+  }
+  
+  .quick-actions {
+    padding: 12px 16px;
+  }
+  
+  .quick-action-btn {
+    padding: 10px 12px;
+    font-size: 13px;
+  }
+  
+  .card-content {
+    padding: 16px;
+  }
+}

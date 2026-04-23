@@ -1,0 +1,476 @@
+/* ============================================================
+   FILE: src/pages/shipment-details/shipment-details.css
+   Shipment Details Page Styles
+   ============================================================ */
+
+.sd-page {
+  min-height: 100vh;
+  background: var(--gray-50, #f9fafb);
+  padding-bottom: 3rem;
+}
+
+/* Header */
+.sd-header {
+  background: #fff;
+  border-bottom: 1px solid var(--gray-200, #e5e7eb);
+  padding: 1rem 1.5rem;
+  position: sticky;
+  top: 0;
+  z-index: 10;
+}
+
+.sd-back-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  background: none;
+  border: none;
+  color: var(--gray-600, #4b5563);
+  font-size: 0.875rem;
+  cursor: pointer;
+  padding: 0.5rem 0;
+  margin-bottom: 0.75rem;
+  transition: color 0.15s ease;
+}
+
+.sd-back-btn:hover {
+  color: var(--primary, #2563eb);
+}
+
+.sd-header-content {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  flex-wrap: wrap;
+}
+
+.sd-header-title {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+}
+
+.sd-header-title h1 {
+  font-size: 1.5rem;
+  font-weight: 600;
+  color: var(--gray-900, #111827);
+  margin: 0;
+}
+
+.sd-order-badge {
+  background: var(--gray-100, #f3f4f6);
+  color: var(--gray-700, #374151);
+  padding: 0.25rem 0.625rem;
+  border-radius: 9999px;
+  font-size: 0.75rem;
+  font-weight: 500;
+  font-family: monospace;
+}
+
+/* Status Badge */
+.sd-status-badge {
+  display: inline-flex;
+  align-items: center;
+  padding: 0.375rem 0.875rem;
+  border-radius: 9999px;
+  font-size: 0.75rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.025em;
+}
+
+.sd-status-badge.status--waiting {
+  background: var(--yellow-100, #fef3c7);
+  color: var(--yellow-800, #92400e);
+}
+
+.sd-status-badge.status--accepted {
+  background: var(--blue-100, #dbeafe);
+  color: var(--blue-800, #1e40af);
+}
+
+.sd-status-badge.status--transit {
+  background: var(--purple-100, #ede9fe);
+  color: var(--purple-800, #5b21b6);
+}
+
+.sd-status-badge.status--delivered {
+  background: var(--green-100, #dcfce7);
+  color: var(--green-800, #166534);
+}
+
+.sd-status-badge.status--cancelled {
+  background: var(--red-100, #fee2e2);
+  color: var(--red-800, #991b1b);
+}
+
+/* Main Content */
+.sd-content {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 1.5rem;
+}
+
+/* Cards */
+.sd-card {
+  background: #fff;
+  border-radius: 0.75rem;
+  border: 1px solid var(--gray-200, #e5e7eb);
+  padding: 1.5rem;
+  margin-bottom: 1rem;
+}
+
+.sd-card-title {
+  display: flex;
+  align-items: center;
+  gap: 0.625rem;
+  font-size: 1rem;
+  font-weight: 600;
+  color: var(--gray-900, #111827);
+  margin: 0 0 1.25rem 0;
+}
+
+.sd-card-title svg {
+  color: var(--gray-500, #6b7280);
+}
+
+/* Grid Layout */
+.sd-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 1rem;
+}
+
+@media (max-width: 768px) {
+  .sd-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+/* Route Card */
+.sd-route-card {
+  grid-column: 1 / -1;
+}
+
+.sd-route {
+  display: flex;
+  align-items: stretch;
+  gap: 0;
+}
+
+.sd-route-point {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.75rem;
+  flex: 1;
+}
+
+.sd-route-marker {
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+  margin-top: 0.25rem;
+  flex-shrink: 0;
+}
+
+.sd-route-marker--pickup {
+  background: var(--green-500, #22c55e);
+  box-shadow: 0 0 0 3px var(--green-100, #dcfce7);
+}
+
+.sd-route-marker--dropoff {
+  background: var(--red-500, #ef4444);
+  box-shadow: 0 0 0 3px var(--red-100, #fee2e2);
+}
+
+.sd-route-details {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+}
+
+.sd-route-label {
+  font-size: 0.75rem;
+  font-weight: 600;
+  color: var(--gray-500, #6b7280);
+  text-transform: uppercase;
+  letter-spacing: 0.025em;
+}
+
+.sd-route-address {
+  font-size: 0.9375rem;
+  color: var(--gray-900, #111827);
+  font-weight: 500;
+}
+
+.sd-route-type {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.375rem;
+  font-size: 0.8125rem;
+  color: var(--gray-600, #4b5563);
+}
+
+.sd-route-line {
+  flex-shrink: 0;
+  width: 80px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+}
+
+.sd-route-line::before {
+  content: '';
+  position: absolute;
+  top: 50%;
+  left: 0;
+  right: 0;
+  height: 2px;
+  background: var(--gray-300, #d1d5db);
+  border-style: dashed;
+}
+
+.sd-route-distance {
+  background: #fff;
+  padding: 0.25rem 0.5rem;
+  border-radius: 9999px;
+  font-size: 0.75rem;
+  font-weight: 600;
+  color: var(--gray-600, #4b5563);
+  border: 1px solid var(--gray-200, #e5e7eb);
+  position: relative;
+  z-index: 1;
+}
+
+/* Info Grid */
+.sd-info-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+  gap: 1rem;
+}
+
+.sd-info-item {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+}
+
+.sd-info-label {
+  font-size: 0.75rem;
+  font-weight: 500;
+  color: var(--gray-500, #6b7280);
+  text-transform: uppercase;
+  letter-spacing: 0.025em;
+}
+
+.sd-info-value {
+  font-size: 0.9375rem;
+  color: var(--gray-900, #111827);
+  font-weight: 500;
+}
+
+.sd-info-time {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.25rem;
+  font-size: 0.8125rem;
+  color: var(--gray-600, #4b5563);
+  margin-top: 0.125rem;
+}
+
+.sd-info-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.375rem;
+  color: var(--primary, #2563eb);
+  text-decoration: none;
+  font-size: 0.9375rem;
+}
+
+.sd-info-link:hover {
+  text-decoration: underline;
+}
+
+/* Price Display */
+.sd-price-display {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+}
+
+.sd-price-amount {
+  font-size: 1.75rem;
+  font-weight: 700;
+  color: var(--gray-900, #111827);
+}
+
+.sd-price-per-mile {
+  font-size: 0.875rem;
+  color: var(--gray-500, #6b7280);
+}
+
+/* Documents */
+.sd-documents {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.sd-doc-item {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0.75rem 1rem;
+  background: var(--gray-50, #f9fafb);
+  border-radius: 0.5rem;
+  border: 1px solid var(--gray-200, #e5e7eb);
+}
+
+.sd-doc-label {
+  font-size: 0.875rem;
+  font-weight: 500;
+  color: var(--gray-700, #374151);
+}
+
+/* ⭐ Document Download Button */
+.sd-doc-download {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.5rem 0.875rem;
+  background: var(--primary, #2563eb);
+  color: #fff;
+  border: none;
+  border-radius: 0.375rem;
+  font-size: 0.8125rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.15s ease;
+}
+
+.sd-doc-download:hover:not(:disabled) {
+  background: var(--primary-dark, #1d4ed8);
+}
+
+.sd-doc-download:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+/* Notes */
+.sd-notes {
+  font-size: 0.9375rem;
+  color: var(--gray-700, #374151);
+  line-height: 1.6;
+  margin: 0;
+  white-space: pre-wrap;
+}
+
+/* Loading State */
+.sd-loading {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  min-height: 50vh;
+  gap: 1rem;
+  color: var(--gray-500, #6b7280);
+}
+
+/* Error State */
+.sd-error {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  min-height: 50vh;
+  gap: 1rem;
+  text-align: center;
+  padding: 2rem;
+}
+
+.sd-error svg {
+  color: var(--red-500, #ef4444);
+}
+
+.sd-error h2 {
+  font-size: 1.25rem;
+  font-weight: 600;
+  color: var(--gray-900, #111827);
+  margin: 0;
+}
+
+.sd-error p {
+  color: var(--gray-600, #4b5563);
+  margin: 0;
+}
+
+/* Buttons */
+.sd-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  padding: 0.625rem 1.25rem;
+  border-radius: 0.5rem;
+  font-size: 0.875rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.15s ease;
+  border: none;
+}
+
+.sd-btn--primary {
+  background: var(--primary, #2563eb);
+  color: #fff;
+}
+
+.sd-btn--primary:hover {
+  background: var(--primary-dark, #1d4ed8);
+}
+
+/* Spinner */
+.sd-spinner {
+  animation: sd-spin 1s linear infinite;
+}
+
+@keyframes sd-spin {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+/* Responsive */
+@media (max-width: 640px) {
+  .sd-header {
+    padding: 1rem;
+  }
+  
+  .sd-content {
+    padding: 1rem;
+  }
+  
+  .sd-route {
+    flex-direction: column;
+    gap: 1.5rem;
+  }
+  
+  .sd-route-line {
+    display: none;
+  }
+  
+  .sd-header-title h1 {
+    font-size: 1.25rem;
+  }
+  
+  .sd-doc-item {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 0.75rem;
+  }
+}

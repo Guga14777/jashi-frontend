@@ -1,0 +1,144 @@
+/* ================================
+   Broker–Carrier Agreement (BCA)
+   File: src/pages/legal/broker-carrier-agreement.css
+   ================================ */
+
+/* ---- Page shell & content width ---- */
+.page-shell.bca .bca-main,
+.page-shell.bca .page-main {
+  max-width: 980px;
+  margin: 0 auto;
+  padding: 96px 16px 48px; /* extra top space from header */
+}
+
+/* extra space on very small screens */
+@media (max-width: 640px) {
+  .page-shell.bca .bca-main,
+  .page-shell.bca .page-main {
+    padding-top: 88px;
+    padding-bottom: 40px;
+  }
+}
+
+/* ---- Header block ---- */
+.page-shell.bca .bca-header,
+.page-shell.bca .page-header {
+  margin: 0 0 18px;
+}
+
+.page-shell.bca .bca-header h1,
+.page-shell.bca .page-header h1 {
+  font-size: 42px;
+  line-height: 1.15;
+  letter-spacing: -0.01em;
+  margin: 4px 0 10px; /* subtle offset so it doesn’t hug the sticky header */
+}
+
+.page-shell.bca .bca-header p,
+.page-shell.bca .page-header p {
+  margin: 0;
+  opacity: .9;
+}
+
+/* ---- Section cards ---- */
+.page-shell.bca .legal-section {
+  margin: 20px 0 0;
+}
+
+.page-shell.bca .legal-card,
+.page-shell.bca .card {
+  border: 1px solid rgba(255, 255, 255, .08);
+  background: rgba(255, 255, 255, .02);
+  border-radius: 14px;
+  padding: 18px 20px;
+  box-shadow: 0 1px 10px rgba(16, 24, 40, .05);
+}
+
+.page-shell.bca .legal-card + .legal-card {
+  margin-top: 16px;
+}
+
+/* ---- Section titles ---- */
+.page-shell.bca .legal-title,
+.page-shell.bca .card h2 {
+  font-size: 28px;
+  line-height: 1.2;
+  margin: 0 0 10px;
+  letter-spacing: -0.01em;
+}
+
+/* Numbered heading (e.g., “1. Parties & Scope”) */
+.page-shell.bca .legal-title-number {
+  color: var(--color-primary, #2563eb);
+  margin-right: 6px;
+}
+
+/* ---- Lists & text ---- */
+.page-shell.bca .legal-text,
+.page-shell.bca .card p {
+  margin: 0 0 10px;
+}
+
+.page-shell.bca .legal-list,
+.page-shell.bca .list,
+.page-shell.bca .card ul {
+  margin: 8px 0 0 22px;  /* room for bullets */
+  padding: 0;
+}
+
+.page-shell.bca .legal-list li,
+.page-shell.bca .card ul li {
+  margin: 6px 0;
+}
+
+/* em-dash list style (— item …) */
+.page-shell.bca .dash-list {
+  list-style: none;
+  margin-left: 0;
+}
+
+.page-shell.bca .dash-list li::before {
+  content: "—";
+  display: inline-block;
+  margin-right: 8px;
+  opacity: .9;
+}
+
+/* ---- Links ---- */
+.page-shell.bca a {
+  color: var(--color-primary, #2b6ef7);
+  text-decoration: none;
+  transition: color var(--transition-base, .15s ease);
+}
+
+.page-shell.bca a:hover {
+  text-decoration: underline;
+}
+
+/* ---- Utilities ---- */
+.page-shell.bca .spacer-xxl { height: 48px; }
+.page-shell.bca .spacer-xl  { height: 32px; }
+.page-shell.bca .spacer-lg  { height: 24px; }
+.page-shell.bca .spacer-md  { height: 16px; }
+.page-shell.bca .spacer-sm  { height: 10px; }
+
+/* keep content away from chat bubble & footer edge */
+.page-shell.bca .pad-bottom {
+  padding-bottom: 24px;
+}
+
+/* ---- Print styles (optional) ---- */
+@media print {
+  .page-shell.bca .bca-main,
+  .page-shell.bca .page-main {
+    padding: 0;
+  }
+  .page-shell.bca .legal-card,
+  .page-shell.bca .card {
+    box-shadow: none;
+    background: transparent;
+  }
+  .page-shell.bca a {
+    text-decoration: underline;
+  }
+}

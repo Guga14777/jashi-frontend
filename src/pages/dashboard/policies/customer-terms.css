@@ -1,0 +1,100 @@
+/* Page shell */
+.customer-terms-page {
+  min-height: 100vh;
+  background-color: #f1f5f9;
+}
+
+/* Container */
+.terms-container {
+  max-width: 900px;
+  margin: 0 auto;
+  padding: 80px 20px;
+}
+
+/* Card */
+.terms-content {
+  background: #ffffff;
+  border-radius: 12px;
+  box-shadow: 0 4px 6px -1px rgba(0,0,0,0.1);
+  padding: 60px 40px 48px;
+  line-height: 1.7;
+}
+
+/* Headings */
+.terms-content h1 {
+  color: #1e293b;
+  font-size: 2.5rem;
+  font-weight: 700;
+  margin-bottom: 32px;
+  text-align: left;
+}
+
+.terms-section {
+  margin-bottom: 40px;
+}
+
+.terms-section h2 {
+  color: #1e40af;
+  font-size: 1.375rem;
+  font-weight: 700;
+  margin-bottom: 16px;
+  margin-top: 40px;
+  text-align: left;
+}
+
+.terms-section:first-of-type h2 {
+  margin-top: 0;
+}
+
+.terms-section h3 {
+  color: #1e293b;
+  font-size: 1.2rem;
+  font-weight: 600;
+  margin-bottom: 12px;
+  margin-top: 20px;
+  text-align: left;
+}
+
+/* Text */
+.terms-section p,
+.terms-section li {
+  color: #374151;
+  text-align: left;
+}
+
+.terms-section p { margin-bottom: 16px; }
+.terms-section ul { margin-bottom: 16px; padding-left: 24px; }
+.terms-section li { margin-bottom: 8px; }
+
+/* Intro + notes */
+.intro-text { color: #374151; }
+.price { font-weight: 800; }
+.note { color: #374151; opacity: 0.9; }
+
+/* Highlighted $50 section */
+.terms-section.highlight {
+  border: 1px solid rgba(37, 99, 235, 0.18);
+  background: rgba(37, 99, 235, 0.06);
+  border-radius: 10px;
+  padding: 16px 16px 6px;
+}
+
+/* Small print */
+.smallprint {
+  font-size: 0.95rem;
+  color: #475569;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .terms-container { padding: 20px 16px; }
+  .terms-content { padding: 24px; }
+  .terms-content h1 { font-size: 2rem; }
+  .terms-section h2 { font-size: 1.3rem; }
+  .terms-section h3 { font-size: 1.1rem; }
+}
+
+@media (max-width: 480px) {
+  .terms-content { padding: 20px; }
+  .terms-content h1 { font-size: 1.8rem; }
+}

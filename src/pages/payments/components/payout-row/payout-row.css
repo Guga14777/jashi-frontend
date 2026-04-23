@@ -1,0 +1,416 @@
+/* ============================================
+   PAYOUT ROW COMPONENT STYLES
+   Clean outline button design with design tokens
+   ============================================ */
+
+/* Desktop Table Row */
+.payout-row {
+  cursor: pointer;
+  transition: background-color 0.15s ease;
+  background: var(--bg-primary, #FFFFFF);
+}
+
+.payout-row:hover {
+  background-color: var(--bg-hover-subtle, #F8FAFC);
+}
+
+.payout-row:focus-within {
+  outline: 2px solid var(--color-primary, #0066FF);
+  outline-offset: -2px;
+}
+
+.payout-row td {
+  padding: var(--spacing-4, 16px);
+  vertical-align: middle;
+  border-bottom: 1px solid var(--border-light, #E2E8F0);
+}
+
+/* Table Caption for Screen Readers */
+.payout-table-caption {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}
+
+/* Reference Column */
+.reference-col {
+  min-width: 180px;
+}
+
+.reference-display {
+  font-family: var(--font-mono, ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace);
+  font-weight: var(--font-weight-semibold, 600);
+  letter-spacing: 0.02em;
+  text-transform: uppercase;
+  display: block;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  color: var(--text-primary, #334155);
+}
+
+.ref-lg {
+  font-size: var(--text-sm, 14px);
+}
+
+.ref-sm {
+  font-size: var(--text-xs, 13px);
+}
+
+/* Date Column */
+.date-col {
+  min-width: 120px;
+}
+
+.date-text {
+  font-size: var(--text-sm, 14px);
+  color: var(--text-secondary, #64748B);
+  font-weight: var(--font-weight-medium, 500);
+}
+
+/* Load Column */
+.load-col {
+  min-width: 100px;
+}
+
+.load-text {
+  font-size: var(--text-sm, 14px);
+  color: var(--text-secondary, #64748B);
+  font-weight: var(--font-weight-medium, 500);
+}
+
+/* Method Column */
+.method-col {
+  min-width: 140px;
+}
+
+.method-text {
+  font-size: var(--text-sm, 14px);
+  color: var(--text-primary, #475569);
+  font-weight: var(--font-weight-medium, 500);
+}
+
+/* Amount Column */
+.amount-col.align-right {
+  text-align: right;
+  min-width: 120px;
+}
+
+.amount-value {
+  font-weight: var(--font-weight-bold, 700);
+  font-variant-numeric: tabular-nums;
+  font-size: var(--text-base, 15px);
+  color: var(--text-primary, #0F172A);
+}
+
+/* Status Column */
+.status-col {
+  min-width: 120px;
+}
+
+/* Status Badges - Aligned with app design system */
+.badge {
+  display: inline-flex;
+  align-items: center;
+  padding: var(--spacing-1, 4px) var(--spacing-3, 12px);
+  border-radius: var(--radius-full, 9999px);
+  font-size: var(--text-xs, 12px);
+  font-weight: var(--font-weight-semibold, 600);
+  text-transform: capitalize;
+  border: 1px solid;
+  min-height: var(--size-6, 24px);
+}
+
+.badge-paid {
+  background: var(--status-success-bg, #ECFDF5);
+  color: var(--status-success-text, #065F46);
+  border-color: var(--status-success-border, #10B981);
+}
+
+.badge-pending {
+  background: var(--status-pending-bg, #FEF9C3);
+  color: var(--status-pending-text, #92400E);
+  border-color: var(--status-pending-border, #FDE68A);
+}
+
+.badge-cancelled {
+  background: var(--status-error-bg, #FEF2F2);
+  color: var(--status-error-text, #991B1B);
+  border-color: var(--status-error-border, #EF4444);
+}
+
+/* Actions Column */
+.actions-col {
+  min-width: 100px;
+  text-align: right;
+}
+
+/* ============================================
+   CLEAN OUTLINE ACTION BUTTON
+   Consistent with app design system
+   ============================================ */
+.action-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--spacing-1-5, 6px);
+  padding: var(--spacing-2, 8px) var(--spacing-3-5, 14px);
+  background: transparent;
+  color: var(--color-primary, #0066FF);
+  border: 1px solid var(--color-primary, #0066FF);
+  border-radius: var(--radius-md, 8px);
+  font-size: var(--text-sm, 14px);
+  font-weight: var(--font-weight-medium, 500);
+  cursor: pointer;
+  transition: all 0.15s ease;
+  white-space: nowrap;
+  min-height: var(--size-9, 36px);
+}
+
+.action-btn:hover {
+  background: var(--color-primary-bg-hover, rgba(0, 102, 255, 0.05));
+  border-color: var(--color-primary-hover, #0052CC);
+  color: var(--color-primary-hover, #0052CC);
+}
+
+.action-btn:active {
+  background: var(--color-primary-bg-active, rgba(0, 102, 255, 0.08));
+  transform: scale(0.98);
+}
+
+.action-btn:focus-visible {
+  outline: 2px solid var(--color-primary, #0066FF);
+  outline-offset: 2px;
+}
+
+/* ============================================
+   MOBILE CARD STYLES
+   ============================================ */
+
+.payout-card {
+  background: var(--bg-primary, #FFFFFF);
+  border: 1px solid var(--border-light, #E2E8F0);
+  border-radius: var(--radius-lg, 12px);
+  padding: var(--spacing-5, 20px);
+  box-shadow: var(--shadow-sm, 0 1px 3px rgba(0, 0, 0, 0.04));
+  transition: all 0.2s ease;
+  margin-bottom: var(--spacing-3, 12px);
+}
+
+.payout-card:hover {
+  box-shadow: var(--shadow-md, 0 4px 12px rgba(0, 0, 0, 0.08));
+  transform: translateY(-2px);
+}
+
+/* Card Header */
+.payout-card-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: var(--spacing-3, 12px);
+  padding-bottom: var(--spacing-3, 12px);
+  border-bottom: 1px solid var(--border-light, #E2E8F0);
+}
+
+/* Card Info */
+.payout-card-info {
+  margin-bottom: var(--spacing-4, 16px);
+}
+
+/* Card Amounts */
+.payout-card-amounts {
+  display: grid;
+  gap: var(--spacing-2-5, 10px);
+  padding: var(--spacing-4, 16px);
+  background: var(--bg-subtle, #F8FAFC);
+  border-radius: var(--radius-md, 8px);
+  margin-bottom: var(--spacing-4, 16px);
+}
+
+.amount-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  min-height: var(--size-6, 24px);
+}
+
+.amount-label {
+  font-size: var(--text-xs, 12px);
+  font-weight: var(--font-weight-semibold, 600);
+  color: var(--text-secondary, #64748B);
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+}
+
+.payout-card-amounts .amount-value {
+  font-size: var(--text-lg, 16px);
+  font-weight: var(--font-weight-bold, 700);
+  font-variant-numeric: tabular-nums;
+  color: var(--text-primary, #0F172A);
+}
+
+.payout-card-amounts .method-text {
+  font-size: var(--text-sm, 14px);
+  color: var(--text-primary, #334155);
+  font-weight: var(--font-weight-medium, 500);
+}
+
+.payout-card-amounts .load-text {
+  font-size: var(--text-sm, 14px);
+  color: var(--text-primary, #334155);
+  font-weight: var(--font-weight-medium, 500);
+}
+
+/* Card Actions */
+.payout-card-actions {
+  padding-top: var(--spacing-3, 12px);
+  border-top: 1px solid var(--border-light, #E2E8F0);
+}
+
+/* ============================================
+   MOBILE CARD PRIMARY BUTTON
+   Matching outline style for consistency
+   ============================================ */
+.card-action-primary {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--spacing-2, 8px);
+  padding: var(--spacing-3, 12px) var(--spacing-5, 20px);
+  background: transparent;
+  color: var(--color-primary, #0066FF);
+  border: 1px solid var(--color-primary, #0066FF);
+  border-radius: var(--radius-lg, 10px);
+  font-size: var(--text-base, 15px);
+  font-weight: var(--font-weight-medium, 500);
+  cursor: pointer;
+  transition: all 0.15s ease;
+  min-height: var(--size-11, 44px);
+}
+
+.card-action-primary:hover {
+  background: var(--color-primary-bg-hover, rgba(0, 102, 255, 0.05));
+  border-color: var(--color-primary-hover, #0052CC);
+  color: var(--color-primary-hover, #0052CC);
+  transform: translateY(-1px);
+}
+
+.card-action-primary:active {
+  transform: translateY(0);
+  background: var(--color-primary-bg-active, rgba(0, 102, 255, 0.08));
+}
+
+.card-action-primary:focus-visible {
+  outline: 2px solid var(--color-primary, #0066FF);
+  outline-offset: 2px;
+}
+
+/* ============================================
+   RESPONSIVE BEHAVIOR
+   ============================================ */
+
+@media (max-width: 768px) {
+  .payout-row {
+    display: none;
+  }
+  
+  .payout-card {
+    display: block;
+  }
+}
+
+@media (min-width: 769px) {
+  .payout-card {
+    display: none;
+  }
+}
+
+@media (max-width: 480px) {
+  .payout-card {
+    padding: var(--spacing-4, 16px);
+  }
+  
+  .payout-card-header {
+    margin-bottom: var(--spacing-2-5, 10px);
+    padding-bottom: var(--spacing-2-5, 10px);
+  }
+  
+  .payout-card-amounts {
+    padding: var(--spacing-3, 12px);
+    margin-bottom: var(--spacing-3, 12px);
+  }
+  
+  .card-action-primary {
+    font-size: var(--text-sm, 14px);
+    padding: var(--spacing-2-5, 10px) var(--spacing-4, 16px);
+    min-height: var(--size-10, 40px);
+  }
+}
+
+/* ============================================
+   ACCESSIBILITY
+   ============================================ */
+
+@media (prefers-reduced-motion: reduce) {
+  .payout-row,
+  .action-btn,
+  .payout-card,
+  .card-action-primary {
+    transition: none;
+    animation: none;
+  }
+  
+  .action-btn:active,
+  .card-action-primary:hover {
+    transform: none;
+  }
+}
+
+/* High contrast mode */
+@media (prefers-contrast: high) {
+  .payout-card {
+    border-width: 2px;
+  }
+  
+  .action-btn,
+  .card-action-primary {
+    border-width: 2px;
+  }
+  
+  .action-btn:focus-visible,
+  .card-action-primary:focus-visible {
+    outline-width: 3px;
+  }
+  
+  .badge {
+    border-width: 2px;
+  }
+}
+
+/* Dark mode support */
+@media (prefers-color-scheme: dark) {
+  :root {
+    --bg-primary: #1E293B;
+    --bg-hover-subtle: #334155;
+    --bg-subtle: #334155;
+    --border-light: #334155;
+    --text-primary: #E2E8F0;
+    --text-secondary: #94A3B8;
+    --shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.2);
+    --shadow-md: 0 4px 12px rgba(0, 0, 0, 0.3);
+  }
+  
+  .action-btn:hover,
+  .card-action-primary:hover {
+    background: rgba(59, 130, 246, 0.1);
+    border-color: #3B82F6;
+    color: #3B82F6;
+  }
+}

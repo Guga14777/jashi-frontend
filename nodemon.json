@@ -1,0 +1,6 @@
+{
+  "watch": ["server.cjs", "server/**/*.cjs"],
+  "ext": "cjs",
+  "ignore": ["server/storage/**"],
+  "delay": 1000
+}

@@ -1,0 +1,409 @@
+// ============================================================
+// FILE: src/components/load-details/components/route-vehicle-card.jsx
+// Route info, vehicle details, schedule, and locations
+// ============================================================
+
+import React, { useState } from 'react';
+import { ClockIcon, LocationTypeIcon, CarIcon, ChevronUpIcon, ChevronDownIcon, DownloadIcon } from './icons';
+import { capitalize, formatAddr, formatLocationType } from '../utils/formatters';
+import { formatDate } from '../../../utils/formatters';
+import { getDownloadUrl } from '../../../services/documents.api';
+
+const API_BASE = import.meta.env.VITE_API_URL || 'http://localhost:5177';
+
+// Time pill component
+const TimePill = ({ time }) => time ? (
+  <span className="ldm-time"><ClockIcon />{time}</span>
+) : null;
+
+// Location type badge
+const LocationTypeBadge = ({ type }) => {
+  if (!type) return null;
+  
+  const getTypeClass = () => {
+    const t = type.toLowerCase();
+    if (t.includes('auction')) return 'ldm-location-type--auction';
+    if (t.includes('dealership')) return 'ldm-location-type--dealership';
+    return 'ldm-location-type--private';
+  };
+  
+  return (
+    <span className={`ldm-location-type ${getTypeClass()}`}>
+      <LocationTypeIcon />
+      {type}
+    </span>
+  );
+};
+
+// Document link component
+const DocLink = ({ doc, label }) => {
+  const getDownloadUrlForDoc = (doc) => {
+    if (!doc) return null;
+    if (doc.id) return getDownloadUrl(doc.id);
+    const url = doc.fileUrl || doc.filePath;
+    return url?.startsWith('http') ? url : url ? `${API_BASE}${url}` : null;
+  };
+
+  const url = getDownloadUrlForDoc(doc);
+  if (!url) return null;
+  
+  const handleClick = async (e) => {
+    e.preventDefault();
+    const token = localStorage.getItem('token');
+    try {
+      const res = await fetch(url, { headers: { 'Authorization': `Bearer ${token}` } });
+      const blob = await res.blob();
+      const link = document.createElement('a');
+      link.href = URL.createObjectURL(blob);
+      link.download = doc.originalName || label;
+      link.click();
+      URL.revokeObjectURL(link.href);
+    } catch {
+      window.open(url, '_blank', 'noopener,noreferrer');
+    }
+  };
+
+  return (
+    <a href={url} onClick={handleClick} className="ldm-doc-link">
+      <DownloadIcon />{label}
+    </a>
+  );
+};
+
+// Route and Vehicle Card (for single vehicle)
+export const RouteVehicleCard = ({ from, to, miles, vehicle, transport }) => {
+  return (
+    <div className="ldm-section">
+      <div className="ldm-grid ldm-grid--2">
+        <div className="ldm-box">
+          <div className="ldm-section-label">Route</div>
+          <div className="ldm-grid ldm-grid--route">
+            <div className="ldm-field">
+              <span className="ldm-field__label">From</span>
+              <span className="ldm-field__value">{from}</span>
+            </div>
+            <div className="ldm-field">
+              <span className="ldm-field__label">To</span>
+              <span className="ldm-field__value">{to}</span>
+            </div>
+            <div className="ldm-field">
+              <span className="ldm-field__label">Distance</span>
+              <span className="ldm-field__value">{miles > 0 ? `${miles.toLocaleString()} mi` : '—'}</span>
+            </div>
+          </div>
+        </div>
+        <div className="ldm-box">
+          <div className="ldm-section-label">Vehicle</div>
+          <div className="ldm-grid ldm-grid--2">
+            <div className="ldm-field">
+              <span className="ldm-field__label">Year</span>
+              <span className="ldm-field__value">{vehicle.year || '—'}</span>
+            </div>
+            <div className="ldm-field">
+              <span className="ldm-field__label">Make</span>
+              <span className="ldm-field__value">{capitalize(vehicle.make) || '—'}</span>
+            </div>
+            <div className="ldm-field">
+              <span className="ldm-field__label">Model</span>
+              <span className="ldm-field__value">{capitalize(vehicle.model) || '—'}</span>
+            </div>
+            <div className="ldm-field">
+              <span className="ldm-field__label">Type</span>
+              <span className="ldm-field__value">{capitalize(vehicle.type) || '—'}</span>
+            </div>
+            <div className="ldm-field">
+              <span className="ldm-field__label">Condition</span>
+              <span className="ldm-field__value">{vehicle.condition || '—'}</span>
+            </div>
+            <div className="ldm-field">
+              <span className="ldm-field__label">Transport</span>
+              <span className="ldm-field__value">{transport}</span>
+            </div>
+            {vehicle.vin && (
+              <div className="ldm-field ldm-field--full">
+                <span className="ldm-field__label">VIN</span>
+                <span className="ldm-field__value ldm-field__value--mono">{vehicle.vin}</span>
+              </div>
+            )}
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+};
+
+// Schedule Card
+export const ScheduleCard = ({ dates, times, pickupAt, deliveredAt }) => {
+  return (
+    <div className="ldm-section">
+      <div className="ldm-section-label">Schedule</div>
+      <div className="ldm-box ldm-grid ldm-grid--2">
+        <div className="ldm-field">
+          <span className="ldm-field__label">Pickup</span>
+          <div className="ldm-schedule-value">
+            <span className="ldm-field__value">{dates.pickup ? formatDate(dates.pickup) : '—'}</span>
+            <TimePill time={times.pickup} />
+          </div>
+          {pickupAt && (
+            <span className="ldm-field__sub ldm-timestamp">
+              Picked up: {formatDate(pickupAt)}
+            </span>
+          )}
+        </div>
+        <div className="ldm-field">
+          <span className="ldm-field__label">Drop-off</span>
+          <div className="ldm-schedule-value">
+            <span className="ldm-field__value">{dates.dropoff ? formatDate(dates.dropoff) : '—'}</span>
+            <TimePill time={times.dropoff} />
+          </div>
+          {deliveredAt && (
+            <span className="ldm-field__sub ldm-timestamp">
+              Delivered: {formatDate(deliveredAt)}
+            </span>
+          )}
+        </div>
+      </div>
+    </div>
+  );
+};
+
+// Locations Card (for single vehicle)
+export const LocationsCard = ({ pickup, dropoff, locationTypes, showGatePass, pickupGatePass, dropoffGatePass, isPreviewOnly }) => {
+  return (
+    <div className="ldm-section">
+      <div className="ldm-section-label">Locations</div>
+      <div className="ldm-grid ldm-grid--2">
+        <div className="ldm-box">
+          <div className="ldm-field">
+            <span className="ldm-field__label">Pickup</span>
+            <span className="ldm-field__value">{formatAddr(pickup)}</span>
+          </div>
+          {locationTypes.pickup && (
+            <div className="ldm-location-type-row">
+              <LocationTypeBadge type={locationTypes.pickup} />
+            </div>
+          )}
+          {!isPreviewOnly && (pickup?.phone || pickup?.contact?.phone) && (
+            <div className="ldm-field" style={{ marginTop: 6 }}>
+              <a href={`tel:${pickup?.phone || pickup?.contact?.phone}`} className="ldm-link">
+                {pickup?.phone || pickup?.contact?.phone}
+              </a>
+            </div>
+          )}
+          {showGatePass && pickupGatePass && <DocLink doc={pickupGatePass} label="Gate Pass" />}
+        </div>
+        <div className="ldm-box">
+          <div className="ldm-field">
+            <span className="ldm-field__label">Drop-off</span>
+            <span className="ldm-field__value">{formatAddr(dropoff)}</span>
+          </div>
+          {locationTypes.dropoff && (
+            <div className="ldm-location-type-row">
+              <LocationTypeBadge type={locationTypes.dropoff} />
+            </div>
+          )}
+          {!isPreviewOnly && (dropoff?.phone || dropoff?.contact?.phone) && (
+            <div className="ldm-field" style={{ marginTop: 6 }}>
+              <a href={`tel:${dropoff?.phone || dropoff?.contact?.phone}`} className="ldm-link">
+                {dropoff?.phone || dropoff?.contact?.phone}
+              </a>
+            </div>
+          )}
+          {showGatePass && dropoffGatePass && <DocLink doc={dropoffGatePass} label="Gate Pass" />}
+        </div>
+      </div>
+    </div>
+  );
+};
+
+// Multi-Vehicle Route Summary Card
+export const RouteSummaryCard = ({ from, to, miles, transport, pickupStopsCount, dropoffStopsCount }) => {
+  return (
+    <div className="ldm-section">
+      <div className="ldm-section-label">Route Summary</div>
+      <div className="ldm-box ldm-grid ldm-grid--3">
+        <div className="ldm-field">
+          <span className="ldm-field__label">From</span>
+          <span className="ldm-field__value">{from}</span>
+        </div>
+        <div className="ldm-field">
+          <span className="ldm-field__label">To</span>
+          <span className="ldm-field__value">{to}</span>
+        </div>
+        <div className="ldm-field">
+          <span className="ldm-field__label">Distance</span>
+          <span className="ldm-field__value">{miles > 0 ? `${miles.toLocaleString()} mi` : '—'}</span>
+        </div>
+        <div className="ldm-field">
+          <span className="ldm-field__label">Transport</span>
+          <span className="ldm-field__value">{transport}</span>
+        </div>
+        <div className="ldm-field">
+          <span className="ldm-field__label">Pickup Stops</span>
+          <span className="ldm-field__value">{pickupStopsCount || 1}</span>
+        </div>
+        <div className="ldm-field">
+          <span className="ldm-field__label">Dropoff Stops</span>
+          <span className="ldm-field__value">{dropoffStopsCount || 1}</span>
+        </div>
+      </div>
+    </div>
+  );
+};
+
+// Vehicle Card for multi-vehicle
+export const VehicleCard = ({ vehicle, index, showGatePass = true }) => {
+  const [expanded, setExpanded] = useState(false);
+  
+  const vehicleName = [vehicle.year, capitalize(vehicle.make), capitalize(vehicle.model)].filter(Boolean).join(' ') || `Vehicle ${index + 1}`;
+  const isOperable = vehicle.operable?.toString().toLowerCase() === 'yes' || 
+                     vehicle.operable === true || 
+                     vehicle.operable === 'true';
+  
+  const pickupStop = vehicle.pickupStop;
+  const dropoffStop = vehicle.dropoffStop;
+  const pickupGatePass = vehicle.pickupGatePass;
+  const dropoffGatePass = vehicle.dropoffGatePass;
+  
+  return (
+    <div className={`ldm-vehicle-card ${expanded ? 'ldm-vehicle-card--expanded' : ''}`}>
+      <div className="ldm-vehicle-card__header" onClick={() => setExpanded(!expanded)}>
+        <div className="ldm-vehicle-card__index">{index + 1}</div>
+        <div className="ldm-vehicle-card__info">
+          <span className="ldm-vehicle-card__name">{vehicleName}</span>
+          <div className="ldm-vehicle-card__meta">
+            {vehicle.vin && <span className="ldm-vehicle-card__vin">VIN: {vehicle.vin}</span>}
+            <span className={`ldm-vehicle-card__condition ${isOperable ? 'ldm-vehicle-card__condition--operable' : 'ldm-vehicle-card__condition--inoperable'}`}>
+              {isOperable ? 'Operable' : 'Inoperable'}
+            </span>
+          </div>
+        </div>
+        <div className="ldm-vehicle-card__toggle">
+          {expanded ? <ChevronUpIcon /> : <ChevronDownIcon />}
+        </div>
+      </div>
+      
+      {expanded && (
+        <div className="ldm-vehicle-card__details">
+          {pickupStop && (
+            <div className="ldm-vehicle-card__stop ldm-vehicle-card__stop--pickup">
+              <div className="ldm-vehicle-card__stop-header">
+                <span className="ldm-vehicle-card__stop-badge ldm-vehicle-card__stop-badge--pickup">Pickup</span>
+                {pickupStop.locationType && (
+                  <LocationTypeBadge type={formatLocationType(pickupStop.locationType)} />
+                )}
+              </div>
+              <div className="ldm-vehicle-card__stop-address">
+                <LocationTypeIcon />
+                <span>{formatAddr(pickupStop)}</span>
+              </div>
+              {pickupStop.auctionName && (
+                <div className="ldm-vehicle-card__auction">
+                  <strong>{pickupStop.auctionName}</strong>
+                  {pickupStop.auctionBuyerNumber && <span>Buyer #: {pickupStop.auctionBuyerNumber}</span>}
+                </div>
+              )}
+              {pickupStop.contactFirstName && (
+                <div className="ldm-vehicle-card__contact">
+                  {pickupStop.contactFirstName} {pickupStop.contactLastName}
+                  {pickupStop.contactPhone && <span> • {pickupStop.contactPhone}</span>}
+                </div>
+              )}
+            </div>
+          )}
+          
+          {dropoffStop && (
+            <div className="ldm-vehicle-card__stop ldm-vehicle-card__stop--dropoff">
+              <div className="ldm-vehicle-card__stop-header">
+                <span className="ldm-vehicle-card__stop-badge ldm-vehicle-card__stop-badge--dropoff">Dropoff</span>
+                {dropoffStop.locationType && (
+                  <LocationTypeBadge type={formatLocationType(dropoffStop.locationType)} />
+                )}
+              </div>
+              <div className="ldm-vehicle-card__stop-address">
+                <LocationTypeIcon />
+                <span>{formatAddr(dropoffStop)}</span>
+              </div>
+              {dropoffStop.auctionName && (
+                <div className="ldm-vehicle-card__auction">
+                  <strong>{dropoffStop.auctionName}</strong>
+                  {dropoffStop.auctionBuyerNumber && <span>Buyer #: {dropoffStop.auctionBuyerNumber}</span>}
+                </div>
+              )}
+              {dropoffStop.contactFirstName && (
+                <div className="ldm-vehicle-card__contact">
+                  {dropoffStop.contactFirstName} {dropoffStop.contactLastName}
+                  {dropoffStop.contactPhone && <span> • {dropoffStop.contactPhone}</span>}
+                </div>
+              )}
+            </div>
+          )}
+          
+          {showGatePass && (pickupGatePass || dropoffGatePass) && (
+            <div className="ldm-vehicle-card__gatepasses">
+              {pickupGatePass && (
+                <DocLink doc={pickupGatePass} label="Pickup Gate Pass" />
+              )}
+              {dropoffGatePass && (
+                <DocLink doc={dropoffGatePass} label="Dropoff Gate Pass" />
+              )}
+            </div>
+          )}
+        </div>
+      )}
+    </div>
+  );
+};
+
+// Multi-Vehicle Section
+export const MultiVehicleSection = ({ vehicles, showGatePass = true }) => {
+  if (!vehicles || vehicles.length === 0) return null;
+  
+  return (
+    <div className="ldm-section">
+      <div className="ldm-section-label">
+        <CarIcon />
+        <span style={{ marginLeft: 6 }}>Vehicles ({vehicles.length})</span>
+      </div>
+      <div className="ldm-vehicle-list">
+        {vehicles.map((vehicle, index) => (
+          <VehicleCard
+            key={vehicle.id || index}
+            vehicle={vehicle}
+            index={vehicle.vehicleIndex ?? index}
+            showGatePass={showGatePass}
+          />
+        ))}
+      </div>
+    </div>
+  );
+};
+
+// Notes Card
+export const NotesCard = ({ notes }) => {
+  const hasNotes = notes.general || notes.pickup || notes.dropoff;
+  if (!hasNotes) return null;
+  
+  return (
+    <div className="ldm-section">
+      <div className="ldm-section-label">Notes</div>
+      <div className="ldm-box">
+        {notes.general && <p className="ldm-notes-text">{notes.general}</p>}
+        {notes.pickup && (
+          <div className="ldm-notes-sub">
+            <div className="ldm-notes-sub-label">Pickup</div>
+            <p className="ldm-notes-text">{notes.pickup}</p>
+          </div>
+        )}
+        {notes.dropoff && (
+          <div className="ldm-notes-sub">
+            <div className="ldm-notes-sub-label">Drop-off</div>
+            <p className="ldm-notes-text">{notes.dropoff}</p>
+          </div>
+        )}
+      </div>
+    </div>
+  );
+};
+
+export { TimePill, LocationTypeBadge, DocLink };

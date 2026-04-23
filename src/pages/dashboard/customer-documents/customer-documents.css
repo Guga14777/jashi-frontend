@@ -1,0 +1,433 @@
+/* =============================================================================
+   CUSTOMER DOCUMENTS PAGE STYLES - SPACIOUS & CLEAN
+   ============================================================================= */
+
+/* CSS Custom Properties / Design Tokens */
+:root {
+  --surface-card: #ffffff;
+  --surface-subtle: #f6f8fa;
+  --border-light: #e5e7eb;
+  --border-muted: #e2e8f0;
+  --text-primary: #1a202c;
+  --text-secondary: #475569;
+  --text-muted: #64748b;
+  --primary-500: #3b82f6;
+  --primary-600: #2563eb;
+  --error-50: #fef5e7;
+  --error-500: #c05621;
+  --error-600: #9c4221;
+  --shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.04);
+  --shadow-md: 0 2px 10px rgba(0, 0, 0, 0.05);
+  --shadow-focus: 0 2px 10px rgba(59, 130, 246, 0.25);
+  --radius-sm: 8px;
+  --radius-md: 12px;
+  --radius-lg: 16px;
+  --spacing-xs: 8px;
+  --spacing-sm: 16px;
+  --spacing-md: 24px;
+  --spacing-lg: 32px;
+  --spacing-xl: 48px;
+}
+
+/* Scoped overrides for common layout shells - CUSTDOCS PAGE ONLY */
+.dashboard-layout, 
+.app-content, 
+main[aria-labelledby*="custdocs"],
+main[aria-labelledby*="documents"] {
+  background: #fff !important;
+}
+
+/* Page Container - FORCE WHITE BACKGROUND */
+.custdocs-page {
+  --app-header-height: 96px;
+  max-width: 1400px;
+  margin: 0 auto;
+  padding: var(--spacing-lg);
+  padding-top: calc(var(--app-header-height) + env(safe-area-inset-top, 0px) + var(--spacing-md));
+  scroll-padding-top: calc(var(--app-header-height) + var(--spacing-sm));
+  background-color: #fff !important;
+  background-image: none !important;
+  min-height: 100vh;
+  box-sizing: border-box;
+  position: relative;
+  z-index: 1;
+}
+
+@media (max-width: 768px) {
+  .custdocs-page {
+    padding: 20px;
+    padding-top: calc(var(--app-header-height) + var(--spacing-sm));
+  }
+}
+
+.custdocs-container {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-sm);
+  background: transparent;
+}
+
+/* Header */
+.custdocs-header {
+  display: block;
+  padding: var(--spacing-lg) 40px;
+  background-color: var(--surface-card);
+  border-radius: var(--radius-lg);
+  border: 1px solid var(--border-light);
+  box-shadow: var(--shadow-sm);
+}
+
+.page-title-section { 
+  min-width: 0; 
+}
+
+.page-title {
+  font-size: 2rem;
+  font-weight: 600;
+  color: var(--text-primary);
+  margin: 0;
+  line-height: 1.2;
+  letter-spacing: -0.02em;
+}
+
+/* Filters Container - Unified Styling */
+.filters-container {
+  background-color: var(--surface-card);
+  border-radius: var(--radius-lg);
+  border: 1px solid var(--border-light);
+  padding: var(--spacing-lg) 40px;
+  box-shadow: var(--shadow-sm);
+}
+
+.filters-container .custdocs-filters {
+  background: none;
+  border: none;
+  padding: 0;
+  box-shadow: none;
+  border-radius: 0;
+}
+
+/* Shared Button Styles */
+.btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  padding: 10px var(--spacing-sm);
+  border-radius: var(--radius-md);
+  font-size: 0.875rem;
+  font-weight: 500;
+  line-height: 1;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  text-decoration: none;
+  border: 1px solid transparent;
+  min-height: 42px;
+}
+
+.btn:focus {
+  outline: 2px solid var(--primary-500);
+  outline-offset: 2px;
+}
+
+.btn-primary {
+  background: var(--primary-500);
+  color: #ffffff;
+}
+
+.btn-primary:hover {
+  background: var(--primary-600);
+  box-shadow: var(--shadow-focus);
+}
+
+.btn-primary:active {
+  transform: translateY(1px);
+}
+
+.btn-outline {
+  background-color: transparent;
+  border-color: var(--border-muted);
+  color: var(--text-muted);
+}
+
+.btn-outline:hover {
+  background-color: var(--surface-subtle);
+  border-color: #cbd5e0;
+  color: var(--text-secondary);
+}
+
+.clear-filters-btn {
+  margin-top: 20px;
+}
+
+/* Main Content */
+.custdocs-content {
+  background-color: var(--surface-card);
+  border-radius: var(--radius-lg);
+  border: 1px solid var(--border-light);
+  overflow: hidden;
+  box-shadow: var(--shadow-md);
+  transition: opacity 0.2s ease;
+}
+
+/* Mid-page pagination */
+.custdocs-midpager {
+  display: flex;
+  justify-content: center;
+  padding: 4px 0;
+  margin: 6px 0;
+  background: transparent;
+  border: none;
+  box-shadow: none;
+}
+
+/* Upload callout bar */
+.ud-bar {
+  display: grid;
+  grid-template-columns: 1fr auto;
+  gap: var(--spacing-sm);
+  align-items: center;
+  background: var(--surface-card);
+  border: 1px solid var(--border-light);
+  border-radius: 14px;
+  padding: 18px 20px;
+  margin-top: var(--spacing-xs);
+  box-shadow: var(--shadow-sm);
+}
+
+@media (max-width: 768px) {
+  .ud-bar {
+    display: flex;
+    flex-direction: column;
+    align-items: stretch;
+    gap: var(--spacing-sm);
+  }
+  
+  .ud-bar__action { 
+    display: flex; 
+    justify-content: flex-start; 
+  }
+}
+
+@media (max-width: 480px) {
+  .ud-bar__action .btn {
+    width: 100%;
+    justify-content: center;
+    min-height: 48px; /* Touch-friendly */
+  }
+}
+
+.ud-bar__text h3 {
+  margin: 0 0 6px;
+  font-size: 1rem; /* Reduced from 1.05rem for better hierarchy */
+  font-weight: 600; /* Reduced from 700 */
+  color: var(--text-primary);
+  letter-spacing: -0.01em;
+}
+
+.ud-bar__text p {
+  margin: 0;
+  font-size: 0.92rem;
+  color: var(--text-muted);
+}
+
+.ud-bar__action { 
+  flex-shrink: 0; 
+}
+
+/* Force Upload button to use the same dark blue as table "View" buttons */
+.ud-bar__action .btn,
+.ud-upload-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 8px 16px;
+  border-radius: 8px;
+  font-size: 0.875rem;
+  font-weight: 500;
+  color: #ffffff;
+  background-color: #2563eb; /* SAME as View buttons */
+  border: 1px solid #2563eb;
+  cursor: pointer;
+  transition: none; /* remove hover transitions */
+}
+
+/* Keep same color on hover, focus, active — no change */
+.ud-bar__action .btn:hover,
+.ud-bar__action .btn:focus,
+.ud-bar__action .btn:active,
+.ud-upload-btn:hover,
+.ud-upload-btn:focus,
+.ud-upload-btn:active {
+  background-color: #2563eb;
+  border-color: #2563eb;
+  color: #ffffff;
+  box-shadow: none;
+  transform: none;
+}
+
+.ud-bar__action .ud-btn {
+  padding: 10px var(--spacing-sm);
+  min-height: 42px;
+  border-radius: var(--radius-md);
+  font-weight: 700;
+}
+
+.ud-widget {
+  max-width: 520px;
+}
+
+/* Alert Component - Unified Error/Success States */
+.alert {
+  padding: 20px var(--spacing-md);
+  border-radius: var(--radius-md);
+  margin-bottom: 20px;
+  display: flex;
+  align-items: flex-start;
+  gap: var(--spacing-sm);
+  border: 1px solid;
+}
+
+.alert-error {
+  background-color: var(--error-50);
+  border-color: #f6ad55;
+  color: var(--error-500);
+}
+
+.alert-content {
+  flex: 1;
+}
+
+.alert-title {
+  font-weight: 600;
+  margin-bottom: 6px;
+  color: var(--error-500);
+}
+
+.alert-message {
+  margin: 0;
+  font-size: 0.9rem;
+  line-height: 1.5;
+  color: var(--error-500);
+}
+
+.alert-action-btn,
+.error-retry-btn {
+  padding: var(--spacing-xs) var(--spacing-sm);
+  background-color: var(--error-500);
+  color: white;
+  border: none;
+  border-radius: var(--radius-sm);
+  font-size: 0.875rem;
+  cursor: pointer;
+  transition: background-color 0.2s;
+  font-weight: 500;
+  margin-top: 12px;
+}
+
+.alert-action-btn:hover,
+.error-retry-btn:hover {
+  background-color: var(--error-600);
+}
+
+.alert-action-btn:focus,
+.error-retry-btn:focus {
+  outline: 2px solid var(--error-500);
+  outline-offset: 2px;
+}
+
+/* Improved accessibility and contrast */
+.custdocs-content th,
+.custdocs-content td {
+  color: var(--text-secondary); /* Better contrast */
+}
+
+/* Hover transitions for interactive elements */
+.custdocs-content tbody tr {
+  transition: background-color 0.15s ease;
+}
+
+.custdocs-content tbody tr:hover {
+  background-color: var(--surface-subtle);
+}
+
+/* Focus states for accessibility - only show outlines for keyboard navigation */
+.custdocs-content button:focus-visible,
+.custdocs-content a:focus-visible {
+  outline: 2px solid var(--primary-500);
+  outline-offset: 2px;
+}
+
+/* Remove blue outline for mouse clicks (prevents "stuck" highlight after modal close) */
+.custdocs-content button:focus:not(:focus-visible),
+.custdocs-content a:focus:not(:focus-visible) {
+  outline: none !important;
+  box-shadow: none !important;
+}
+
+/* Responsive header adjustments */
+@media (max-width: 768px) {
+  .custdocs-header {
+    padding: var(--spacing-md);
+  }
+
+  .page-title {
+    font-size: 1.75rem;
+  }
+
+  .filters-container {
+    padding: 20px var(--spacing-md);
+  }
+}
+
+/* Remove legacy styles */
+.status-counters {
+  display: none;
+}
+
+.custdocs-footer { 
+  display: none; 
+}
+
+/* Typography improvements */
+body {
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+/* Smooth scrolling for anchor links */
+html {
+  scroll-behavior: smooth;
+}
+
+/* Loading states */
+.custdocs-content[data-loading="true"] {
+  opacity: 0.7;
+  pointer-events: none;
+}
+
+.ud-upload-btn {
+  width: 130px;
+  height: 52px;
+  font-size: 0.95rem;
+  font-weight: 600;
+  border-radius: 10px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  color: #ffffff;
+  background: var(--color-primary, #0066cc) !important;
+  border: 1px solid var(--color-primary, #0066cc) !important;
+  cursor: pointer;
+  transition: none !important;
+}
+
+/* Keep color constant on hover/focus */
+.ud-upload-btn:hover,
+.ud-upload-btn:focus,
+.ud-upload-btn:active {
+  background: var(--color-primary, #0066cc) !important;
+  border-color: var(--color-primary, #0066cc) !important;
+  color: #ffffff !important;
+  box-shadow: none !important;
+  transform: none !important;
+}

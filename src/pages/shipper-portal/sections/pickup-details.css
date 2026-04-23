@@ -1,0 +1,504 @@
+/* ============================================================
+   FILE: src/pages/shipper-portal/sections/pickup-details.css
+   ✅ REDESIGNED: Styles for origin-type-based scheduling
+   - Appointment requirement badges
+   - Weekend warning/confirmation
+   - Time preference buttons
+   - Vehicle headers and uploaded file displays
+   ============================================================ */
+
+/* ============================================================
+   VEHICLE PICKUP SECTION
+   ============================================================ */
+
+.sp-vehicle-pickup-section {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.sp-vehicle-header {
+  margin-bottom: 0.5rem;
+  padding: 0.75rem 1rem;
+  background-color: var(--color-surface-secondary, #f8fafc);
+  border-radius: 8px;
+  font-weight: 600;
+  border-left: 4px solid var(--color-primary, #2563eb);
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 4px;
+}
+
+.sp-vehicle-header-number {
+  color: var(--color-primary, #2563eb);
+}
+
+.sp-vehicle-header-name {
+  font-weight: 400;
+  color: var(--color-text-secondary, #64748b);
+}
+
+/* ============================================================
+   CARD TITLE ICON
+   ============================================================ */
+
+.sp-card-title-icon {
+  margin-right: 8px;
+  vertical-align: middle;
+  color: var(--color-primary, #2563eb);
+}
+
+/* ============================================================
+   APPOINTMENT REQUIREMENT BADGES
+   ============================================================ */
+
+.sp-appointment-badge {
+  display: flex;
+  align-items: flex-start;
+  gap: 14px;
+  padding: 16px 18px;
+  border-radius: 12px;
+  margin-bottom: 16px;
+}
+
+.sp-appointment-badge--required {
+  background: linear-gradient(135deg, #FEF3C7 0%, #FDE68A 100%);
+  border: 1px solid #F59E0B;
+}
+
+.sp-appointment-badge--not-required {
+  background: linear-gradient(135deg, #D1FAE5 0%, #A7F3D0 100%);
+  border: 1px solid #10B981;
+}
+
+.sp-appointment-badge--unknown {
+  background: linear-gradient(135deg, #F1F5F9 0%, #E2E8F0 100%);
+  border: 1px solid #94A3B8;
+}
+
+.sp-appointment-badge-icon {
+  flex-shrink: 0;
+  width: 36px;
+  height: 36px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 8px;
+}
+
+.sp-appointment-badge--required .sp-appointment-badge-icon {
+  background: rgba(245, 158, 11, 0.2);
+  color: #B45309;
+}
+
+.sp-appointment-badge--not-required .sp-appointment-badge-icon {
+  background: rgba(16, 185, 129, 0.2);
+  color: #047857;
+}
+
+.sp-appointment-badge--unknown .sp-appointment-badge-icon {
+  background: rgba(148, 163, 184, 0.2);
+  color: #475569;
+}
+
+.sp-appointment-badge-content {
+  flex: 1;
+  min-width: 0;
+}
+
+.sp-appointment-badge-title {
+  font-size: 15px;
+  font-weight: 600;
+  margin-bottom: 4px;
+}
+
+.sp-appointment-badge--required .sp-appointment-badge-title {
+  color: #92400E;
+}
+
+.sp-appointment-badge--not-required .sp-appointment-badge-title {
+  color: #065F46;
+}
+
+.sp-appointment-badge--unknown .sp-appointment-badge-title {
+  color: #334155;
+}
+
+.sp-appointment-badge-message {
+  font-size: 14px;
+  line-height: 1.5;
+}
+
+.sp-appointment-badge--required .sp-appointment-badge-message {
+  color: #A16207;
+}
+
+.sp-appointment-badge--not-required .sp-appointment-badge-message {
+  color: #047857;
+}
+
+.sp-appointment-badge--unknown .sp-appointment-badge-message {
+  color: #64748B;
+}
+
+/* ============================================================
+   WEEKEND WARNING
+   ============================================================ */
+
+.sp-weekend-warning {
+  padding: 18px 20px;
+  background: linear-gradient(135deg, #FEF3C7 0%, #FDE68A 100%);
+  border: 1px solid #F59E0B;
+  border-radius: 12px;
+  margin-top: 16px;
+}
+
+.sp-weekend-warning-header {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-size: 15px;
+  font-weight: 600;
+  color: #92400E;
+  margin-bottom: 10px;
+}
+
+.sp-weekend-warning-header svg {
+  color: #D97706;
+}
+
+.sp-weekend-warning-text {
+  font-size: 14px;
+  color: #A16207;
+  line-height: 1.6;
+  margin: 0 0 16px;
+}
+
+.sp-weekend-checkbox-label {
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+  cursor: pointer;
+  padding: 12px 14px;
+  background: rgba(255, 255, 255, 0.6);
+  border: 1px solid rgba(245, 158, 11, 0.3);
+  border-radius: 8px;
+  transition: all 0.2s ease;
+}
+
+.sp-weekend-checkbox-label:hover {
+  background: rgba(255, 255, 255, 0.8);
+  border-color: #F59E0B;
+}
+
+.sp-weekend-checkbox {
+  flex-shrink: 0;
+  width: 18px;
+  height: 18px;
+  margin-top: 2px;
+  accent-color: #D97706;
+  cursor: pointer;
+}
+
+.sp-weekend-checkbox-label span {
+  font-size: 14px;
+  font-weight: 500;
+  color: #92400E;
+  line-height: 1.5;
+}
+
+/* ============================================================
+   TIME PREFERENCE BUTTONS
+   ============================================================ */
+
+.sp-time-preference-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 12px;
+}
+
+@media (max-width: 640px) {
+  .sp-time-preference-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+.sp-time-preference-btn {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 18px 14px;
+  border: 2px solid var(--color-border, #e5e7eb);
+  border-radius: 12px;
+  background: var(--color-surface, #fff);
+  cursor: pointer;
+  transition: all 0.2s ease;
+  min-height: 80px;
+}
+
+.sp-time-preference-btn:hover:not(.sp-time-preference-btn--active) {
+  border-color: var(--color-primary, #2563eb);
+  background: var(--color-primary-light, #eff6ff);
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(37, 99, 235, 0.1);
+}
+
+.sp-time-preference-btn--active {
+  border-color: var(--color-primary, #2563eb) !important;
+  background: var(--color-primary, #2563eb) !important;
+  box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.15);
+  transform: translateY(0);
+}
+
+.sp-time-preference-label {
+  font-weight: 600;
+  font-size: 1rem;
+  color: var(--color-text-primary, #1a1a1a);
+  transition: color 0.2s ease;
+}
+
+.sp-time-preference-sublabel {
+  font-size: 0.8rem;
+  color: var(--color-text-secondary, #64748b);
+  margin-top: 4px;
+  transition: color 0.2s ease;
+}
+
+.sp-time-preference-btn--active .sp-time-preference-label {
+  color: rgba(255, 255, 255, 0.95) !important;
+}
+
+.sp-time-preference-btn--active .sp-time-preference-sublabel {
+  color: rgba(255, 255, 255, 0.8) !important;
+}
+
+/* ============================================================
+   EARLY ARRIVAL TOGGLE
+   ============================================================ */
+
+.sp-early-arrival-toggle {
+  margin-top: 20px;
+  padding-top: 16px;
+  border-top: 1px solid var(--color-border, #e5e7eb);
+}
+
+.sp-checkbox-label {
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+  cursor: pointer;
+}
+
+.sp-checkbox {
+  flex-shrink: 0;
+  width: 18px;
+  height: 18px;
+  margin-top: 2px;
+  accent-color: var(--color-primary, #2563eb);
+  cursor: pointer;
+}
+
+.sp-checkbox-title {
+  font-weight: 500;
+  color: var(--color-text-primary, #1a1a1a);
+  display: block;
+}
+
+.sp-checkbox-description {
+  font-size: 0.875rem;
+  color: var(--color-text-secondary, #64748b);
+  margin-top: 4px;
+  line-height: 1.5;
+}
+
+/* ============================================================
+   UPLOADED FILE DISPLAY
+   ============================================================ */
+
+.sp-uploaded-file {
+  padding: 14px 18px;
+  background: var(--color-success-bg, #f0fdf4);
+  border: 1px solid var(--color-success-border, #86efac);
+  border-radius: 10px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  flex-wrap: wrap;
+}
+
+.sp-uploaded-file-info {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  flex: 1;
+  min-width: 200px;
+}
+
+.sp-uploaded-file-icon {
+  color: var(--color-success, #22c55e);
+  flex-shrink: 0;
+}
+
+.sp-uploaded-file-name {
+  font-weight: 500;
+  color: var(--color-text-primary, #1a1a1a);
+  word-break: break-word;
+}
+
+.sp-uploaded-file-status {
+  font-size: 0.875rem;
+  color: var(--color-text-secondary, #64748b);
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+.sp-uploaded-file-syncing {
+  color: var(--color-primary, #2563eb);
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.sp-uploaded-file-synced {
+  color: var(--color-success, #22c55e);
+}
+
+.sp-uploaded-file-error {
+  color: var(--color-warning, #f59e0b);
+}
+
+.sp-uploaded-file-actions {
+  display: flex;
+  gap: 8px;
+  flex-shrink: 0;
+}
+
+.sp-spinner-icon {
+  animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+/* ============================================================
+   FIELD HELPERS
+   ============================================================ */
+
+.sp-field-helper--success {
+  color: var(--color-success, #22c55e) !important;
+}
+
+.sp-field-helper--warning {
+  color: var(--color-warning, #f59e0b) !important;
+}
+
+.sp-label-hint {
+  font-weight: 400;
+  color: var(--color-text-secondary, #64748b);
+  margin-left: 8px;
+}
+
+/* ============================================================
+   DERIVED INPUT STYLE
+   ============================================================ */
+
+.sp-input--derived {
+  background-color: var(--color-surface-secondary, #f5f5f5) !important;
+  cursor: not-allowed !important;
+}
+
+/* ============================================================
+   BUTTON VARIANTS
+   ============================================================ */
+
+.sp-btn--small {
+  padding: 6px 12px !important;
+  font-size: 0.875rem !important;
+}
+
+.sp-btn--danger {
+  background: #FEF2F2 !important;
+  color: #DC2626 !important;
+  border-color: #FECACA !important;
+}
+
+.sp-btn--danger:hover:not(:disabled) {
+  background: #FEE2E2 !important;
+  border-color: #F87171 !important;
+}
+
+/* ============================================================
+   SUBSECTION TITLE
+   ============================================================ */
+
+.sp-subsection-title {
+  font-size: 15px;
+  font-weight: 600;
+  color: #111827;
+  margin: 0 0 12px;
+}
+
+/* ============================================================
+   RESPONSIVE ADJUSTMENTS
+   ============================================================ */
+
+@media (max-width: 768px) {
+  .sp-uploaded-file {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .sp-uploaded-file-actions {
+    justify-content: flex-end;
+  }
+
+  .sp-appointment-badge {
+    padding: 14px 16px;
+  }
+
+  .sp-appointment-badge-icon {
+    width: 32px;
+    height: 32px;
+  }
+
+  .sp-appointment-badge-title {
+    font-size: 14px;
+  }
+
+  .sp-appointment-badge-message {
+    font-size: 13px;
+  }
+
+  .sp-weekend-warning {
+    padding: 14px 16px;
+  }
+
+  .sp-time-preference-btn {
+    padding: 14px 12px;
+    min-height: 70px;
+  }
+}
+
+@media (max-width: 480px) {
+  .sp-vehicle-header {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 2px;
+  }
+
+  .sp-time-preference-label {
+    font-size: 0.9rem;
+  }
+
+  .sp-time-preference-sublabel {
+    font-size: 0.75rem;
+  }
+}

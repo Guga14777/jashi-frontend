@@ -1,0 +1,92 @@
+/* src/pages/legal/carrier-privacy.css */
+.carrier-privacy {
+  /* adjust this if your sticky header is taller/shorter */
+  --app-sticky-h: 72px;     /* typical sticky header height */
+  --cp-max: 1100px;
+  --cp-pad: 22px;
+  --cp-border: #e5e7eb;
+  --cp-muted: #6b7280;
+  --cp-bg: #ffffff;
+  --cp-h: #111827;
+
+  max-width: var(--cp-max);
+  margin: 0 auto;
+
+  /* KEY FIX: add top padding so H1 isn't hidden under sticky header */
+  padding: calc(var(--app-sticky-h) + 24px) var(--cp-pad) 72px;
+
+  color: var(--cp-h);
+  background: var(--cp-bg);
+  line-height: 1.6;
+  font-size: 0.95rem;
+}
+
+/* Ensure in-page anchors (any element with an id) don't get hidden */
+.carrier-privacy [id] {
+  scroll-margin-top: calc(var(--app-sticky-h) + 12px);
+}
+
+/* Header */
+.cp-header {
+  margin-bottom: 20px;
+  border-bottom: 1px solid var(--cp-border);
+  padding-bottom: 16px;
+}
+
+.cp-header h1 {
+  margin: 0 0 4px;
+  font-size: 1.8rem;
+  letter-spacing: -0.01em;
+}
+
+.cp-subtitle,
+.cp-effective {
+  margin: 0 0 4px;
+  color: var(--cp-muted);
+  font-size: 0.95rem;
+}
+
+/* Sections */
+.cp-section {
+  padding: 14px 0;
+  border-top: 1px solid var(--cp-border);
+}
+.cp-section:first-of-type { border-top: none; }
+
+.cp-section h2 {
+  margin: 0 0 6px;
+  font-size: 1.2rem;
+}
+
+.cp-section p { margin: 0 0 8px; }
+.cp-section ul { margin: 4px 0 8px 20px; }
+.cp-section li { margin: 4px 0; }
+
+/* Notes / Footer */
+.cp-note {
+  margin-top: 6px;
+  font-size: 0.94rem;
+  color: var(--cp-muted);
+}
+
+.cp-footer {
+  margin-top: 24px;
+  padding-top: 14px;
+  border-top: 1px solid var(--cp-border);
+}
+
+.cp-disclaimer {
+  margin: 0;
+  font-size: 0.92rem;
+  color: var(--cp-muted);
+}
+
+/* Responsive */
+@media (max-width: 640px) {
+  .carrier-privacy {
+    /* keep the same sticky offset on mobile, slightly tighter paddings */
+    padding: calc(var(--app-sticky-h) + 16px) 14px 56px;
+    font-size: 0.96rem;
+  }
+  .cp-header h1 { font-size: 1.5rem; }
+}

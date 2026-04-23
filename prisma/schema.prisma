@@ -1,0 +1,728 @@
+// prisma/schema.prisma
+// ✅ UPDATED: Added detention fee fields for $50 waiting fee after 60 minutes
+// ✅ UPDATED: Added "could not pickup" fields for carrier edge cases
+// ✅ UPDATED: Added tripStartedAt timestamp
+// Status values for Booking (6-step flow):
+// 'scheduled' - Customer booked, waiting for carrier
+// 'assigned' - Carrier accepted the load
+// 'on_the_way_to_pickup' - Carrier started driving to pickup location
+// 'arrived_at_pickup' - Carrier physically arrived at pickup, detention timer starts
+// 'picked_up' - Carrier completed pickup, vehicle loaded
+// 'delivered' - Carrier completed delivery
+// 'cancelled' - Booking was cancelled
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id                String         @id @default(cuid())
+  email             String         @unique
+  password          String
+  firstName         String
+  lastName          String
+  phone             String         @unique
+  roles             String         @default("CUSTOMER")
+  companyName       String?
+  dotNumber         String?
+  mcNumber          String?
+  hasCargoInsurance Boolean        @default(false)
+  createdAt         DateTime       @default(now())
+  updatedAt         DateTime       @updatedAt
+  isActive          Boolean        @default(true)
+  accountEvents     AccountEvent[]
+  addresses         Address[]
+  bookings          Booking[]
+  drafts            Draft[]
+  notifications     Notification[]
+  quotes            Quote[]
+  documents         Document[]
+  carrierPayouts    CarrierPayout[]
+  passwordResets    PasswordReset[]
+
+  @@index([email])
+  @@index([phone])
+  @@index([roles])
+  @@index([isActive])
+}
+
+model Address {
+  id              String    @id @default(cuid())
+  userId          String
+  name            String?
+  street1         String
+  street2         String?
+  city            String
+  state           String
+  zip             String
+  phone           String?
+  email           String?
+  addressType     String?
+  isDefault       Boolean   @default(false)
+  createdAt       DateTime  @default(now())
+  updatedAt       DateTime  @updatedAt
+  user            User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+  dropoffBookings Booking[] @relation("DropoffBooking")
+  pickupBookings  Booking[] @relation("PickupBooking")
+  dropoffQuotes   Quote[]   @relation("DropoffQuote")
+  pickupQuotes    Quote[]   @relation("PickupQuote")
+
+  @@index([userId])
+  @@index([isDefault])
+}
+
+model Quote {
+  id               String     @id @default(cuid())
+  userId           String
+  userEmail        String
+  role             String     @default("customer")
+  fromZip          String
+  toZip            String
+  miles            Int
+  durationHours    Float?
+  vehicle          String
+  vehicles         Json
+  transportType    String
+  offer            Float
+  likelihood       Int
+  marketAvg        Float
+  recommendedMin   Float
+  recommendedMax   Float
+  pickupDate       DateTime?
+  notes            String?
+  status           String     @default("waiting")
+  source           String?    @default("quote-widget")
+  createdAt        DateTime   @default(now())
+  updatedAt        DateTime   @updatedAt
+  dropoffAddressId String?
+  pickupAddressId  String?
+  orderNumber      Int        @unique @default(autoincrement())
+  
+  // Multi-vehicle count (1-3 vehicles supported)
+  vehiclesCount    Int?       @default(1)
+  
+  bookings         Booking[]
+  documents        Document[] @relation("QuoteDocuments")
+  dropoffAddress   Address?   @relation("DropoffQuote", fields: [dropoffAddressId], references: [id])
+  pickupAddress    Address?   @relation("PickupQuote", fields: [pickupAddressId], references: [id])
+  user             User       @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId])
+  @@index([userEmail])
+  @@index([status])
+  @@index([createdAt])
+  @@index([pickupAddressId])
+  @@index([dropoffAddressId])
+  @@index([orderNumber])
+}
+
+// ============================================================
+// Stop Model - Represents a pickup or dropoff location
+// Used for multi-vehicle bookings where vehicles may go to different locations
+// ============================================================
+model Stop {
+  id              String    @id @default(cuid())
+  bookingId       String
+  draftId         String?
+  
+  // Stop type: 'pickup' or 'dropoff'
+  stage           String    // 'pickup' | 'dropoff'
+  
+  // Location type for gate pass requirements
+  locationType    String    // 'auction' | 'dealership' | 'private'
+  
+  // Address details
+  address         String
+  city            String
+  state           String
+  zip             String
+  
+  // Contact info (depends on location type)
+  contactFirstName  String?
+  contactLastName   String?
+  contactPhone      String?
+  
+  // Auction-specific fields
+  auctionName       String?
+  auctionBuyerNumber String?
+  
+  // Scheduling
+  scheduledDate     DateTime?
+  windowStart       String?
+  windowEnd         String?
+  preferredWindow   String?
+  
+  // Order within the booking (for multiple stops)
+  stopIndex         Int       @default(0)
+  
+  createdAt         DateTime  @default(now())
+  updatedAt         DateTime  @updatedAt
+  
+  // Relations
+  booking           Booking   @relation(fields: [bookingId], references: [id], onDelete: Cascade)
+  vehicles          BookingVehicle[] @relation("VehicleStop")
+  pickupVehicles    BookingVehicle[] @relation("PickupStop")
+  dropoffVehicles   BookingVehicle[] @relation("DropoffStop")
+  documents         Document[] @relation("StopDocuments")
+
+  @@index([bookingId])
+  @@index([draftId])
+  @@index([stage])
+  @@index([locationType])
+  @@index([bookingId, stage])
+}
+
+// ============================================================
+// BookingVehicle Model - Represents a vehicle in a booking
+// Each vehicle can have its own pickup and dropoff stop assignments
+// ============================================================
+model BookingVehicle {
+  id              String    @id @default(cuid())
+  bookingId       String
+  
+  // Vehicle details
+  year            String?
+  make            String?
+  model           String?
+  vin             String?
+  vehicleType     String?   // sedan, suv, truck, etc.
+  operable        String    @default("yes") // 'yes' | 'no'
+  
+  // Index within the booking (0-based)
+  vehicleIndex    Int       @default(0)
+  
+  // Stop assignments
+  pickupStopId    String?
+  dropoffStopId   String?
+  
+  // Gate pass document references
+  pickupGatePassId  String?
+  dropoffGatePassId String?
+  
+  createdAt       DateTime  @default(now())
+  updatedAt       DateTime  @updatedAt
+  
+  // Relations
+  booking         Booking   @relation(fields: [bookingId], references: [id], onDelete: Cascade)
+  pickupStop      Stop?     @relation("PickupStop", fields: [pickupStopId], references: [id])
+  dropoffStop     Stop?     @relation("DropoffStop", fields: [dropoffStopId], references: [id])
+  stops           Stop[]    @relation("VehicleStop")
+  documents       Document[] @relation("VehicleDocuments")
+  pickupGatePass  Document? @relation("VehiclePickupGatePass", fields: [pickupGatePassId], references: [id])
+  dropoffGatePass Document? @relation("VehicleDropoffGatePass", fields: [dropoffGatePassId], references: [id])
+
+  @@unique([bookingId, vehicleIndex])
+  @@index([bookingId])
+  @@index([pickupStopId])
+  @@index([dropoffStopId])
+  @@index([pickupGatePassId])
+  @@index([dropoffGatePassId])
+}
+
+model Booking {
+  id                        String    @id @default(cuid())
+  ref                       String    @unique
+  draftId                   String?
+  userId                    String
+  userEmail                 String
+  quoteId                   String?
+  customerFirstName         String?
+  customerLastName          String?
+  customerPhone             String?
+  fromCity                  String
+  toCity                    String
+  vehicle                   String
+  vehicleType               String
+  vehicleDetails            Json
+  price                     Float
+  miles                     Int
+  transportType             String
+  pickupDate                DateTime
+  dropoffDate               DateTime
+  pickup                    Json
+  dropoff                   Json
+  pickupOriginType          String
+  dealerFirstName           String?
+  dealerLastName            String?
+  dealerPhone               String?
+  auctionGatePass           String?
+  auctionName               String?
+  auctionBuyerNumber        String?
+  privateFirstName          String?
+  privateLastName           String?
+  privatePhone              String?
+  dropoffDestinationType    String?
+  dropoffDealerFirstName    String?
+  dropoffDealerLastName     String?
+  dropoffDealerPhone        String?
+  dropoffAuctionGatePass    String?
+  dropoffAuctionName        String?
+  dropoffAuctionBuyerNumber String?
+  dropoffPrivateFirstName   String?
+  dropoffPrivateLastName    String?
+  dropoffPrivatePhone       String?
+  customerInstructions      String?
+  notes                     String?
+  instructions              String?
+  pickupInstructions        String?
+  quote                     Json
+  scheduling                Json
+  
+  // ============================================================
+  // STATUS FIELD - Values allowed (6-step flow):
+  // 'scheduled' - Customer booked, waiting for carrier
+  // 'assigned' - Carrier accepted the load
+  // 'on_the_way_to_pickup' - Carrier started driving to pickup location
+  // 'arrived_at_pickup' - Carrier physically arrived at pickup (detention timer starts)
+  // 'picked_up' - Carrier completed pickup, vehicle loaded
+  // 'delivered' - Carrier completed delivery
+  // 'cancelled' - Booking was cancelled
+  // ============================================================
+  status                    String    @default("scheduled")
+  
+  // ============================================================
+  // Cancellation fields
+  // ============================================================
+  cancelledAt               DateTime?
+  cancelledBy               String?   // 'CUSTOMER' or 'CARRIER'
+  cancelReason              String?
+  cancellationFee           Float?
+  cancellationNotes         String?
+  
+  createdAt                 DateTime  @default(now())
+  updatedAt                 DateTime  @updatedAt
+  dropoffAddressId          String?
+  pickupAddressId           String?
+  orderNumber               Int       @unique
+  
+  // Time window fields
+  pickupWindowStart         String?
+  pickupWindowEnd           String?
+  dropoffWindowStart        String?
+  dropoffWindowEnd          String?
+  
+  // Carrier assignment fields with timestamps
+  carrierId                 String?
+  assignedAt                DateTime?
+  carrierAcceptedAt         DateTime?
+  
+  // ============================================================
+  // Status transition timestamps (6-step flow)
+  // ============================================================
+  
+  // ✅ NEW: When carrier starts driving to pickup (status -> on_the_way_to_pickup)
+  tripStartedAt             DateTime?
+  onTheWayAt                DateTime?
+  
+  // When carrier physically arrives at pickup location (status -> arrived_at_pickup)
+  arrivedAtPickupAt         DateTime?
+  
+  // ============================================================
+  // ✅ NEW: DETENTION FEE FIELDS ($50 after 60 minutes at pickup)
+  // Timer starts at arrivedAtPickupAt. After 60 minutes, carrier
+  // becomes eligible for $50 detention fee.
+  // ============================================================
+  
+  // The detention fee amount (default $50)
+  detentionAmount           Float     @default(50)
+  
+  // When carrier requested the detention fee (null if not requested)
+  detentionRequestedAt      DateTime?
+  
+  // When admin approved the detention fee (null if not approved, auto-approve for MVP)
+  detentionApprovedAt       DateTime?
+  
+  // Carrier notes when requesting detention fee
+  detentionNotes            String?
+  
+  // JSON array of document IDs/URLs as proof for detention request
+  detentionProof            Json?
+  
+  // ============================================================
+  // ✅ NEW: COULD NOT PICKUP FIELDS
+  // For edge cases where carrier arrived but cannot complete pickup
+  // Examples: auction closed, no gate pass, wrong address, customer no-show
+  // ============================================================
+  
+  // When carrier reported "could not pickup"
+  couldNotPickupAt          DateTime?
+  
+  // Reason code: 'auction_closed', 'no_gate_pass', 'wrong_address', 
+  // 'customer_no_show', 'vehicle_not_ready', 'vehicle_not_as_described', 
+  // 'access_denied', 'other'
+  couldNotPickupReason      String?
+  
+  // Additional notes from carrier
+  couldNotPickupNotes       String?
+  
+  // JSON array of document IDs/URLs as proof
+  couldNotPickupProof       Json?
+  
+  // ============================================================
+  // LEGACY waiting fee fields (keeping for compatibility)
+  // ============================================================
+  waitTimerStartAt          DateTime?
+  waitFeeAmount             Float     @default(0)
+  waitFeeRequestedAt        DateTime?
+  
+  // Pickup/Delivery tracking timestamps
+  pickedUpAt                DateTime?
+  deliveredAt               DateTime?
+  
+  // Legacy field - keeping for compatibility
+  pickupAt                  DateTime?
+  
+  podDocumentId             String?
+  
+  // Gate pass document references (LEGACY - single gate pass per stage)
+  // For multi-vehicle, use BookingVehicle relations
+  pickupGatePassId          String?
+  dropoffGatePassId         String?
+  
+  // Multi-vehicle count (1-3 vehicles supported)
+  vehiclesCount             Int?      @default(1)
+  
+  // Multi-vehicle details JSON array
+  // Format: [{ year, make, model, vin, type, operable }, ...]
+  vehicles                  Json?
+  
+  // Multi-vehicle configuration (JSON)
+  // Format: { 
+  //   sharePickup: true/false, 
+  //   shareDropoff: true/false,
+  //   vehicleCount: number
+  // }
+  multiVehicleConfig        Json?
+  
+  // Payment tracking fields for BOL
+  paymentMode               String?
+  paymentStatus             String?
+  paymentSource             String?
+  carrierPayout             Float?
+  
+  dropoffAddress            Address?  @relation("DropoffBooking", fields: [dropoffAddressId], references: [id])
+  pickupAddress             Address?  @relation("PickupBooking", fields: [pickupAddressId], references: [id])
+  quoteRelation             Quote?    @relation(fields: [quoteId], references: [id])
+  user                      User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+  
+  // Legacy document relations (for single-vehicle bookings)
+  pickupGatePass            Document? @relation("PickupGatePass", fields: [pickupGatePassId], references: [id])
+  dropoffGatePass           Document? @relation("DropoffGatePass", fields: [dropoffGatePassId], references: [id])
+  podDocument               Document? @relation("PODDocument", fields: [podDocumentId], references: [id])
+  documents                 Document[] @relation("BookingDocuments")
+  
+  // Multi-vehicle relations
+  bookingVehicles           BookingVehicle[]
+  stops                     Stop[]
+  
+  // Payment relations
+  payments                  PaymentTransaction[]
+  carrierPayouts            CarrierPayout[]
+
+  @@index([userId])
+  @@index([userEmail])
+  @@index([ref])
+  @@index([status])
+  @@index([createdAt])
+  @@index([quoteId])
+  @@index([pickupAddressId])
+  @@index([dropoffAddressId])
+  @@index([orderNumber])
+  @@index([carrierId])
+  @@index([status, carrierId])
+  @@index([pickupGatePassId])
+  @@index([dropoffGatePassId])
+  @@index([podDocumentId])
+  @@index([paymentStatus])
+  @@index([cancelledAt])
+  @@index([cancelledBy])
+  @@index([onTheWayAt])
+  @@index([arrivedAtPickupAt])
+  @@index([tripStartedAt])
+  @@index([detentionRequestedAt])
+  @@index([couldNotPickupAt])
+}
+
+model Draft {
+  id                        String   @id @default(cuid())
+  userId                    String
+  userEmail                 String
+  quote                     Json
+  pickup                    Json
+  dropoff                   Json
+  vehicleDetails            Json
+  scheduling                Json
+  instructions              String?
+  pickupOriginType          String?
+  dealerFirstName           String?
+  dealerLastName            String?
+  dealerPhone               String?
+  auctionGatePass           String?
+  auctionName               String?
+  auctionBuyerNumber        String?
+  privateFirstName          String?
+  privateLastName           String?
+  privatePhone              String?
+  dropoffDestinationType    String?
+  dropoffDealerFirstName    String?
+  dropoffDealerLastName     String?
+  dropoffDealerPhone        String?
+  dropoffAuctionGatePass    String?
+  dropoffAuctionName        String?
+  dropoffAuctionBuyerNumber String?
+  dropoffPrivateFirstName   String?
+  dropoffPrivateLastName    String?
+  dropoffPrivatePhone       String?
+  status                    String   @default("draft")
+  createdAt                 DateTime @default(now())
+  updatedAt                 DateTime @updatedAt
+  
+  // Gate pass document references for drafts (LEGACY)
+  pickupGatePassId          String?
+  dropoffGatePassId         String?
+  
+  // Multi-vehicle count (1-3 vehicles supported)
+  vehiclesCount             Int?     @default(1)
+  
+  // Multi-vehicle configuration for drafts
+  // Format: { 
+  //   sharePickup: true/false, 
+  //   shareDropoff: true/false,
+  //   vehicleCount: number,
+  //   pickupStops: [...],
+  //   dropoffStops: [...],
+  //   vehicleAssignments: [{ vehicleIndex, pickupStopIndex, dropoffStopIndex }, ...]
+  // }
+  multiVehicleConfig        Json?
+  
+  // Per-vehicle gate passes (JSON array)
+  // Format: [{ vehicleIndex: 0, stage: 'pickup'|'dropoff', documentId: '...', stopIndex: 0 }, ...]
+  vehicleGatePasses         Json?
+  
+  // Multiple vehicles data
+  // Format: [{ year, make, model, vin, type, operable, pickupStopIndex, dropoffStopIndex }, ...]
+  vehicles                  Json?
+  
+  // Multiple stops data
+  // Format: { pickup: [...], dropoff: [...] }
+  stops                     Json?
+  
+  user                      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId])
+  @@index([userEmail])
+  @@index([status])
+  @@index([createdAt])
+}
+
+model Document {
+  id                 String    @id @default(cuid())
+  userId             String
+  bookingId          String?
+  quoteId            String?
+  type               String    // gate_pass, pickup_photo, delivery_photo, pod, bol, detention_proof, could_not_pickup_proof
+  fileName           String
+  originalName       String
+  fileUrl            String
+  filePath           String?
+  mimeType           String?
+  fileSize           Int?
+  storageType        String?  @default("local")
+  
+  // Vehicle-specific fields for multi-vehicle gate passes
+  vehicleIndex       Int?      // 0-based index of vehicle in booking's vehicles array
+  stage              String?   // 'pickup' or 'dropoff' - which stage this document is for
+  locationIndex      Int?      // Index of the stop this gate pass is for (for multi-location support)
+  
+  // Stop reference for multi-vehicle bookings
+  stopId             String?
+  bookingVehicleId   String?
+  
+  createdAt          DateTime @default(now())
+  updatedAt          DateTime @updatedAt
+  
+  user               User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+  booking            Booking?  @relation("BookingDocuments", fields: [bookingId], references: [id])
+  quote              Quote?    @relation("QuoteDocuments", fields: [quoteId], references: [id])
+  pickupGatePassFor  Booking[] @relation("PickupGatePass")
+  dropoffGatePassFor Booking[] @relation("DropoffGatePass")
+  podFor             Booking[] @relation("PODDocument")
+  
+  // Multi-vehicle relations
+  stop               Stop?     @relation("StopDocuments", fields: [stopId], references: [id])
+  bookingVehicle     BookingVehicle? @relation("VehicleDocuments", fields: [bookingVehicleId], references: [id])
+  vehiclePickupGatePassFor  BookingVehicle[] @relation("VehiclePickupGatePass")
+  vehicleDropoffGatePassFor BookingVehicle[] @relation("VehicleDropoffGatePass")
+
+  @@index([userId])
+  @@index([bookingId])
+  @@index([quoteId])
+  @@index([type])
+  @@index([storageType])
+  @@index([createdAt])
+  @@index([vehicleIndex])
+  @@index([stage])
+  @@index([stopId])
+  @@index([bookingVehicleId])
+  @@index([bookingId, vehicleIndex, stage])
+  @@index([quoteId, vehicleIndex])
+}
+
+model Notification {
+  id            String    @id @default(cuid())
+  userId        String
+  orderId       String?
+  type          String
+  title         String
+  message       String
+  category      String    @default("dispatch")
+  meta          Json      @default("{}")
+  readAt        DateTime?
+  createdAt     DateTime  @default(now())
+  // Delivery channel. in_app is the only one today. Future channels (email,
+  // sms, push) will reuse this column so we never have to widen the table.
+  channel       String    @default("in_app")
+  // Role the notification was addressed to. Optional — useful when filtering
+  // admin dashboards by audience. Values: "customer" | "carrier" | "admin".
+  recipientRole String?
+  user          User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId])
+  @@index([orderId])
+  @@index([readAt])
+  @@index([createdAt])
+  @@index([type])
+  @@index([category])
+}
+
+model AccountEvent {
+  id        String   @id @default(cuid())
+  userId    String
+  eventType String
+  eventData Json?
+  ipAddress String?
+  userAgent String?
+  createdAt DateTime @default(now())
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId])
+  @@index([eventType])
+  @@index([createdAt])
+}
+
+model PaymentTransaction {
+  id                  String    @id @default(cuid())
+  userId              String?
+  bookingId           String?
+  amount              Float
+  currency            String    @default("USD")
+  status              String
+  paymentMethod       String?
+  stripePaymentId     String?
+  stripeCustomerId    String?
+  cardLast4           String?
+  cardBrand           String?
+  cardholderFirstName String?
+  cardholderLastName  String?
+  paidAt              DateTime?
+  reference           String?
+  metadata            Json?
+  createdAt           DateTime  @default(now())
+  updatedAt           DateTime  @updatedAt
+  booking             Booking?  @relation(fields: [bookingId], references: [id])
+
+  @@index([userId])
+  @@index([bookingId])
+  @@index([status])
+  @@index([createdAt])
+  @@index([paidAt])
+  @@index([reference])
+}
+
+model CarrierPayout {
+  id          String    @id @default(cuid())
+  carrierId   String
+  bookingId   String?
+  type        String    @default("PAYOUT")
+  amount      Float
+  currency    String    @default("USD")
+  status      String    @default("pending")
+  method      String    @default("ach")
+  reference   String    @unique
+  description String?
+  metadata    Json?
+  paidAt      DateTime?
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+  
+  carrier     User      @relation(fields: [carrierId], references: [id], onDelete: Cascade)
+  booking     Booking?  @relation(fields: [bookingId], references: [id], onDelete: SetNull)
+
+  @@index([carrierId])
+  @@index([bookingId])
+  @@index([status])
+  @@index([method])
+  @@index([createdAt])
+  @@index([reference])
+}
+
+model CarrierRating {
+  id         String   @id @default(cuid())
+  carrierId  String
+  customerId String
+  bookingId  String?
+  rating     Int
+  comment    String?
+  createdAt  DateTime @default(now())
+
+  @@index([carrierId])
+  @@index([customerId])
+  @@index([rating])
+}
+
+model PasswordReset {
+  id         String    @id @default(cuid())
+  userId     String
+  codeHash   String
+  expiresAt  DateTime
+  attempts   Int       @default(0)
+  usedAt     DateTime?
+  createdAt  DateTime  @default(now())
+  user       User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId])
+  @@index([expiresAt])
+}
+
+// Internal admin notes attached to a booking. Visible only to ADMIN roles.
+// Never exposed through customer/carrier endpoints.
+model AdminNote {
+  id          String    @id @default(cuid())
+  bookingId   String
+  authorId    String
+  body        String
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+  deletedAt   DateTime?
+
+  @@index([bookingId])
+  @@index([authorId])
+  @@index([createdAt])
+}
+
+// Admin-editable platform settings stored as key/value. One row per setting.
+// Writes require admin_super; reads require admin role. History tracking via
+// AccountEvent — Setting itself only keeps the current value.
+model Setting {
+  key         String   @id
+  value       Json
+  description String?
+  updatedBy   String?
+  updatedAt   DateTime @updatedAt
+  createdAt   DateTime @default(now())
+}

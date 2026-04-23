@@ -1,0 +1,370 @@
+/* ============================================================
+   FILE: src/pages/shipper-portal/shipper-portal.css
+   ✅ FIXED: Vertical layout with horizontal steps at top
+   ============================================================ */
+
+/* Main Shipper Portal Container */
+.shipper-portal {
+  max-width: 1040px;
+  margin: 0 auto;
+  padding: 100px 20px 40px;
+  min-height: calc(100vh - 160px);
+}
+
+/* Loading State */
+.sp-loading {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  min-height: 400px;
+  gap: 16px;
+}
+
+.sp-loading-spinner {
+  width: 40px;
+  height: 40px;
+  border: 3px solid #E5E7EB;
+  border-top-color: #1D4ED8;
+  border-radius: 50%;
+  animation: sp-spin 0.8s linear infinite;
+}
+
+@keyframes sp-spin {
+  to { transform: rotate(360deg); }
+}
+
+.sp-loading p {
+  color: #6B7280;
+  font-size: 14px;
+}
+
+/* Error State */
+.sp-error {
+  text-align: center;
+  padding: 60px 20px;
+}
+
+.sp-error h2 {
+  font-size: 20px;
+  font-weight: 600;
+  color: #DC2626;
+  margin: 0 0 12px;
+}
+
+.sp-error p {
+  color: #6B7280;
+  margin: 0 0 24px;
+}
+
+/* Main white body that contains step content */
+.sp-body {
+  background: #ffffff;
+  border: 1px solid #e5e7eb;
+  border-radius: 16px;
+  padding: 24px;
+  box-shadow:
+    0 10px 15px -3px rgba(15, 23, 42, 0.08),
+    0 4px 6px -2px rgba(15, 23, 42, 0.04);
+}
+
+/* Page header */
+.sp-header {
+  margin-bottom: 10px;
+}
+
+.sp-header h2 {
+  font-size: 22px;
+  font-weight: 600;
+  margin: 0 0 4px;
+  color: #111827;
+  line-height: 1.25;
+}
+
+.sp-header p {
+  font-size: 13px;
+  color: #6b7280;
+  margin: 0;
+  max-width: 640px;
+  line-height: 1.45;
+}
+
+/* Steps nav wrapper */
+.sp-steps-nav {
+  margin: 10px 0 14px;
+}
+
+/* Generic section styling */
+.sp-section {
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+}
+
+.sp-section h3 {
+  font-size: 18px;
+  font-weight: 600;
+  margin: 0;
+  color: #1a202c;
+}
+
+.sp-section h4 {
+  font-size: 16px;
+  font-weight: 600;
+  margin: 0 0 12px;
+  color: #1a202c;
+}
+
+/* Form inputs */
+.form-group-portal {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.form-group-portal label {
+  font-size: 14px;
+  font-weight: 500;
+  color: #374151;
+}
+
+.form-group-portal input,
+.form-group-portal select,
+.form-group-portal textarea {
+  padding: 10px 12px;
+  border: 1px solid #d1d5db;
+  border-radius: 8px;
+  font-size: 14px;
+  font-family: inherit;
+  transition: border-color 0.2s, box-shadow 0.2s;
+}
+
+.form-group-portal input:focus,
+.form-group-portal select:focus,
+.form-group-portal textarea:focus {
+  outline: none;
+  border-color: #1d4ed8;
+  box-shadow: 0 0 0 3px rgba(29, 78, 216, 0.1);
+}
+
+/* Address grid */
+.address-fields {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.af-title {
+  font-size: 16px;
+  font-weight: 600;
+  margin: 0 0 12px;
+  color: #1a202c;
+}
+
+.af-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 12px;
+}
+
+.af-input {
+  padding: 10px 12px;
+  border: 1px solid #d1d5db;
+  border-radius: 8px;
+  font-size: 14px;
+  transition: border-color 0.2s, box-shadow 0.2s;
+}
+
+.af-input:focus {
+  outline: none;
+  border-color: #1d4ed8;
+  box-shadow: 0 0 0 3px rgba(29, 78, 216, 0.1);
+}
+
+/* Time window picker */
+.twp {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.twp-title {
+  font-size: 14px;
+  font-weight: 600;
+  color: #374151;
+  margin: 0;
+}
+
+.twp-row {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+  gap: 12px;
+}
+
+.twp-col {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.twp-col label {
+  font-size: 12px;
+  color: #6b7280;
+  font-weight: 500;
+}
+
+.twp-col input,
+.twp-col select {
+  padding: 8px 10px;
+  border: 1px solid #d1d5db;
+  border-radius: 6px;
+  font-size: 13px;
+}
+
+/* Vehicle details grid */
+.vd-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+  gap: 12px;
+}
+
+/* Instructions */
+.instr-section {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.instr-title {
+  font-size: 14px;
+  font-weight: 600;
+  color: #374151;
+  margin: 0;
+}
+
+.instr-textarea {
+  padding: 10px 12px;
+  border: 1px solid #d1d5db;
+  border-radius: 8px;
+  font-size: 14px;
+  font-family: inherit;
+  resize: vertical;
+  min-height: 100px;
+}
+
+.instr-textarea:focus {
+  outline: none;
+  border-color: #1d4ed8;
+  box-shadow: 0 0 0 3px rgba(29, 78, 216, 0.1);
+}
+
+/* Summary card */
+.summary-card {
+  background: #f9fafb;
+  border: 1px solid #e5e7eb;
+  border-radius: 12px;
+  padding: 16px;
+  margin-bottom: 16px;
+}
+
+.sc-title {
+  font-size: 14px;
+  font-weight: 600;
+  color: #1a202c;
+  margin: 0 0 12px;
+}
+
+.sc-row {
+  display: flex;
+  justify-content: space-between;
+  font-size: 13px;
+  margin: 8px 0;
+}
+
+.sc-row strong {
+  font-weight: 600;
+  color: #1a202c;
+}
+
+.sc-row span {
+  color: #6b7280;
+}
+
+/* Actions row at bottom */
+.sp-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 12px;
+  margin-top: 24px;
+  padding-top: 24px;
+  border-top: 1px solid #e5e7eb;
+}
+
+.btn-primary-portal {
+  background: #1d4ed8;
+  color: #ffffff;
+  border: none;
+  border-radius: 999px;
+  padding: 10px 24px;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background-color 0.2s, box-shadow 0.2s;
+}
+
+.btn-primary-portal:hover:not(:disabled) {
+  background: #1e40af;
+  box-shadow: 0 4px 10px rgba(37, 99, 235, 0.3);
+}
+
+.btn-primary-portal:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+.btn-secondary-portal {
+  background: #ffffff;
+  color: #1d4ed8;
+  border: 1px solid #1d4ed8;
+  border-radius: 999px;
+  padding: 10px 24px;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background-color 0.2s, border-color 0.2s;
+}
+
+.btn-secondary-portal:hover {
+  background: #f0f4ff;
+}
+
+/* Mobile */
+@media (max-width: 768px) {
+  .shipper-portal {
+    padding: 80px 12px 24px;
+  }
+
+  .sp-body {
+    padding: 18px;
+    border-radius: 14px;
+  }
+
+  .af-grid,
+  .twp-row,
+  .vd-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .sp-actions {
+    flex-direction: column-reverse;
+  }
+
+  .btn-primary-portal,
+  .btn-secondary-portal {
+    width: 100%;
+  }
+
+  .sp-header h2 {
+    font-size: 20px;
+  }
+}

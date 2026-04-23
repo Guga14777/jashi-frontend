@@ -1,0 +1,212 @@
+/* src/components/ui/pagination.css */
+
+/* ============================================================
+   PAGINATION COMPONENT - Blue Theme
+   ============================================================ */
+
+/* CSS Variables */
+:root {
+  --pagination-primary: #2563EB;
+  --pagination-primary-hover: #1D4ED8;
+  --pagination-primary-light: #EFF6FF;
+  --pagination-border: #E5E7EB;
+  --pagination-text: #374151;
+  --pagination-text-light: #6B7280;
+  --pagination-white: #FFFFFF;
+  --pagination-disabled: #9CA3AF;
+}
+
+/* Main Container */
+.pagination {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  padding: 24px 0;
+  margin-top: 24px;
+}
+
+/* Base Button Styles */
+.pagination-button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  height: 40px;
+  padding: 0 16px;
+  font-family: inherit;
+  font-size: 14px;
+  font-weight: 500;
+  color: var(--pagination-text);
+  background-color: var(--pagination-white);
+  border: 1px solid var(--pagination-border);
+  border-radius: 8px;
+  cursor: pointer;
+  transition: all 0.15s ease;
+  outline: none;
+  -webkit-appearance: none;
+  appearance: none;
+  user-select: none;
+  -webkit-tap-highlight-color: transparent;
+}
+
+/* Navigation Buttons (Previous/Next) */
+.pagination-button--prev,
+.pagination-button--next {
+  min-width: 110px;
+}
+
+.pagination-button--prev svg,
+.pagination-button--next svg {
+  flex-shrink: 0;
+}
+
+/* Page Number Buttons */
+.pagination-button--page {
+  min-width: 40px;
+  width: 40px;
+  padding: 0;
+  font-weight: 600;
+}
+
+/* Pages Container */
+.pagination-pages {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
+/* Ellipsis */
+.pagination-ellipsis {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 32px;
+  height: 40px;
+  color: var(--pagination-text-light);
+  font-weight: 500;
+  user-select: none;
+}
+
+/* Hover State */
+.pagination-button:not(:disabled):not(.pagination-button--active):hover {
+  background-color: var(--pagination-primary-light);
+  border-color: var(--pagination-primary);
+  color: var(--pagination-primary);
+}
+
+/* Active Page State - Blue Background */
+.pagination-button--active,
+.pagination-button--page[aria-current="page"] {
+  background-color: var(--pagination-primary) !important;
+  border-color: var(--pagination-primary) !important;
+  color: var(--pagination-white) !important;
+  cursor: default;
+}
+
+/* Active Page Hover */
+.pagination-button--active:hover,
+.pagination-button--page[aria-current="page"]:hover {
+  background-color: var(--pagination-primary-hover) !important;
+  border-color: var(--pagination-primary-hover) !important;
+  color: var(--pagination-white) !important;
+}
+
+/* Focus State */
+.pagination-button:focus-visible {
+  box-shadow: 0 0 0 2px var(--pagination-white), 0 0 0 4px var(--pagination-primary);
+}
+
+/* Disabled State */
+.pagination-button:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+  pointer-events: none;
+  color: var(--pagination-disabled);
+}
+
+.pagination-button:disabled:hover {
+  background-color: var(--pagination-white);
+  border-color: var(--pagination-border);
+  color: var(--pagination-disabled);
+}
+
+/* ============================================================
+   RESPONSIVE STYLES
+   ============================================================ */
+
+@media (max-width: 640px) {
+  .pagination {
+    gap: 6px;
+    flex-wrap: wrap;
+  }
+  
+  .pagination-button--prev,
+  .pagination-button--next {
+    min-width: auto;
+    padding: 0 12px;
+  }
+  
+  .pagination-button--prev span,
+  .pagination-button--next span {
+    display: none;
+  }
+  
+  .pagination-button--page {
+    min-width: 36px;
+    width: 36px;
+    height: 36px;
+    font-size: 13px;
+  }
+  
+  .pagination-pages {
+    gap: 2px;
+  }
+  
+  .pagination-ellipsis {
+    min-width: 24px;
+    height: 36px;
+  }
+}
+
+@media (max-width: 400px) {
+  .pagination-pages {
+    order: 2;
+    width: 100%;
+    justify-content: center;
+    margin-top: 8px;
+  }
+  
+  .pagination-button--prev {
+    order: 1;
+  }
+  
+  .pagination-button--next {
+    order: 1;
+  }
+}
+
+/* ============================================================
+   AVAILABLE LOADS PAGINATION WRAPPER
+   ============================================================ */
+
+.al-pagination {
+  display: flex;
+  justify-content: center;
+  padding: 16px 0 32px;
+  margin-top: 16px;
+  border-top: 1px solid #E5E7EB;
+}
+
+/* Screen reader only text */
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border-width: 0;
+}

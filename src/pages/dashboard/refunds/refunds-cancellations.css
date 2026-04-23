@@ -1,0 +1,158 @@
+/* Page base — light theme */
+.rc-page {
+  min-height: 100vh;
+  background: var(--page-bg, #f6f8fc);
+  color: var(--page-fg, #0f172a);
+}
+
+.rc-container {
+  max-width: 1080px;
+  margin: 0 auto;
+  padding: 80px 16px 56px; /* extra top space below fixed header */
+}
+
+/* Header */
+.rc-header h1 {
+  font-size: 40px;
+  line-height: 1.1;
+  letter-spacing: -0.02em;
+  margin: 8px 0 8px;
+  color: #0f172a;
+}
+.rc-subtitle {
+  margin: 0 0 28px;
+  font-size: 16px;
+  color: #64748b;
+}
+
+/* Cards */
+.rc-card {
+  background: #fff;
+  border: 1px solid #e5e7eb;
+  border-radius: 14px;
+  padding: 22px 22px;
+  margin-bottom: 20px;
+  box-shadow: 0 6px 20px rgba(15, 23, 42, 0.04);
+}
+
+.rc-muted {
+  background: #f9fafb;
+}
+
+/* Headings */
+.rc-h2 { margin: 2px 0 14px; font-weight: 700; font-size: 22px; color: #0f172a; }
+.rc-h3 { margin: 0 0 6px; font-weight: 600; font-size: 16px; color: #0f172a; }
+.rc-p  { margin: 0; color: #4b5563; font-size: 14px; line-height: 1.55; }
+.rc-center { text-align: center; }
+.rc-max { max-width: 720px; margin-left: auto; margin-right: auto; }
+
+/* Grids */
+.rc-grid {
+  display: grid;
+  gap: 16px;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+}
+
+/* Cancellation windows */
+.rc-windows { display: grid; gap: 14px; }
+.rc-window {
+  border: 1px solid #e5e7eb;
+  border-radius: 12px;
+  padding: 14px 16px;
+  background: #fff;
+}
+.rc-window-head { display: flex; gap: 12px; justify-content: space-between; align-items: flex-start; }
+.rc-chip {
+  align-self: flex-start;
+  padding: 4px 10px;
+  font-size: 12px;
+  font-weight: 700;
+  border-radius: 999px;
+  border: 1px solid transparent;
+}
+.rc-chip.rc-free { background: #ecfdf5; color: #047857; border-color: #a7f3d0; }
+.rc-chip.rc-fee { background: #fffbeb; color: #b45309; border-color: #fde68a; }
+.rc-chip.rc-non-refundable { background: #fef2f2; color: #b91c1c; border-color: #fecaca; }
+.rc-time { margin-top: 4px; font-size: 12px; color: #6b7280; font-style: italic; }
+
+/* Accent tiles (left bar) */
+.rc-tile {
+  background: #fff;
+  border: 1px solid #e5e7eb;
+  border-radius: 12px;
+  padding: 14px 16px 14px 14px;
+  position: relative;
+}
+.rc-accent::before,
+.rc-accent-alt::before {
+  content: "";
+  position: absolute; left: 0; top: 0; bottom: 0; width: 4px; border-radius: 12px 0 0 12px;
+}
+.rc-accent::before { background: #2563eb; }
+.rc-accent-alt::before { background: #10b981; }
+
+/* Steps */
+.rc-steps { display: grid; gap: 12px; }
+.rc-step {
+  display: grid;
+  grid-template-columns: 36px 1fr;
+  gap: 12px;
+  align-items: start;
+  background: #fff;
+  border: 1px solid #e5e7eb;
+  border-radius: 12px;
+  padding: 14px 16px;
+}
+.rc-step-num {
+  width: 28px; height: 28px;
+  border-radius: 999px;
+  background: #2563eb; color: #fff;
+  display: grid; place-items: center;
+  font-weight: 700; font-size: 13px; margin-top: 2px;
+}
+
+/* Help CTA */
+.rc-help-cta {
+  margin-top: 14px;
+  padding: 14px;
+  border: 1px solid #dbeafe;
+  background: #eff6ff;
+  border-radius: 12px;
+  text-align: center;
+}
+.rc-btn {
+  appearance: none;
+  border: none;
+  border-radius: 10px;
+  padding: 12px 22px;
+  font-weight: 700;
+  font-size: 15px;
+  cursor: pointer;
+}
+.rc-btn-primary {
+  background: #3b82f6;
+  color: #fff;
+  box-shadow: 0 10px 24px rgba(59, 130, 246, 0.24);
+}
+.rc-btn-primary:hover { background: #2563eb; }
+
+/* FAQ */
+.rc-faq { display: grid; gap: 10px; }
+.rc-faq-item { border: 1px solid #e5e7eb; border-radius: 12px; background: #fff; overflow: hidden; }
+.rc-faq-q {
+  width: 100%; background: transparent; border: 0; padding: 14px 16px;
+  display: flex; justify-content: space-between; align-items: center;
+  font-weight: 600; color: #0f172a; cursor: pointer;
+}
+.rc-faq-q:hover { background: #f8fafc; }
+.rc-faq-q.is-open { border-bottom: 1px solid #e5e7eb; background: #f9fbff; }
+.rc-toggle { color: #2563eb; font-size: 20px; line-height: 1; }
+.rc-faq-a { padding: 12px 16px 16px; }
+
+/* Responsive */
+@media (max-width: 980px) {
+  .rc-container { padding-top: 64px; }
+}
+@media (max-width: 640px) {
+  .rc-header h1 { font-size: 32px; }
+}

@@ -1,0 +1,446 @@
+/* Carrier Header — BORDER-ONLY (no blue fills anywhere) */
+
+/* ========== Layout Vars (safe) ========== */
+:root{
+  --header-height:72px;
+  --header-height-mobile:64px;
+
+  --text-primary:#0F172A;
+  --text-secondary:#475569;
+  --text-muted:#64748B;
+
+  --border-light:#e5e7eb;
+  --border-lighter:#F1F5F9;
+  --border-subtle:rgba(15,23,42,.06);
+
+  --shadow-sm:0 1px 2px rgba(0,0,0,.05);
+  --shadow-md:0 4px 6px rgba(0,0,0,.07);
+  --shadow-lg:0 10px 40px rgba(0,0,0,.08);
+  --shadow-scrolled:0 4px 10px rgba(0,0,0,.07);
+
+  --danger:#EF4444;
+  --danger-hover:#DC2626;
+  --danger-light:rgba(239,68,68,.04);
+}
+
+/* Scope brand blues to header only */
+.car-header{
+  --primary:#0a58ff;
+  --primary-hover:#0848d6;
+  --primary-light:#f5f9ff;           /* used for rings only */
+  --primary-lighter:rgba(10,88,255,.04);
+}
+
+/* ========== Header Container ========== */
+.car-header{
+  position:fixed; inset:0 0 auto 0; height:var(--header-height);
+  background:#fff; border-bottom:1px solid var(--border-light);
+  z-index:100; /* ✅ LOWERED FROM 1000 TO 100 — allows notification panel (z-index 4000) to sit above */
+  transition: box-shadow .15s ease; will-change:transform;
+}
+.car-header[data-scrolled="true"]{ box-shadow:var(--shadow-scrolled); }
+
+.car-inner{
+  max-width:1400px; margin:0 auto; padding:0 32px; height:100%;
+  display:flex; align-items:center; justify-content:space-between; position:relative; overflow:visible;
+}
+
+/* ========== Brand ========== */
+.car-brand{
+  display:inline-flex; align-items:center; gap:12px; background:transparent; border:none; padding:0; margin:0; cursor:pointer;
+  transition: opacity .15s ease; font-family:inherit; text-decoration:none;
+}
+.car-brand:hover{ opacity:.85; }
+.car-brand:active{ opacity:.75; }
+.car-brand:focus-visible{ outline:2px solid var(--primary); outline-offset:4px; }
+
+.car-badge{
+  width:64px; height:64px; border-radius:50%; background:var(--primary); display:grid; place-items:center; overflow:hidden; position:relative; flex-shrink:0;
+}
+.car-badge img{ width:75%; height:75%; object-fit:contain; }
+.car-badge[data-fallback="true"] img{ display:none; }
+.badge-fallback{ display:none; color:#fff; font-size:22px; font-weight:700; text-transform:uppercase; letter-spacing:-.5px; }
+.car-badge[data-fallback="true"] .badge-fallback{ display:block; }
+
+.car-name{ color:var(--primary); font-size:26px; font-weight:800; letter-spacing:.2px; text-transform:capitalize; }
+
+/* ========== Right Actions ========== */
+.car-actions{ display:flex; align-items:center; gap:14px; position:relative; z-index:50; overflow:visible; }
+
+/* Notification (border-only hover) - Legacy styles for old notification-btn */
+.notification-wrapper{ position:relative; overflow:visible; }
+.notification-btn{
+  position:relative; width:48px!important; height:48px!important; border-radius:10px;
+  border:1px solid var(--border-light); background:#fff;
+  display:flex; align-items:center; justify-content:center; cursor:pointer;
+  transition: all .15s ease; color:var(--text-primary); font-family:inherit;
+}
+.notification-btn svg{ 
+  width:32px!important; 
+  height:32px!important; 
+  stroke-width:1.5; 
+  min-width:32px; 
+  min-height:32px; 
+  flex:0 0 auto; 
+}
+.notification-btn:hover{
+  background:#fff;
+  border-color:var(--primary);
+  box-shadow:0 0 0 3px var(--primary-light);
+  color:var(--primary);
+}
+.notification-btn:focus-visible{ outline:2px solid var(--primary); outline-offset:2px; }
+.notification-btn:active{ background:#fff; transform:scale(.98); }
+
+/* ========== Header-scoped Notification Bell (NEW) ========== */
+/* Button size (normal) */
+.car-header .car-header-bell{
+  position:relative !important;
+  width:56px !important;
+  height:56px !important;
+  border:1px solid var(--border-light) !important;
+  border-radius:10px !important;
+  background:#fff !important;
+  display:flex !important;
+  align-items:center !important;
+  justify-content:center !important;
+  cursor:pointer !important;
+  transition:all .15s ease !important;
+  color:var(--text-primary) !important;
+  padding:0 !important;
+}
+
+/* Bell icon size */
+.car-header .car-header-bell svg{
+  width:28px !important;
+  height:28px !important;
+  stroke-width:1.8 !important;
+}
+
+/* Anchor the badge to the bell icon, not the button */
+.car-header .car-header-bell .bell-icon{
+  position:relative !important;
+  display:inline-flex !important;
+  align-items:center !important;
+  justify-content:center !important;
+}
+
+/* Badge pinned at the icon's top-right (fixed size) */
+.car-header .car-header-bell .notification-badge{
+  position:absolute !important;
+  top:-4px !important;
+  right:-4px !important;
+  min-width:20px !important;
+  height:20px !important;
+  padding:0 6px !important;
+  border-radius:999px !important;
+  background:#EF4444 !important;
+  color:#fff !important;
+  font-size:11px !important;
+  font-weight:700 !important;
+  display:flex !important;
+  align-items:center !important;
+  justify-content:center !important;
+  border:2px solid #fff !important;
+  box-shadow:0 2px 4px rgba(0,0,0,.2) !important;
+  pointer-events:none !important;
+  z-index:10 !important;
+  transform:scale(1) !important;
+  transition:transform .15s ease !important;
+}
+
+/* Hover / focus states */
+.car-header .car-header-bell:hover{
+  background:#fff !important;
+  border-color:var(--primary) !important;
+  box-shadow:0 0 0 3px var(--primary-light) !important;
+  color:var(--primary) !important;
+  transform:translateY(-1px) !important;
+}
+.car-header .car-header-bell:focus-visible{
+  outline:2px solid var(--primary) !important;
+  outline-offset:2px !important;
+}
+.car-header .car-header-bell:active{
+  background:#fff !important;
+  transform:scale(.98) !important;
+}
+.car-header .car-header-bell:hover .notification-badge{
+  transform:scale(1.1) !important;
+}
+
+/* Legacy badge (scoped to notification-btn to avoid global override) */
+.notification-btn .notification-badge{
+  position:absolute; top:-5px!important; right:-5px!important;
+  min-width:20px!important; height:20px!important; padding:0 5px!important;
+  background:#EF4444!important; color:#fff!important; border-radius:11px!important;
+  font-size:12px!important; font-weight:700!important; display:flex!important; align-items:center!important; justify-content:center!important;
+  border:2.5px solid #fff!important; transform:scale(1); transition:transform .15s ease; z-index:10!important;
+  box-shadow:0 2px 4px rgba(0,0,0,.1)!important;
+}
+.notification-btn:hover .notification-badge{ transform:scale(1.1); }
+
+/* ========== Avatar trigger — ✅ NO BLUE RING AT ALL ========== */
+.car-avatar-btn{
+  display:flex; 
+  align-items:center; 
+  gap:8px; 
+  background:transparent; 
+  border:none; 
+  cursor:pointer;
+  padding:4px 10px 4px 4px; 
+  border-radius:24px; 
+  transition: background .15s ease; 
+  font-family:inherit; 
+  position:relative; 
+  /* ✅ REMOVE ALL RINGS/OUTLINES */
+  outline:none !important;
+  box-shadow:none !important;
+}
+
+/* ✅ NO RING ON HOVER — just subtle background */
+.car-avatar-btn:hover{ 
+  background:rgba(0,0,0,.04) !important; 
+  outline:none !important;
+  box-shadow:none !important;
+}
+
+/* ✅ NO RING ON FOCUS — just subtle background */
+.car-avatar-btn:focus,
+.car-avatar-btn:focus-visible,
+.car-avatar-btn:focus-within { 
+  background:rgba(0,0,0,.06) !important; 
+  outline:none !important;
+  box-shadow:none !important;
+}
+
+/* ✅ NO RING ON ACTIVE/CLICK */
+.car-avatar-btn:active { 
+  background:rgba(0,0,0,.08) !important; 
+  outline:none !important;
+  box-shadow:none !important;
+}
+
+/* ✅ Prevent any ring on the avatar circle itself */
+.car-avatar{
+  width:42px; 
+  height:42px; 
+  border-radius:50%; 
+  background:var(--primary); 
+  color:#fff; 
+  font-size:16px; 
+  font-weight:600; 
+  line-height:1; 
+  display:grid; 
+  place-items:center; 
+  transition:all .15s ease; 
+  position:relative;
+  outline:none !important;
+  box-shadow:none !important;
+}
+
+.car-avatar:focus,
+.car-avatar:focus-visible {
+  outline:none !important;
+  box-shadow:none !important;
+}
+
+.car-avatar span{ color:#fff; font-size:16px; font-weight:600; line-height:1; text-transform:uppercase; }
+.avatar-chevron{ color:var(--text-secondary); transition: transform .2s ease, color .15s ease; }
+.avatar-chevron.rotated{ transform:rotate(180deg); }
+.car-avatar-btn:hover .avatar-chevron{ color:var(--primary); }
+
+/* ========== Dropdown (portal) ========== */
+.user-dropdown{ position:relative; overflow:visible; z-index:50; }
+
+.user-dropdown-menu-portal{
+  position:fixed!important; z-index:9999!important; width:280px; background:#fff;
+  border:1px solid var(--border-light); border-radius:12px; box-shadow:0 12px 28px rgba(2,12,27,.12);
+  max-height:calc(100vh - 100px); overflow-y:auto; overflow-x:hidden;
+  animation:dropdownFadeIn .15s ease; padding:8px;
+}
+@keyframes dropdownFadeIn{ from{opacity:0; transform:translateY(-4px) scale(.98);} to{opacity:1; transform:translateY(0) scale(1);} }
+
+.dropdown-header{ padding:8px 12px; background:transparent; border-bottom:1px solid var(--border-lighter); margin-bottom:4px; }
+.dropdown-company{ font-size:14px; font-weight:600; color:var(--text-primary); line-height:1.2; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+
+.dropdown-section{ padding:4px 0; }
+.dropdown-divider{ height:1px; background:var(--border-lighter); margin:4px 0; }
+
+/* Menu items — border-only */
+.user-dropdown-menu-portal .dropdown-item{
+  display:flex; align-items:center; gap:10px; padding:10px 12px; font-size:14px; color:var(--text-primary);
+  text-decoration:none; border:none; background:#fff; width:100%; min-height:44px; text-align:left; cursor:pointer;
+  transition: all .15s ease; font-family:inherit; font-weight:500; position:relative; border-radius:8px; text-transform:capitalize;
+  box-shadow: inset 0 0 0 1px transparent;
+}
+.user-dropdown-menu-portal .dropdown-item:hover{
+  background:#fff;
+  color:var(--primary);
+  box-shadow: inset 0 0 0 2px var(--primary);
+}
+.user-dropdown-menu-portal .dropdown-item:focus-visible{
+  outline:2px solid var(--primary); outline-offset:-2px; border-radius:8px;
+}
+.user-dropdown-menu-portal .dropdown-item:active{
+  background:#fff;
+  box-shadow: inset 0 0 0 3px var(--primary);
+}
+
+/* Current/active route with border only */
+.user-dropdown-menu-portal .dropdown-item.current-route,
+.user-dropdown-menu-portal .dropdown-item[aria-current="page"]{
+  background:#fff;
+  color:var(--primary);
+  font-weight:600;
+  box-shadow: inset 0 0 0 2px var(--primary);
+}
+.user-dropdown-menu-portal .dropdown-item.current-route::before,
+.user-dropdown-menu-portal .dropdown-item[aria-current="page"]::before{ display:none; }
+
+/* Secondary & Signout variants */
+.user-dropdown-menu-portal .dropdown-item-secondary{ color:var(--text-secondary); }
+.user-dropdown-menu-portal .dropdown-item-secondary:hover{
+  background:#fff; color:var(--primary);
+  box-shadow: inset 0 0 0 2px var(--primary);
+}
+.user-dropdown-menu-portal .dropdown-item-signout{ color:var(--danger); }
+.user-dropdown-menu-portal .dropdown-item-signout:hover{
+  background:#fff; color:var(--danger-hover);
+  box-shadow: inset 0 0 0 2px var(--danger);
+}
+
+/* Admin portal accent */
+.user-dropdown-menu-portal .dropdown-item-admin{ color:#1e3a8a; font-weight:600; }
+.user-dropdown-menu-portal .dropdown-item-admin:hover{
+  background:#eff6ff; color:#1d4ed8;
+  box-shadow: inset 0 0 0 2px #1d4ed8;
+}
+.user-dropdown-menu-portal .dropdown-item-admin .ico{ color:#1e3a8a; }
+.user-dropdown-menu-portal .dropdown-item-admin:hover .ico{ color:#1d4ed8; }
+
+/* Icons */
+.user-dropdown-menu-portal .ico{ flex-shrink:0; width:18px; height:18px; color:#6b7280; transition:color .15s ease; }
+.user-dropdown-menu-portal .dropdown-item:hover .ico{ color:var(--primary); }
+.user-dropdown-menu-portal .dropdown-item-secondary .ico{ color:#6b7280; }
+.user-dropdown-menu-portal .dropdown-item-secondary:hover .ico{ color:var(--primary); }
+.user-dropdown-menu-portal .dropdown-item-signout .ico{ color:#EF4444; }
+.user-dropdown-menu-portal .dropdown-item-signout:hover .ico{ color:#DC2626; }
+
+/* Scrollbar */
+.user-dropdown-menu-portal::-webkit-scrollbar{ width:6px; }
+.user-dropdown-menu-portal::-webkit-scrollbar-track{ background:transparent; }
+.user-dropdown-menu-portal::-webkit-scrollbar-thumb{ background:var(--border-light); border-radius:3px; }
+.user-dropdown-menu-portal::-webkit-scrollbar-thumb:hover{ background:var(--text-muted); }
+
+/* ========== Responsive ========== */
+@media (max-width:768px){
+  :root{ --header-height:64px; }
+  .car-header{ height:var(--header-height-mobile); }
+  .car-inner{ padding:0 16px; }
+  .car-badge{ width:56px; height:56px; }
+  .car-badge img{ width:70%; height:70%; }
+  .badge-fallback{ font-size:18px; }
+  .car-name{ font-size:22px; }
+  .car-avatar{ width:36px; height:36px; }
+  .car-avatar span{ font-size:14px; }
+
+  .notification-btn{ width:44px!important; height:44px!important; }
+  .notification-btn svg{ 
+    width:29px!important; 
+    height:29px!important; 
+    min-width:29px; 
+    min-height:29px; 
+    flex:0 0 auto; 
+  }
+  .notification-btn .notification-badge{ min-width:20px!important; height:20px!important; font-size:11px!important; padding:0 5px!important; }
+
+  /* Keep bell normal size on tablet */
+  .car-header .car-header-bell{ width:56px !important; height:56px !important; }
+  .car-header .car-header-bell svg{ width:28px !important; height:28px !important; }
+  .car-header .car-header-bell .notification-badge{
+    top:-4px !important; right:-4px !important;
+    min-width:20px !important; height:20px !important; font-size:11px !important;
+  }
+
+  .avatar-chevron{ display:none; }
+  .user-dropdown-menu-portal{ width:calc(100vw - 32px); max-width:320px; right:16px!important; }
+}
+@media (max-width:480px){
+  .car-badge{ width:48px; height:48px; }
+  .badge-fallback{ font-size:14px; }
+  .car-name{ font-size:20px; }
+  .car-avatar{ width:32px; height:32px; }
+  .car-avatar span{ font-size:12px; }
+  .notification-btn{ width:40px!important; height:40px!important; }
+  .notification-btn svg{ width:20px!important; height:20px!important; }
+  .car-actions{ gap:10px; }
+
+  /* Keep bell normal size on mobile too */
+  .car-header .car-header-bell{ width:56px !important; height:56px !important; }
+  .car-header .car-header-bell svg{ width:28px !important; height:28px !important; }
+  .car-header .car-header-bell .notification-badge{
+    top:-4px !important; right:-4px !important;
+    min-width:20px !important; height:20px !important; font-size:10px !important;
+  }
+}
+
+/* ========== Print ========== */
+@media print{
+  .car-header{ display:none; }
+  body{ padding-top:0!important; }
+}
+
+/* Remove white card look from header bell */
+.car-header .car-header-bell{
+  background: transparent !important;
+  border: none !important;
+  box-shadow: none !important;
+}
+
+/* Keep hover clean (no card ring), only tint the icon */
+.car-header .car-header-bell:hover{
+  background: transparent !important;
+  border: none !important;
+  box-shadow: none !important;
+  color: var(--primary) !important;
+}
+
+/* Keep accessible focus outline without a card */
+.car-header .car-header-bell:focus-visible{
+  outline: 2px solid var(--primary) !important;
+  outline-offset: 2px !important;
+}
+
+/* ========== ✅ NUCLEAR OPTION: Force remove ALL rings from avatar button ========== */
+.car-header .car-avatar-btn,
+.car-header .car-avatar-btn:hover,
+.car-header .car-avatar-btn:focus,
+.car-header .car-avatar-btn:focus-visible,
+.car-header .car-avatar-btn:focus-within,
+.car-header .car-avatar-btn:active,
+.car-header .car-avatar-btn:visited,
+.car-header .car-avatar-btn[aria-expanded="true"],
+.car-header .car-avatar-btn[aria-expanded="false"] {
+  outline: none !important;
+  box-shadow: none !important;
+  border: none !important;
+  -webkit-tap-highlight-color: transparent !important;
+  -webkit-focus-ring-color: transparent !important;
+}
+
+/* Also target user-dropdown wrapper */
+.car-header .user-dropdown,
+.car-header .user-dropdown:focus,
+.car-header .user-dropdown:focus-within {
+  outline: none !important;
+  box-shadow: none !important;
+}
+
+/* Target car-avatar inner circle too */
+.car-header .car-avatar,
+.car-header .car-avatar:focus,
+.car-header .car-avatar:focus-visible {
+  outline: none !important;
+  box-shadow: none !important;
+}

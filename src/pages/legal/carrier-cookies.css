@@ -1,0 +1,79 @@
+/* ===========================
+   Carrier Cookies — page shell
+   =========================== */
+.page-shell.carrier-cookies .page-main{
+  max-width: 1100px;
+  margin: 0 auto;
+  /* Top padding gives breathing room under the app header */
+  padding: 72px 16px 64px;
+}
+
+/* Keep anchors from being clipped when linked-to */
+.page-shell.carrier-cookies .page-header{ 
+  margin: 12px 0 18px;
+  scroll-margin-top: 96px;
+}
+
+/* H1: smaller + responsive */
+.page-shell.carrier-cookies .page-header h1{
+  font-size: clamp(26px, 2.4vw, 32px);
+  line-height: 1.2;
+  letter-spacing: -0.01em;
+  margin: 0 0 6px;
+}
+
+/* Intro text */
+.page-shell.carrier-cookies .lead{
+  color: #6b7280;
+  margin: 0;
+}
+
+/* ===========================
+   Cards
+   =========================== */
+.page-shell.carrier-cookies .card{
+  background: rgba(255,255,255,0.72);
+  backdrop-filter: blur(2px);
+  border: 1px solid rgba(16,24,40,.08);
+  border-radius: 14px;
+  padding: 18px;
+  margin: 12px 0;
+  box-shadow: 0 1px 0 rgba(16,24,40,.02), 0 8px 24px rgba(16,24,40,.04);
+}
+
+/* Section headings inside cards (smaller than before) */
+.page-shell.carrier-cookies .card h2{
+  font-size: 20px;
+  line-height: 1.3;
+  margin: 0 0 10px;
+  letter-spacing: -0.005em;
+}
+
+/* Subheads */
+.page-shell.carrier-cookies .card h3{
+  font-size: 17px;
+  margin: 10px 0 6px;
+}
+
+/* Lists & body copy */
+.page-shell.carrier-cookies .card p{ margin: 0 0 10px; }
+.page-shell.carrier-cookies .list{ margin: 8px 0 0 18px; }
+.page-shell.carrier-cookies .muted{ color:#6b7280; font-size: 14px; }
+
+/* Two-column grid (types of cookies row) */
+.page-shell.carrier-cookies .grid.two{
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 14px;
+}
+
+/* ===========================
+   Responsive
+   =========================== */
+@media (max-width: 900px){
+  .page-shell.carrier-cookies .grid.two{ grid-template-columns: 1fr; }
+}
+@media (max-width: 640px){
+  .page-shell.carrier-cookies .page-header h1{ font-size: 24px; }
+  .page-shell.carrier-cookies .card h2{ font-size: 19px; }
+}

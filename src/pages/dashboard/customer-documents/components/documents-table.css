@@ -1,0 +1,411 @@
+/* Design tokens for status badges */
+:root {
+  --status-success-bg: #E8FAF1;
+  --status-success-fg: #0E7A4D;
+  --status-success-border: #B9F1D6;
+  
+  --status-warning-bg: #FFF4E5;
+  --status-warning-fg: #8C5A0A;
+  --status-warning-border: #FED7A1;
+  
+  --status-danger-bg: #fee2e2;
+  --status-danger-fg: #991b1b;
+  --status-danger-border: #fecaca;
+  
+  --status-neutral-bg: #EEF0FF;
+  --status-neutral-fg: #3A3FB2;
+  --status-neutral-border: #CBD1FF;
+  
+  --status-info-bg: #eff6ff;
+  --status-info-fg: #1d4ed8;
+  --status-info-border: #bfdbfe;
+}
+
+/* Professional status badge colors */
+.custdocs-badge--success {
+  background-color: var(--status-success-bg);
+  color: var(--status-success-fg);
+  border: 1px solid var(--status-success-border);
+}
+
+.custdocs-badge--warning {
+  background-color: var(--status-warning-bg);
+  color: var(--status-warning-fg);
+  border: 1px solid var(--status-warning-border);
+}
+
+.custdocs-badge--danger {
+  background-color: var(--status-danger-bg);
+  color: var(--status-danger-fg);
+  border: 1px solid var(--status-danger-border);
+}
+
+.custdocs-badge--neutral {
+  background-color: var(--status-neutral-bg);
+  color: var(--status-neutral-fg);
+  border: 1px solid var(--status-neutral-border);
+}
+
+.custdocs-badge--info {
+  background-color: var(--status-info-bg);
+  color: var(--status-info-fg);
+  border: 1px solid var(--status-info-border);
+}
+
+/* Order ID badge styles */
+.custdocs-table-orderid {
+  white-space: nowrap;
+}
+
+.custdocs-orderid-badge {
+  display: inline-flex;
+  align-items: center;
+  padding: 4px 10px;
+  background: #dbeafe;
+  color: #1e40af;
+  border: 1px solid #93c5fd;
+  border-radius: 6px;
+  font-size: 0.8rem;
+  font-weight: 600;
+  font-family: 'SF Mono', 'Monaco', 'Inconsolata', 'Roboto Mono', monospace;
+}
+
+.custdocs-orderid-none {
+  color: #9ca3af;
+}
+
+/* Missing required document indicator */
+.custdocs-missing-indicator {
+  display: inline-block;
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background-color: #ef4444;
+  margin-right: 8px;
+  flex-shrink: 0;
+}
+
+.custdocs-table-row-missing-required {
+  border-left: 3px solid #ef4444;
+}
+
+/* Expires soon indicator */
+.custdocs-expire-dot {
+  display: inline-block;
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  margin-left: 8px;
+  background: #f59e0b;
+  animation: pulse-warning 2s infinite;
+}
+
+@keyframes pulse-warning {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.5; }
+}
+
+/* Screen reader only content */
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}
+
+/* Table container */
+.custdocs-table-container {
+  width: 100%;
+  overflow-x: auto;
+  position: relative;
+}
+
+/* Main table styles */
+.custdocs-table {
+  width: 100%;
+  border-collapse: collapse;
+  background-color: white;
+  font-size: 0.9rem;
+}
+
+/* Sticky header */
+.custdocs-table thead {
+  position: sticky;
+  top: 0;
+  z-index: 10;
+}
+
+.custdocs-table thead th {
+  padding: 16px 12px;
+  text-align: left;
+  font-weight: 600;
+  font-size: 0.875rem;
+  text-transform: uppercase;
+  letter-spacing: 0.025em;
+  border-bottom: 1px solid #e5e7eb;
+  background-color: #f9fafb;
+  white-space: nowrap;
+  color: #334155;
+}
+
+/* Sort button styling */
+.custdocs-table-sort-button {
+  background: none;
+  border: none;
+  color: inherit;
+  font: inherit;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  padding: 4px;
+  text-align: left;
+  white-space: nowrap;
+  border-radius: 4px;
+  transition: all 0.2s ease;
+  min-height: 32px;
+  width: 100%;
+}
+
+.custdocs-table-sort-button:hover {
+  color: #3b82f6;
+  background-color: rgba(59, 130, 246, 0.1);
+}
+
+/* Remove focus outline for mouse interactions, keep for keyboard */
+.custdocs-table-sort-button:focus {
+  outline: none;
+}
+
+/* Only show focus outline when navigating with keyboard */
+.custdocs-table-sort-button:focus-visible {
+  outline: 2px solid #3b82f6;
+  outline-offset: 2px;
+}
+
+/* Table body styles */
+.custdocs-table tbody td {
+  padding: 16px 12px;
+  border-bottom: 1px solid #f3f4f6;
+  font-size: 0.875rem;
+  vertical-align: middle;
+}
+
+.custdocs-table tbody tr {
+  transition: background-color 0.2s ease;
+}
+
+.custdocs-table tbody tr:hover {
+  background-color: #f8fafc;
+  /* Removed border-left to prevent layout shift */
+  /* Removed any transform or box-shadow to prevent movement */
+}
+
+/* Document name cell */
+.custdocs-table-name {
+  display: flex;
+  align-items: center;
+  max-width: 250px;
+}
+
+.custdocs-table-name-text {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+/* Loading states */
+.custdocs-table--loading td {
+  opacity: 0.6;
+}
+
+.loading-skeleton {
+  height: 16px;
+  background: linear-gradient(90deg, #f1f5f9 25%, #e2e8f0 50%, #f1f5f9 75%);
+  background-size: 200% 100%;
+  border-radius: 4px;
+  animation: loading-shimmer 2s infinite;
+}
+
+@keyframes loading-shimmer {
+  0% { background-position: 200% 0; }
+  100% { background-position: -200% 0; }
+}
+
+/* Status badges */
+.custdocs-badge {
+  display: inline-flex;
+  align-items: center;
+  padding: 4px 10px;
+  border-radius: 12px;
+  font-size: 0.75rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  white-space: nowrap;
+}
+
+/* Actions column */
+.custdocs-table-actions {
+  text-align: right;
+  white-space: nowrap;
+}
+
+/* Empty state */
+.custdocs-table-empty {
+  text-align: center;
+  padding: 48px 24px;
+}
+
+.custdocs-table-empty-icon {
+  display: flex;
+  justify-content: center;
+  margin-bottom: 16px;
+  opacity: 0.5;
+  color: #6b7280;
+}
+
+.custdocs-table-empty-text {
+  font-size: 1.125rem;
+  font-weight: 600;
+  color: #374151;
+  margin-bottom: 8px;
+}
+
+.custdocs-table-empty-description {
+  color: #6b7280;
+  margin-bottom: 20px;
+}
+
+/* Button styles */
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 8px 16px;
+  border-radius: 8px;
+  font-size: 0.875rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  text-decoration: none;
+  border: 1px solid transparent;
+  white-space: nowrap;
+}
+
+/* Remove focus outline for mouse interactions, keep for keyboard */
+.btn:focus {
+  outline: none;
+}
+
+/* Only show focus outline when navigating with keyboard */
+.btn:focus-visible {
+  outline: 2px solid #3b82f6;
+  outline-offset: 2px;
+}
+
+.btn-primary {
+  background-color: #3b82f6;
+  color: white;
+  border-color: #3b82f6;
+}
+
+.btn-primary:hover {
+  background-color: #2563eb;
+  border-color: #2563eb;
+}
+
+.btn-primary:active {
+  background-color: #1e3a8a;
+  border-color: #1e3a8a;
+}
+
+/* Responsive adjustments */
+@media (max-width: 1400px) {
+  .custdocs-table thead th,
+  .custdocs-table tbody td {
+    padding: 12px 8px;
+    font-size: 0.8rem;
+  }
+  
+  .custdocs-table-name {
+    max-width: 200px;
+  }
+}
+
+@media (max-width: 1024px) {
+  .custdocs-table-container {
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+  }
+  
+  .custdocs-table {
+    min-width: 900px; /* Increased for new column */
+  }
+  
+  .custdocs-table thead {
+    position: static; /* Remove sticky on tablets for better scrolling */
+  }
+}
+
+@media (max-width: 768px) {
+  .custdocs-table thead th,
+  .custdocs-table tbody td {
+    padding: 10px 6px;
+  }
+  
+  .custdocs-table {
+    font-size: 0.8rem;
+    min-width: 800px;
+  }
+  
+  .custdocs-table-name {
+    max-width: 150px;
+  }
+  
+  .custdocs-badge {
+    font-size: 0.65rem;
+    padding: 2px 6px;
+  }
+  
+  .custdocs-orderid-badge {
+    font-size: 0.7rem;
+    padding: 2px 6px;
+  }
+  
+  .btn {
+    padding: 6px 12px;
+    font-size: 0.8rem;
+  }
+  
+  .custdocs-table-sort-button {
+    min-height: 28px;
+    padding: 2px;
+  }
+}
+
+/* High contrast mode support */
+@media (prefers-contrast: high) {
+  .custdocs-table tbody tr:hover {
+    background-color: #e5e7eb;
+    border-left: 4px solid #374151;
+  }
+  
+  .custdocs-badge {
+    border-width: 2px;
+  }
+  
+  .custdocs-orderid-badge {
+    border-width: 2px;
+  }
+  
+  .custdocs-table-sort-button:focus,
+  .btn:focus {
+    outline-width: 3px;
+  }
+}

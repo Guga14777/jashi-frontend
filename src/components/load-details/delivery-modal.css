@@ -1,0 +1,435 @@
+/* ============================================================
+   FILE: src/components/load-details/delivery-modal.css
+   ✅ UPDATED: Added styles for existing photos info banner
+   ============================================================ */
+
+.delivery-modal-backdrop {
+  position: fixed;
+  inset: 0;
+  background-color: rgba(0, 0, 0, 0.5);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 9999;
+  padding: 1rem;
+}
+
+.delivery-modal {
+  background: white;
+  border-radius: 12px;
+  width: 100%;
+  max-width: 520px;
+  max-height: 90vh;
+  display: flex;
+  flex-direction: column;
+  box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+}
+
+.delivery-modal__header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  padding: 1.25rem 1.5rem;
+  border-bottom: 1px solid #e5e7eb;
+}
+
+.delivery-modal__title {
+  font-size: 1.25rem;
+  font-weight: 600;
+  color: #111827;
+  margin: 0;
+}
+
+.delivery-modal__subtitle {
+  font-size: 0.875rem;
+  color: #6b7280;
+  margin: 0.25rem 0 0;
+}
+
+.delivery-modal__close {
+  background: none;
+  border: none;
+  padding: 0.5rem;
+  cursor: pointer;
+  color: #6b7280;
+  border-radius: 6px;
+  transition: all 0.15s;
+}
+
+.delivery-modal__close:hover {
+  background: #f3f4f6;
+  color: #111827;
+}
+
+.delivery-modal__content {
+  flex: 1;
+  overflow-y: auto;
+  padding: 1.5rem;
+}
+
+/* ✅ NEW: Existing photos info banner */
+.delivery-modal__existing-info {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.75rem 1rem;
+  background: #ecfdf5;
+  border: 1px solid #a7f3d0;
+  border-radius: 8px;
+  margin-bottom: 1rem;
+  font-size: 0.875rem;
+  color: #047857;
+}
+
+.delivery-modal__existing-info svg {
+  flex-shrink: 0;
+}
+
+.delivery-modal__section {
+  margin-bottom: 1.5rem;
+}
+
+.delivery-modal__section:last-child {
+  margin-bottom: 0;
+}
+
+.delivery-modal__section-title {
+  font-size: 0.9375rem;
+  font-weight: 600;
+  color: #111827;
+  margin: 0 0 0.25rem;
+}
+
+.delivery-modal__required {
+  color: #dc2626;
+}
+
+.delivery-modal__section-hint {
+  font-size: 0.8125rem;
+  color: #6b7280;
+  margin: 0 0 0.75rem;
+}
+
+.delivery-modal__dropzone {
+  border: 2px dashed #d1d5db;
+  border-radius: 12px;
+  padding: 1.5rem;
+  text-align: center;
+  cursor: pointer;
+  transition: all 0.2s;
+  background: #fafafa;
+}
+
+.delivery-modal__dropzone:hover {
+  border-color: #3b82f6;
+  background: #eff6ff;
+}
+
+.delivery-modal__dropzone--active {
+  border-color: #3b82f6;
+  background: #eff6ff;
+}
+
+.delivery-modal__dropzone-icon {
+  width: 36px;
+  height: 36px;
+  color: #9ca3af;
+  margin-bottom: 0.5rem;
+}
+
+.delivery-modal__dropzone:hover .delivery-modal__dropzone-icon,
+.delivery-modal__dropzone--active .delivery-modal__dropzone-icon {
+  color: #3b82f6;
+}
+
+.delivery-modal__dropzone-text {
+  font-size: 0.875rem;
+  color: #374151;
+  margin: 0 0 0.25rem;
+  font-weight: 500;
+}
+
+.delivery-modal__dropzone-hint {
+  font-size: 0.75rem;
+  color: #9ca3af;
+  margin: 0;
+}
+
+.delivery-modal__uploading {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  padding: 0.625rem;
+  margin-top: 0.75rem;
+  background: #f3f4f6;
+  border-radius: 8px;
+  font-size: 0.8125rem;
+  color: #6b7280;
+}
+
+.delivery-modal__spinner {
+  animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+  from { transform: rotate(0deg); }
+  to { transform: rotate(360deg); }
+}
+
+.delivery-modal__files {
+  margin-top: 1rem;
+}
+
+.delivery-modal__files-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 0.5rem;
+}
+
+.delivery-modal__files-label {
+  font-size: 0.8125rem;
+  font-weight: 500;
+  color: #374151;
+  margin: 0;
+}
+
+.delivery-modal__files-total {
+  font-weight: 400;
+  color: #6b7280;
+}
+
+.delivery-modal__files-remaining {
+  font-size: 0.6875rem;
+  color: #6b7280;
+}
+
+.delivery-modal__files-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(70px, 1fr));
+  gap: 0.5rem;
+}
+
+.delivery-modal__file {
+  position: relative;
+  aspect-ratio: 1;
+  border-radius: 8px;
+  overflow: hidden;
+  background: #f3f4f6;
+}
+
+.delivery-modal__file-preview {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.delivery-modal__file-placeholder {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  height: 100%;
+  color: #9ca3af;
+}
+
+.delivery-modal__file-remove {
+  position: absolute;
+  top: 4px;
+  right: 4px;
+  width: 20px;
+  height: 20px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(0, 0, 0, 0.6);
+  border: none;
+  border-radius: 50%;
+  cursor: pointer;
+  color: white;
+  transition: all 0.15s;
+}
+
+.delivery-modal__file-remove:hover {
+  background: rgba(0, 0, 0, 0.8);
+}
+
+.delivery-modal__file-check {
+  position: absolute;
+  bottom: 4px;
+  right: 4px;
+  width: 20px;
+  height: 20px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: #10b981;
+  border-radius: 50%;
+  color: white;
+}
+
+/* Signature Section */
+.delivery-modal__signature-display {
+  background: #f9fafb;
+  border: 1px solid #e5e7eb;
+  border-radius: 8px;
+  padding: 1rem;
+}
+
+.delivery-modal__signature-image-wrapper {
+  background: white;
+  border: 1px solid #e5e7eb;
+  border-radius: 6px;
+  padding: 0.75rem;
+  margin-bottom: 0.75rem;
+}
+
+.delivery-modal__signature-image {
+  width: 100%;
+  max-height: 100px;
+  object-fit: contain;
+}
+
+.delivery-modal__signature-info {
+  text-align: center;
+}
+
+.delivery-modal__signature-name {
+  font-size: 0.8125rem;
+  color: #374151;
+  margin: 0 0 0.25rem;
+}
+
+.delivery-modal__signature-time {
+  font-size: 0.75rem;
+  color: #6b7280;
+  margin: 0;
+}
+
+.delivery-modal__signature-placeholder {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  padding: 1rem;
+  background: #f9fafb;
+  border: 1px dashed #d1d5db;
+  border-radius: 8px;
+}
+
+.delivery-modal__signature-placeholder-icon {
+  flex-shrink: 0;
+  width: 48px;
+  height: 48px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: #e5e7eb;
+  border-radius: 50%;
+  color: #9ca3af;
+}
+
+.delivery-modal__signature-placeholder-content {
+  flex: 1;
+}
+
+.delivery-modal__signature-placeholder-text {
+  font-size: 0.875rem;
+  font-weight: 500;
+  color: #6b7280;
+  margin: 0 0 0.25rem;
+}
+
+.delivery-modal__signature-placeholder-hint {
+  display: flex;
+  align-items: center;
+  gap: 0.375rem;
+  font-size: 0.75rem;
+  color: #9ca3af;
+  margin: 0;
+}
+
+.delivery-modal__error {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.75rem 1rem;
+  background: #fef2f2;
+  border: 1px solid #fecaca;
+  border-radius: 8px;
+  margin-top: 1rem;
+  font-size: 0.875rem;
+  color: #dc2626;
+}
+
+.delivery-modal__footer {
+  display: flex;
+  justify-content: flex-end;
+  gap: 0.75rem;
+  padding: 1rem 1.5rem;
+  border-top: 1px solid #e5e7eb;
+  background: #f9fafb;
+  border-radius: 0 0 12px 12px;
+}
+
+.delivery-modal__btn {
+  padding: 0.625rem 1.25rem;
+  font-size: 0.9375rem;
+  font-weight: 500;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: all 0.15s;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.delivery-modal__btn--secondary {
+  background: white;
+  border: 1px solid #d1d5db;
+  color: #374151;
+}
+
+.delivery-modal__btn--secondary:hover:not(:disabled) {
+  background: #f9fafb;
+  border-color: #9ca3af;
+}
+
+.delivery-modal__btn--primary {
+  background: #10b981;
+  border: none;
+  color: white;
+}
+
+.delivery-modal__btn--primary:hover:not(:disabled) {
+  background: #059669;
+}
+
+.delivery-modal__btn:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.delivery-modal__btn-spinner {
+  width: 16px;
+  height: 16px;
+  animation: spin 1s linear infinite;
+}
+
+/* Responsive */
+@media (max-width: 640px) {
+  .delivery-modal {
+    max-width: none;
+    max-height: none;
+    height: 100%;
+    border-radius: 0;
+  }
+
+  .delivery-modal__footer {
+    border-radius: 0;
+  }
+
+  .delivery-modal__files-grid {
+    grid-template-columns: repeat(4, 1fr);
+  }
+}
