@@ -134,23 +134,25 @@
 
 .pub-btn.ghost {
   background: transparent;
-  color: #0a58ff;
+  border: 1px solid rgba(37, 99, 235, 0.5);
+  color: #2563EB;
 }
 
 .pub-btn.ghost:hover {
   background: #f5f9ff;
-  border-color: #0848d6;
-  color: #0848d6;
+  border-color: #2563EB;
+  color: #1d4ed8;
 }
 
 .pub-btn.primary {
-  background: #0a58ff;
+  background: #2563EB;
+  border: 1px solid #2563EB;
   color: #fff;
 }
 
 .pub-btn.primary:hover {
-  background: #0848d6;
-  border-color: #0848d6;
+  background: #1d4ed8;
+  border-color: #1d4ed8;
 }
 
 .pub-btn:focus-visible {
