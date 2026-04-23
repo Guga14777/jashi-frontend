@@ -83,22 +83,20 @@
   margin: 0 auto;
 }
 
-/* Display headline — strong, not dominating. Natural wrapping controlled
-   by max-width instead of forced nowrap, so text settles into 1–2 lines
-   depending on viewport width without stretching. */
+/* Display headline — ONE LINE at desktop widths. Width unconstrained
+   (max-width:none) and font tuned so the full sentence fits on a single
+   line in the 1400px content area. @media (max-width: 1100px) below
+   releases nowrap so narrow viewports wrap naturally. */
 .hero-headline {
-  font-size: clamp(42px, 4vw, 60px);
+  font-size: clamp(40px, 3.6vw, 56px);
   line-height: 1.08;
   font-weight: 800;
   color: #0F172A;
   margin: 0;
   letter-spacing: -0.02em;
   text-align: center;
-  white-space: normal;
-  word-wrap: break-word;
-  overflow-wrap: break-word;
-  hyphens: manual;
-  max-width: 1100px;
+  white-space: nowrap;
+  max-width: none;
 }
 
 .hero-highlight {
@@ -113,8 +111,20 @@
   margin: var(--hero-title-subtitle-gap) 0 0 0;
   font-weight: 400;
   text-align: center;
-  white-space: normal;
-  max-width: 900px;
+  white-space: nowrap;
+  max-width: none;
+}
+
+/* Narrow viewports: release nowrap so text wraps naturally instead of
+   overflowing horizontally. */
+@media (max-width: 1100px) {
+  .hero-headline,
+  .hero-subtitle {
+    white-space: normal;
+    word-wrap: break-word;
+    overflow-wrap: break-word;
+    hyphens: manual;
+  }
 }
 
 .subtitle-highlight {
