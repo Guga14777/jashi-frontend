@@ -40,29 +40,17 @@
   }
 }
 
-/* Why block layout (not flex-center) and no min-height:
-   Previously the hero used `display:flex; align-items:center` inside a
-   `min-height: clamp(440,58svh,640px)` box. The h1 ended up vertically
-   centered inside that tall box, which meant the h1 was the FIRST thing
-   to slip under the 72px fixed header as soon as the user scrolled to
-   reach the quote form (which, because the hero was 640px tall, always
-   started below the fold). Every padding-top patch just moved the
-   centered box down — the h1 still sat in its middle, so any scroll
-   still cropped it.
-
-   Block layout with padding-top anchored to the real header height puts
-   the h1 at a deterministic y-offset directly below the header. The hero
-   is now exactly as tall as its content + clearance (~260px), so the
-   quote section moves up above the fold and the user rarely needs to
-   scroll past the hero at all. */
+/* Desktop header is sticky (see publicheader.css), so the hero no longer
+   needs to "clear" it via padding-top trickery — sticky participates in
+   document flow, so the hero naturally starts right below the header.
+   This padding is just breathing room between the header and the h1.
+   Mobile header stays fixed, so mobile keeps the old clearance formula. */
 .hero-section {
   background: #FFFFFF;
-  padding-top: max(128px, calc(var(--real-header-height) + var(--hero-gap-top)));
+  padding-top: var(--hero-gap-top);
   padding-bottom: var(--hero-gap-bottom);
   position: relative;
   width: 100%;
-  /* Scroll anchoring can silently shift the viewport down when late
-     content (fonts, hero image) changes layout. */
   overflow-anchor: none;
 }
 

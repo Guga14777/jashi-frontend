@@ -7,18 +7,30 @@
    HEADER CONTAINER
    ============================================ */
 .pub-header {
-  position: fixed;
-  inset: 0 0 auto 0;
+  /* Sticky (desktop default): header participates in document flow, so
+     content below it starts below it naturally — no padding-top trickery
+     required on any descendant to "clear" it. Sticky still pins to the
+     top while scrolling, visually identical to fixed. Mobile keeps fixed
+     below because the MobileHome layout is built around a fixed-overlay
+     header and its own padding tokens. */
+  position: sticky;
+  top: 0;
+  left: 0;
+  right: 0;
   height: 72px;
   background: #fff;
   border-bottom: 1px solid #e5e7eb;
-  /* Persistent subtle shadow — keeps the header visually distinct from a
-     white hero below, so content scrolling past it doesn't look cropped. */
   box-shadow: 0 1px 2px rgba(15, 23, 42, 0.04);
   z-index: 1000;
   transition: box-shadow 0.15s ease;
-  /* Header never grows beyond its declared height regardless of children. */
   contain: layout;
+}
+
+@media (max-width: 768px) {
+  .pub-header {
+    position: fixed;
+    inset: 0 0 auto 0;
+  }
 }
 
 .pub-header[data-scrolled="true"] {
