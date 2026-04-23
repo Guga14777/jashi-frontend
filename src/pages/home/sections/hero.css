@@ -12,17 +12,19 @@
 
 :root {
   --real-header-height: 72px;
-  /* Compact vertical rhythm — tight and controlled, not stretched. */
-  --hero-gap-top: 40px;
-  --hero-gap-bottom: 40px;
+  /* Spacious rhythm — big empty space below header, title sits lower,
+     Quote card drops much lower than the subtitle. Matches the
+     older/localhost composition. */
+  --hero-gap-top: 85px;
+  --hero-gap-bottom: 115px;
   --hero-title-subtitle-gap: 18px;
 }
 
 @media (max-width: 1024px) {
   :root {
-    --hero-gap-top: 36px;
-    --hero-gap-bottom: 36px;
-    --hero-title-subtitle-gap: 14px;
+    --hero-gap-top: 60px;
+    --hero-gap-bottom: 80px;
+    --hero-title-subtitle-gap: 16px;
   }
 }
 @media (max-width: 768px) {
@@ -77,21 +79,21 @@
   margin: 0 auto;
 }
 
-/* Display headline — compact, tight, premium.
-   ≥1625px → 52px (cap), 1440px → ~46px, 1200px → ~38px, 1100px → ~35px. */
+/* Display headline — large, clean, single line at desktop widths.
+   ≥1455px → 64px (cap), 1440px → ~63px, 1200px → ~53px, 1100px → ~48px. */
 .hero-headline {
-  font-size: clamp(34px, 3.2vw, 52px);
-  line-height: 1.08;
+  font-size: clamp(44px, 4.4vw, 64px);
+  line-height: 1.05;
   font-weight: 800;
   color: #0F172A;
-  margin: 0 auto var(--hero-title-subtitle-gap) auto;
-  letter-spacing: -0.015em;
+  margin: 0 auto;
+  letter-spacing: -0.02em;
   text-align: center;
-  /* Force one-line at desktop widths — the @media fallback below
-     releases nowrap under 1100px so it wraps naturally on narrow
-     laptops, tablets, and phones. */
+  /* Force one-line at desktop widths — @media fallback below releases
+     nowrap under 1100px so it wraps naturally on narrow laptops,
+     tablets, and phones. */
   white-space: nowrap;
-  max-width: 100%;
+  max-width: 1400px;
 }
 
 .hero-highlight {
@@ -103,15 +105,12 @@
   font-size: clamp(15px, 1.15vw, 17px);
   line-height: 1.55;
   color: #475569;
-  margin-left: auto;
-  margin-right: auto;
-  margin-top: 0;
-  margin-bottom: 0;
+  margin: var(--hero-title-subtitle-gap) auto 0 auto;
   font-weight: 400;
   text-align: center;
   /* Same one-line + fallback pattern as the headline. */
   white-space: nowrap;
-  max-width: 100%;
+  max-width: 1400px;
 }
 
 /* Below ~1100px the viewport is too narrow for the full headline +
