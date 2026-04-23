@@ -34,27 +34,27 @@ html, body {
    ============================================ */
 .hero-wrapper {
   width: 100%;
-  padding-bottom: 0; /* Let hero section handle its own padding */
+  padding-bottom: 0;
   background: #FFFFFF;
-  /* Hero now sets its own min-height via --real-header-height, so the
-     wrapper only adds a touch of rhythm to the next section. */
-  margin-bottom: 24px;
+  /* Hero section sets its own bottom padding via --hero-gap-bottom.
+     No extra margin here — the rhythm flows directly into the quote. */
+  margin-bottom: 0;
 }
 
 .quote-wrapper {
   width: 100%;
   background: #FFFFFF;
-  padding-top: 16px;
+  padding-top: 0;
   position: relative;
 }
 
 @media (max-width: 768px) {
   .hero-wrapper {
-    margin-bottom: 16px;
+    margin-bottom: 0;
   }
 
   .quote-wrapper {
-    padding-top: 8px;
+    padding-top: 0;
   }
 }
 
@@ -64,16 +64,23 @@ html, body {
 }
 
 /* ============================================
-   ENSURE QUOTE SECTION HAS PROPER SPACING
+   QUOTE SECTION SPACING
    ============================================ */
 .home-page .quote-section {
-  padding-top: 20px; /* Additional top padding */
-  padding-bottom: 80px;
+  padding-top: 24px;
+  padding-bottom: 72px;
   background: #FFFFFF;
   width: 100%;
-  overflow: visible; /* IMPORTANT: Allow content to be visible */
+  overflow: visible;
   position: relative;
   margin-top: 0;
+}
+
+@media (max-width: 768px) {
+  .home-page .quote-section {
+    padding-top: 12px;
+    padding-bottom: 48px;
+  }
 }
 
 /* Ensure timeline is not cut off */

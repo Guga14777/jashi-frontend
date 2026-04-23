@@ -245,7 +245,7 @@
   }
 }
 
-/* Phones (iPhone landscape and smaller) */
+/* Phones (≤768px) — matched buttons, tight but balanced header */
 @media (max-width: 768px) {
   .pub-header {
     height: 64px;
@@ -257,28 +257,56 @@
   }
 
   .pub-badge {
-    width: 42px;
-    height: 42px;
+    width: 40px;
+    height: 40px;
   }
 
   .pub-name {
-    font-size: 18px;
+    font-size: 17px;
   }
 
   .pub-actions {
     gap: 8px;
   }
 
+  /* Both buttons identical geometry. Ghost vs primary is communicated
+     by color/fill only, not by size. This stops the "one small, one
+     large" look. */
   .pub-btn {
-    height: 40px;
+    height: 38px;
+    min-width: 0;
     padding: 0 14px;
     font-size: 13px;
+    font-weight: 600;
     border-width: 1.5px;
+    border-radius: 10px;
+    letter-spacing: 0.01em;
+  }
+
+  /* Hide the chevron indicator on mobile — the ghost dropdown button
+     no longer looks different from the primary one, and the tiny ▾
+     icon was the main reason Log In felt visually lighter. */
+  .pub-btn .chev {
+    display: none;
   }
 }
 
-/* Narrower phones — trim brand & buttons further */
+/* Narrower phones (iPhone 14/15, Pixel) — logo-only + compact CTAs */
 @media (max-width: 560px) {
+  .pub-name {
+    /* Hide brand text below 560px so badge + 2 equal buttons always fit
+       without the header growing. Still announced to screen readers. */
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    margin: -1px;
+    padding: 0;
+    overflow: hidden;
+    clip: rect(0, 0, 0, 0);
+    white-space: nowrap;
+    border-width: 0;
+  }
+
   .pub-inner {
     padding: 0 14px;
     gap: 8px;
@@ -289,24 +317,19 @@
     height: 38px;
   }
 
-  .pub-name {
-    font-size: 16px;
-  }
-
   .pub-actions {
-    gap: 6px;
+    gap: 8px;
+    flex: 1 1 auto;
+    justify-content: flex-end;
   }
 
   .pub-btn {
     height: 38px;
-    padding: 0 10px;
-    font-size: 12.5px;
-    border-radius: 8px;
-  }
-
-  .pub-btn .chev {
-    width: 10px;
-    height: 10px;
+    padding: 0 14px;
+    font-size: 13px;
+    font-weight: 600;
+    /* Keep buttons identical in shape */
+    flex: 0 1 auto;
   }
 
   .pub-dd {
@@ -319,23 +342,7 @@
   }
 }
 
-/* Small phones (iPhone 15/14/13/SE, narrow Android) — logo-only brand */
-@media (max-width: 420px) {
-  .pub-name {
-    /* Hidden visually but still read by screen readers */
-    position: absolute;
-    width: 1px;
-    height: 1px;
-    margin: -1px;
-    padding: 0;
-    overflow: hidden;
-    clip: rect(0, 0, 0, 0);
-    white-space: nowrap;
-    border-width: 0;
-  }
-}
-
-/* iPhone SE / narrow Android — the two CTAs still must fit beside the badge */
+/* iPhone SE / narrow Android (≤380px) */
 @media (max-width: 380px) {
   .pub-header {
     height: 60px;
@@ -347,14 +354,14 @@
   }
 
   .pub-badge {
-    width: 36px;
-    height: 36px;
+    width: 34px;
+    height: 34px;
   }
 
   .pub-btn {
     height: 36px;
-    padding: 0 10px;
-    font-size: 12px;
+    padding: 0 12px;
+    font-size: 12.5px;
   }
 }
 

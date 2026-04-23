@@ -295,6 +295,58 @@ app.get('/api/health', (req, res) => {
   res.json({ status: 'ok', timestamp: new Date().toISOString() });
 });
 
+// Diagnostic: confirms DB is reachable from the running process. Returns
+// the error message if Prisma throws — used to pinpoint "is DB broken?"
+// vs "is auth logic broken?" without needing Railway log access.
+app.get('/api/health/db', async (req, res) => {
+  try {
+    await prisma.$queryRaw`SELECT 1`;
+    const userCount = await prisma.user.count();
+    res.json({ status: 'ok', userCount, timestamp: new Date().toISOString() });
+  } catch (err) {
+    res.status(500).json({
+      status: 'error',
+      message: err?.message || String(err),
+      code: err?.code,
+    });
+  }
+});
+
+// Diagnostic: reports which critical env vars are SET (never the values).
+// Use when auth 500s to check if Railway is missing config.
+app.get('/api/health/env', (req, res) => {
+  const required = [
+    'DATABASE_URL',
+    'JWT_SECRET',
+    'NODE_ENV',
+    'ALLOWED_ORIGINS',
+    'GOOGLE_MAPS_API_KEY',
+  ];
+  const optional = [
+    'SUPABASE_URL',
+    'SUPABASE_SERVICE_ROLE_KEY',
+    'SUPABASE_BUCKET',
+    'SMTP_HOST',
+    'SMTP_PORT',
+    'SMTP_USER',
+    'SMTP_PASS',
+    'EMAIL_FROM',
+    'APP_URL',
+    'PORT',
+  ];
+  const mask = (name) => {
+    const v = process.env[name];
+    if (!v) return { set: false };
+    return { set: true, length: v.length };
+  };
+  res.json({
+    required: Object.fromEntries(required.map((k) => [k, mask(k)])),
+    optional: Object.fromEntries(optional.map((k) => [k, mask(k)])),
+    nodeVersion: process.version,
+    timestamp: new Date().toISOString(),
+  });
+});
+
 // ✅ FIXED: Time routes for server-side time validation
 app.use('/api/time', timeRoutes);
 

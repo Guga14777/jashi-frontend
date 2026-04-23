@@ -269,7 +269,14 @@ exports.register = async (req, res) => {
       }
     }
 
-    res.status(500).json({ error: 'Failed to register user' });
+    res.status(500).json({
+      error: 'Failed to register user',
+      // Surface the real reason so prod issues are debuggable from the
+      // browser network tab. Safe: we only include message + code, not
+      // the stack or query fragments.
+      detail: error?.message || String(error),
+      code: error?.code,
+    });
   }
 };
 
@@ -402,7 +409,11 @@ exports.login = async (req, res) => {
 
   } catch (error) {
     console.error('Login error:', error);
-    res.status(500).json({ error: 'Failed to login' });
+    res.status(500).json({
+      error: 'Failed to login',
+      detail: error?.message || String(error),
+      code: error?.code,
+    });
   }
 };
 
