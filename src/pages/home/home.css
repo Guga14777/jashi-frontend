@@ -8,6 +8,13 @@ html, body {
   max-width: 100% !important;
   margin: 0;
   padding: 0;
+  /* Disable browser scroll anchoring site-wide. When fonts / images load
+     after initial paint, scroll anchoring can silently shift the viewport
+     downward to keep a different element in view — which on the homepage
+     made the hero headline appear cropped under the fixed header on first
+     paint. history.scrollRestoration = 'manual' (set in main.jsx) handles
+     the refresh case; this rule handles the post-mount layout-shift case. */
+  overflow-anchor: none;
 }
 
 .home-page {

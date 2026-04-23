@@ -12,14 +12,14 @@
 
 :root {
   --real-header-height: 72px;
-  --hero-gap-top: 40px;
+  --hero-gap-top: 56px;
   --hero-gap-bottom: 32px;
   --hero-min-height: clamp(440px, 58svh, 640px);
 }
 
 @media (max-width: 1024px) {
   :root {
-    --hero-gap-top: 32px;
+    --hero-gap-top: 40px;
     --hero-gap-bottom: 24px;
     --hero-min-height: clamp(380px, 52svh, 520px);
   }
@@ -42,7 +42,11 @@
 
 .hero-section {
   background: #FFFFFF;
-  padding-top: calc(var(--real-header-height) + var(--hero-gap-top));
+  /* Keep the tokenized calc() (ResizeObserver updates --real-header-height
+     to the actual rendered header size) but floor the padding at 128px so
+     the title can never sit within the 72px fixed header even if the CSS
+     variable is briefly unset before React mounts. */
+  padding-top: max(128px, calc(var(--real-header-height) + var(--hero-gap-top)));
   padding-bottom: var(--hero-gap-bottom);
   position: relative;
   width: 100%;
@@ -54,6 +58,19 @@
   display: flex;
   align-items: center;
   justify-content: center;
+  /* Scroll anchoring can silently shift the viewport down as late content
+     (fonts, hero image) changes layout — which was one of the ways the
+     hero appeared cropped on first paint. Turn it off here. */
+  overflow-anchor: none;
+}
+
+/* Mobile fallback: if <Hero /> is ever rendered on a phone (the home page
+   uses MobileHome instead, but other pages may mount Hero directly),
+   relax the 128px desktop minimum back to the mobile header height. */
+@media (max-width: 768px) {
+  .hero-section {
+    padding-top: calc(var(--real-header-height) + var(--hero-gap-top));
+  }
 }
 
 .hero-container {
