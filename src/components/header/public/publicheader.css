@@ -107,34 +107,33 @@
   flex-shrink: 0;
 }
 
-/* Twin buttons: ghost and primary share geometry exactly. Only the
-   fill/color differs. A thinner 1.5px border keeps the ghost from
-   looking chunkier than the filled primary. */
+/* Twin buttons: ghost and primary share geometry EXACTLY. Only the
+   fill/color differs — same height, same padding, same border width,
+   same min-width, same font, no asymmetric shadow on either. */
 .pub-btn {
-  height: 42px;
-  padding: 0 20px;
+  height: 44px;
+  padding: 0 18px;
   border-radius: 10px;
   font-weight: 600;
-  font-size: 14.5px;
+  font-size: 14px;
   letter-spacing: 0.005em;
   display: inline-flex;
   align-items: center;
   justify-content: center;
   gap: 8px;
-  border: 1.5px solid #0a58ff;
+  border: 1px solid #0a58ff;
   cursor: pointer;
   text-transform: none;
   white-space: nowrap;
-  transition: background-color 0.15s ease, color 0.15s ease,
-              box-shadow 0.15s ease, border-color 0.15s ease;
+  transition: background-color 0.15s ease, color 0.15s ease, border-color 0.15s ease;
   font-family: inherit;
   box-sizing: border-box;
   line-height: 1;
-  min-width: 132px;
+  min-width: 140px;
 }
 
 .pub-btn.ghost {
-  background: #fff;
+  background: transparent;
   color: #0a58ff;
 }
 
@@ -147,13 +146,11 @@
 .pub-btn.primary {
   background: #0a58ff;
   color: #fff;
-  box-shadow: 0 1px 2px rgba(10, 88, 255, 0.12);
 }
 
 .pub-btn.primary:hover {
   background: #0848d6;
   border-color: #0848d6;
-  box-shadow: 0 2px 6px rgba(10, 88, 255, 0.18);
 }
 
 .pub-btn:focus-visible {
