@@ -3,6 +3,9 @@
   "version": "2.0.0-postgresql",
   "private": true,
   "type": "module",
+  "engines": {
+    "node": ">=20"
+  },
   "scripts": {
     "dev": "npm-run-all -p dev:api dev:web",
     "dev:web": "vite",
@@ -47,8 +50,7 @@
     "react-icons": "^5.5.0",
     "react-router-dom": "^6.30.1",
     "recharts": "^3.3.0",
-    "stripe": "^20.0.0",
-    "uuid": "^13.0.0"
+    "stripe": "^20.0.0"
   },
   "devDependencies": {
     "@vitejs/plugin-react": "^4.7.0",

@@ -8,7 +8,7 @@
 const multer = require('multer');
 const path = require('path');
 const fs = require('fs');
-const { v4: uuidv4 } = require('uuid');
+const { randomUUID: uuidv4 } = require('crypto');
 
 // ============================================================
 // PHOTO LIMITS - Must match booking.controller.cjs and documents.controller.cjs
