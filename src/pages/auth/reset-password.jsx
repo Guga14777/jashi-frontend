@@ -8,6 +8,7 @@ import { Link, useNavigate, useSearchParams } from 'react-router-dom';
 import { Eye, EyeOff } from 'lucide-react';
 import { validatePassword } from '../../utils/validation';
 import { COMPANY_NAME, LOGO_URL, SUPPORT_EMAIL } from '../../lib/brand';
+import { apiUrl } from '../../lib/api-url';
 import './reset-password.css';
 
 const PASSWORD_RULES = [
@@ -20,14 +21,14 @@ const PASSWORD_RULES = [
 
 async function verifyToken(token) {
   const res = await fetch(
-    `/api/auth/recovery/verify-link?token=${encodeURIComponent(token)}`
+    apiUrl(`/api/auth/recovery/verify-link?token=${encodeURIComponent(token)}`)
   );
   if (!res.ok) return { valid: false };
   return res.json();
 }
 
 async function submitReset(token, newPassword) {
-  const res = await fetch('/api/auth/recovery/reset-with-token', {
+  const res = await fetch(apiUrl('/api/auth/recovery/reset-with-token'), {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify({ token, newPassword }),

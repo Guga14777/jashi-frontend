@@ -3,13 +3,14 @@ import { useNavigate, useLocation } from 'react-router-dom';
 import FormSection from '../../components/ui/form-section';
 import Toast from '../../components/ui/toast';
 import { Eye, EyeOff } from 'lucide-react';
+import { apiUrl } from '../../lib/api-url';
 import './settings.css';
 
 /** Real API endpoints - replace URLs with your actual backend */
 const settingsAPI = {
   fetchNotifications: async () => {
     try {
-      const response = await fetch('/api/settings/notifications', {
+      const response = await fetch(apiUrl('/api/settings/notifications'), {
         method: 'GET',
         headers: {
           'Content-Type': 'application/json',
@@ -26,7 +27,7 @@ const settingsAPI = {
 
   saveNotifications: async (data) => {
     try {
-      const response = await fetch('/api/settings/notifications', {
+      const response = await fetch(apiUrl('/api/settings/notifications'), {
         method: 'PUT',
         headers: {
           'Content-Type': 'application/json',
@@ -44,7 +45,7 @@ const settingsAPI = {
 
   changePassword: async ({ current, next }) => {
     try {
-      const response = await fetch('/api/auth/change-password', {
+      const response = await fetch(apiUrl('/api/auth/change-password'), {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -70,7 +71,7 @@ const settingsAPI = {
 
   registerPushSubscription: async (subscription) => {
     try {
-      const response = await fetch('/api/push/register', {
+      const response = await fetch(apiUrl('/api/push/register'), {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

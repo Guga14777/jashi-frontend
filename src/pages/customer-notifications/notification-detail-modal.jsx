@@ -13,6 +13,7 @@
 import React, { useEffect, useRef, useCallback, useState } from 'react';
 import ReactDOM from 'react-dom';
 import { useCustomerNotifications } from '../../store/customer-notifications-context.jsx';
+import { apiUrl } from '../../lib/api-url';
 import { useAuth } from '../../store/auth-context.jsx';
 import './notification-detail-modal.css';
 
@@ -165,7 +166,7 @@ const NotificationDetailModal = () => {
         
         console.log('📬 [Modal] Fetching booking data for carrier info:', meta.bookingId);
         
-        fetch(`/api/bookings/${meta.bookingId}`, {
+        fetch(apiUrl(`/api/bookings/${meta.bookingId}`), {
           headers: {
             'Authorization': `Bearer ${token}`,
             'Content-Type': 'application/json',

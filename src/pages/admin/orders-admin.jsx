@@ -16,6 +16,7 @@ import {
   AlertTriangle, MessageSquare, Trash2, Edit3
 } from 'lucide-react';
 import { useAuth } from '../../store/auth-context.jsx';
+import { apiUrl } from '../../lib/api-url';
 import {
   SHIPMENT_STATUS,
   STATUS_ORDER,
@@ -265,7 +266,7 @@ export default function OrdersAdmin() {
       search.set(k, Array.isArray(v) ? v.join(',') : String(v));
     }
     try {
-      const resp = await fetch('/api/admin/orders/export/csv?' + search.toString(), {
+      const resp = await fetch(apiUrl('/api/admin/orders/export/csv?' + search.toString()), {
         headers: { Authorization: `Bearer ${token}` },
       });
       if (!resp.ok) throw new Error('Export failed (HTTP ' + resp.status + ')');
@@ -287,7 +288,7 @@ export default function OrdersAdmin() {
     const ids = Array.from(selectedIds);
     if (ids.length === 0) return;
     try {
-      const resp = await fetch('/api/admin/bulk/status', {
+      const resp = await fetch(apiUrl('/api/admin/bulk/status'), {
         method: 'POST',
         headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${token}` },
         body: JSON.stringify({ ids, status: newStatus, note }),

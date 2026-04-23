@@ -7,13 +7,14 @@ import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
 import { validateEmail } from '../../utils/validation';
 import { COMPANY_NAME, LOGO_URL, SUPPORT_EMAIL } from '../../lib/brand';
+import { apiUrl } from '../../lib/api-url';
 import './forgot-password.css';
 
 const GENERIC_MESSAGE =
   'If an account with that email exists, we sent password reset instructions. Please check your inbox (and spam folder).';
 
 async function requestResetLink(email) {
-  const res = await fetch('/api/auth/recovery/request-link', {
+  const res = await fetch(apiUrl('/api/auth/recovery/request-link'), {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify({ email }),

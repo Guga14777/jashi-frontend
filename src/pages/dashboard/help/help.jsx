@@ -2,6 +2,7 @@ import React, { useState, useMemo, useEffect } from "react";
 import "./help.css";
 import CustomerDashboardFooter from "../../../components/footer/customer-dashboard-footer.jsx";
 import LiveChat from "../../../components/live-chat/live-chat.jsx";
+import { apiUrl } from "../../../lib/api-url";
 
 const FAQS = [
   {
@@ -127,7 +128,7 @@ export default function Help() {
 
       // ------- REAL API (uncomment when ready; same as Carrier) -------
       /*
-      const resp = await fetch('/api/support/tickets', {
+      const resp = await fetch(apiUrl('/api/support/tickets'), {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
