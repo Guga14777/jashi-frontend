@@ -12,19 +12,22 @@
 
 :root {
   --real-header-height: 72px;
-  /* Vertical rhythm tokens. Large, generous spacing to match the target
-     composition — title breathes below the header, subtitle sits well
-     below the title, and the Quote card drops to a comfortable distance. */
-  --hero-gap-top: 96px;
-  --hero-gap-bottom: 96px;
-  --hero-title-subtitle-gap: 32px;
+  /* Vertical rhythm tokens. Tuned to the target composition: title sits
+     a premium distance below the sticky header, subtitle tucks close
+     beneath the title, and the Quote grid drops with real breathing
+     room below the subtitle. Quote side of that gap comes from the
+     Quote section's own top padding (40px by default) so the total
+     subtitle→Quote grid distance lands ~100px. */
+  --hero-gap-top: 64px;
+  --hero-gap-bottom: 64px;
+  --hero-title-subtitle-gap: 18px;
 }
 
 @media (max-width: 1024px) {
   :root {
-    --hero-gap-top: 64px;
-    --hero-gap-bottom: 64px;
-    --hero-title-subtitle-gap: 24px;
+    --hero-gap-top: 48px;
+    --hero-gap-bottom: 48px;
+    --hero-title-subtitle-gap: 16px;
   }
 }
 @media (max-width: 768px) {
@@ -63,12 +66,12 @@
 }
 
 .hero-container {
-  /* Wide container so the large headline can span across the page on
-     big desktops instead of wrapping at 960px. Side padding keeps the
-     title off the edges. */
-  max-width: 1600px;
+  /* Match the Quote grid width (1280px) so the hero title sits over the
+     same column axis as the 3-column grid below it. 24px side padding
+     matches .quote-container. */
+  max-width: 1280px;
   margin: 0 auto;
-  padding: 0 48px;
+  padding: 0 24px;
   width: 100%;
   box-sizing: border-box;
 }
@@ -76,20 +79,22 @@
 .hero-content {
   text-align: center;
   width: 100%;
-  max-width: 1500px;
+  /* Title/subtitle width cap — keeps them visually balanced with the
+     1280px Quote grid underneath rather than stretching edge-to-edge. */
+  max-width: 1200px;
   margin: 0 auto;
 }
 
-/* Fluid headline — LARGE to match the reference composition.
-   1920px → ~88px (cap), 1440px → ~75px, 1200px → ~62px, 1024px → ~53px,
-   768px → falls through to the mobile rule below (≤36px). */
+/* Display headline — strong but not oversized.
+   1920px → 68px (cap), 1440px → ~60px, 1200px → ~50px, 1024px → ~43px,
+   768px → falls through to the mobile rule below. */
 .hero-headline {
-  font-size: clamp(36px, 5.2vw, 88px);
+  font-size: clamp(42px, 4.2vw, 68px);
   line-height: 1.05;
   font-weight: 800;
   color: #0F172A;
   margin: 0 auto var(--hero-title-subtitle-gap) auto;
-  letter-spacing: -0.025em;
+  letter-spacing: -0.02em;
   max-width: 100%;
   word-wrap: break-word;
   overflow-wrap: break-word;
