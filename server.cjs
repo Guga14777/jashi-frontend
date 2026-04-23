@@ -59,42 +59,92 @@ global.prisma = prisma;
 
 // ============================================================
 // CONTROLLERS
+// ------------------------------------------------------------
+// Every top-level controller require is wrapped so a failing module
+// cannot abort boot. The route handler for any controller that failed
+// will respond 503 via the proxy handler below, but the server still
+// listens and /api/health still passes the platform healthcheck.
 // ============================================================
-const authController = require('./server/controllers/auth.controller.cjs');
-const authRecoveryController = require('./server/controllers/auth.recovery.controller.cjs');
-const quotesController = require('./server/controllers/quotes.controller.cjs');
-const bookingController = require('./server/controllers/booking.controller.cjs');
-const draftController = require('./server/controllers/draft.controller.cjs');
-const addressController = require('./server/controllers/address.controller.cjs');
-const notificationsController = require('./server/controllers/notifications.controller.cjs');
-const accountEventsController = require('./server/controllers/account-events.controller.cjs');
-const customerStatsController = require('./server/controllers/customer.stats.controller.cjs');
-const paymentsController = require('./server/controllers/payments.controller.cjs');
-const routesController = require('./server/controllers/routes.controller.cjs');
-const documentsController = require('./server/controllers/documents.controller.cjs');
-const adminDocumentsController = require('./server/controllers/admin-documents.controller.cjs');
-const adminOrdersController = require('./server/controllers/admin-orders.controller.cjs');
-const adminActionsController = require('./server/controllers/admin/admin.actions.controller.cjs');
-const adminExportController = require('./server/controllers/admin/admin.export.controller.cjs');
-const adminBulkController = require('./server/controllers/admin/admin.bulk.controller.cjs');
-const adminNotesController = require('./server/controllers/admin/admin.notes.controller.cjs');
-const adminSettingsController = require('./server/controllers/admin/admin.settings.controller.cjs');
-const adminAutomation = require('./server/services/admin/admin.automation.service.cjs');
-const { requireAdminTier } = require('./server/middleware/admin-role.cjs');
+function safeLoad(modulePath, moduleName) {
+  try {
+    const mod = require(modulePath);
+    return mod || {};
+  } catch (e) {
+    console.error(`[boot] ❌ ${moduleName} failed to load:`, e && e.message ? e.message : e);
+    if (e && e.stack) console.error(e.stack);
+    return new Proxy({}, {
+      get() {
+        return (req, res) =>
+          res.status(503).json({
+            error: `${moduleName} unavailable`,
+            detail: 'Controller failed to load at startup; see Deploy Logs.',
+          });
+      },
+    });
+  }
+}
+
+const authController = safeLoad('./server/controllers/auth.controller.cjs', 'auth.controller');
+const authRecoveryController = safeLoad('./server/controllers/auth.recovery.controller.cjs', 'auth.recovery.controller');
+const quotesController = safeLoad('./server/controllers/quotes.controller.cjs', 'quotes.controller');
+const bookingController = safeLoad('./server/controllers/booking.controller.cjs', 'booking.controller');
+const draftController = safeLoad('./server/controllers/draft.controller.cjs', 'draft.controller');
+const addressController = safeLoad('./server/controllers/address.controller.cjs', 'address.controller');
+const notificationsController = safeLoad('./server/controllers/notifications.controller.cjs', 'notifications.controller');
+const accountEventsController = safeLoad('./server/controllers/account-events.controller.cjs', 'account-events.controller');
+const customerStatsController = safeLoad('./server/controllers/customer.stats.controller.cjs', 'customer.stats.controller');
+const paymentsController = safeLoad('./server/controllers/payments.controller.cjs', 'payments.controller');
+const routesController = safeLoad('./server/controllers/routes.controller.cjs', 'routes.controller');
+const documentsController = safeLoad('./server/controllers/documents.controller.cjs', 'documents.controller');
+const adminDocumentsController = safeLoad('./server/controllers/admin-documents.controller.cjs', 'admin-documents.controller');
+const adminOrdersController = safeLoad('./server/controllers/admin-orders.controller.cjs', 'admin-orders.controller');
+const adminActionsController = safeLoad('./server/controllers/admin/admin.actions.controller.cjs', 'admin.actions.controller');
+const adminExportController = safeLoad('./server/controllers/admin/admin.export.controller.cjs', 'admin.export.controller');
+const adminBulkController = safeLoad('./server/controllers/admin/admin.bulk.controller.cjs', 'admin.bulk.controller');
+const adminNotesController = safeLoad('./server/controllers/admin/admin.notes.controller.cjs', 'admin.notes.controller');
+const adminSettingsController = safeLoad('./server/controllers/admin/admin.settings.controller.cjs', 'admin.settings.controller');
+const adminAutomation = safeLoad('./server/services/admin/admin.automation.service.cjs', 'admin.automation.service');
+let requireAdminTier;
+try {
+  ({ requireAdminTier } = require('./server/middleware/admin-role.cjs'));
+} catch (e) {
+  console.error('[boot] ❌ admin-role middleware failed to load:', e.message);
+  requireAdminTier = () => (req, res, next) => next();
+}
 
 // ✅ FIXED: Import carrier loads controller for available-loads endpoint
-const carrierLoadsController = require('./server/controllers/booking/booking.carrier.loads.controller.cjs');
+const carrierLoadsController = safeLoad(
+  './server/controllers/booking/booking.carrier.loads.controller.cjs',
+  'booking.carrier.loads.controller'
+);
 
 // ============================================================
 // ROUTES
 // ============================================================
-const timeRoutes = require('./server/routes/time.routes.cjs');
+let timeRoutes;
+try {
+  timeRoutes = require('./server/routes/time.routes.cjs');
+} catch (e) {
+  console.error('[boot] ❌ time.routes failed to load:', e.message);
+  timeRoutes = express.Router();
+}
 
 // ============================================================
 // MIDDLEWARE
 // ============================================================
-const authMiddleware = require('./server/middleware/auth.cjs');
-const requireAdmin = require('./server/middleware/require-admin.cjs');
+let authMiddleware, requireAdmin;
+try {
+  authMiddleware = require('./server/middleware/auth.cjs');
+} catch (e) {
+  console.error('[boot] ❌ auth middleware failed to load:', e.message);
+  authMiddleware = (req, res) => res.status(503).json({ error: 'auth middleware unavailable' });
+}
+try {
+  requireAdmin = require('./server/middleware/require-admin.cjs');
+} catch (e) {
+  console.error('[boot] ❌ require-admin middleware failed to load:', e.message);
+  requireAdmin = (req, res) => res.status(503).json({ error: 'admin middleware unavailable' });
+}
 
 // ============================================================
 // EXPRESS APP SETUP
