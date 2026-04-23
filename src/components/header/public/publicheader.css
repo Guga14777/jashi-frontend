@@ -111,11 +111,11 @@
    fill/color differs — same height, same padding, same border width,
    same min-width, same font, no asymmetric shadow on either. */
 .pub-btn {
-  height: 44px;
-  padding: 0 18px;
+  height: 40px;
+  padding: 0 16px;
   border-radius: 10px;
   font-weight: 600;
-  font-size: 14px;
+  font-size: 13.5px;
   letter-spacing: 0.005em;
   display: inline-flex;
   align-items: center;
@@ -129,7 +129,7 @@
   font-family: inherit;
   box-sizing: border-box;
   line-height: 1;
-  min-width: 140px;
+  min-width: 130px;
 }
 
 .pub-btn.ghost {
