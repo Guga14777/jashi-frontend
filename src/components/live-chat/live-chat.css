@@ -363,20 +363,22 @@
   display: none !important;
 }
 
-/* Tablet Responsive */
+/* Tablet / small screens (≤768px). Sit near the bottom corner — never
+   float midway up the screen. The previous 100px offset made the chat
+   button overlap the Submit Offer CTA on the mobile home page. */
 @media (max-width: 768px) {
   .live-chat-button {
-    bottom: 100px; /* Adjusted for tablet to avoid footer */
-    right: 20px;
-    padding: 14px 20px;
+    bottom: 16px;
+    right: 14px;
+    padding: 10px 16px;
     z-index: 9999;
   }
 
   .live-chat-panel {
     width: 360px;
     height: 520px;
-    bottom: 96px; /* Adjusted to align with button */
-    right: 20px;
+    bottom: 72px;
+    right: 14px;
     z-index: 10000;
   }
 }
@@ -484,24 +486,27 @@ body .live-chat-panel {
   z-index: 1101 !important;
 }
 
-/* Special handling for pages with footer to ensure proper spacing */
-.page-with-footer .live-chat-button {
-  bottom: 120px !important;
-}
+/* Desktop-only: lift the chat above the tall marketing footer so it
+   doesn't sit on top of the footer links. On mobile we override this
+   below — the chat should live in the bottom-right corner. */
+@media (min-width: 769px) {
+  .page-with-footer .live-chat-button {
+    bottom: 120px !important;
+  }
 
-.page-with-footer .live-chat-panel {
-  bottom: 116px !important;
-}
+  .page-with-footer .live-chat-panel {
+    bottom: 116px !important;
+  }
 
-/* Ensure footer doesn't interfere with chat positioning */
-.footer + .live-chat-button,
-.footer ~ .live-chat-button {
-  bottom: 120px !important;
-}
+  .footer + .live-chat-button,
+  .footer ~ .live-chat-button {
+    bottom: 120px !important;
+  }
 
-.footer + .live-chat-panel,
-.footer ~ .live-chat-panel {
-  bottom: 116px !important;
+  .footer + .live-chat-panel,
+  .footer ~ .live-chat-panel {
+    bottom: 116px !important;
+  }
 }
 
 /* On small phones, override the +120px shifts so the button sits in the
