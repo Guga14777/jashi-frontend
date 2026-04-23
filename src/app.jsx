@@ -137,22 +137,29 @@ import "./styles/mobile-responsive.css";
 import "./components/ui/ui-components.css";
 import "./components/auth/customer-login.css";
 
-// Enhanced ScrollToTop - scrolls both window and any scrollable containers
+// ScrollToTop — force scroll to the true top on every route change. Runs on
+// initial mount too (so a cold page load can't land mid-hero because browser
+// scroll-restoration applied late). It does NOT scroll when only the query
+// string changes (e.g. ?auth=shipper-login toggling): that would yank the
+// page around as the user clicks Log In. Scroll restoration is disabled at
+// boot in main.jsx so refresh/back-forward no longer jumps mid-page.
 function ScrollToTop() {
   const { pathname } = useLocation();
 
   useEffect(() => {
-    // Immediate scroll
-    window.scrollTo(0, 0);
-    document.documentElement.scrollTop = 0;
-    document.body.scrollTop = 0;
-    
-    // Delayed scroll to catch any late-rendering content
-    requestAnimationFrame(() => {
+    const forceTop = () => {
       window.scrollTo(0, 0);
       document.documentElement.scrollTop = 0;
       document.body.scrollTop = 0;
-    });
+    };
+
+    // Run now, on next frame, and shortly after — the second and third calls
+    // defeat any late layout growth (fonts, images) that might otherwise pull
+    // the viewport down if something anchored scroll to the old position.
+    forceTop();
+    requestAnimationFrame(forceTop);
+    const t = setTimeout(forceTop, 80);
+    return () => clearTimeout(t);
   }, [pathname]);
 
   return null;
