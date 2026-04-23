@@ -62,7 +62,14 @@ body {
 #root {
   width: 100%;
   min-height: 100vh;
+  /* See comment in home.css .home-page: `overflow-x: hidden` quietly
+     turns `overflow-y: visible` into `auto`, which makes #root a scroll
+     container. Then window.scrollTo(0,0) can't reach #root.scrollTop
+     and the page appears scrolled while window scrollY stays 0. Use
+     `overflow-x: clip` (no implied scroll container) with `hidden`
+     fallback for older browsers. */
   overflow-x: hidden;
+  overflow-x: clip;
   position: relative;
   background: #FFFFFF;
   /* FIXED: Ensure no stacking context properties */

@@ -20,7 +20,16 @@ html, body {
 .home-page {
   width: 100%;
   min-height: 100vh;
+  /* `overflow-x: hidden` implicitly turns `overflow-y` into `auto`, making
+     this element a scroll container. That was the real cause of the hero
+     crop — user scrolls or focuses into the quote widget, .home-page
+     scrolls internally, ScrollToTop in app.jsx only resets `window`
+     scroll, and the page appears mid-scrolled while window.scrollY === 0.
+     `overflow-x: clip` prevents horizontal overflow WITHOUT creating a
+     scroll container (CSS Overflow Module Level 3). The `hidden` line
+     stays as a fallback for browsers that don't support `clip`. */
   overflow-x: hidden;
+  overflow-x: clip;
   background: #FFFFFF;
   margin: 0;
   padding: 0;

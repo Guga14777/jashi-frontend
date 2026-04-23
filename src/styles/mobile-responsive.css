@@ -20,11 +20,26 @@ html {
 }
 
 /* ----- 1. KILL HORIZONTAL OVERFLOW APP-WIDE ----- */
+/* IMPORTANT: `overflow-x: hidden` implicitly sets `overflow-y: auto`
+   when overflow-y would otherwise be `visible`, creating a hidden
+   scroll container. That scroll container can silently accumulate
+   scrollTop from focus/scroll events and desync from `window.scrollY`,
+   which is why ScrollToTop stopped looking like it was working even
+   though window.scrollY was 0. `overflow-x: clip` clips horizontal
+   overflow without making the element scrollable. `hidden` stays as
+   a fallback for browsers that predate `clip` support. */
 html,
-body,
+body {
+  max-width: 100%;
+  /* html + body need to be the actual scroll container for
+     window.scrollTo() to work, so keep `hidden` here (which leaves
+     overflow-y: auto, the desired behaviour for the main viewport). */
+  overflow-x: hidden;
+}
 #root {
   max-width: 100%;
   overflow-x: hidden;
+  overflow-x: clip;
 }
 
 img,
