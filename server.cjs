@@ -11,6 +11,27 @@
 // ✅ FIXED: Added time routes for server-side time validation
 // ============================================================
 
+// ---------------------------------------------------------------------------
+// Startup telemetry — these lines print FIRST, before any require that could
+// throw. If the server fails to come up on Railway / Render / Fly, the
+// deploy log shows exactly how far boot got.
+// ---------------------------------------------------------------------------
+console.log(`[boot] node=${process.version} cwd=${process.cwd()}`);
+console.log(
+  `[boot] NODE_ENV=${process.env.NODE_ENV || '(unset)'} PORT=${process.env.PORT || '(unset→5182)'} HOST=${process.env.HOST || '(unset→0.0.0.0 in prod)'}`
+);
+console.log(
+  `[boot] DATABASE_URL=${process.env.DATABASE_URL ? 'set' : 'MISSING'} JWT_SECRET=${process.env.JWT_SECRET ? 'set' : 'MISSING'}`
+);
+
+process.on('uncaughtException', (err) => {
+  console.error('[boot] FATAL uncaughtException:', err && err.stack ? err.stack : err);
+  // Don't exit — let the healthcheck fail loudly rather than silently.
+});
+process.on('unhandledRejection', (reason) => {
+  console.error('[boot] unhandledRejection:', reason && reason.stack ? reason.stack : reason);
+});
+
 require('dotenv').config();
 const express = require('express');
 const cors = require('cors');
@@ -24,7 +45,10 @@ const multer = require('multer');
 // ============================================================
 const { PrismaClient } = require('@prisma/client');
 const prisma = new PrismaClient({
-  log: ['query', 'info', 'warn', 'error'],
+  log:
+    process.env.NODE_ENV === 'production'
+      ? ['warn', 'error']
+      : ['query', 'info', 'warn', 'error'],
 });
 
 prisma.$connect()
