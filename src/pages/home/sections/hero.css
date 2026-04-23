@@ -30,20 +30,14 @@
 
 .hero-section {
   background: #FFFFFF;
-  /* With the header sticky (in flow), the hero starts right below it.
-     padding-top is pure breathing room; padding-bottom is small because
-     min-height fills the remaining viewport, pushing the Quote section
-     to the bottom of the fold. */
-  padding-top: var(--hero-gap);
-  padding-bottom: 24px;
+  /* Normal document flow — no viewport fill, no flex centering.
+     Header → hero (natural height) → quote section, with normal gaps. */
+  min-height: auto;
+  display: block;
+  padding-top: 56px;
+  padding-bottom: 40px;
   position: relative;
   width: 100%;
-  /* Above-the-fold fill: hero + sticky header together ≈ one viewport,
-     so the headline sits comfortably centered vertically in the visible
-     area and the Quote card lands right at the bottom of the fold. */
-  min-height: calc(100svh - var(--real-header-height));
-  display: flex;
-  align-items: center;
   overflow-anchor: none;
 }
 
@@ -74,18 +68,14 @@
   margin: 0 auto;
 }
 
-/* Fluid headline — RESTORED to the 738d840 size.
-   At 1440px: ~56px. At 1024px: ~48px. At 768px falls to the mobile rule. */
 .hero-headline {
-  font-size: clamp(30px, 4.6vw, 56px);
-  line-height: 1.14;
+  font-size: clamp(38px, 3.2vw, 52px);
+  line-height: 1.08;
   font-weight: 800;
   color: #0F172A;
   margin: 0 auto 20px auto;
   letter-spacing: -0.02em;
   text-align: center;
-  /* Desktop: one clean line. ≤1100px fallback below releases nowrap so
-     narrow viewports wrap naturally instead of overflowing. */
   white-space: nowrap;
   max-width: none;
 }
