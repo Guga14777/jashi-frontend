@@ -12,19 +12,19 @@
 
 :root {
   --real-header-height: 72px;
-  /* Vertical rhythm tokens. Hero padding-top is the gap between sticky
-     header and the h1; padding-bottom is the gap between the subtitle
-     and the Quote card below. */
-  --hero-gap-top: 72px;
-  --hero-gap-bottom: 56px;
-  --hero-title-subtitle-gap: 24px;
+  /* Vertical rhythm tokens. Large, generous spacing to match the target
+     composition — title breathes below the header, subtitle sits well
+     below the title, and the Quote card drops to a comfortable distance. */
+  --hero-gap-top: 96px;
+  --hero-gap-bottom: 96px;
+  --hero-title-subtitle-gap: 32px;
 }
 
 @media (max-width: 1024px) {
   :root {
-    --hero-gap-top: 56px;
-    --hero-gap-bottom: 44px;
-    --hero-title-subtitle-gap: 20px;
+    --hero-gap-top: 64px;
+    --hero-gap-bottom: 64px;
+    --hero-title-subtitle-gap: 24px;
   }
 }
 @media (max-width: 768px) {
@@ -63,9 +63,12 @@
 }
 
 .hero-container {
-  max-width: 960px;
+  /* Wide container so the large headline can span across the page on
+     big desktops instead of wrapping at 960px. Side padding keeps the
+     title off the edges. */
+  max-width: 1600px;
   margin: 0 auto;
-  padding: 0 40px;
+  padding: 0 48px;
   width: 100%;
   box-sizing: border-box;
 }
@@ -73,19 +76,20 @@
 .hero-content {
   text-align: center;
   width: 100%;
-  max-width: 820px;
+  max-width: 1500px;
   margin: 0 auto;
 }
 
-/* Fluid headline — smaller + tighter than before.
-   1440px+ → ~48px (cap), 1200px → ~44px, 1024px → ~38px, 768px → ~34px. */
+/* Fluid headline — LARGE to match the reference composition.
+   1920px → ~88px (cap), 1440px → ~75px, 1200px → ~62px, 1024px → ~53px,
+   768px → falls through to the mobile rule below (≤36px). */
 .hero-headline {
-  font-size: clamp(32px, 3.4vw, 48px);
-  line-height: 1.1;
+  font-size: clamp(36px, 5.2vw, 88px);
+  line-height: 1.05;
   font-weight: 800;
   color: #0F172A;
   margin: 0 auto var(--hero-title-subtitle-gap) auto;
-  letter-spacing: -0.02em;
+  letter-spacing: -0.025em;
   max-width: 100%;
   word-wrap: break-word;
   overflow-wrap: break-word;
