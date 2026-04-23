@@ -12,10 +12,10 @@
 
 :root {
   --real-header-height: 72px;
-  /* Balanced rhythm — tight composition, not cramped, not floating. */
-  --hero-gap-top: 60px;
+  /* Balanced rhythm — calm, premium, not shouting. */
+  --hero-gap-top: 72px;
   --hero-gap-bottom: 70px;
-  --hero-title-subtitle-gap: 18px;
+  --hero-title-subtitle-gap: 22px;
 }
 
 @media (max-width: 1024px) {
@@ -88,7 +88,7 @@
    line in the 1400px content area. @media (max-width: 1100px) below
    releases nowrap so narrow viewports wrap naturally. */
 .hero-headline {
-  font-size: clamp(40px, 3.6vw, 56px);
+  font-size: clamp(38px, 3.2vw, 52px);
   line-height: 1.08;
   font-weight: 800;
   color: #0F172A;
