@@ -1,45 +1,59 @@
 /* src/pages/home/sections/hero.css
-   Hero sits directly under the fixed public header. Top padding is the
-   REAL rendered header height (published as --real-header-height by
-   PublicHeader via ResizeObserver) + a breathing-room gap.
-   No min-height — the hero is sized by its content so the page flows
-   naturally into the quote section below. */
+   The hero is the first screen on desktop. It should feel intentional,
+   never cropped under the fixed header, and transition cleanly into the
+   quote section.
+
+   Desktop: hero occupies ~55% of the viewport with content vertically
+     centered. Padding-top clears the fixed header; padding-bottom gives
+     a small breath before the quote.
+   Mobile (< 768px): this file is effectively bypassed — home.jsx renders
+     the MobileHome layout instead. Mobile-specific tokens below stay as
+     a safety net for any <Hero /> usage elsewhere. */
 
 :root {
   --real-header-height: 72px;
-  --hero-gap-top: 96px;
-  --hero-gap-bottom: 64px;
+  --hero-gap-top: 40px;
+  --hero-gap-bottom: 32px;
+  --hero-min-height: clamp(440px, 58svh, 640px);
 }
 
 @media (max-width: 1024px) {
   :root {
-    --hero-gap-top: 72px;
-    --hero-gap-bottom: 48px;
+    --hero-gap-top: 32px;
+    --hero-gap-bottom: 24px;
+    --hero-min-height: clamp(380px, 52svh, 520px);
   }
 }
 @media (max-width: 768px) {
   :root {
     --real-header-height: 64px;
-    --hero-gap-top: 40px;
-    --hero-gap-bottom: 28px;
+    --hero-gap-top: 24px;
+    --hero-gap-bottom: 20px;
+    --hero-min-height: auto;
   }
 }
 @media (max-width: 420px) {
   :root {
     --real-header-height: 60px;
-    --hero-gap-top: 28px;
-    --hero-gap-bottom: 20px;
+    --hero-gap-top: 20px;
+    --hero-gap-bottom: 16px;
   }
 }
 
 .hero-section {
   background: #FFFFFF;
-  /* Top padding = real header height + gap. Bottom padding is small;
-     the page flow tightens into the quote section. */
   padding-top: calc(var(--real-header-height) + var(--hero-gap-top));
   padding-bottom: var(--hero-gap-bottom);
   position: relative;
   width: 100%;
+  /* Give the hero real vertical presence on desktop and center the
+     content inside it. This puts the title comfortably below the fixed
+     header on first paint and creates a clean rhythm into the quote
+     section, instead of a title that sits jammed under the header. */
+  min-height: var(--hero-min-height);
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
 .hero-container {
