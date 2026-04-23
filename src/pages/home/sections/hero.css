@@ -1,100 +1,91 @@
 /* src/pages/home/sections/hero.css
-   The hero is the first screen on desktop. It should feel intentional,
-   never cropped under the fixed header, and transition cleanly into the
-   quote section.
+   RESTORED from 738d840 / c90fb8f — the layout the target screenshot
+   was captured from. Only one structural adjustment: the PublicHeader
+   is position: sticky now (commit 5aa7961), so it's in document flow
+   and the hero padding-top no longer needs to duplicate header height.
 
-   Desktop: hero occupies ~55% of the viewport with content vertically
-     centered. Padding-top clears the fixed header; padding-bottom gives
-     a small breath before the quote.
-   Mobile (< 768px): this file is effectively bypassed — home.jsx renders
-     the MobileHome layout instead. Mobile-specific tokens below stay as
-     a safety net for any <Hero /> usage elsewhere. */
+   Mobile (< 768px): home.jsx renders <MobileHome /> instead of <Hero />,
+   so the mobile rules below are fallback-only. Not touched. */
 
 :root {
   --real-header-height: 72px;
-  /* Balanced rhythm — calm, premium, not shouting. */
-  --hero-gap-top: 72px;
-  --hero-gap-bottom: 70px;
-  --hero-title-subtitle-gap: 22px;
+  --hero-gap: 56px;
 }
 
 @media (max-width: 1024px) {
-  :root {
-    --hero-gap-top: 48px;
-    --hero-gap-bottom: 56px;
-    --hero-title-subtitle-gap: 16px;
-  }
+  :root { --hero-gap: 48px; }
 }
 @media (max-width: 768px) {
   :root {
     --real-header-height: 64px;
-    --hero-gap-top: 24px;
-    --hero-gap-bottom: 20px;
+    --hero-gap: 36px;
   }
 }
 @media (max-width: 420px) {
   :root {
     --real-header-height: 60px;
-    --hero-gap-top: 20px;
-    --hero-gap-bottom: 16px;
+    --hero-gap: 28px;
   }
 }
 
-/* Desktop header is sticky (see publicheader.css), so the hero no longer
-   needs to "clear" it via padding-top trickery — sticky participates in
-   document flow, so the hero naturally starts right below the header.
-   This padding is just breathing room between the header and the h1.
-   Mobile header stays fixed, so mobile keeps the old clearance formula. */
 .hero-section {
   background: #FFFFFF;
-  padding-top: var(--hero-gap-top);
-  padding-bottom: var(--hero-gap-bottom);
+  /* With the header sticky (in flow), the hero starts right below it.
+     padding-top is pure breathing room; padding-bottom is small because
+     min-height fills the remaining viewport, pushing the Quote section
+     to the bottom of the fold. */
+  padding-top: var(--hero-gap);
+  padding-bottom: 24px;
   position: relative;
   width: 100%;
+  /* Above-the-fold fill: hero + sticky header together ≈ one viewport,
+     so the headline sits comfortably centered vertically in the visible
+     area and the Quote card lands right at the bottom of the fold. */
+  min-height: calc(100svh - var(--real-header-height));
+  display: flex;
+  align-items: center;
   overflow-anchor: none;
 }
 
+/* Mobile — <Hero /> fallback only (MobileHome is the real mobile layout).
+   No 100svh fill, no flex-center, back to document-flow block layout
+   with clearance below the fixed mobile header. */
 @media (max-width: 768px) {
   .hero-section {
-    padding-top: calc(var(--real-header-height) + var(--hero-gap-top));
+    min-height: 0;
+    display: block;
+    padding-top: calc(var(--real-header-height) + var(--hero-gap));
+    padding-bottom: 32px;
   }
 }
 
 .hero-container {
-  /* Wide container so title + subtitle can sit on ONE line each at
-     desktop widths. 24px side padding keeps content off the edges. */
-  max-width: 1400px;
+  max-width: 1280px;
   margin: 0 auto;
-  padding: 0 24px;
+  padding: 0 40px;
   width: 100%;
   box-sizing: border-box;
 }
 
 .hero-content {
-  /* Flex column keeps the block centered without relying on auto
-     margins on children and lets the subtitle sit predictably under
-     the headline with a single gap-sized margin-top. */
-  display: flex;
-  flex-direction: column;
-  align-items: center;
   text-align: center;
   width: 100%;
-  max-width: 1400px;
+  max-width: 1200px;
   margin: 0 auto;
 }
 
-/* Display headline — ONE LINE at desktop widths. Width unconstrained
-   (max-width:none) and font tuned so the full sentence fits on a single
-   line in the 1400px content area. @media (max-width: 1100px) below
-   releases nowrap so narrow viewports wrap naturally. */
+/* Fluid headline — RESTORED to the 738d840 size.
+   At 1440px: ~56px. At 1024px: ~48px. At 768px falls to the mobile rule. */
 .hero-headline {
-  font-size: clamp(38px, 3.2vw, 52px);
-  line-height: 1.08;
+  font-size: clamp(30px, 4.6vw, 56px);
+  line-height: 1.14;
   font-weight: 800;
   color: #0F172A;
-  margin: 0;
+  margin: 0 auto 20px auto;
   letter-spacing: -0.02em;
   text-align: center;
+  /* Desktop: one clean line. ≤1100px fallback below releases nowrap so
+     narrow viewports wrap naturally instead of overflowing. */
   white-space: nowrap;
   max-width: none;
 }
@@ -105,10 +96,10 @@
 }
 
 .hero-subtitle {
-  font-size: clamp(15px, 1.15vw, 17px);
+  font-size: clamp(15px, 1.35vw, 18px);
   line-height: 1.55;
   color: #475569;
-  margin: var(--hero-title-subtitle-gap) 0 0 0;
+  margin: 0 auto;
   font-weight: 400;
   text-align: center;
   white-space: nowrap;
@@ -152,7 +143,7 @@
 
   .hero-headline {
     /* Mobile fallback size when <Hero /> is rendered outside the
-       MobileHome layout. Kept compact to prevent horizontal overflow. */
+       MobileHome layout. */
     font-size: clamp(28px, 7.5vw, 36px);
     line-height: 1.15;
     margin-bottom: 16px;

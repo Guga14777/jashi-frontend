@@ -3,10 +3,10 @@
 :root {
 --row-height: 88px;
 --gap-size: 24px;
---column-gap: 48px;
+--column-gap: 32px;
 --border-radius: 8px;
---side-column-width: 280px;
---center-column-width: 560px;
+--side-column-width: 300px;
+--center-column-width: 520px;
 }
 
 .quote-section {
@@ -24,12 +24,10 @@ padding: 0 24px;
 width: 100%;
 }
 
-/* Three Column Grid — 280 / flex(480–560) / 280, gap 48 — matches the
-   target composition. minmax() lets the center column shrink gracefully
-   at ~1200px before the responsive rules below take over. */
+/* Three Column Grid — restored to 738d840 values: 300 / 520 / 300, gap 32 */
 .qs-grid {
 display: grid;
-grid-template-columns: var(--side-column-width) minmax(480px, var(--center-column-width)) var(--side-column-width);
+grid-template-columns: var(--side-column-width) var(--center-column-width) var(--side-column-width);
 gap: var(--column-gap);
 align-items: start;
 justify-content: center;
