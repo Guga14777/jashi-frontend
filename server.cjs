@@ -77,7 +77,17 @@ const requireAdmin = require('./server/middleware/require-admin.cjs');
 // ============================================================
 const app = express();
 const PORT = process.env.PORT || 5182;
-const HOST = process.env.HOST || 'localhost';
+// In production always bind 0.0.0.0 so Railway/Render/Fly proxies can
+// reach the process. `localhost` binding in a Linux container is a common
+// "application failed to respond" footgun. HOST env is only honored in
+// non-production (dev / test).
+const HOST =
+  process.env.NODE_ENV === 'production'
+    ? '0.0.0.0'
+    : (process.env.HOST || '0.0.0.0');
+// Behind Railway / Heroku / Vercel-style proxies, req.ip and secure cookies
+// must trust the X-Forwarded-For chain.
+app.set('trust proxy', 1);
 
 // ============================================================
 // MULTER CONFIGURATION
@@ -115,19 +125,22 @@ global.uploadsDir = uploadsDir;
 // ============================================================
 app.use(helmet({ contentSecurityPolicy: false, crossOriginEmbedderPolicy: false }));
 
-const allowedOrigins = process.env.ALLOWED_ORIGINS 
-  ? process.env.ALLOWED_ORIGINS.split(',') 
+const allowedOriginsRaw = process.env.ALLOWED_ORIGINS
+  ? process.env.ALLOWED_ORIGINS.split(',').map((s) => s.trim()).filter(Boolean)
   : ['http://localhost:5177', 'http://localhost:5173'];
+
+// ALLOWED_ORIGINS=* acts as a wildcard (useful while bringing up staging).
+const allowAnyOrigin = allowedOriginsRaw.includes('*');
 
 app.use(cors({
   origin: (origin, callback) => {
+    // Same-origin / curl / server-to-server requests have no Origin header.
     if (!origin) return callback(null, true);
-    if (allowedOrigins.indexOf(origin) === -1) {
-      return callback(new Error('CORS not allowed'), false);
-    }
-    return callback(null, true);
+    if (allowAnyOrigin) return callback(null, true);
+    if (allowedOriginsRaw.indexOf(origin) !== -1) return callback(null, true);
+    return callback(new Error(`CORS not allowed: ${origin}`), false);
   },
-  credentials: true
+  credentials: true,
 }));
 
 app.use(express.json({ limit: '10mb' }));

@@ -1,0 +1,18 @@
+# Backend files — not needed for the Vite frontend build on Vercel.
+# The backend deploys separately to Railway.
+server.cjs
+server/
+prisma/
+uploads/
+scripts/
+nodemon.json
+railway.json
+server.log
+*.save
+
+# Local dev artifacts
+.env
+.env.backup
+.env.*
+!.env.example
+.claude/
