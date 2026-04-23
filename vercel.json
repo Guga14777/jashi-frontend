@@ -4,19 +4,6 @@
   "buildCommand": "vite build",
   "outputDirectory": "dist",
   "installCommand": "npm install --ignore-scripts",
-
-  "//": "============================================================",
-  "//1": " PRODUCTION API ROUTING",
-  "//2": "",
-  "//3": " Frontend is Vercel (jashilogistics.com + www.jashilogistics.com).",
-  "//4": " Backend is Railway at jashi-frontend-production.up.railway.app",
-  "//5": " (yes the Railway service is named \"jashi-frontend\" but it",
-  "//6": " hosts the Express API — verified 2026-04-23 via /api/health).",
-  "//7": "",
-  "//8": " The /api rewrite MUST come before the SPA catch-all so that",
-  "//9": " POST /api/* is not rewritten to /index.html (which 405'd).",
-  "//10": "============================================================",
-
   "rewrites": [
     {
       "source": "/api/:path*",
