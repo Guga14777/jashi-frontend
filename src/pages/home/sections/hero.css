@@ -12,17 +12,19 @@
 
 :root {
   --real-header-height: 72px;
-  /* Clearance above the h1. Floor at 128px so the title never sits within
-     the 72px fixed header even if --real-header-height is momentarily
-     unset before PublicHeader's ResizeObserver publishes it. */
-  --hero-gap-top: 56px;
-  --hero-gap-bottom: 40px;
+  /* Vertical rhythm tokens. Hero padding-top is the gap between sticky
+     header and the h1; padding-bottom is the gap between the subtitle
+     and the Quote card below. */
+  --hero-gap-top: 72px;
+  --hero-gap-bottom: 56px;
+  --hero-title-subtitle-gap: 24px;
 }
 
 @media (max-width: 1024px) {
   :root {
-    --hero-gap-top: 40px;
-    --hero-gap-bottom: 32px;
+    --hero-gap-top: 56px;
+    --hero-gap-bottom: 44px;
+    --hero-title-subtitle-gap: 20px;
   }
 }
 @media (max-width: 768px) {
@@ -75,17 +77,18 @@
   margin: 0 auto;
 }
 
-/* Fluid headline — scales with viewport, never cropped, never oversized.
-   1440px → ~52px, 1024px → ~46px, 768px → ~36px, 390px → ~30px. */
+/* Fluid headline — smaller + tighter than before.
+   1440px+ → ~48px (cap), 1200px → ~44px, 1024px → ~38px, 768px → ~34px. */
 .hero-headline {
-  font-size: clamp(30px, 4.2vw, 52px);
-  line-height: 1.15;
+  font-size: clamp(32px, 3.4vw, 48px);
+  line-height: 1.1;
   font-weight: 800;
   color: #0F172A;
-  margin: 0 auto 18px auto;
+  margin: 0 auto var(--hero-title-subtitle-gap) auto;
   letter-spacing: -0.02em;
   max-width: 100%;
   word-wrap: break-word;
+  overflow-wrap: break-word;
   hyphens: manual;
 }
 
@@ -95,7 +98,7 @@
 }
 
 .hero-subtitle {
-  font-size: clamp(15px, 1.2vw, 17px);
+  font-size: clamp(15px, 1.15vw, 17px);
   line-height: 1.55;
   color: #475569;
   margin: 0 auto;
@@ -127,8 +130,11 @@
   }
 
   .hero-headline {
-    line-height: 1.18;
-    margin-bottom: 14px;
+    /* Mobile fallback size when <Hero /> is rendered outside the
+       MobileHome layout. Kept compact to prevent horizontal overflow. */
+    font-size: clamp(28px, 7.5vw, 36px);
+    line-height: 1.15;
+    margin-bottom: 16px;
   }
 
   .hero-subtitle {
@@ -144,6 +150,7 @@
   .hero-headline {
     letter-spacing: -0.015em;
     margin-bottom: 12px;
+    font-size: clamp(26px, 7vw, 32px);
   }
 
   .hero-subtitle {
