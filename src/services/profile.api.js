@@ -1,5 +1,7 @@
 // src/services/profile.api.js
 
+import { apiUrl } from '../lib/api-url.js';
+
 /**
  * Update a specific section of the user profile
  * @param {string} section - The section to update ('company', 'payout', 'contacts', 'notifications')
@@ -190,7 +192,7 @@ export async function deactivateAccount() {
   try {
     const token = getAuthToken();
     
-    const response = await fetch('/api/auth/deactivate', {
+    const response = await fetch(apiUrl('/api/auth/deactivate'), {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
@@ -227,7 +229,7 @@ export async function deleteAccount() {
   try {
     const token = getAuthToken();
     
-    const response = await fetch('/api/auth/delete', {
+    const response = await fetch(apiUrl('/api/auth/delete'), {
       method: 'DELETE',
       headers: {
         'Content-Type': 'application/json',

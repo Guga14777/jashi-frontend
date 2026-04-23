@@ -133,6 +133,7 @@ import "./styles/tokens.css";
 import "./styles/global.css";
 import "./styles/app.css";
 import "./styles/utilities.css";
+import "./styles/mobile-responsive.css";
 import "./components/ui/ui-components.css";
 import "./components/auth/customer-login.css";
 

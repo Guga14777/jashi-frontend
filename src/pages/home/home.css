@@ -36,14 +36,26 @@ html, body {
   width: 100%;
   padding-bottom: 0; /* Let hero section handle its own padding */
   background: #FFFFFF;
-  margin-bottom: 60px; /* ADDED: Space after hero wrapper */
+  /* Hero now sets its own min-height via --real-header-height, so the
+     wrapper only adds a touch of rhythm to the next section. */
+  margin-bottom: 24px;
 }
 
 .quote-wrapper {
   width: 100%;
   background: #FFFFFF;
-  padding-top: 40px; /* ADDED: Extra top padding for quote section */
+  padding-top: 16px;
   position: relative;
+}
+
+@media (max-width: 768px) {
+  .hero-wrapper {
+    margin-bottom: 16px;
+  }
+
+  .quote-wrapper {
+    padding-top: 8px;
+  }
 }
 
 .features-wrapper {

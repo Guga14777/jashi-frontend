@@ -5,6 +5,7 @@
 
 import React, { createContext, useContext, useState, useCallback, useEffect } from 'react';
 import { useAuth } from './auth-context';
+import { apiUrl } from '../lib/api-url.js';
 
 // Utility function for formatting relative time
 export const formatRelativeTime = (isoString) => {
@@ -56,7 +57,7 @@ export const CustomerNotificationsProvider = ({ children }) => {
 
     try {
       setIsLoading(true);
-      const response = await fetch('/api/customer/notifications', {
+      const response = await fetch(apiUrl('/api/customer/notifications'), {
         headers: {
           'Authorization': `Bearer ${token}`,
           'Content-Type': 'application/json'
@@ -107,7 +108,7 @@ export const CustomerNotificationsProvider = ({ children }) => {
     );
 
     try {
-      const response = await fetch(`/api/customer/notifications/${id}/read`, {
+      const response = await fetch(apiUrl(`/api/customer/notifications/${id}/read`), {
         method: 'PATCH',
         headers: {
           'Authorization': `Bearer ${token}`,
@@ -137,7 +138,7 @@ export const CustomerNotificationsProvider = ({ children }) => {
     );
 
     try {
-      const response = await fetch('/api/customer/notifications/mark-all-read', {
+      const response = await fetch(apiUrl('/api/customer/notifications/mark-all-read'), {
         method: 'PATCH',
         headers: {
           'Authorization': `Bearer ${token}`,
@@ -161,7 +162,7 @@ export const CustomerNotificationsProvider = ({ children }) => {
     setNotifications(prev => prev.filter(notification => notification.id !== id));
 
     try {
-      const response = await fetch(`/api/customer/notifications/${id}`, {
+      const response = await fetch(apiUrl(`/api/customer/notifications/${id}`), {
         method: 'DELETE',
         headers: {
           'Authorization': `Bearer ${token}`,

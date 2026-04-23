@@ -8,7 +8,8 @@
   overflow: hidden;
   margin-bottom: 0; /* Keep at 0 to avoid white gap */
   margin-top: 0; /* ADDED: No top margin */
-  width: 100vw; /* ADDED: Full viewport width */
+  width: 100%; /* FIXED: 100vw triggers horizontal scroll on mobile when scrollbar gutter differs */
+  max-width: 100%;
   margin-left: 0; /* ADDED: No left margin */
   margin-right: 0; /* ADDED: No right margin */
 }

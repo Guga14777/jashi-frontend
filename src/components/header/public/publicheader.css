@@ -1,4 +1,7 @@
-/* src/components/header/public/publicheader.css */
+/* src/components/header/public/publicheader.css
+   Public marketing header. Layout rules are the source of truth for
+   --real-header-height; any page that sits under a fixed header should
+   read that variable rather than hard-coding 72px. */
 
 /* ============================================
    HEADER CONTAINER
@@ -9,12 +12,17 @@
   height: 72px;
   background: #fff;
   border-bottom: 1px solid #e5e7eb;
+  /* Persistent subtle shadow — keeps the header visually distinct from a
+     white hero below, so content scrolling past it doesn't look cropped. */
+  box-shadow: 0 1px 2px rgba(15, 23, 42, 0.04);
   z-index: 1000;
   transition: box-shadow 0.15s ease;
+  /* Header never grows beyond its declared height regardless of children. */
+  contain: layout;
 }
 
-.pub-header[data-scrolled="true"] { 
-  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.07);
+.pub-header[data-scrolled="true"] {
+  box-shadow: 0 4px 12px rgba(15, 23, 42, 0.08);
 }
 
 .pub-inner {
@@ -25,6 +33,9 @@
   display: flex;
   align-items: center;
   justify-content: space-between;
+  gap: 12px;
+  min-width: 0;
+  flex-wrap: nowrap;
 }
 
 /* ============================================
@@ -35,47 +46,60 @@
   align-items: center;
   gap: 12px;
   text-decoration: none;
+  min-width: 0;
+  flex: 0 1 auto;
+  /* Brand never wraps. If space is tight, the name ellipsizes or hides. */
+  white-space: nowrap;
+  overflow: hidden;
 }
 
 .pub-badge {
-  width: 64px;
-  height: 64px;
+  width: 56px;
+  height: 56px;
   border-radius: 50%;
   background: #0a58ff;
   display: grid;
   place-items: center;
   overflow: hidden;
+  flex-shrink: 0;
 }
 
-.pub-badge img { 
-  width: 75%; 
-  height: 75%; 
-  object-fit: contain; 
+.pub-badge img {
+  width: 75%;
+  height: 75%;
+  object-fit: contain;
 }
 
 .pub-name {
   color: #0a58ff;
   font-weight: 800;
-  font-size: 26px;
+  font-size: 24px;
   letter-spacing: 0.2px;
   text-transform: capitalize;
+  /* Always single line — otherwise the header grows and pushes the hero
+     down by an unpredictable amount. */
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: clip;
+  line-height: 1.1;
+  min-width: 0;
 }
 
 /* ============================================
-   ACTIONS
+   ACTIONS (right-hand CTAs)
    ============================================ */
-.pub-actions { 
-  display: flex; 
-  align-items: center; 
-  gap: 14px; 
+.pub-actions {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  flex-shrink: 0;
 }
 
 .pub-btn {
-  width: 160px;
   height: 40px;
-  padding: 0 14px;
+  padding: 0 18px;
   border-radius: 10px;
-  font-weight: 500;
+  font-weight: 600;
   font-size: 14px;
   display: inline-flex;
   align-items: center;
@@ -83,36 +107,42 @@
   gap: 6px;
   border: 2px solid #0a58ff;
   cursor: pointer;
-  text-transform: capitalize;
+  text-transform: none;
   white-space: nowrap;
-  transition: all 0.15s ease;
+  transition: background-color 0.15s ease, color 0.15s ease, box-shadow 0.15s ease;
   font-family: inherit;
   box-sizing: border-box;
+  line-height: 1;
 }
 
-.pub-btn.ghost { 
-  background: #fff; 
-  color: #0a58ff; 
+.pub-btn.ghost {
+  background: #fff;
+  color: #0a58ff;
 }
 
-.pub-btn.ghost:hover { 
-  background: #f5f9ff; 
+.pub-btn.ghost:hover {
+  background: #f5f9ff;
 }
 
-.pub-btn.primary { 
-  background: #0a58ff; 
-  color: #fff; 
+.pub-btn.primary {
+  background: #0a58ff;
+  color: #fff;
 }
 
-.pub-btn.primary:hover { 
-  background: #0848d6; 
-  border-color: #0848d6; 
+.pub-btn.primary:hover {
+  background: #0848d6;
+  border-color: #0848d6;
+}
+
+.pub-btn:focus-visible {
+  outline: 2px solid #0a58ff;
+  outline-offset: 2px;
 }
 
 /* Chevron icon */
-.chev { 
-  width: 12px; 
-  height: 12px; 
+.chev {
+  width: 12px;
+  height: 12px;
   opacity: 0.9;
   display: inline-block;
   stroke: currentColor;
@@ -122,8 +152,8 @@
 /* ============================================
    DROPDOWN
    ============================================ */
-.pub-dd-wrap { 
-  position: relative; 
+.pub-dd-wrap {
+  position: relative;
 }
 
 .pub-dd {
@@ -146,7 +176,6 @@
   overflow: visible;
 }
 
-/* HOVER GAP FIX: Add invisible bridge to prevent hover loss */
 .pub-dd::before {
   content: "";
   position: absolute;
@@ -178,19 +207,18 @@
   font-size: 14px;
   color: #0f172a;
   text-transform: capitalize;
-  transition: all 0.15s ease;
+  transition: background-color 0.15s ease, color 0.15s ease;
   font-family: inherit;
 }
 
-.pub-dd-item:hover { 
-  background: #f5f9ff; 
-  color: #0a58ff; 
+.pub-dd-item:hover {
+  background: #f5f9ff;
+  color: #0a58ff;
 }
 
-/* Icon styles */
 .pub-dd-item .ico {
   font-size: 18px;
-  width: 18px; 
+  width: 18px;
   height: 18px;
   color: #6b7280;
   vertical-align: middle;
@@ -199,65 +227,86 @@
   flex: 0 0 auto;
 }
 
-.pub-dd-item:hover .ico { 
-  color: #0a58ff; 
+.pub-dd-item:hover .ico {
+  color: #0a58ff;
 }
 
 /* ============================================
-   RESPONSIVE
+   RESPONSIVE — only header sizing changes.
+   The PublicHeader component writes the real rendered height to
+   --real-header-height on <html> via ResizeObserver, so anything
+   below the header can always clear it correctly.
    ============================================ */
+
+/* Tablet / small desktop */
+@media (max-width: 1024px) {
+  .pub-inner {
+    padding: 0 24px;
+  }
+}
+
+/* Phones (iPhone landscape and smaller) */
 @media (max-width: 768px) {
   .pub-header {
     height: 64px;
   }
 
-  .pub-inner { 
-    padding: 0 16px; 
-  }
-  
-  .pub-badge { 
-    width: 56px; 
-    height: 56px; 
-  }
-  
-  .pub-name { 
-    font-size: 22px; 
-  }
-
-  .pub-actions {
+  .pub-inner {
+    padding: 0 16px;
     gap: 10px;
   }
 
+  .pub-badge {
+    width: 42px;
+    height: 42px;
+  }
+
+  .pub-name {
+    font-size: 18px;
+  }
+
+  .pub-actions {
+    gap: 8px;
+  }
+
   .pub-btn {
-    width: 140px;
-    height: 38px;
+    height: 40px;
+    padding: 0 14px;
     font-size: 13px;
+    border-width: 1.5px;
   }
 }
 
-@media (max-width: 480px) {
-  .pub-header {
-    height: 60px;
+/* Narrower phones — trim brand & buttons further */
+@media (max-width: 560px) {
+  .pub-inner {
+    padding: 0 14px;
+    gap: 8px;
   }
 
-  .pub-badge { 
-    width: 48px; 
-    height: 48px; 
+  .pub-badge {
+    width: 38px;
+    height: 38px;
   }
-  
-  .pub-name { 
-    font-size: 20px; 
+
+  .pub-name {
+    font-size: 16px;
   }
-  
-  .pub-actions { 
-    gap: 8px; 
+
+  .pub-actions {
+    gap: 6px;
   }
-  
-  .pub-btn { 
-    width: 120px;
-    height: 36px;
-    font-size: 12px;
+
+  .pub-btn {
+    height: 38px;
     padding: 0 10px;
+    font-size: 12.5px;
+    border-radius: 8px;
+  }
+
+  .pub-btn .chev {
+    width: 10px;
+    height: 10px;
   }
 
   .pub-dd {
@@ -267,6 +316,45 @@
   .pub-dd-item {
     font-size: 13px;
     padding: 9px 10px;
+  }
+}
+
+/* Small phones (iPhone 15/14/13/SE, narrow Android) — logo-only brand */
+@media (max-width: 420px) {
+  .pub-name {
+    /* Hidden visually but still read by screen readers */
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    margin: -1px;
+    padding: 0;
+    overflow: hidden;
+    clip: rect(0, 0, 0, 0);
+    white-space: nowrap;
+    border-width: 0;
+  }
+}
+
+/* iPhone SE / narrow Android — the two CTAs still must fit beside the badge */
+@media (max-width: 380px) {
+  .pub-header {
+    height: 60px;
+  }
+
+  .pub-inner {
+    padding: 0 12px;
+    gap: 6px;
+  }
+
+  .pub-badge {
+    width: 36px;
+    height: 36px;
+  }
+
+  .pub-btn {
+    height: 36px;
+    padding: 0 10px;
+    font-size: 12px;
   }
 }
 

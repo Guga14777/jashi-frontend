@@ -342,6 +342,7 @@
 @media (max-width: 768px) {
   .shipper-portal {
     padding: 80px 12px 24px;
+    min-height: calc(100vh - 120px);
   }
 
   .sp-body {
@@ -357,14 +358,66 @@
 
   .sp-actions {
     flex-direction: column-reverse;
+    align-items: stretch;
+    margin-top: 20px;
+    padding-top: 20px;
+    gap: 10px;
   }
 
   .btn-primary-portal,
   .btn-secondary-portal {
     width: 100%;
+    padding: 14px 24px;
+    font-size: 15px;
+    min-height: 48px;
   }
 
   .sp-header h2 {
     font-size: 20px;
+  }
+}
+
+@media (max-width: 480px) {
+  .shipper-portal {
+    padding: 76px 10px 20px;
+  }
+
+  .sp-body {
+    padding: 14px;
+    border-radius: 12px;
+  }
+
+  .sp-header h2 {
+    font-size: 18px;
+  }
+
+  .sp-header p {
+    font-size: 12.5px;
+  }
+
+  .sp-section h3 {
+    font-size: 16px;
+  }
+
+  .sp-section h4 {
+    font-size: 15px;
+  }
+
+  .form-group-portal input,
+  .form-group-portal select,
+  .form-group-portal textarea,
+  .af-input {
+    padding: 12px;
+    font-size: 16px; /* prevent iOS zoom */
+  }
+
+  .summary-card {
+    padding: 14px;
+  }
+
+  .sc-row {
+    flex-direction: column;
+    gap: 2px;
+    margin: 6px 0;
   }
 }

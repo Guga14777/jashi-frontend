@@ -143,6 +143,28 @@ const CustomerHeader = () => {
     return () => window.removeEventListener('scroll', handleScroll);
   }, [isScrolled]);
 
+  // Publish real header height so dashboard content can clear it reliably
+  // (e.g. scroll-padding-top, section offsets) regardless of font load,
+  // brand-name wrap, or user zoom.
+  useEffect(() => {
+    const el = headerRef.current;
+    if (!el) return;
+    const publish = () => {
+      const h = Math.round(el.getBoundingClientRect().height);
+      if (h > 0) {
+        document.documentElement.style.setProperty('--real-header-height', `${h}px`);
+      }
+    };
+    publish();
+    const ro = new ResizeObserver(publish);
+    ro.observe(el);
+    window.addEventListener('resize', publish);
+    return () => {
+      ro.disconnect();
+      window.removeEventListener('resize', publish);
+    };
+  }, []);
+
   useEffect(() => {
     if (!showDropdown) return;
     const handleEscape = (e) => {

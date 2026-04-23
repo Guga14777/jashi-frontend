@@ -1,14 +1,52 @@
-/* src/pages/home/sections/hero.css - REFINED TYPOGRAPHY */
+/* src/pages/home/sections/hero.css
+   Hero sits directly under the fixed public header. Top padding is the
+   REAL rendered header height (published as --real-header-height by
+   PublicHeader via ResizeObserver) + a breathing-room gap that scales
+   with viewport — not a guessed magic number. */
+
+:root {
+  /* Fallback if the header hasn't measured itself yet (e.g. during the
+     first frame of SSR / route transition). Matches the CSS-declared
+     header height per breakpoint and is overridden dynamically at runtime. */
+  --real-header-height: 72px;
+  --hero-gap: 56px;
+}
+
+@media (max-width: 1024px) {
+  :root { --hero-gap: 48px; }
+}
+@media (max-width: 768px) {
+  :root {
+    --real-header-height: 64px;
+    --hero-gap: 36px;
+  }
+}
+@media (max-width: 420px) {
+  :root {
+    --real-header-height: 60px;
+    --hero-gap: 28px;
+  }
+}
 
 .hero-section {
   background: #FFFFFF;
-  padding: 120px 0 0 0;
+  /* Top padding clears whatever height the header actually renders at +
+     a comfortable gap. Bottom padding is small; the .hero-wrapper sets
+     the hero→quote rhythm. */
+  padding-top: calc(var(--real-header-height) + var(--hero-gap));
+  padding-bottom: 24px;
   position: relative;
   width: 100%;
+  /* Above-the-fold: on desktop the hero occupies roughly the first
+     viewport minus the header, so the headline sits comfortably centered
+     vertically relative to the visible area. */
+  min-height: calc(100svh - var(--real-header-height));
+  display: flex;
+  align-items: center;
 }
 
 .hero-container {
-  max-width: 1200px;
+  max-width: 1040px;
   margin: 0 auto;
   padding: 0 40px;
   width: 100%;
@@ -18,100 +56,105 @@
 .hero-content {
   text-align: center;
   width: 100%;
+  max-width: 880px;
   margin: 0 auto;
 }
 
-/* Main headline - Keep strong at 64px */
+/* Fluid headline — never cropped, never oversized.
+   At 1440px: ~56px. At 1024px: ~48px. At 768px: ~38px. At 390px: ~30px. */
 .hero-headline {
-  font-size: 64px; /* Perfect H1 size */
-  line-height: 1.1;
+  font-size: clamp(30px, 4.6vw, 56px);
+  line-height: 1.14;
   font-weight: 800;
-  color: #1F2937;
-  margin: 0 auto 30px auto;
-  letter-spacing: -1.5px;
+  color: #0F172A;
+  margin: 0 auto 20px auto;
+  letter-spacing: -0.02em;
   max-width: 100%;
+  word-wrap: break-word;
+  hyphens: manual;
 }
 
-/* Blue highlight */
 .hero-highlight {
   color: #0066FF;
   font-weight: 800;
 }
 
-/* Subtitle - Slightly smaller for better contrast */
 .hero-subtitle {
-  font-size: 18px; /* Reduced from 20px for better hierarchy */
-  line-height: 1.5;
-  color: #64748B;
-  margin: 0 auto 56px auto;
+  font-size: clamp(15px, 1.35vw, 18px);
+  line-height: 1.55;
+  color: #475569;
+  margin: 0 auto;
   font-weight: 400;
-  max-width: 800px;
+  max-width: 720px;
 }
 
-/* Bold highlights in subtitle */
 .subtitle-highlight {
   color: #0066FF;
   font-weight: 600;
 }
 
-/* Tablet */
+/* Optional spacer — keeps markup stable. */
+.hero-spacer {
+  display: none;
+}
+
+/* ============================================
+   RESPONSIVE HERO
+   The header-height variable is already breakpoint-aware above; these
+   blocks tune the container padding and subtitle comfort only.
+   ============================================ */
 @media (max-width: 1024px) {
-  .hero-section {
-    padding: 100px 0 0 0;
-  }
-  
   .hero-container {
-    padding: 0 30px;
-  }
-  
-  .hero-headline {
-    font-size: 52px; /* Scaled down proportionally */
-  }
-  
-  .hero-subtitle {
-    font-size: 17px; /* Reduced from 18px */
-    margin-bottom: 40px;
+    padding: 0 28px;
   }
 }
 
-/* Mobile */
 @media (max-width: 768px) {
   .hero-section {
-    padding: 80px 0 0 0;
+    /* On mobile the above-the-fold doesn't need to fill the viewport —
+     it should be sized to content + comfortable margin so users can see
+     there's more below. */
+    min-height: 0;
+    display: block;
+    padding-bottom: 32px;
   }
-  
-  .hero-container {
-    padding: 0 24px;
-  }
-  
-  .hero-headline {
-    font-size: 40px;
-    letter-spacing: -1px;
-  }
-  
-  .hero-subtitle {
-    font-size: 16px; /* Stays at 16px for readability */
-    margin-bottom: 32px;
-  }
-}
 
-/* Small mobile */
-@media (max-width: 480px) {
-  .hero-section {
-    padding: 60px 0 0 0;
-  }
-  
   .hero-container {
     padding: 0 20px;
   }
-  
+
   .hero-headline {
-    font-size: 32px;
-    margin-bottom: 20px;
+    line-height: 1.2;
+    margin-bottom: 16px;
   }
-  
+
+  .hero-subtitle {
+    font-size: 16px;
+    line-height: 1.55;
+  }
+}
+
+@media (max-width: 480px) {
+  .hero-container {
+    padding: 0 18px;
+  }
+
+  .hero-headline {
+    letter-spacing: -0.015em;
+    margin-bottom: 14px;
+  }
+
   .hero-subtitle {
     font-size: 15px;
-    margin-bottom: 24px;
+  }
+}
+
+@media (max-width: 360px) {
+  .hero-container {
+    padding: 0 14px;
+  }
+
+  .hero-subtitle {
+    font-size: 14.5px;
   }
 }

@@ -199,12 +199,29 @@ global.uploadsDir = uploadsDir;
 // ============================================================
 app.use(helmet({ contentSecurityPolicy: false, crossOriginEmbedderPolicy: false }));
 
+// Always-allowed origins. These cover local dev and the production web
+// domain so direct cross-origin requests work even if ALLOWED_ORIGINS is
+// forgotten on the Railway side.
+const DEFAULT_ALLOWED_ORIGINS = [
+  'http://localhost:5177',
+  'http://localhost:5173',
+  'https://jashilogistics.com',
+  'https://www.jashilogistics.com',
+];
+
 const allowedOriginsRaw = process.env.ALLOWED_ORIGINS
-  ? process.env.ALLOWED_ORIGINS.split(',').map((s) => s.trim()).filter(Boolean)
-  : ['http://localhost:5177', 'http://localhost:5173'];
+  ? Array.from(new Set([
+      ...DEFAULT_ALLOWED_ORIGINS,
+      ...process.env.ALLOWED_ORIGINS.split(',').map((s) => s.trim()).filter(Boolean),
+    ]))
+  : DEFAULT_ALLOWED_ORIGINS;
 
 // ALLOWED_ORIGINS=* acts as a wildcard (useful while bringing up staging).
 const allowAnyOrigin = allowedOriginsRaw.includes('*');
+
+// Any *.vercel.app preview deployment (pr/branch previews) — safe to accept
+// because they are owned by the Vercel account that deploys jashilogistics.com.
+const vercelPreviewRegex = /\.vercel\.app$/i;
 
 app.use(cors({
   origin: (origin, callback) => {
@@ -212,6 +229,10 @@ app.use(cors({
     if (!origin) return callback(null, true);
     if (allowAnyOrigin) return callback(null, true);
     if (allowedOriginsRaw.indexOf(origin) !== -1) return callback(null, true);
+    try {
+      const host = new URL(origin).host;
+      if (vercelPreviewRegex.test(host)) return callback(null, true);
+    } catch { /* fallthrough */ }
     return callback(new Error(`CORS not allowed: ${origin}`), false);
   },
   credentials: true,

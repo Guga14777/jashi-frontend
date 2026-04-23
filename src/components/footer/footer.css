@@ -2,7 +2,10 @@
   background: linear-gradient(180deg, #1E293B 0%, #1a2332 100%);
   padding: 40px 0;
   margin-top: 0;
-  width: 100vw;
+  /* 100vw triggers horizontal scroll on mobile browsers where the
+     visual viewport differs from the layout viewport. 100% is safe. */
+  width: 100%;
+  max-width: 100%;
   position: relative;
   z-index: 1;
   border-top: 1px solid rgba(255, 255, 255, 0.05);

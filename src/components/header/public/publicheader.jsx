@@ -12,6 +12,7 @@ const PublicHeader = () => {
   const [activeMenu, setActiveMenu] = useState(null);
   const [isScrolled, setIsScrolled] = useState(false);
 
+  const headerRef = useRef(null);
   const loginRef = useRef(null);
   const createRef = useRef(null);
   const closeTimer = useRef(null);
@@ -20,6 +21,31 @@ const PublicHeader = () => {
     const onScroll = () => setIsScrolled(window.scrollY > 10);
     window.addEventListener("scroll", onScroll);
     return () => window.removeEventListener("scroll", onScroll);
+  }, []);
+
+  // Publish the real rendered header height as a CSS variable so the hero
+  // (and any other content that must sit below a fixed header) can clear it
+  // regardless of zoom, font loading, or brand-name wrapping.
+  useEffect(() => {
+    const el = headerRef.current;
+    if (!el) return;
+
+    const publish = () => {
+      const h = Math.round(el.getBoundingClientRect().height);
+      if (h > 0) {
+        document.documentElement.style.setProperty('--real-header-height', `${h}px`);
+      }
+    };
+
+    publish();
+
+    const ro = new ResizeObserver(publish);
+    ro.observe(el);
+    window.addEventListener('resize', publish);
+    return () => {
+      ro.disconnect();
+      window.removeEventListener('resize', publish);
+    };
   }, []);
 
   useEffect(() => {
@@ -96,7 +122,7 @@ const PublicHeader = () => {
 
   if (isLoading) {
     return (
-      <header className="pub-header" data-scrolled={isScrolled}>
+      <header ref={headerRef} className="pub-header" data-scrolled={isScrolled}>
         <div className="pub-inner">
           <Link to="/" className="pub-brand">
             <span className="pub-badge">
@@ -110,7 +136,7 @@ const PublicHeader = () => {
   }
 
   return (
-    <header className="pub-header" data-scrolled={isScrolled}>
+    <header ref={headerRef} className="pub-header" data-scrolled={isScrolled}>
       <div className="pub-inner">
         <Link to="/" className="pub-brand">
           <span className="pub-badge">

@@ -117,6 +117,26 @@ const CarrierHeader = () => {
     return () => window.removeEventListener('scroll', handleScroll);
   }, [isScrolled]);
 
+  // Publish real header height — same rationale as customer/public headers.
+  useEffect(() => {
+    const el = headerRef.current;
+    if (!el) return;
+    const publish = () => {
+      const h = Math.round(el.getBoundingClientRect().height);
+      if (h > 0) {
+        document.documentElement.style.setProperty('--real-header-height', `${h}px`);
+      }
+    };
+    publish();
+    const ro = new ResizeObserver(publish);
+    ro.observe(el);
+    window.addEventListener('resize', publish);
+    return () => {
+      ro.disconnect();
+      window.removeEventListener('resize', publish);
+    };
+  }, []);
+
   useEffect(() => {
     if (!showDropdown) return;
     const handleEscape = (e) => {

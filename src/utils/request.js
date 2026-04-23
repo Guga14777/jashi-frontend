@@ -1,11 +1,15 @@
 // src/utils/request.js
-const BASE_URL = (import.meta.env.VITE_API_BASE ?? '').replace(/\/+$/, '');
+// Thin fetch wrapper used by every src/services/*.api.js. All URL resolution
+// goes through apiUrl() so dev (Vite proxy) and production (Vercel rewrite
+// or cross-origin VITE_API_BASE) behave the same.
+
+import { apiUrl } from '../lib/api-url.js';
 
 async function http(method, endpoint, data = null, token = null) {
   const headers = { 'Content-Type': 'application/json' };
   if (token) headers.Authorization = `Bearer ${token}`;
 
-  const url = `${BASE_URL}${endpoint.startsWith('/') ? '' : '/'}${endpoint}`;
+  const url = apiUrl(endpoint);
 
   const res = await fetch(url, {
     method,

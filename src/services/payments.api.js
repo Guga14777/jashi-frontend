@@ -3,6 +3,8 @@
  * ✅ UPDATED: Connects to real backend endpoints for carrier payouts
  */
 
+import { apiUrl } from '../lib/api-url.js';
+
 const API_BASE = '/api/dashboard/payments';
 const CARRIER_API_BASE = '/api/carrier/payouts';
 
@@ -54,7 +56,7 @@ const authFetch = async (url, options = {}) => {
     'Authorization': `Bearer ${token}`,
     ...options.headers,
   };
-  const response = await fetch(url, {
+  const response = await fetch(apiUrl(url), {
     ...options,
     headers,
   });
@@ -124,7 +126,7 @@ export async function getCustomerPayments(token, filters = {}) {
     headers['Authorization'] = `Bearer ${authToken}`;
   }
   
-  const response = await fetch(url, { method: 'GET', headers });
+  const response = await fetch(apiUrl(url), { method: 'GET', headers });
   if (!response.ok) {
     throw new Error('Failed to fetch payments');
   }
@@ -140,7 +142,7 @@ export async function getPaymentById(paymentId, token) {
   if (authToken) {
     headers['Authorization'] = `Bearer ${authToken}`;
   }
-  const response = await fetch(`${API_BASE}/${paymentId}`, { method: 'GET', headers });
+  const response = await fetch(apiUrl(`${API_BASE}/${paymentId}`), { method: 'GET', headers });
   if (!response.ok) {
     throw new Error('Failed to fetch payment details');
   }
@@ -156,7 +158,7 @@ export async function createPayment(paymentData, token) {
   if (authToken) {
     headers['Authorization'] = `Bearer ${authToken}`;
   }
-  const response = await fetch('/api/shipper/payments', {
+  const response = await fetch(apiUrl('/api/shipper/payments'), {
     method: 'POST',
     headers,
     body: JSON.stringify(paymentData),

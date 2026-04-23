@@ -4,6 +4,8 @@
 // ✅ Silent fallback to device time (no user-facing warnings)
 // ============================================================
 
+import { apiUrl } from '../lib/api-url.js';
+
 let cachedServerTime = null;
 let cacheTimestamp = null;
 const CACHE_DURATION_MS = 60000; // Re-fetch every 60 seconds
@@ -30,7 +32,7 @@ export async function fetchServerTime() {
   }
   
   try {
-    const response = await fetch('/api/time/now');
+    const response = await fetch(apiUrl('/api/time/now'));
     
     if (!response.ok) {
       throw new Error(`Server time fetch failed: ${response.status}`);

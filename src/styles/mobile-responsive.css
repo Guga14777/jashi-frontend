@@ -1,0 +1,163 @@
+/* ============================================
+   MOBILE RESPONSIVE BASELINE
+   ============================================
+   Loaded LAST. Provides app-wide mobile defaults
+   without touching individual component CSS:
+     - Prevent horizontal overflow
+     - Stop iOS input zoom (16px font on inputs)
+     - Touch-friendly tap targets
+     - Replace 100vw with 100% to avoid scrollbar overflow
+     - Font / container fallbacks for narrow screens
+   ============================================ */
+
+/* ----- 0. HEADER-SAFE SCROLL ANCHOR ----- */
+/* scroll-padding-top reads the REAL rendered header height published by
+   PublicHeader (ResizeObserver writes it to --real-header-height on
+   <html>). Any in-page anchor link now lands below the header at
+   whatever height the header actually is — no magic numbers. */
+html {
+  scroll-padding-top: calc(var(--real-header-height, 72px) + 16px);
+}
+
+/* ----- 1. KILL HORIZONTAL OVERFLOW APP-WIDE ----- */
+html,
+body,
+#root {
+  max-width: 100%;
+  overflow-x: hidden;
+}
+
+img,
+video,
+svg,
+canvas,
+iframe {
+  max-width: 100%;
+}
+
+/* Replace 100vw width sections with 100% — 100vw includes the
+   scrollbar gutter on desktop and overflows on mobile browsers
+   that report different inner widths. */
+@media (max-width: 1024px) {
+  .footer,
+  .modern-feature-section {
+    width: 100% !important;
+    max-width: 100% !important;
+  }
+}
+
+/* ----- 2. iOS ZOOM PREVENTION ON FORM FIELDS ----- */
+/* Any input < 16px causes Mobile Safari to auto-zoom. Force 16px
+   on small screens for inputs/selects/textarea everywhere. */
+@media (max-width: 768px) {
+  input:not([type="checkbox"]):not([type="radio"]):not([type="range"]),
+  select,
+  textarea {
+    font-size: 16px !important;
+  }
+}
+
+/* ----- 3. TOUCH-FRIENDLY TAP TARGETS ----- */
+/* Mobile guideline is 44x44px minimum. Apply to common interactive
+   elements that don't already have a min-height. */
+@media (max-width: 768px) {
+  button,
+  a.button,
+  .btn,
+  [role="button"] {
+    min-height: 44px;
+  }
+
+  /* Don't force min-height on tiny chips/icons that already opt out */
+  .qw-chip,
+  .qw-other-chip,
+  .pill-chip,
+  .step-chip,
+  .footer-social-link,
+  .pdf-zoom-btn,
+  .auth-password-toggle,
+  .live-chat-minimize {
+    min-height: 0;
+  }
+}
+
+/* ----- 4. CONTAINER MAX WIDTH AT EXTRA-SMALL ----- */
+@media (max-width: 360px) {
+  :root {
+    --page-gutter: 12px;
+    --page-gutter-mobile: 12px;
+  }
+}
+
+/* ----- 5. TABLE SCROLL CONTAINERS ----- */
+/* Any wide data table inside an overflow-x:auto wrapper should scroll
+   smoothly on touch devices. Some pages already do this; this is a
+   safety net. */
+.table-wrapper,
+.table-scroll,
+.responsive-table {
+  -webkit-overflow-scrolling: touch;
+  overscroll-behavior-x: contain;
+  max-width: 100%;
+}
+
+/* ----- 6. MODALS & DROPDOWNS — FIT SMALL SCREENS ----- */
+@media (max-width: 480px) {
+  .modal-content,
+  .modal-panel,
+  .auth-modal,
+  .other-panel {
+    max-width: calc(100vw - 16px) !important;
+    margin: 8px auto !important;
+  }
+}
+
+/* ----- 7. MOBILE UX POLISH (≤768px) ----- */
+/* Everything beyond this point is wrapped in @media so desktop is
+   never affected. Goal: balanced spacing, generous but not empty,
+   premium feel rather than a desktop page squeezed into a phone. */
+
+@media (max-width: 768px) {
+  /* Quote widget — centered with generous gutters on phone */
+  .quote-widget {
+    max-width: 100%;
+    margin: 0 auto;
+    box-shadow: 0 4px 16px rgba(15, 23, 42, 0.06);
+    border-radius: 14px;
+    overflow: hidden;
+  }
+
+  .quote-form {
+    padding: 22px 20px;
+  }
+
+  /* Section rhythm: tighter than desktop but not cramped */
+  .home-page section {
+    padding-left: 0;
+    padding-right: 0;
+  }
+
+  .home-page .features-wrapper {
+    margin-top: 12px;
+  }
+
+  /* Balanced stacking for any generic 2-column desktop row that
+     hasn't been explicitly addressed. */
+  .row-2col,
+  .two-col,
+  [data-stack-on-mobile="true"] {
+    grid-template-columns: 1fr !important;
+    flex-direction: column !important;
+  }
+}
+
+@media (max-width: 480px) {
+  .quote-form {
+    padding: 20px 16px;
+  }
+
+  .quote-widget {
+    border-radius: 12px;
+  }
+}
+

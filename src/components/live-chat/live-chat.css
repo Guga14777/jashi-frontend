@@ -384,19 +384,21 @@
 /* Mobile Responsive - Full Screen */
 @media (max-width: 480px) {
   .live-chat-button {
-    bottom: 80px; /* Adjusted for mobile to avoid footer */
-    right: 16px;
-    padding: 12px 18px;
+    bottom: 16px; /* Sits in safe corner — won't cover content */
+    right: 12px;
+    padding: 10px 14px;
+    gap: 6px;
     z-index: 9999;
+    border-radius: 999px;
   }
 
   .live-chat-icon {
-    width: 20px;
-    height: 20px;
+    width: 18px;
+    height: 18px;
   }
 
   .live-chat-text {
-    font-size: 14px;
+    font-size: 13px;
   }
 
   .live-chat-panel {
@@ -500,4 +502,21 @@ body .live-chat-panel {
 .footer + .live-chat-panel,
 .footer ~ .live-chat-panel {
   bottom: 116px !important;
+}
+
+/* On small phones, override the +120px shifts so the button sits in the
+   bottom corner instead of floating midway up the screen and obscuring
+   primary CTAs (e.g. "Get Quote" on the homepage hero). */
+@media (max-width: 480px) {
+  .page-with-footer .live-chat-button,
+  .footer + .live-chat-button,
+  .footer ~ .live-chat-button {
+    bottom: 16px !important;
+  }
+
+  .page-with-footer .live-chat-panel,
+  .footer + .live-chat-panel,
+  .footer ~ .live-chat-panel {
+    bottom: 0 !important;
+  }
 }
