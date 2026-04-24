@@ -26,7 +26,8 @@ async function getQuotes(req, res) {
     console.log('📥 [QUOTES] GET QUOTES REQUEST');
     
     const userId = req.userId;
-    
+    const userEmail = req.userEmail;
+
     const {
       page = DEFAULT_PAGE,
       pageSize = DEFAULT_PAGE_SIZE,
@@ -42,10 +43,20 @@ async function getQuotes(req, res) {
     const limitNum = parseInt(pageSize);
     const skip = (pageNum - 1) * limitNum;
 
-    const where = {
-      userId,
-      ...(status && { status }),
-    };
+    // Match by userId OR email so legacy quotes (created when the user had a
+    // different userId) still surface on the dashboard. See equivalent fix
+    // in booking.core.controller.cjs / customer.stats.controller.cjs.
+    const ownerFilter = userEmail
+      ? {
+          OR: [
+            { userId },
+            { userEmail: { equals: userEmail, mode: 'insensitive' } },
+          ],
+        }
+      : { userId };
+
+    const andConditions = [ownerFilter];
+    if (status) andConditions.push({ status });
 
     // Quote "Waiting" vs "Accepted" is derived from whether a carrier has
     // picked up the booking tied to the quote. Filter via the booking relation
@@ -53,17 +64,17 @@ async function getQuotes(req, res) {
     if (typeof statusFilter === 'string' && statusFilter.trim()) {
       const bucket = statusFilter.trim().toLowerCase();
       if (bucket === 'accepted') {
-        where.bookings = { some: { carrierId: { not: null } } };
+        andConditions.push({ bookings: { some: { carrierId: { not: null } } } });
       } else if (bucket === 'waiting') {
-        where.NOT = { bookings: { some: { carrierId: { not: null } } } };
+        andConditions.push({ NOT: { bookings: { some: { carrierId: { not: null } } } } });
       }
     }
 
     if (typeof likelihoodFilter === 'string' && likelihoodFilter.trim()) {
       const band = likelihoodFilter.trim().toLowerCase();
-      if (band === 'high') where.likelihood = { gte: 80 };
-      else if (band === 'medium') where.likelihood = { gte: 60, lt: 80 };
-      else if (band === 'low') where.likelihood = { lt: 60 };
+      if (band === 'high') andConditions.push({ likelihood: { gte: 80 } });
+      else if (band === 'medium') andConditions.push({ likelihood: { gte: 60, lt: 80 } });
+      else if (band === 'low') andConditions.push({ likelihood: { lt: 60 } });
     }
 
     const searchTerm = typeof search === 'string' ? search.trim() : '';
@@ -97,8 +108,10 @@ async function getQuotes(req, res) {
         }
       }
 
-      where.OR = or;
+      andConditions.push({ OR: or });
     }
+
+    const where = { AND: andConditions };
     
     const [quotes, total] = await prisma.$transaction([
       prisma.quote.findMany({
@@ -111,7 +124,7 @@ async function getQuotes(req, res) {
       prisma.quote.count({ where }),
     ]);
     
-    console.log(`📋 [QUOTES] Found ${quotes.length} quotes for user ${userId}`);
+    console.log(`📋 [QUOTES] Found ${quotes.length}/${total} quotes for user ${userId} (${userEmail || 'no email'})`);
     
     const enhancedQuotes = quotes.map((quote) => transformQuoteForList(quote));
     
@@ -189,16 +202,32 @@ async function getQuoteById(req, res) {
 async function getQuoteStats(req, res) {
   try {
     const userId = req.userId;
+    const userEmail = req.userEmail;
+
+    // Match by userId OR email, same pattern as getQuotes and
+    // customer.stats.controller, so legacy quotes tied only by email still
+    // count. Without this, users with pre-account-linkage quotes see all
+    // zeros on the dashboard stats tiles.
+    const ownerFilter = userEmail
+      ? {
+          OR: [
+            { userId },
+            { userEmail: { equals: userEmail, mode: 'insensitive' } },
+          ],
+        }
+      : { userId };
+
+    const withStatus = (status) => ({ AND: [ownerFilter, { status }] });
 
     const [total, waiting, accepted, expired] = await prisma.$transaction([
-      prisma.quote.count({ where: { userId } }),
-      prisma.quote.count({ where: { userId, status: 'waiting' } }),
-      prisma.quote.count({ where: { userId, status: 'booked' } }),
-      prisma.quote.count({ where: { userId, status: 'expired' } }),
+      prisma.quote.count({ where: ownerFilter }),
+      prisma.quote.count({ where: withStatus('waiting') }),
+      prisma.quote.count({ where: withStatus('booked') }),
+      prisma.quote.count({ where: withStatus('expired') }),
     ]);
 
     const avgOffer = await prisma.quote.aggregate({
-      where: { userId },
+      where: ownerFilter,
       _avg: { offer: true },
     });
 
