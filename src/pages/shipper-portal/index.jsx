@@ -25,6 +25,10 @@ import { useAuth } from '../../store/auth-context.jsx';
 import * as quotesApi from '../../services/quotes.api.js';
 import * as bookingApi from '../../services/booking.api.js';
 import StepsNav from '../../components/booking/steps-nav.jsx';
+import {
+  promotePendingQuote,
+  readPendingQuote,
+} from '../../utils/promote-pending-quote.js';
 import './shipper-portal.css';
 
 /* ───────────────────────────────────────────────────────────
@@ -388,9 +392,61 @@ export default function ShipperPortal() {
      ✅ BACKGROUND: Load/create draft (doesn't block UI)
      UI is already showing URL data, this just handles drafts
   ───────────────────────────────────────────────────────────*/
+  // Track whether a recovery promotion is in flight, so we don't render the
+  // "No quote ID provided" dead end while the recovery is running.
+  const [isRecoveringQuote, setIsRecoveringQuote] = useState(false);
+  const recoveryAttempted = useRef(false);
+
+  useEffect(() => {
+    if (urlQuoteId) return;
+
+    // Recovery path: quote widget stored a pending payload in sessionStorage
+    // before the user signed in. Now that we have a token, promote it into a
+    // real quote and replace the URL with the real quoteId — rather than
+    // showing the old "No quote ID provided" error.
+    if (recoveryAttempted.current) return;
+    const pending = readPendingQuote();
+    if (!pending) {
+      setError(
+        "We couldn't find your quote. Please start a new quote from the homepage."
+      );
+      return;
+    }
+    if (!token) {
+      // Wait for auth to finish hydrating; this effect re-runs when token arrives.
+      return;
+    }
+
+    recoveryAttempted.current = true;
+    setIsRecoveringQuote(true);
+    setError(null);
+    // Cleanup flag so setState after unmount is a no-op. The in-flight POST
+    // itself is held by promotePendingQuote's module-level inflight lock and
+    // has a 20s timeout, so it will always resolve or reject.
+    let cancelled = false;
+    (async () => {
+      const promotion = await promotePendingQuote({ token, payload: pending });
+      if (cancelled) return;
+      setIsRecoveringQuote(false);
+      if (promotion.ok) {
+        // Replace the URL so all downstream logic (draft creation, DB fetches)
+        // sees the real quoteId. history.replaceState avoids a full remount.
+        navigate(promotion.url, { replace: true });
+      } else {
+        setError(
+          promotion.error ||
+            "We couldn't save your quote. Please try again from the homepage."
+        );
+      }
+    })();
+    return () => {
+      cancelled = true;
+    };
+  }, [urlQuoteId, token, navigate]);
+
   useEffect(() => {
     if (!urlQuoteId) {
-      setError('No quote ID provided');
+      // Error/recovery is handled by the recovery effect above.
       return;
     }
 
@@ -782,12 +838,12 @@ export default function ShipperPortal() {
   /* ─────────────────────────────────────────────────────────
      Render
   ───────────────────────────────────────────────────────────*/
-  if (isLoading) {
+  if (isLoading || isRecoveringQuote) {
     return (
       <div className="shipper-portal">
         <div className="sp-loading">
           <div className="sp-loading-spinner" />
-          <p>Loading booking portal...</p>
+          <p>{isRecoveringQuote ? 'Saving your quote…' : 'Loading booking portal...'}</p>
         </div>
       </div>
     );
@@ -797,11 +853,16 @@ export default function ShipperPortal() {
     return (
       <div className="shipper-portal">
         <div className="sp-error">
-          <h2>Error</h2>
+          <h2>Quote unavailable</h2>
           <p>{error}</p>
-          <button onClick={() => navigate('/dashboard')} className="btn-primary-portal">
-            Return to Dashboard
-          </button>
+          <div style={{ display: 'flex', gap: 12, marginTop: 16 }}>
+            <button onClick={() => navigate('/#quote-widget')} className="btn-primary-portal">
+              Start a new quote
+            </button>
+            <button onClick={() => navigate('/dashboard')} className="btn-primary-portal" style={{ background: 'transparent', border: '1px solid currentColor' }}>
+              Return to Dashboard
+            </button>
+          </div>
         </div>
       </div>
     );

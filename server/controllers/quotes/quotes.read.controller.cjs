@@ -196,16 +196,26 @@ async function getQuoteById(req, res) {
 async function getQuoteStats(req, res) {
   try {
     const userId = req.userId;
+    const userEmail = typeof req.userEmail === 'string' ? req.userEmail.trim() : '';
+
+    // Match by userId OR email, same pattern as getQuotes above and
+    // customer.stats.controller. Without this, users with pre-account-linkage
+    // quotes see all zeros on the dashboard stats tiles.
+    const ownerFilter = userEmail
+      ? { OR: [{ userId }, { userEmail: { equals: userEmail, mode: 'insensitive' } }] }
+      : { userId };
+
+    const withStatus = (status) => ({ AND: [ownerFilter, { status }] });
 
     const [total, waiting, accepted, expired] = await prisma.$transaction([
-      prisma.quote.count({ where: { userId } }),
-      prisma.quote.count({ where: { userId, status: 'waiting' } }),
-      prisma.quote.count({ where: { userId, status: 'booked' } }),
-      prisma.quote.count({ where: { userId, status: 'expired' } }),
+      prisma.quote.count({ where: ownerFilter }),
+      prisma.quote.count({ where: withStatus('waiting') }),
+      prisma.quote.count({ where: withStatus('booked') }),
+      prisma.quote.count({ where: withStatus('expired') }),
     ]);
 
     const avgOffer = await prisma.quote.aggregate({
-      where: { userId },
+      where: ownerFilter,
       _avg: { offer: true },
     });
 
