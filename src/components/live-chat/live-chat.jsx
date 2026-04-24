@@ -85,10 +85,10 @@ function LiveChat() {
             <div className="live-chat-header-content">
               <div className="live-chat-company">
                 <div className="company-logo">
-                  <span>G</span>
+                  <span>J</span>
                 </div>
                 <div className="company-info">
-                  <h3 className="company-name">Guga Support</h3>
+                  <h3 className="company-name">Jashi Support</h3>
                   <div className="agent-status">
                     <BsCircleFill className="status-dot" />
                     <span>Available</span>
@@ -115,7 +115,7 @@ function LiveChat() {
                 >
                   {msg.type === 'agent' && (
                     <div className="message-avatar">
-                      <span>G</span>
+                      <span>J</span>
                     </div>
                   )}
                   <div className="message-bubble">
@@ -149,7 +149,7 @@ function LiveChat() {
               </button>
             </form>
             <div className="live-chat-powered">
-              <span>Powered by Guga</span>
+              <span>Powered by Jashi Logistics</span>
             </div>
           </div>
         </div>

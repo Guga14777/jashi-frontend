@@ -184,7 +184,7 @@ export default function Privacy() {
             <h2>Contact Us</h2>
             <ul>
               <li>Email: <a href="mailto:privacy@guga.com">privacy@guga.com</a></li>
-              <li>Phone: 1-800-GUGA-HELP</li>
+              <li>Phone: 1-800-JASHI-HELP</li>
              
             </ul>
           </section>

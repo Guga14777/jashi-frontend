@@ -4,7 +4,7 @@
  */
 
 // Platform fee configuration
-const PLATFORM_FEE_RATE = 0.03; // 3%
+const PLATFORM_FEE_RATE = 0.06; // 6%
 
 // Vehicle limits
 const MIN_VEHICLES = 1;

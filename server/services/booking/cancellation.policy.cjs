@@ -26,8 +26,8 @@ const STAGE = { A: 'A', B: 'B', C: 'C', D: 'D' };
 const CARRIER_DISPATCH_FEE = 50;
 
 // Platform fee is expressed as a percentage of the offer amount — the same
-// 3% already displayed to customers in the shipper portal footer/summary.
-const PLATFORM_FEE_PERCENT = 3;
+// 6% already displayed to customers in the shipper portal footer/summary.
+const PLATFORM_FEE_PERCENT = 6;
 
 const stageForStatus = (status) => {
   const s = normalizeStatus(status);

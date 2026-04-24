@@ -73,7 +73,7 @@ export default function CustomerCookies() {
           <h2>Contact</h2>
           <p>
             Questions? Email <a href="mailto:privacy@guga.com">privacy@guga.com</a> or call
-            <span> </span><strong>1-800-GUGA-HELP</strong>.
+            <span> </span><strong>1-800-JASHI-HELP</strong>.
           </p>
         </section>
       </main>

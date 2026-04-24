@@ -20,7 +20,7 @@ function MobileHome() {
             Ship your car <span className="mhome-accent">in seconds</span>
           </h1>
           <p className="mhome-hero-sub">
-            Set your price. Skip the brokers. Only a 3% fee.
+            Set your price. Skip the brokers. Only a 6% fee.
           </p>
         </section>
 
@@ -30,7 +30,7 @@ function MobileHome() {
 
         <section className="mhome-trust" aria-label="Why Jashi Logistics">
           <div className="mhome-trust-item">
-            <span className="mhome-trust-num">3%</span>
+            <span className="mhome-trust-num">6%</span>
             <span className="mhome-trust-label">Flat fee</span>
           </div>
           <div className="mhome-trust-divider" aria-hidden="true" />

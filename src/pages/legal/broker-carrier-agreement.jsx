@@ -141,7 +141,7 @@ export default function BrokerCarrierAgreement() {
           <p>
             By accepting and performing loads, Carrier acknowledges the terms above and agrees the signed
             Broker–Carrier Agreement and each RateCon govern. Please contact{" "}
-            <a href="mailto:carrier-support@guga.com">carrier-support@guga.com</a> with any questions.
+            <a href="mailto:carrier-support@jashilogistics.com">carrier-support@jashilogistics.com</a> with any questions.
           </p>
         </section>
       </main>

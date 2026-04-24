@@ -24,7 +24,7 @@ export default function Claims() {
             <h2>Start a Claim</h2>
             <ol className="list-ol">
               <li>Gather evidence: BOL, clear photos (before/after), and notes.</li>
-              <li>Submit details in the portal or email <strong>carrier-support@guga.com</strong>.</li>
+              <li>Submit details in the portal or email <strong>carrier-support@jashilogistics.com</strong>.</li>
               <li>We confirm coverage and next steps in 1–2 business days.</li>
             </ol>
 
@@ -36,7 +36,7 @@ export default function Claims() {
 
               {/* Email shown as NON-clickable pill — forced to its own line */}
               <span className="btn_email" aria-label="Carrier support email">
-                carrier-support@guga.com
+                carrier-support@jashilogistics.com
               </span>
             </div>
           </div>

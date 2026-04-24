@@ -55,7 +55,7 @@ export default function ShippingGuide() {
               <li>Note issues on the Bill of Lading (BOL) before signing. Your signed BOL becomes the official Proof of Delivery (POD)</li>
               <li>Start the vehicle; check lights, windows, and basic functions</li>
               <li>Complete the short POD steps in Guga to close out the shipment</li>
-              <li>If something doesn't look right: note it on the BOL, take photos, and contact Guga Support from the order page. We'll guide you on next steps</li>
+              <li>If something doesn't look right: note it on the BOL, take photos, and contact Jashi Support from the order page. We'll guide you on next steps</li>
             </ul>
           </section>
 
@@ -82,7 +82,7 @@ export default function ShippingGuide() {
           <div className="help-section">
             <h2>Need Help?</h2>
             <p>
-              Questions about pricing, dispatch odds, or timing? Live chat from the bottom-right bubble or email support@guga.com
+              Questions about pricing, dispatch odds, or timing? Live chat from the bottom-right bubble or email support@jashilogistics.com
             </p>
             <p>
               Ready to book? Get a quote and see your dispatch likelihood instantly.

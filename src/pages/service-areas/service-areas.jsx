@@ -7,7 +7,7 @@ import "./service-areas.css";
 
 export default function ServiceAreas() {
   useEffect(() => {
-    document.title = "Service Areas — Guga Auto Transport (Continental U.S.)";
+    document.title = "Service Areas — Jashi Logistics Auto Transport (Continental U.S.)";
   }, []);
 
   return (
@@ -17,7 +17,7 @@ export default function ServiceAreas() {
         <div className="static-page-container">
           <h1>Service Areas</h1>
           <p>
-            Guga operates across the <strong>continental United States</strong>, connecting shippers and
+            Jashi Logistics operates across the <strong>continental United States</strong>, connecting shippers and
             verified carriers in major metros, suburbs, and many rural corridors.
           </p>
 
@@ -51,7 +51,7 @@ export default function ServiceAreas() {
           <div className="carrier-invitation">
             <h3>Carriers Welcome</h3>
             <p>
-              Licensed and insured carriers can join Guga to access steady loads across preferred
+              Licensed and insured carriers can join Jashi Logistics to access steady loads across preferred
               regions. We're expanding coverage continuously to improve service for shippers and carriers.
             </p>
           </div>

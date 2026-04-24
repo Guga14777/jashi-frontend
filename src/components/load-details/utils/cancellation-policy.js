@@ -6,7 +6,7 @@ import { SHIPMENT_STATUS, normalizeStatus } from './status-map';
 
 export const STAGE = { A: 'A', B: 'B', C: 'C', D: 'D' };
 export const CARRIER_DISPATCH_FEE = 50;
-export const PLATFORM_FEE_PERCENT = 3;
+export const PLATFORM_FEE_PERCENT = 6;
 
 export const stageForStatus = (status) => {
   const s = normalizeStatus(status);

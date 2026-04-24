@@ -150,7 +150,7 @@ const CustomerPrivacy = () => {
             <p>Questions or requests?</p>
             <ul>
               <li>Email: <a href="mailto:privacy@guga.com">privacy@guga.com</a></li>
-              <li>Phone: 1-800-GUGA-HELP</li>
+              <li>Phone: 1-800-JASHI-HELP</li>
               <li>Address: [Your Company Address]</li>
             </ul>
             <p className="effective">Effective date: November 7, 2025</p>

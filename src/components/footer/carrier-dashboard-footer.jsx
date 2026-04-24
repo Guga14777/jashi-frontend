@@ -23,17 +23,17 @@ function Footer() {
             <div className="footer-brand">
               <img
                 src="/images/logomercury1.png"
-                alt="Guga — freight platform for carriers"
+                alt="Jashi Logistics — freight platform for carriers"
                 className="footer-logo"
               />
-              <span className="footer-brand-name">Guga</span>
+              <span className="footer-brand-name">Jashi Logistics</span>
             </div>
             <p className="footer-tagline">Book loads. Get paid. Stay moving.</p>
             <div className="footer-social">
-              <a href="https://linkedin.com" target="_blank" rel="noopener noreferrer" aria-label="Guga on LinkedIn" className="footer-social-link"><FaLinkedinIn /></a>
-              <a href="https://instagram.com" target="_blank" rel="noopener noreferrer" aria-label="Guga on Instagram" className="footer-social-link"><FaInstagram /></a>
-              <a href="https://x.com" target="_blank" rel="noopener noreferrer" aria-label="Guga on X" className="footer-social-link"><FaXTwitter /></a>
-              <a href="https://facebook.com" target="_blank" rel="noopener noreferrer" aria-label="Guga on Facebook" className="footer-social-link"><FaFacebookF /></a>
+              <a href="https://linkedin.com" target="_blank" rel="noopener noreferrer" aria-label="Jashi Logistics on LinkedIn" className="footer-social-link"><FaLinkedinIn /></a>
+              <a href="https://instagram.com" target="_blank" rel="noopener noreferrer" aria-label="Jashi Logistics on Instagram" className="footer-social-link"><FaInstagram /></a>
+              <a href="https://x.com" target="_blank" rel="noopener noreferrer" aria-label="Jashi Logistics on X" className="footer-social-link"><FaXTwitter /></a>
+              <a href="https://facebook.com" target="_blank" rel="noopener noreferrer" aria-label="Jashi Logistics on Facebook" className="footer-social-link"><FaFacebookF /></a>
             </div>
           </div>
 
@@ -68,14 +68,14 @@ function Footer() {
                   <path d="M22 16.92v3a2 2 0 01-2.18 2A19.79 19.79 0 0111.19 19a19.5 19.5 0 01-6-6A19.79 19.79 0 012.12 4.33 2 2 0 014.11 2h3a2 2 0 012 1.72 12.84 12.84 0 00.7 2.81 2 2 0 01-.45 2.11L8.09 9.91a16 16 0 006 6l1.27-1.27a2 2 0 012.11-.45 12.84 12.84 0 002.81.7A2 2 0 0122 16.92z"/>
                 </svg>
                 {/* Unclickable phone text */}
-                <span className="footer-contact-text" role="text">1-800-GUGA-CARRIERS</span>
+                <span className="footer-contact-text" role="text">1-800-JASHI-CARRIERS</span>
               </li>
               <li>
                 <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" className="footer-icon">
                   <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/>
                 </svg>
                 {/* Unclickable email text */}
-                <span className="footer-contact-text" role="text">carrier-support@guga.com</span>
+                <span className="footer-contact-text" role="text">carrier-support@jashilogistics.com</span>
               </li>
             </ul>
           </div>
@@ -84,7 +84,7 @@ function Footer() {
         {/* Bottom row */}
         <div className="footer-bottom">
           <div className="footer-bottom-content">
-            <div className="footer-copyright">© {currentYear} Guga. All rights reserved.</div>
+            <div className="footer-copyright">© {currentYear} Jashi Logistics. All rights reserved.</div>
             <div className="footer-legal">
               <Link to="/legal/carrier-terms">Carrier Terms</Link><span className="footer-separator">·</span>
               <Link to="/legal/carrier-privacy">Carrier Privacy</Link><span className="footer-separator">·</span>

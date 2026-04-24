@@ -105,7 +105,7 @@ const CarrierLoginForm = ({ onSuccess, onSwitchToSignup, inModal = false }) => {
 
       <div className="simple-footer">
         <p>
-          New to Guga?{' '}
+          New to Jashi Logistics?{' '}
           <button
             type="button"
             onClick={onSwitchToSignup}
@@ -115,7 +115,7 @@ const CarrierLoginForm = ({ onSuccess, onSwitchToSignup, inModal = false }) => {
           </button>
         </p>
         <p className="simple-legal">
-          By logging in, you agree to Guga&apos;s{' '}
+          By logging in, you agree to Jashi Logistics&apos;s{' '}
           <a href="/terms" target="_blank" rel="noopener noreferrer">Terms of Service</a> and{' '}
           <a href="/privacy" target="_blank" rel="noopener noreferrer">Privacy Policy</a>.
         </p>

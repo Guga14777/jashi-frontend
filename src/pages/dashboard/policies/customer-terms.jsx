@@ -342,7 +342,7 @@ const CustomerTerms = () => {
             <p>If you have questions about these Terms of Service, please contact us:</p>
             <ul>
               <li>Email: legal@guga.com</li>
-              <li>Phone: 1-800-GUGA-HELP</li>
+              <li>Phone: 1-800-JASHI-HELP</li>
               <li>Address: [Your Company Address]</li>
             </ul>
           </section>
