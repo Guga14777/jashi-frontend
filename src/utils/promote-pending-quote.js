@@ -10,10 +10,21 @@
 //   - on failure → show a visible error; do NOT navigate to /shipper/offer
 //     without a real quoteId.
 
-import { api } from './request.js';
+import { apiUrl } from '../lib/api-url.js';
 
 const STORAGE_KEY = 'pendingQuotePayload';
 const RETURN_TO_KEY = 'authReturnTo';
+
+// Client-side timeout for POST /api/quotes. Prevents the recovery/login
+// spinner from hanging forever if Railway stalls. 20s is generous for a
+// CREATE that normally returns in <500ms.
+const QUOTE_CREATE_TIMEOUT_MS = 20_000;
+
+// Module-level in-flight guard. If two React components race to promote
+// the same sessionStorage payload (e.g. login form fires, portal recovery
+// also starts before navigate() fires), the second caller awaits the first
+// and gets the same result instead of double-posting.
+let inflightPromise = null;
 
 export function readPendingQuote() {
   try {
@@ -74,10 +85,54 @@ export function buildOfferUrl(quoteId, pending) {
   return `/shipper/offer?${params.toString()}`;
 }
 
+// POST /api/quotes with an AbortController timeout. We don't go through
+// utils/request.js because that wrapper has no timeout and we need this
+// call specifically to never hang forever.
+async function postQuoteWithTimeout(apiPayload, token, timeoutMs) {
+  const controller = new AbortController();
+  const timer = setTimeout(() => controller.abort(), timeoutMs);
+  try {
+    const res = await fetch(apiUrl('/api/quotes'), {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        Authorization: `Bearer ${token}`,
+      },
+      body: JSON.stringify(apiPayload),
+      signal: controller.signal,
+    });
+
+    // Parse body once, as JSON if content-type says so, else text.
+    const ct = res.headers.get('content-type') || '';
+    const body = ct.includes('application/json')
+      ? await res.json().catch(() => null)
+      : null;
+
+    if (!res.ok) {
+      const msg = body?.error || body?.message || `HTTP ${res.status}`;
+      const err = new Error(msg);
+      err.status = res.status;
+      err.body = body;
+      throw err;
+    }
+    return body;
+  } finally {
+    clearTimeout(timer);
+  }
+}
+
 // Create the quote from either an explicit payload or the sessionStorage one.
 // Returns { ok: true, quoteId, url } on success or { ok: false, error, raw }
 // on failure. Does NOT clear storage on failure so the caller can retry.
+// Concurrent callers with the same intent share one in-flight promise.
 export async function promotePendingQuote({ token, payload } = {}) {
+  if (inflightPromise) {
+    // Another caller is already promoting — await their result instead of
+    // duplicating the POST. Fine to share because all callers share the
+    // same sessionStorage payload anyway.
+    return inflightPromise;
+  }
+
   const pending = payload || readPendingQuote();
   if (!pending) {
     return { ok: false, error: 'No pending quote found. Please start a new quote.' };
@@ -86,23 +141,33 @@ export async function promotePendingQuote({ token, payload } = {}) {
     return { ok: false, error: 'You must be logged in to save a quote.' };
   }
 
-  try {
-    const apiPayload = buildApiPayload(pending);
-    const resp = await api.post('/api/quotes', apiPayload, token);
-    const quoteId = resp?.quote?.id || resp?.id;
-    if (!quoteId) {
-      return { ok: false, error: 'Quote creation returned no id.', raw: resp };
+  const run = async () => {
+    try {
+      const apiPayload = buildApiPayload(pending);
+      const resp = await postQuoteWithTimeout(apiPayload, token, QUOTE_CREATE_TIMEOUT_MS);
+      const quoteId = resp?.quote?.id || resp?.id;
+      if (!quoteId) {
+        return { ok: false, error: 'Quote creation returned no id.', raw: resp };
+      }
+      clearPendingQuote();
+      sessionStorage.setItem('lastQuoteId', quoteId);
+      return { ok: true, quoteId, url: buildOfferUrl(quoteId, pending) };
+    } catch (err) {
+      const isAbort = err?.name === 'AbortError';
+      console.error('[promotePendingQuote] failed:', err);
+      return {
+        ok: false,
+        error: isAbort
+          ? 'Saving your quote is taking too long. Please try again.'
+          : err?.message || 'Failed to save your quote.',
+        status: err?.status,
+        raw: err,
+      };
     }
-    clearPendingQuote();
-    sessionStorage.setItem('lastQuoteId', quoteId);
-    return { ok: true, quoteId, url: buildOfferUrl(quoteId, pending) };
-  } catch (err) {
-    console.error('[promotePendingQuote] failed:', err);
-    return {
-      ok: false,
-      error: err?.message || 'Failed to save your quote.',
-      status: err?.status,
-      raw: err,
-    };
-  }
+  };
+
+  inflightPromise = run().finally(() => {
+    inflightPromise = null;
+  });
+  return inflightPromise;
 }

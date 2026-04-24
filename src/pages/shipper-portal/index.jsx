@@ -420,8 +420,13 @@ export default function ShipperPortal() {
     recoveryAttempted.current = true;
     setIsRecoveringQuote(true);
     setError(null);
+    // Cleanup flag so setState after unmount is a no-op. The in-flight POST
+    // itself is held by promotePendingQuote's module-level inflight lock and
+    // has a 20s timeout, so it will always resolve or reject.
+    let cancelled = false;
     (async () => {
       const promotion = await promotePendingQuote({ token, payload: pending });
+      if (cancelled) return;
       setIsRecoveringQuote(false);
       if (promotion.ok) {
         // Replace the URL so all downstream logic (draft creation, DB fetches)
@@ -434,6 +439,9 @@ export default function ShipperPortal() {
         );
       }
     })();
+    return () => {
+      cancelled = true;
+    };
   }, [urlQuoteId, token, navigate]);
 
   useEffect(() => {

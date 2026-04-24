@@ -1,5 +1,5 @@
 // src/components/auth/customerloginform.jsx
-import React, { useState } from 'react';
+import React, { useRef, useState } from 'react';
 import { useNavigate, useLocation, useSearchParams } from 'react-router-dom';
 import PropTypes from 'prop-types';
 import { Eye, EyeOff } from 'lucide-react';
@@ -17,10 +17,15 @@ const CustomerLoginForm = ({ onSuccess, onSwitchToSignup, showTitle = true, inMo
   const [showPassword, setShowPassword] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [error, setError] = useState('');
+  // Ref guard for double-submit. React state is not synchronous, so a
+  // very fast second click can re-enter handleSubmit before isSubmitting
+  // flips. A ref flips immediately and blocks re-entry.
+  const submitLockRef = useRef(false);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    if (isSubmitting) return;
+    if (submitLockRef.current || isSubmitting) return;
+    submitLockRef.current = true;
     setIsSubmitting(true);
     setError('');
 
@@ -82,6 +87,7 @@ const CustomerLoginForm = ({ onSuccess, onSwitchToSignup, showTitle = true, inMo
       setError('Login failed. Please try again.');
     } finally {
       setIsSubmitting(false);
+      submitLockRef.current = false;
     }
   };
 

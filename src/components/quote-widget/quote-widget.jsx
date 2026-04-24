@@ -44,6 +44,10 @@ function QuoteWidget({ onStateChange } = {}) {
   const [isSubmitting, setIsSubmitting] = useState(false);
 
   const distanceAbortRef = useRef(null);
+  // Ref-based double-click guard for Submit. Flips before any await so a
+  // fast double-click within the same microtask can't enter the handler
+  // twice and create a duplicate quote row. See login/signup for analog.
+  const submitLockRef = useRef(false);
 
   // ============================================================================
   // PRICING CONSTANTS - MUST MATCH pricing-engine.js
@@ -481,7 +485,10 @@ function QuoteWidget({ onStateChange } = {}) {
     }
 
     if (!canSubmit) return;
+    if (submitLockRef.current) return;
+    submitLockRef.current = true;
 
+    try {
     // ✅ CRITICAL: Snapshot the selectedVehicles state IMMEDIATELY at submit time
     // This prevents any stale closure issues
     const vehiclesSnapshot = { ...selectedVehicles };
@@ -590,6 +597,9 @@ function QuoteWidget({ onStateChange } = {}) {
       alert('Failed to submit your quote, please try again.');
     } finally {
       setIsSubmitting(false);
+    }
+    } finally {
+      submitLockRef.current = false;
     }
   };
 

@@ -1,5 +1,5 @@
 // src/components/auth/customersignupform.jsx
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import PropTypes from "prop-types";
 import { Eye, EyeOff } from "lucide-react";
@@ -34,6 +34,8 @@ const CustomerSignupForm = ({
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
+  // Ref guard for double-submit; see customerloginform for rationale.
+  const submitLockRef = useRef(false);
 
   useEffect(() => {
     if (!inModal) {
@@ -136,7 +138,9 @@ const CustomerSignupForm = ({
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    if (!validateForm() || isSubmitting) return;
+    if (submitLockRef.current || isSubmitting) return;
+    if (!validateForm()) return;
+    submitLockRef.current = true;
 
     setIsSubmitting(true);
     setErrors((prev) => ({ ...prev, general: "", phoneNumber: "", email: "" }));
@@ -285,6 +289,7 @@ const CustomerSignupForm = ({
       }
     } finally {
       setIsSubmitting(false);
+      submitLockRef.current = false;
     }
   };
 
