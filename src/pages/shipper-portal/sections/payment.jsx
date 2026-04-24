@@ -12,6 +12,7 @@ import { useAuth } from '../../../store/auth-context.jsx';
 import { usePortal } from '../index.jsx';
 import * as bookingApi from '../../../services/booking.api.js';
 import * as quotesApi from '../../../services/quotes.api.js';
+import { computeFeeBreakdown, roundMoney, formatMoney } from '../../../utils/money';
 import PolicyModal from '../components/policy-modal.jsx';
 import './sections.css';
 
@@ -148,8 +149,10 @@ export default function Payment() {
   })();
 
   const platformFeeRate = 0.03;
-  const platformFee = offerAmount * platformFeeRate;
-  const totalAmount = offerAmount + platformFee;
+  const { base: offerBase, fee: platformFee, total: totalAmount } = computeFeeBreakdown(
+    offerAmount,
+    platformFeeRate,
+  );
   const cardChargeAmount = paymentMode === 'full_card_charge' ? totalAmount : platformFee;
 
   const formatCardNumber = (value) => {
@@ -585,7 +588,7 @@ export default function Payment() {
               <div className="sp-summary-content-minimal">
                 <div className="sp-summary-row-minimal">
                   <span className="sp-summary-label-minimal">Carrier Offer</span>
-                  <span className="sp-summary-value-minimal">${offerAmount.toFixed(2)}</span>
+                  <span className="sp-summary-value-minimal">${formatMoney(offerBase)}</span>
                 </div>
 
                 <div className="sp-summary-row-minimal sp-summary-row-highlight-softer">
@@ -593,7 +596,7 @@ export default function Payment() {
                     <span className="sp-summary-label-minimal">Platform Fee (3%)</span>
                     <span className="sp-summary-note-minimal">Charged when accepted</span>
                   </div>
-                  <span className="sp-summary-value-minimal">${platformFee.toFixed(2)}</span>
+                  <span className="sp-summary-value-minimal">${formatMoney(platformFee)}</span>
                 </div>
 
                 <div className="sp-summary-caption-static">
@@ -608,7 +611,7 @@ export default function Payment() {
               <div className="sp-summary-total-section">
                 <div className="sp-summary-row-total-clean">
                   <span className="sp-summary-label-total">Charged to card</span>
-                  <span className="sp-summary-value-total">${cardChargeAmount.toFixed(2)}</span>
+                  <span className="sp-summary-value-total">${formatMoney(cardChargeAmount)}</span>
                 </div>
               </div>
 

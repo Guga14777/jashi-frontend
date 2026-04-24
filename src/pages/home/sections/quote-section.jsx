@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import QuoteWidget from '../../../components/quote-widget/quote-widget';
+import { computeFeeBreakdown, roundMoney, addMoney, formatMoney } from '../../../utils/money';
 import './quote-section.css';
 
 function QuoteSection() {
@@ -29,30 +30,29 @@ function QuoteSection() {
   }, []);
 
   const calculateFees = () => {
-    const baseRate = quoteData.shippingPrice;
-    const marketAverage = baseRate * 1.08; // Market average = Base × 1.08
-    const carrierFee = baseRate * 0.125;
-    const carrierPayout = baseRate - carrierFee;
+    const baseRate = roundMoney(quoteData.shippingPrice);
+    // Market average = base × 1.08, rounded once to cents so every downstream
+    // fee/total is derived from the displayed value (no penny drift).
+    const marketAverage = roundMoney(quoteData.shippingPrice * 1.08);
+    const carrierPayout = roundMoney(baseRate * (1 - 0.125));
 
-    // Use market average as the display base for consistency with quote widget
-    const typicalBrokerFee = marketAverage * 0.15;
-    const typicalTotal = marketAverage + typicalBrokerFee;
-    const typicalPerMile = quoteData.miles > 0 ? typicalTotal / quoteData.miles : 0;
+    const typical = computeFeeBreakdown(marketAverage, 0.15);
+    const guga = computeFeeBreakdown(marketAverage, 0.03);
 
-    const gugaPlatformFee = marketAverage * 0.03;
-    const gugaTotal = marketAverage + gugaPlatformFee;
-    const gugaPerMile = quoteData.miles > 0 ? gugaTotal / quoteData.miles : 0;
+    const typicalPerMile = quoteData.miles > 0 ? typical.total / quoteData.miles : 0;
+    const gugaPerMile = quoteData.miles > 0 ? guga.total / quoteData.miles : 0;
 
-    const totalSavings = typicalTotal - gugaTotal;
-    const savingsPercent = (totalSavings / marketAverage) * 100;
+    const totalSavings = addMoney(typical.total, -guga.total);
+    // Savings on fees is structurally exact: (15 - 3) / 15 = 80%.
+    const savingsPercent = typical.fee > 0 ? ((typical.fee - guga.fee) / typical.fee) * 100 : 0;
     const perMileSavings = typicalPerMile - gugaPerMile;
 
     return {
       baseRate,
       marketAverage,
       carrierPayout,
-      typical: { brokerFee: typicalBrokerFee, total: typicalTotal, perMile: typicalPerMile },
-      guga: { platformFee: gugaPlatformFee, total: gugaTotal, perMile: gugaPerMile },
+      typical: { brokerFee: typical.fee, total: typical.total, perMile: typicalPerMile },
+      guga: { platformFee: guga.fee, total: guga.total, perMile: gugaPerMile },
       savings: { total: totalSavings, percent: savingsPercent, perMile: perMileSavings }
     };
   };
@@ -106,16 +106,16 @@ function QuoteSection() {
                       <div className="qs-comparison-breakdown">
                         <div className="qs-comparison-line">
                           <span>Base market rate:</span>
-                          <span className="qs-comparison-value">${fees.marketAverage.toFixed(2)}</span>
+                          <span className="qs-comparison-value">${formatMoney(fees.marketAverage)}</span>
                         </div>
                         <div className="qs-comparison-line">
                           <span>Broker fee 15%:</span>
-                          <span className="qs-comparison-value qs-fee-danger">${fees.typical.brokerFee.toFixed(2)}</span>
+                          <span className="qs-comparison-value qs-fee-danger">${formatMoney(fees.typical.brokerFee)}</span>
                         </div>
                       </div>
                       <div className="qs-comparison-total">
                         <span className="qs-total-label">You pay:</span>
-                        <span className="qs-total-value qs-total-danger">${fees.typical.total.toFixed(2)}</span>
+                        <span className="qs-total-value qs-total-danger">${formatMoney(fees.typical.total)}</span>
                       </div>
                     </div>
                   </div>
@@ -155,16 +155,16 @@ function QuoteSection() {
                       <div className="qs-comparison-breakdown">
                         <div className="qs-comparison-line">
                           <span>Base market rate:</span>
-                          <span className="qs-comparison-value">${fees.marketAverage.toFixed(2)}</span>
+                          <span className="qs-comparison-value">${formatMoney(fees.marketAverage)}</span>
                         </div>
                         <div className="qs-comparison-line">
                           <span>Platform fee 3%:</span>
-                          <span className="qs-comparison-value qs-fee-success">${fees.guga.platformFee.toFixed(2)}</span>
+                          <span className="qs-comparison-value qs-fee-success">${formatMoney(fees.guga.platformFee)}</span>
                         </div>
                       </div>
                       <div className="qs-comparison-total">
                         <span className="qs-total-label">You pay:</span>
-                        <span className="qs-total-value qs-total-success">${fees.guga.total.toFixed(2)}</span>
+                        <span className="qs-total-value qs-total-success">${formatMoney(fees.guga.total)}</span>
                       </div>
                     </div>
                   </div>
@@ -185,16 +185,16 @@ function QuoteSection() {
                   <div className="qs-comparison-breakdown">
                     <div className="qs-comparison-line">
                       <span>Base market rate:</span>
-                      <span className="qs-comparison-value">${fees.marketAverage.toFixed(2)}</span>
+                      <span className="qs-comparison-value">${formatMoney(fees.marketAverage)}</span>
                     </div>
                     <div className="qs-comparison-line">
                       <span>Broker fee 15%:</span>
-                      <span className="qs-comparison-value qs-fee-danger">${fees.typical.brokerFee.toFixed(2)}</span>
+                      <span className="qs-comparison-value qs-fee-danger">${formatMoney(fees.typical.brokerFee)}</span>
                     </div>
                   </div>
                   <div className="qs-comparison-total">
                     <span className="qs-total-label">You pay:</span>
-                    <span className="qs-total-value qs-total-danger">${fees.typical.total.toFixed(2)}</span>
+                    <span className="qs-total-value qs-total-danger">${formatMoney(fees.typical.total)}</span>
                   </div>
                 </div>
               </div>
@@ -210,16 +210,16 @@ function QuoteSection() {
                   <div className="qs-comparison-breakdown">
                     <div className="qs-comparison-line">
                       <span>Base market rate:</span>
-                      <span className="qs-comparison-value">${fees.marketAverage.toFixed(2)}</span>
+                      <span className="qs-comparison-value">${formatMoney(fees.marketAverage)}</span>
                     </div>
                     <div className="qs-comparison-line">
                       <span>Platform fee 3%:</span>
-                      <span className="qs-comparison-value qs-fee-success">${fees.guga.platformFee.toFixed(2)}</span>
+                      <span className="qs-comparison-value qs-fee-success">${formatMoney(fees.guga.platformFee)}</span>
                     </div>
                   </div>
                   <div className="qs-comparison-total">
                     <span className="qs-total-label">You pay:</span>
-                    <span className="qs-total-value qs-total-success">${fees.guga.total.toFixed(2)}</span>
+                    <span className="qs-total-value qs-total-success">${formatMoney(fees.guga.total)}</span>
                   </div>
                 </div>
               </div>
