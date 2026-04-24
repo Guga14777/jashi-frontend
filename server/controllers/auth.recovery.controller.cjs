@@ -289,16 +289,19 @@ exports.requestLink = async (req, res) => {
   // Send the generic response FIRST so no downstream failure (DB, SMTP,
   // anything) can bubble up as a 5xx to the browser. After we respond,
   // the rest of this function is a background job.
+  console.log('[RECOVERY] start', { bodyKeys: Object.keys(req.body || {}), path: req.originalUrl });
   console.log('[recovery] request-link: start');
 
   let email;
   try {
     const rawEmail = (req.body && req.body.email) || '';
+    console.log('[RECOVERY] received email', { typeof: typeof rawEmail, length: String(rawEmail).length });
     console.log('[recovery] request-link: received email typeof=', typeof rawEmail);
     if (typeof rawEmail === 'string' && rawEmail.trim()) {
       email = rawEmail.trim().toLowerCase();
     }
   } catch (e) {
+    console.error('[RECOVERY] body parse failed', e);
     console.error('[recovery] request-link: body parse failed:', e);
   }
 
@@ -321,6 +324,7 @@ exports.requestLink = async (req, res) => {
       return;
     }
 
+    console.log('[RECOVERY] user lookup', { email, found: !!user, userId: user?.id || null });
     if (!user) {
       console.log(`[recovery] request-link: no user for ${email} (generic 200 already sent).`);
       return;
@@ -351,11 +355,13 @@ exports.requestLink = async (req, res) => {
     }
 
     try {
+      console.log('[RECOVERY] creating reset token', { userId: user.id, expiresAt: expiresAt.toISOString() });
       await prisma.passwordReset.create({
         data: { userId: user.id, codeHash, expiresAt },
       });
       console.log('[recovery] passwordReset row created');
     } catch (e) {
+      console.error('[RECOVERY] token create failed', e);
       console.error('[recovery] passwordReset.create failed:', e);
       return;
     }
@@ -364,12 +370,19 @@ exports.requestLink = async (req, res) => {
     const resetUrl = `${appUrl}/reset-password?token=${rawToken}`;
     const recipientName = [user.firstName, user.lastName].filter(Boolean).join(' ');
 
+    console.log('[RECOVERY] sending email', { to: user.email, resetUrl });
     console.log(`[recovery] dispatching email to ${user.email}`);
     try {
       const result = await emailService.sendPasswordResetLink({
         to: user.email,
         resetUrl,
         recipientName,
+      });
+      console.log('[RECOVERY] email result', {
+        ok: result?.ok,
+        stub: result?.stub,
+        messageId: result?.messageId || null,
+        error: result?.error || null,
       });
       if (result?.stub) {
         console.log(`[recovery] (stub) reset link for ${user.email}: ${resetUrl}`);
@@ -379,6 +392,7 @@ exports.requestLink = async (req, res) => {
         console.error(`[recovery] reset email failed for ${user.email}:`, result?.error);
       }
     } catch (e) {
+      console.error('[RECOVERY] email failed', e);
       console.error('[recovery] sendPasswordResetLink threw:', e);
     }
 

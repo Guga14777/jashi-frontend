@@ -150,6 +150,26 @@ try {
 // EXPRESS APP SETUP
 // ============================================================
 const app = express();
+
+// ============================================================
+// [GLOBAL REQ] — first middleware, BEFORE helmet/cors/body-parse,
+// so even CORS-rejected preflights show up. If this service is the
+// one receiving a request, this line will always print. If you
+// submit forgot-password and this line does NOT appear in Railway
+// runtime logs, the request is reaching a different service.
+// ============================================================
+app.use((req, res, next) => {
+  console.log(
+    '[GLOBAL REQ]',
+    req.method,
+    req.originalUrl,
+    'host=' + (req.headers.host || '-'),
+    'ua=' + String(req.headers['user-agent'] || '-').slice(0, 40),
+    new Date().toISOString()
+  );
+  next();
+});
+
 const PORT = process.env.PORT || 5182;
 // In production always bind 0.0.0.0 so Railway/Render/Fly proxies can
 // reach the process. `localhost` binding in a Linux container is a common

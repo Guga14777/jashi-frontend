@@ -28,6 +28,14 @@ function hasSmtpConfig() {
 
 // Log current mode once on module load so it's obvious from the very first
 // server boot whether emails will actually go out.
+console.log('[EMAIL] smtp config', {
+  host: SMTP_HOST || '(empty)',
+  port: SMTP_PORT,
+  secure: SMTP_SECURE,
+  user: SMTP_USER || '(empty)',
+  hasPass: !!SMTP_PASS,
+  mode: hasSmtpConfig() ? 'REAL' : 'STUB',
+});
 if (hasSmtpConfig()) {
   console.log(
     `[email] Mode: REAL SMTP  (host=${SMTP_HOST}:${SMTP_PORT} secure=${SMTP_SECURE} user=${SMTP_USER})`
@@ -187,6 +195,7 @@ function escapeAttr(value) {
 
 async function sendEmail({ to, subject, html, text, replyTo, attachments }) {
   const tx = getTransporter();
+  console.log('[EMAIL] sending', { to, from: brand.FROM_EMAIL, subject, hasHtml: !!html, hasText: !!text, stubMode: !tx });
 
   if (!tx) {
     // Loud, impossible-to-miss banner so nobody thinks an email was sent.
@@ -236,6 +245,7 @@ async function sendEmail({ to, subject, html, text, replyTo, attachments }) {
       replyTo: replyTo || brand.SUPPORT_EMAIL,
       attachments: Array.isArray(attachments) && attachments.length ? attachments : undefined,
     });
+    console.log('[EMAIL] delivered', { to, messageId: info.messageId, accepted: info.accepted, rejected: info.rejected, response: info.response });
     console.log(
       `[email] ✅ delivered to ${to} (messageId=${info.messageId}, response="${info.response || ''}")`
     );
@@ -247,6 +257,7 @@ async function sendEmail({ to, subject, html, text, replyTo, attachments }) {
     }
     return { ok: true, messageId: info.messageId, accepted: info.accepted, rejected: info.rejected };
   } catch (err) {
+    console.error('[EMAIL] failed', { to, code: err.code, command: err.command, response: err.response, message: err.message });
     // Full diagnostic dump — we want the cause visible.
     console.error('');
     console.error('████████████████████████████████████████████████████████████████');
