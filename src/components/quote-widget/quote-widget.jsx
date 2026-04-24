@@ -21,7 +21,7 @@ import './quote-widget.css';
 // 6. Pickup/SUV/Van/Minivan must ALWAYS be more expensive than Sedan (same route)
 // 7. SINGLE VEHICLE SELECTION ONLY (max 1 vehicle per quote)
 // ======================================================
-function QuoteWidget() {
+function QuoteWidget({ onStateChange } = {}) {
   const navigate = useNavigate();
   const location = useLocation();
   const { isAuthenticated, token } = useAuth();
@@ -361,7 +361,7 @@ function QuoteWidget() {
     const market = Math.round(openMarketAvg * enclosedMultiplier * 100) / 100;
 
     setMarketAvg(market);
-    
+
     // NOTE: Recommended range is for UI display only, not part of pricing engine
     setRecommendedRange({
       min: Math.round(market * 0.9 * 100) / 100,
@@ -369,6 +369,28 @@ function QuoteWidget() {
       recommended: market,
     });
   }, [distanceMi, selectedVehicles, transportType, totalSelected]);
+
+  // ============================================================================
+  // Expose relevant form state to the parent (used by the comparison cards on
+  // the homepage, so distance / market / vehicle stay in sync with the widget).
+  // ============================================================================
+  const onStateChangeRef = useRef(onStateChange);
+  useEffect(() => {
+    onStateChangeRef.current = onStateChange;
+  }, [onStateChange]);
+
+  useEffect(() => {
+    const cb = onStateChangeRef.current;
+    if (typeof cb !== 'function') return;
+    cb({
+      pickupZip,
+      dropoffZip,
+      distanceMi,
+      selectedVehicles,
+      transportType,
+      marketAvg,
+    });
+  }, [pickupZip, dropoffZip, distanceMi, selectedVehicles, transportType, marketAvg]);
 
   // ============================================================================
   // LIKELIHOOD CALCULATION

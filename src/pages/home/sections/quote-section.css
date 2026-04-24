@@ -309,6 +309,14 @@ flex-direction: column;
 height: auto; /* FIXED: Allow content to determine height */
 }
 
+.qs-comparison-placeholder {
+font-size: 14px;
+color: #64748B;
+padding: 24px 0;
+text-align: center;
+line-height: 1.5;
+}
+
 /* Vehicle info - FIXED: Natural height */
 .qs-comparison-vehicle {
 font-size: 13px;
