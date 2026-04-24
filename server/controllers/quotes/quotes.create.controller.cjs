@@ -100,6 +100,63 @@ async function createQuote(req, res) {
       primaryVehicle,
     });
 
+    // Idempotency: if the same user submitted a matching quote in the last
+    // 60 seconds, return that row instead of inserting a duplicate. This
+    // covers the refresh-during-POST case — the server may have committed
+    // before the browser aborted the fetch, and the recovered client would
+    // otherwise retry and create a second row. The match criteria are
+    // narrow enough that a deliberate second-submit with a different offer
+    // or route still goes through.
+    const DEDUPE_WINDOW_MS = 60_000;
+    const dedupeWhere = {
+      userId,
+      fromZip: String(fromZip),
+      toZip: String(toZip),
+      transportType: String(transportType),
+      offer: finalOffer,
+      vehicle: String(primaryVehicle),
+      createdAt: { gte: new Date(Date.now() - DEDUPE_WINDOW_MS) },
+    };
+    const recentDuplicate = await prisma.quote.findFirst({
+      where: dedupeWhere,
+      orderBy: { createdAt: 'desc' },
+      include: {
+        user: {
+          select: {
+            id: true,
+            email: true,
+            firstName: true,
+            lastName: true,
+            phone: true,
+          },
+        },
+        pickupAddress: true,
+        dropoffAddress: true,
+      },
+    });
+    if (recentDuplicate) {
+      console.log(
+        '🔁 [QUOTES] Idempotent replay — returning existing quote',
+        recentDuplicate.id,
+        'orderNumber:',
+        recentDuplicate.orderNumber
+      );
+      const pricingDup = buildPricingBreakdown(recentDuplicate.offer);
+      const { vehicles: dupVehicles, vehiclesCount: dupCount } = extractVehiclesFromQuote(recentDuplicate);
+      const dupVin = extractPrimaryVin(recentDuplicate);
+      return res.status(200).json({
+        success: true,
+        deduped: true,
+        quote: {
+          ...recentDuplicate,
+          ...pricingDup,
+          vin: dupVin,
+          vehicles: dupVehicles,
+          vehiclesCount: dupCount,
+        },
+      });
+    }
+
     const quoteData = {
       userId,
       userEmail: userEmail || user?.email || '',
