@@ -13,7 +13,7 @@ export default function DetentionTONU() {
         <header className="page-header">
           <h1>Detention / TONU</h1>
           <p className="page-subtitle">
-            All accessorials on Guga are <strong>$50 flat</strong> — simple, predictable, and fast to process.
+            All accessorials on Jashi Logistics are <strong>$50 flat</strong> — simple, predictable, and fast to process.
           </p>
         </header>
 
@@ -23,7 +23,7 @@ export default function DetentionTONU() {
           <ul className="list">
             <li>Detention, Layover, and TONU are all <strong>$50 flat</strong>.</li>
             <li>Detention still begins after <strong>2 hours</strong> of free time (unless RateCon says otherwise), but the charge is flat $50.</li>
-            <li>All accessorials must be documented on the BOL (or equivalent) and approved by Guga before invoicing.</li>
+            <li>All accessorials must be documented on the BOL (or equivalent) and approved by Jashi Logistics before invoicing.</li>
           </ul>
         </section>
 
@@ -103,7 +103,7 @@ export default function DetentionTONU() {
             <li>Check-in/out times on BOL or facility time-stamped ticket.</li>
             <li>Photos of gate/in-app timer with visible time &amp; location (GPS).</li>
             <li>Messages/emails showing cancellation or “not ready” status (for TONU).</li>
-            <li>Dispatcher notes in the Guga app with timestamps.</li>
+            <li>Dispatcher notes in the Jashi Logistics app with timestamps.</li>
           </ul>
         </section>
 

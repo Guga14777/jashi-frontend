@@ -135,7 +135,7 @@ export default function Apps({ variant = "public" }) {
           <div className="apps-card">
             <h3>Auto-Upload to the System</h3>
             <p>
-              Photos, notes, and signed docs sync to your Guga dashboard and become visible to
+              Photos, notes, and signed docs sync to your Jashi Logistics dashboard and become visible to
               customers in real time.
             </p>
           </div>
@@ -164,7 +164,7 @@ export default function Apps({ variant = "public" }) {
       <section className="apps-section">
         <h2>How it works</h2>
         <ol className="apps-steps">
-          <li><span className="apps-step-num">1</span>Dispatcher assigns a load in Guga and shares it to the driver’s phone.</li>
+          <li><span className="apps-step-num">1</span>Dispatcher assigns a load in Jashi Logistics and shares it to the driver’s phone.</li>
           <li><span className="apps-step-num">2</span>Driver follows the pickup checklist and captures required photos.</li>
           <li><span className="apps-step-num">3</span>BOL is reviewed and signed; documents upload automatically.</li>
           <li><span className="apps-step-num">4</span>En-route, the app can share status and ETA (driver-controlled privacy).</li>

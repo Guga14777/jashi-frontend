@@ -24,7 +24,7 @@ const AdminHeader = () => {
           <div className="admin-logo-circle">
             <img 
               src="/images/logomercury1.png" 
-              alt="Guga Auto Transport" 
+              alt="Jashi Logistics Auto Transport" 
             />
           </div>
           <span className="admin-header-title">Admin Portal</span>

@@ -351,7 +351,7 @@ exports.login = async (req, res) => {
           userId: user.id,
           type: 'account',
           title: 'Welcome Back!',
-          message: 'Your account has been reactivated. Welcome back to Guga!',
+          message: 'Your account has been reactivated. Welcome back to Jashi Logistics!',
           category: 'account',
           meta: {
             timestamp: new Date().toISOString()

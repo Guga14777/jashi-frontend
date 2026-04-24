@@ -91,7 +91,7 @@ const evaluateCustomerCancel = (status) => {
       carrierDispatchFee: 0,
       platformFeeRefundable: false,
       headline: 'Platform fee is non-refundable',
-      detail: 'A carrier has accepted but has not yet started driving. The 3% platform fee is non-refundable.',
+      detail: 'A carrier has accepted but has not yet started driving. The 6% platform fee is non-refundable.',
     };
   }
 
@@ -102,7 +102,7 @@ const evaluateCustomerCancel = (status) => {
     carrierDispatchFee: CARRIER_DISPATCH_FEE,
     platformFeeRefundable: false,
     headline: `Carrier dispatch fee applies ($${CARRIER_DISPATCH_FEE})`,
-    detail: `The carrier is already ${normalized === SHIPMENT_STATUS.ARRIVED_AT_PICKUP ? 'on-site at pickup' : 'en route to pickup'}. A $${CARRIER_DISPATCH_FEE} dispatch fee applies and the 3% platform fee is non-refundable.`,
+    detail: `The carrier is already ${normalized === SHIPMENT_STATUS.ARRIVED_AT_PICKUP ? 'on-site at pickup' : 'en route to pickup'}. A $${CARRIER_DISPATCH_FEE} dispatch fee applies and the 6% platform fee is non-refundable.`,
   };
 };
 

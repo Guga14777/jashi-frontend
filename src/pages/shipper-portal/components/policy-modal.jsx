@@ -60,11 +60,11 @@ const PolicyModal = ({ open, onClose }) => {
               </li>
               <li>
                 <span className="sp-policy-stage__label">After acceptance, before the carrier starts driving</span>
-                <p>You may cancel. The 3% platform fee is non-refundable. No carrier fee.</p>
+                <p>You may cancel. The 6% platform fee is non-refundable. No carrier fee.</p>
               </li>
               <li>
                 <span className="sp-policy-stage__label">After the carrier has been dispatched</span>
-                <p>You may cancel. The 3% platform fee is non-refundable and a flat <strong>$50 carrier dispatch fee</strong> applies — this covers the carrier's time and fuel while en route or on-site.</p>
+                <p>You may cancel. The 6% platform fee is non-refundable and a flat <strong>$50 carrier dispatch fee</strong> applies — this covers the carrier's time and fuel while en route or on-site.</p>
               </li>
               <li>
                 <span className="sp-policy-stage__label">After your vehicle has been picked up</span>
