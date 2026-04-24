@@ -4,7 +4,7 @@ import { useNavigate, useLocation, useSearchParams } from 'react-router-dom';
 import PropTypes from 'prop-types';
 import { Eye, EyeOff } from 'lucide-react';
 import { useAuth } from '../../store/auth-context';
-import { api } from '../../utils/request';
+import { promotePendingQuote, readPendingQuote } from '../../utils/promote-pending-quote';
 import './customer-login.css';
 
 const CustomerLoginForm = ({ onSuccess, onSwitchToSignup, showTitle = true, inModal = false }) => {
@@ -34,7 +34,7 @@ const CustomerLoginForm = ({ onSuccess, onSwitchToSignup, showTitle = true, inMo
 
       const urlRedirect = searchParams.get('redirect');
       const returnTo = sessionStorage.getItem('authReturnTo');
-      const pendingQuoteStr = sessionStorage.getItem('pendingQuotePayload');
+      const pendingQuote = readPendingQuote();
 
       // URL redirect param takes priority (except when it points at shipper flow).
       if (urlRedirect && !urlRedirect.includes('/shipper')) {
@@ -44,58 +44,24 @@ const CustomerLoginForm = ({ onSuccess, onSwitchToSignup, showTitle = true, inMo
         return;
       }
 
-      // Pending quote: create it server-side, then redirect to shipper portal with quoteId.
-      if (returnTo && returnTo.includes('/shipper') && pendingQuoteStr && result.token) {
-        try {
-          const pendingQuote = JSON.parse(pendingQuoteStr);
-
-          // Clear pending quote immediately to prevent the quote-widget useEffect
-          // from racing us and creating a duplicate.
-          sessionStorage.removeItem('pendingQuotePayload');
-          sessionStorage.removeItem('authReturnTo');
-
-          const quotePayload = {
-            fromZip: pendingQuote.fromZip,
-            toZip: pendingQuote.toZip,
-            miles: pendingQuote.miles,
-            vehicle: pendingQuote.vehicle,
-            vehicles: pendingQuote.vehicles,
-            transportType: pendingQuote.transportType,
-            offer: pendingQuote.offer,
-            likelihood: pendingQuote.likelihood,
-            marketAvg: pendingQuote.marketAvg,
-            recommendedMin: pendingQuote.recommendedMin,
-            recommendedMax: pendingQuote.recommendedMax,
-            source: 'quote-widget',
-          };
-
-          const createdQuote = await api.post('/api/quotes', quotePayload, result.token);
-          const savedQuoteId = createdQuote?.quote?.id || createdQuote?.id;
-
-          if (savedQuoteId) {
-            sessionStorage.setItem('lastQuoteId', savedQuoteId);
-
-            const params = new URLSearchParams();
-            params.set('quoteId', savedQuoteId);
-            params.set('fromZip', pendingQuote.fromZip);
-            params.set('toZip', pendingQuote.toZip);
-            params.set('miles', `${pendingQuote.miles}`);
-            params.set('offer', `${pendingQuote.offer}`);
-            params.set('transportType', pendingQuote.transportType);
-            params.set('likelihood', `${pendingQuote.likelihood}`);
-            params.set('vehicle', pendingQuote.vehicle);
-            params.set('marketAvg', `${pendingQuote.marketAvg}`);
-            params.set('recommendedMin', `${pendingQuote.recommendedMin}`);
-            params.set('recommendedMax', `${pendingQuote.recommendedMax}`);
-
-            navigate(`/shipper/offer?${params.toString()}`, { replace: true });
-            if (inModal) onSuccess?.();
-            return;
-          }
-        } catch (quoteErr) {
-          console.error('Failed to create pending quote:', quoteErr);
-          // Fall through to default redirect.
+      // Pending quote: create it server-side, then redirect to shipper portal
+      // with the real quoteId. On failure, stay on the login screen and show
+      // a visible error — never redirect to /shipper/offer without a quoteId
+      // (that's what produces the "No quote ID provided" dead end).
+      if (returnTo && returnTo.includes('/shipper') && pendingQuote && result.token) {
+        const promotion = await promotePendingQuote({
+          token: result.token,
+          payload: pendingQuote,
+        });
+        if (promotion.ok) {
+          navigate(promotion.url, { replace: true });
+          if (inModal) onSuccess?.();
+          return;
         }
+        setError(
+          "We couldn't save your quote. Please try again, or start a new quote from the homepage."
+        );
+        return;
       }
 
       // Shipper login — always land on the customer dashboard. Admin role

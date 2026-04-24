@@ -4,6 +4,7 @@ import { useNavigate } from "react-router-dom";
 import PropTypes from "prop-types";
 import { Eye, EyeOff } from "lucide-react";
 import { useAuth } from "../../store/auth-context";
+import { promotePendingQuote, readPendingQuote } from "../../utils/promote-pending-quote";
 import "./customer-signup.css";
 
 const PASSWORD_HELP_TEXT =
@@ -156,13 +157,33 @@ const CustomerSignupForm = ({
 
       if (result?.success) {
         console.log('✅ [CUSTOMER SIGNUP] Success!', { roleAdded: result.roleAdded });
-        
-        // ⭐ NEW: Show different success message if role was added
+
         if (result.roleAdded) {
           console.log('🎉 Shipper account added to existing carrier account!');
-          // Optional: You can show a toast notification here
         }
-        
+
+        // If the user landed here via the quote widget, promote the pending
+        // quote into a real DB record now and route them straight to
+        // /shipper/offer?quoteId=... — signup was the bug's dead end before.
+        const pending = readPendingQuote();
+        if (pending && result.token) {
+          const promotion = await promotePendingQuote({
+            token: result.token,
+            payload: pending,
+          });
+          if (promotion.ok) {
+            onSuccess?.();
+            navigate(promotion.url, { replace: true });
+            return;
+          }
+          setErrors((prev) => ({
+            ...prev,
+            general:
+              "Account created, but we couldn't save your quote. Please try again from the homepage.",
+          }));
+          return;
+        }
+
         onSuccess?.();
         if (!inModal) {
           navigate("/dashboard", { replace: true });

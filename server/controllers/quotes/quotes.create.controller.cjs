@@ -159,10 +159,35 @@ async function createQuote(req, res) {
     });
 
   } catch (error) {
-    console.error('❌ Create quote error:', error);
-    res.status(500).json({ 
-      error: 'Failed to create quote',
-      details: error.message 
+    // Detailed diagnostic logging so Railway logs expose the exact failure
+    // (Prisma validation/constraint, type coercion, etc.) instead of just a
+    // stack trace without context.
+    const bodyForLog = { ...(req.body || {}) };
+    if (bodyForLog.notes && typeof bodyForLog.notes === 'string' && bodyForLog.notes.length > 200) {
+      bodyForLog.notes = `${bodyForLog.notes.slice(0, 200)}…(truncated)`;
+    }
+    console.error('❌ [QUOTES] Create quote error:', {
+      name: error?.name,
+      code: error?.code,
+      message: error?.message,
+      meta: error?.meta,
+      userId: req.userId,
+      userEmail: req.userEmail,
+      body: bodyForLog,
+    });
+    if (error?.stack) console.error(error.stack);
+
+    // Prisma validation errors carry a `code` like P2000/P2002/P2003/P2025 —
+    // those indicate a data problem, not a server bug. Return 400 so the
+    // client shows a useful message instead of a generic "temporarily down."
+    const isPrismaValidation = typeof error?.code === 'string' && /^P2\d{3}$/.test(error.code);
+    const status = isPrismaValidation ? 400 : 500;
+
+    res.status(status).json({
+      error: isPrismaValidation ? 'Invalid quote data' : 'Failed to create quote',
+      code: error?.code || null,
+      details: error?.message || String(error),
+      meta: error?.meta || undefined,
     });
   }
 }
