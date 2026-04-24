@@ -30,11 +30,18 @@ const OPEN_ALIASES = [
 const getCustomerDashboardStats = async (req, res) => {
   try {
     const userId = req.userId;
+    const userEmail = typeof req.userEmail === 'string' ? req.userEmail.trim() : '';
     if (!userId) {
       return res.status(401).json({ error: 'Unauthorized' });
     }
 
-    const ownerFilter = { userId };
+    // Ownership match: prefer the FK (userId) but fall back to the denormalized
+    // userEmail so records whose userId drifted (DB restore, re-registration,
+    // legacy import) still surface for the rightful owner. User.email is
+    // unique, so the email branch cannot leak another user's records.
+    const ownerFilter = userEmail
+      ? { OR: [{ userId }, { userEmail: { equals: userEmail, mode: 'insensitive' } }] }
+      : { userId };
 
     const [
       totalQuotes,
@@ -60,6 +67,16 @@ const getCustomerDashboardStats = async (req, res) => {
         _sum: { price: true },
       }),
     ]);
+
+    console.log('[CUSTOMER STATS]', {
+      userId,
+      userEmail,
+      totalQuotes,
+      totalOrders,
+      totalOpenOrders,
+      totalDeliveredOrders,
+      totalCancelledOrders,
+    });
 
     const totalSpend = Number(deliveredSpendAgg?._sum?.price ?? 0) || 0;
 

@@ -381,14 +381,18 @@ const CustomerDashboard = () => {
     try {
       setStatsLoading(true);
       const response = await getCustomerDashboardStats(token);
+      console.log('📊 Dashboard stats API response:', response);
       const stats = response?.stats || response?.data?.stats || null;
       if (stats) {
+        console.log('📊 Parsed stats:', stats);
         setDashboardStats(stats);
         try {
           localStorage.setItem('dashboard_stats_cache', JSON.stringify(stats));
         } catch (e) {
           console.error('Failed to cache dashboard stats:', e);
         }
+      } else {
+        console.warn('⚠️ Dashboard stats response had no stats field');
       }
     } catch (err) {
       console.error('❌ Failed to load dashboard stats:', err);
@@ -406,6 +410,13 @@ const CustomerDashboard = () => {
           setError('Authentication required');
           return;
         }
+
+        console.log('👤 Dashboard loading for user:', {
+          id: user?.id,
+          email: user?.email,
+          role: user?.role,
+          hasToken: !!token,
+        });
 
         setLoading(true);
 

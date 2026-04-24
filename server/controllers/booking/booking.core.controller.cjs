@@ -701,11 +701,23 @@ const createBooking = async (req, res) => {
 const getBookings = async (req, res) => {
   try {
     const userId = req.userId;
+    const userEmail = typeof req.userEmail === 'string' ? req.userEmail.trim() : '';
     const { page = 1, limit = 10, status, search, statusFilter } = req.query;
     const pageNum = parseInt(page);
     const limitNum = parseInt(limit);
     const skip = (pageNum - 1) * limitNum;
-    const where = { userId, ...(status && { status }) };
+
+    // Ownership: userId (FK) OR userEmail (denormalized). The email branch
+    // rescues legacy rows whose userId no longer matches (DB restore, user
+    // re-registration, pre-migration imports). User.email is unique, so this
+    // cannot leak another user's data.
+    const ownerFilter = userEmail
+      ? { OR: [{ userId }, { userEmail: { equals: userEmail, mode: 'insensitive' } }] }
+      : { userId };
+
+    // Use an AND array so search (which sets its own OR) cannot clobber
+    // ownership. Any additional filter below pushes into where.AND.
+    const where = { AND: [ownerFilter, ...(status ? [{ status }] : [])] };
 
     // Map the customer-facing status bucket onto the DB column values.
     // "Assigned" covers every post-assignment, pre-delivery state so the
@@ -743,7 +755,7 @@ const getBookings = async (req, res) => {
       };
       const dbStatuses = bucketMap[bucket];
       if (dbStatuses && dbStatuses.length > 0) {
-        where.status = { in: dbStatuses };
+        where.AND.push({ status: { in: dbStatuses } });
       }
     }
 
@@ -780,8 +792,10 @@ const getBookings = async (req, res) => {
         }
       }
 
-      where.OR = or;
+      where.AND.push({ OR: or });
     }
+
+    console.log('[BOOKINGS LIST]', { userId, userEmail, statusFilter, searchTerm, page: pageNum, limit: limitNum });
 
     const [bookings, total] = await prisma.$transaction([
       prisma.booking.findMany({
@@ -837,6 +851,8 @@ const getBookings = async (req, res) => {
         deliveredAt: booking.deliveredAt,
       };
     }));
+
+    console.log(`[BOOKINGS LIST] Found ${bookings.length}/${total} for userId=${userId} userEmail=${userEmail}`);
 
     res.json({ success: true, bookings: transformedBookings, pagination: { page: pageNum, limit: limitNum, total, totalPages: Math.ceil(total / limitNum) } });
   } catch (error) {

@@ -24,9 +24,10 @@ async function getQuotes(req, res) {
   try {
     console.log('\n═══════════════════════════════════════════════════════');
     console.log('📥 [QUOTES] GET QUOTES REQUEST');
-    
+
     const userId = req.userId;
-    
+    const userEmail = typeof req.userEmail === 'string' ? req.userEmail.trim() : '';
+
     const {
       page = DEFAULT_PAGE,
       pageSize = DEFAULT_PAGE_SIZE,
@@ -42,10 +43,16 @@ async function getQuotes(req, res) {
     const limitNum = parseInt(pageSize);
     const skip = (pageNum - 1) * limitNum;
 
-    const where = {
-      userId,
-      ...(status && { status }),
-    };
+    // Ownership: userId (FK) OR userEmail (denormalized). The email branch
+    // rescues legacy rows whose userId no longer matches the logged-in user
+    // (DB restore, re-registration, legacy import). User.email is unique,
+    // so this cannot leak another user's records.
+    const ownerFilter = userEmail
+      ? { OR: [{ userId }, { userEmail: { equals: userEmail, mode: 'insensitive' } }] }
+      : { userId };
+
+    // AND array so search (which sets its own OR) cannot clobber ownership.
+    const where = { AND: [ownerFilter, ...(status ? [{ status }] : [])] };
 
     // Quote "Waiting" vs "Accepted" is derived from whether a carrier has
     // picked up the booking tied to the quote. Filter via the booking relation
@@ -53,17 +60,17 @@ async function getQuotes(req, res) {
     if (typeof statusFilter === 'string' && statusFilter.trim()) {
       const bucket = statusFilter.trim().toLowerCase();
       if (bucket === 'accepted') {
-        where.bookings = { some: { carrierId: { not: null } } };
+        where.AND.push({ bookings: { some: { carrierId: { not: null } } } });
       } else if (bucket === 'waiting') {
-        where.NOT = { bookings: { some: { carrierId: { not: null } } } };
+        where.AND.push({ NOT: { bookings: { some: { carrierId: { not: null } } } } });
       }
     }
 
     if (typeof likelihoodFilter === 'string' && likelihoodFilter.trim()) {
       const band = likelihoodFilter.trim().toLowerCase();
-      if (band === 'high') where.likelihood = { gte: 80 };
-      else if (band === 'medium') where.likelihood = { gte: 60, lt: 80 };
-      else if (band === 'low') where.likelihood = { lt: 60 };
+      if (band === 'high') where.AND.push({ likelihood: { gte: 80 } });
+      else if (band === 'medium') where.AND.push({ likelihood: { gte: 60, lt: 80 } });
+      else if (band === 'low') where.AND.push({ likelihood: { lt: 60 } });
     }
 
     const searchTerm = typeof search === 'string' ? search.trim() : '';
@@ -97,9 +104,9 @@ async function getQuotes(req, res) {
         }
       }
 
-      where.OR = or;
+      where.AND.push({ OR: or });
     }
-    
+
     const [quotes, total] = await prisma.$transaction([
       prisma.quote.findMany({
         where,
@@ -110,8 +117,8 @@ async function getQuotes(req, res) {
       }),
       prisma.quote.count({ where }),
     ]);
-    
-    console.log(`📋 [QUOTES] Found ${quotes.length} quotes for user ${userId}`);
+
+    console.log(`📋 [QUOTES] Found ${quotes.length}/${total} for userId=${userId} userEmail=${userEmail}`);
     
     const enhancedQuotes = quotes.map((quote) => transformQuoteForList(quote));
     
