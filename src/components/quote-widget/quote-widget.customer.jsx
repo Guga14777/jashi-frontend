@@ -149,16 +149,33 @@ function QuoteWidgetCustomer() {
         setDistanceHours(Number.isFinite(duration?.hours) ? duration.hours : null);
       })
       .catch((err) => {
+        if (err?.name === 'AbortError') return;
         console.error('[distance]', err);
         setDistanceMi(null);
-        const msg = err?.message || '';
-        if (msg.includes('REQUEST_DENIED')) {
-          setDistanceErr('API key error — check ROUTES_API_KEY in backend.');
-        } else if (msg.includes('OVER_QUERY_LIMIT')) {
-          setDistanceErr('Google rate limit exceeded — try again shortly.');
-        } else if (!msg.includes('cancelled')) {
-          setDistanceErr('Could not fetch distance — check ZIP codes.');
-        }
+
+        const isDev = !!import.meta.env?.DEV;
+        const code = err?.code || '';
+        const raw = err?.raw || err?.message || '';
+
+        const pretty = (() => {
+          switch (code) {
+            case 'INVALID_ZIP':
+              return 'Invalid or unsupported ZIP code. Please double-check and try again.';
+            case 'NO_ROUTE':
+              return 'No driving route between these ZIP codes.';
+            case 'OVER_QUERY_LIMIT':
+              return 'Distance lookup is rate-limited. Please try again shortly.';
+            case 'REQUEST_DENIED':
+            case 'SERVICE_NOT_CONFIGURED':
+              return 'Distance service is temporarily unavailable. Our team has been notified.';
+            case 'SERVER_ERROR':
+              return 'Distance service is temporarily unavailable. Please try again shortly.';
+            default:
+              return 'Could not calculate distance right now. Please try again.';
+          }
+        })();
+
+        setDistanceErr(isDev && raw ? `${pretty} [dev: ${raw}]` : pretty);
       })
       .finally(() => setIsCalculatingDistance(false));
 
