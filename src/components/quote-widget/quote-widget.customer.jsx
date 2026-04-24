@@ -726,7 +726,7 @@ function QuoteWidgetCustomer() {
           >
             {isSubmitting ? <span>Submitting…</span> : <span>Submit Offer</span>}
           </button>
-          <p className="qw-policy-note">No commitment required. Flat 3% fee only when you book.</p>
+          <p className="qw-policy-note">No commitment required. Flat 6% fee only when you book.</p>
         </div>
       </form>
     </div>

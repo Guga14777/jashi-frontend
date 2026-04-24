@@ -101,8 +101,8 @@ export default function Compliance() {
           </div>
 
           <div className="support-actions">
-            <span className="apps-btn email" role="text">carrier-support@guga.com</span>
-            <span className="apps-btn phone" role="text">1-800-GUGA-CARRIERS</span>
+            <span className="apps-btn email" role="text">carrier-support@jashilogistics.com</span>
+            <span className="apps-btn phone" role="text">1-800-JASHI-CARRIERS</span>
           </div>
         </section>
       </main>

@@ -35,7 +35,7 @@ function HowItWorks() {
         </svg>
       ),
       title: 'Book Securely',
-      description: 'Pay with confidence. We itemize the 3% service fee.'
+      description: 'Pay with confidence. We itemize the 6% service fee.'
     }
   ];
 

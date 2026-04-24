@@ -7,6 +7,26 @@
 // Rule: total = roundMoney(base) + roundMoney(fee) — never sum unrounded
 // floats and round once at the end.
 
+// ---------------------------------------------------------------------------
+// Shared fee rates — every surface that displays or charges a fee reads from
+// here so marketing copy, quote cards, and checkout can never drift apart.
+// ---------------------------------------------------------------------------
+export const BROKER_FEE_RATE = 0.15;
+export const PLATFORM_FEE_RATE = 0.06;
+export const CARRIER_FEE_RATE = 0.125;
+
+const pctLabel = (rate) => `${Math.round(rate * 100)}%`;
+
+export const BROKER_FEE_PCT_LABEL = pctLabel(BROKER_FEE_RATE);
+export const PLATFORM_FEE_PCT_LABEL = pctLabel(PLATFORM_FEE_RATE);
+
+// Fee savings vs a typical broker, expressed as a percentage of the broker
+// fee. Structurally exact because both fees apply to the same base.
+export const SAVINGS_PCT_ON_FEES = Math.round(
+  ((BROKER_FEE_RATE - PLATFORM_FEE_RATE) / BROKER_FEE_RATE) * 100,
+);
+export const SAVINGS_PCT_ON_FEES_LABEL = `${SAVINGS_PCT_ON_FEES}%`;
+
 const toCents = (value) => {
   const n = typeof value === 'number' ? value : Number(value);
   if (!Number.isFinite(n)) return 0;

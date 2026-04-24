@@ -111,7 +111,7 @@ const Cookies = () => {
             </p>
             <ul>
               <li>Email: privacy@guga.com</li>
-              <li>Phone: 1-800-GUGA-HELP</li>
+              <li>Phone: 1-800-JASHI-HELP</li>
             </ul>
           </section>
         </div>

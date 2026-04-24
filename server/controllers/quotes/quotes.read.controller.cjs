@@ -24,9 +24,9 @@ async function getQuotes(req, res) {
   try {
     console.log('\n═══════════════════════════════════════════════════════');
     console.log('📥 [QUOTES] GET QUOTES REQUEST');
-    
+
     const userId = req.userId;
-    const userEmail = req.userEmail;
+    const userEmail = typeof req.userEmail === 'string' ? req.userEmail.trim() : '';
 
     const {
       page = DEFAULT_PAGE,
@@ -43,20 +43,16 @@ async function getQuotes(req, res) {
     const limitNum = parseInt(pageSize);
     const skip = (pageNum - 1) * limitNum;
 
-    // Match by userId OR email so legacy quotes (created when the user had a
-    // different userId) still surface on the dashboard. See equivalent fix
-    // in booking.core.controller.cjs / customer.stats.controller.cjs.
+    // Ownership: userId (FK) OR userEmail (denormalized). The email branch
+    // rescues legacy rows whose userId no longer matches the logged-in user
+    // (DB restore, re-registration, legacy import). User.email is unique,
+    // so this cannot leak another user's records.
     const ownerFilter = userEmail
-      ? {
-          OR: [
-            { userId },
-            { userEmail: { equals: userEmail, mode: 'insensitive' } },
-          ],
-        }
+      ? { OR: [{ userId }, { userEmail: { equals: userEmail, mode: 'insensitive' } }] }
       : { userId };
 
-    const andConditions = [ownerFilter];
-    if (status) andConditions.push({ status });
+    // AND array so search (which sets its own OR) cannot clobber ownership.
+    const where = { AND: [ownerFilter, ...(status ? [{ status }] : [])] };
 
     // Quote "Waiting" vs "Accepted" is derived from whether a carrier has
     // picked up the booking tied to the quote. Filter via the booking relation
@@ -64,17 +60,17 @@ async function getQuotes(req, res) {
     if (typeof statusFilter === 'string' && statusFilter.trim()) {
       const bucket = statusFilter.trim().toLowerCase();
       if (bucket === 'accepted') {
-        andConditions.push({ bookings: { some: { carrierId: { not: null } } } });
+        where.AND.push({ bookings: { some: { carrierId: { not: null } } } });
       } else if (bucket === 'waiting') {
-        andConditions.push({ NOT: { bookings: { some: { carrierId: { not: null } } } } });
+        where.AND.push({ NOT: { bookings: { some: { carrierId: { not: null } } } } });
       }
     }
 
     if (typeof likelihoodFilter === 'string' && likelihoodFilter.trim()) {
       const band = likelihoodFilter.trim().toLowerCase();
-      if (band === 'high') andConditions.push({ likelihood: { gte: 80 } });
-      else if (band === 'medium') andConditions.push({ likelihood: { gte: 60, lt: 80 } });
-      else if (band === 'low') andConditions.push({ likelihood: { lt: 60 } });
+      if (band === 'high') where.AND.push({ likelihood: { gte: 80 } });
+      else if (band === 'medium') where.AND.push({ likelihood: { gte: 60, lt: 80 } });
+      else if (band === 'low') where.AND.push({ likelihood: { lt: 60 } });
     }
 
     const searchTerm = typeof search === 'string' ? search.trim() : '';
@@ -108,11 +104,9 @@ async function getQuotes(req, res) {
         }
       }
 
-      andConditions.push({ OR: or });
+      where.AND.push({ OR: or });
     }
 
-    const where = { AND: andConditions };
-    
     const [quotes, total] = await prisma.$transaction([
       prisma.quote.findMany({
         where,
@@ -123,8 +117,8 @@ async function getQuotes(req, res) {
       }),
       prisma.quote.count({ where }),
     ]);
-    
-    console.log(`📋 [QUOTES] Found ${quotes.length}/${total} quotes for user ${userId} (${userEmail || 'no email'})`);
+
+    console.log(`📋 [QUOTES] Found ${quotes.length}/${total} for userId=${userId} userEmail=${userEmail}`);
     
     const enhancedQuotes = quotes.map((quote) => transformQuoteForList(quote));
     
@@ -202,19 +196,13 @@ async function getQuoteById(req, res) {
 async function getQuoteStats(req, res) {
   try {
     const userId = req.userId;
-    const userEmail = req.userEmail;
+    const userEmail = typeof req.userEmail === 'string' ? req.userEmail.trim() : '';
 
-    // Match by userId OR email, same pattern as getQuotes and
-    // customer.stats.controller, so legacy quotes tied only by email still
-    // count. Without this, users with pre-account-linkage quotes see all
-    // zeros on the dashboard stats tiles.
+    // Match by userId OR email, same pattern as getQuotes above and
+    // customer.stats.controller. Without this, users with pre-account-linkage
+    // quotes see all zeros on the dashboard stats tiles.
     const ownerFilter = userEmail
-      ? {
-          OR: [
-            { userId },
-            { userEmail: { equals: userEmail, mode: 'insensitive' } },
-          ],
-        }
+      ? { OR: [{ userId }, { userEmail: { equals: userEmail, mode: 'insensitive' } }] }
       : { userId };
 
     const withStatus = (status) => ({ AND: [ownerFilter, { status }] });

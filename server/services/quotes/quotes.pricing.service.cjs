@@ -43,7 +43,7 @@ function buildPricingBreakdown(offer) {
 
 /**
  * Get platform fee rate
- * @returns {number} - Fee rate as decimal (e.g., 0.03 for 3%)
+ * @returns {number} - Fee rate as decimal (e.g., 0.06 for 6%)
  */
 function getPlatformFeeRate() {
   return PLATFORM_FEE_RATE;

@@ -18,7 +18,7 @@ export default function InsurancePolicy() {
           <div className="ins-container">
             <h1 id="insTitle">Insurance &amp; Coverage</h1>
             <p className="ins-sub">
-              Every carrier booked on Guga must maintain active Motor Truck
+              Every carrier booked on Jashi Logistics must maintain active Motor Truck
               Cargo Insurance with a <strong>minimum limit of $50,000</strong>.
               Your vehicle is protected while it's in the carrier's care,
               custody, and control. Higher limits are common for high-value
@@ -37,7 +37,7 @@ export default function InsurancePolicy() {
               </li>
               <li>Coverage applies while your vehicle is under carrier control.</li>
               <li>
-                Guga verifies active coverage before dispatch via Certificate of Insurance (COI).
+                Jashi Logistics verifies active coverage before dispatch via Certificate of Insurance (COI).
               </li>
               <li>COI copies are available upon request.</li>
             </ul>
@@ -143,7 +143,7 @@ export default function InsurancePolicy() {
                 <div>
                   <h3>Notify</h3>
                   <p>
-                    Contact <Link to="/dashboard/help">Guga Support</Link> within 24 hours. We coordinate with the
+                    Contact <Link to="/dashboard/help">Jashi Support</Link> within 24 hours. We coordinate with the
                     carrier/insurer.
                   </p>
                 </div>
@@ -167,7 +167,7 @@ export default function InsurancePolicy() {
             <p className="muted">
               This page is for general information only and does not alter or replace the carrier's insurance policy.
               Coverage, limits, exclusions, and deductibles are determined solely by the carrier's policy and insurer.
-              Guga is not an insurance producer or advisor. For specific policy questions, request the carrier's COI and
+              Jashi Logistics is not an insurance producer or advisor. For specific policy questions, request the carrier's COI and
               policy details.
             </p>
           </section>

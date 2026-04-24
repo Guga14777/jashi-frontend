@@ -140,10 +140,10 @@ export default function Payouts() {
 
           <div className="support-actions">
             <div className="apps-btn primary not-link" aria-disabled="true">
-              <span className="email-text">carrier-support@guga.com</span>
+              <span className="email-text">carrier-support@jashilogistics.com</span>
             </div>
             <a className="apps-btn ghost" href="tel:1800GUGACARRIERS">
-              1-800-GUGA-CARRIERS
+              1-800-JASHI-CARRIERS
             </a>
           </div>
         </section>

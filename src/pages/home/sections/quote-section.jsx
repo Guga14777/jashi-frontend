@@ -1,6 +1,16 @@
 import React, { useCallback, useState } from 'react';
 import QuoteWidget from '../../../components/quote-widget/quote-widget';
-import { computeFeeBreakdown, roundMoney, addMoney, formatMoney } from '../../../utils/money';
+import {
+  computeFeeBreakdown,
+  roundMoney,
+  addMoney,
+  formatMoney,
+  BROKER_FEE_RATE,
+  PLATFORM_FEE_RATE,
+  BROKER_FEE_PCT_LABEL,
+  PLATFORM_FEE_PCT_LABEL,
+  SAVINGS_PCT_ON_FEES_LABEL,
+} from '../../../utils/money';
 import './quote-section.css';
 
 const EMPTY_FORM_STATE = {
@@ -15,7 +25,7 @@ const EMPTY_FORM_STATE = {
 function QuoteSection() {
   // Single source of truth for the comparison cards: the live widget state.
   // distanceMi / marketAvg / ZIPs come straight from the form, so every
-  // surface (distance badge, broker card, Guga card) stays in sync.
+  // surface (distance badge, broker card, Jashi card) stays in sync.
   const [form, setForm] = useState(EMPTY_FORM_STATE);
 
   const handleWidgetStateChange = useCallback((next) => {
@@ -42,19 +52,19 @@ function QuoteSection() {
   const fees = hasQuote
     ? (() => {
         const marketAverage = roundMoney(form.marketAvg);
-        const typical = computeFeeBreakdown(marketAverage, 0.15);
-        const guga = computeFeeBreakdown(marketAverage, 0.03);
+        const typical = computeFeeBreakdown(marketAverage, BROKER_FEE_RATE);
+        const jashi = computeFeeBreakdown(marketAverage, PLATFORM_FEE_RATE);
         const miles = form.distanceMi;
         const typicalPerMile = miles > 0 ? typical.total / miles : 0;
-        const gugaPerMile = miles > 0 ? guga.total / miles : 0;
-        const totalSavings = addMoney(typical.total, -guga.total);
-        // Savings on fees is structurally exact: (15 - 3) / 15 = 80%.
+        const jashiPerMile = miles > 0 ? jashi.total / miles : 0;
+        const totalSavings = addMoney(typical.total, -jashi.total);
+        // Savings on fees is structurally exact: (broker - platform) / broker.
         const savingsPercent =
-          typical.fee > 0 ? ((typical.fee - guga.fee) / typical.fee) * 100 : 0;
+          typical.fee > 0 ? ((typical.fee - jashi.fee) / typical.fee) * 100 : 0;
         return {
           marketAverage,
           typical: { brokerFee: typical.fee, total: typical.total, perMile: typicalPerMile },
-          guga: { platformFee: guga.fee, total: guga.total, perMile: gugaPerMile },
+          jashi: { platformFee: jashi.fee, total: jashi.total, perMile: jashiPerMile },
           savings: { total: totalSavings, percent: savingsPercent },
         };
       })()
@@ -85,7 +95,7 @@ function QuoteSection() {
 
   const renderTypicalCard = () => (
     <div className="qs-comparison-card qs-comparison-typical">
-      <h4 className="qs-comparison-title">Typical Broker (15% fee)</h4>
+      <h4 className="qs-comparison-title">Typical Broker ({BROKER_FEE_PCT_LABEL} fee)</h4>
       <div className="qs-comparison-details">
         {hasQuote ? (
           <>
@@ -97,7 +107,7 @@ function QuoteSection() {
                 <span className="qs-comparison-value">${formatMoney(fees.marketAverage)}</span>
               </div>
               <div className="qs-comparison-line">
-                <span>Broker fee 15%:</span>
+                <span>Broker fee {BROKER_FEE_PCT_LABEL}:</span>
                 <span className="qs-comparison-value qs-fee-danger">${formatMoney(fees.typical.brokerFee)}</span>
               </div>
             </div>
@@ -113,10 +123,12 @@ function QuoteSection() {
     </div>
   );
 
-  const renderGugaCard = () => (
+  const renderJashiCard = () => (
     <div className="qs-comparison-card qs-comparison-guga">
-      {hasQuote && <div className="qs-savings-badge">You save 80% on fees</div>}
-      <h4 className="qs-comparison-title">Guga (3% fee)</h4>
+      {hasQuote && (
+        <div className="qs-savings-badge">You save {SAVINGS_PCT_ON_FEES_LABEL} on fees</div>
+      )}
+      <h4 className="qs-comparison-title">Jashi Logistics ({PLATFORM_FEE_PCT_LABEL} fee)</h4>
       <div className="qs-comparison-details">
         {hasQuote ? (
           <>
@@ -128,13 +140,13 @@ function QuoteSection() {
                 <span className="qs-comparison-value">${formatMoney(fees.marketAverage)}</span>
               </div>
               <div className="qs-comparison-line">
-                <span>Platform fee 3%:</span>
-                <span className="qs-comparison-value qs-fee-success">${formatMoney(fees.guga.platformFee)}</span>
+                <span>Platform fee {PLATFORM_FEE_PCT_LABEL}:</span>
+                <span className="qs-comparison-value qs-fee-success">${formatMoney(fees.jashi.platformFee)}</span>
               </div>
             </div>
             <div className="qs-comparison-total">
               <span className="qs-total-label">You pay:</span>
-              <span className="qs-total-value qs-total-success">${formatMoney(fees.guga.total)}</span>
+              <span className="qs-total-value qs-total-success">${formatMoney(fees.jashi.total)}</span>
             </div>
           </>
         ) : (
@@ -194,7 +206,7 @@ function QuoteSection() {
               </div>
 
               <div className="qs-comparison-wrapper desktop-only">
-                {renderGugaCard()}
+                {renderJashiCard()}
               </div>
             </div>
           </div>
@@ -202,7 +214,7 @@ function QuoteSection() {
 
         <div className="qs-comparison-mobile">
           <div className="qs-comparison-wrapper">{renderTypicalCard()}</div>
-          <div className="qs-comparison-wrapper">{renderGugaCard()}</div>
+          <div className="qs-comparison-wrapper">{renderJashiCard()}</div>
         </div>
       </div>
     </section>

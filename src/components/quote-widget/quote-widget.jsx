@@ -44,10 +44,10 @@ function QuoteWidget({ onStateChange } = {}) {
   const [isSubmitting, setIsSubmitting] = useState(false);
 
   const distanceAbortRef = useRef(null);
-  // Ref-based double-click guard for Submit. Flips before any await so a
-  // fast double-click within the same microtask can't enter the handler
-  // twice and create a duplicate quote row. See login/signup for analog.
-  const submitLockRef = useRef(false);
+  // Ref-based double-click guard. React state updates aren't synchronous, so
+  // two clicks fired within the same microtask both see isSubmitting=false
+  // and both enter the handler. A ref flips immediately and blocks re-entry.
+  const submitInFlightRef = useRef(false);
 
   // ============================================================================
   // PRICING CONSTANTS - MUST MATCH pricing-engine.js
@@ -485,8 +485,10 @@ function QuoteWidget({ onStateChange } = {}) {
     }
 
     if (!canSubmit) return;
-    if (submitLockRef.current) return;
-    submitLockRef.current = true;
+    // Sync guard: ref flips before any await so a double-click within the
+    // same frame can't enter twice and create a duplicate DB row.
+    if (submitInFlightRef.current) return;
+    submitInFlightRef.current = true;
 
     try {
     // ✅ CRITICAL: Snapshot the selectedVehicles state IMMEDIATELY at submit time
@@ -599,7 +601,7 @@ function QuoteWidget({ onStateChange } = {}) {
       setIsSubmitting(false);
     }
     } finally {
-      submitLockRef.current = false;
+      submitInFlightRef.current = false;
     }
   };
 
@@ -820,7 +822,7 @@ function QuoteWidget({ onStateChange } = {}) {
           >
             {isSubmitting ? <span>Submitting…</span> : <span>Submit Offer</span>}
           </button>
-          <p className="qw-policy-note">No commitment required. Flat 3% fee only when you book.</p>
+          <p className="qw-policy-note">No commitment required. Flat 6% fee only when you book.</p>
         </div>
       </form>
     </div>

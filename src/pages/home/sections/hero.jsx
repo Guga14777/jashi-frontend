@@ -12,7 +12,7 @@ function Hero() {
           </h1>
           
           <p className="hero-subtitle">
-            <span className="subtitle-highlight">Revolutionary 3%</span> platform fee — <span className="subtitle-highlight">Set Your Own Price</span> and see dispatch probability in real time.
+            <span className="subtitle-highlight">Revolutionary 6%</span> platform fee — <span className="subtitle-highlight">Set Your Own Price</span> and see dispatch probability in real time.
           </p>
         </div>
         

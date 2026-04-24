@@ -6,7 +6,7 @@ const WhyChoose = () => {
   return (
     <section className="why-choose-section">
       <div className="container">
-        <h2>Why Choose Guga</h2>
+        <h2>Why Choose Jashi Logistics</h2>
         <div className="why-choose-content">
           <p>Your trusted shipping partner</p>
           {/* Add your actual content here */}

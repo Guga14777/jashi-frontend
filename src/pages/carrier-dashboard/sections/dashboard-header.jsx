@@ -106,12 +106,12 @@ const DashboardHeader = () => {
           <Link
             to="/carrier/loads"
             className="cdh-header__logo-link"
-            aria-label="Guga Carrier Portal Home"
+            aria-label="Jashi Logistics Carrier Portal Home"
           >
             <span className="cdh-header__logo-badge">
               <img
                 src="/images/logomercury1.png"
-                alt="Guga"
+                alt="Jashi Logistics"
                 className="cdh-header__logo-img"
                 width="44"
                 height="44"
@@ -121,7 +121,7 @@ const DashboardHeader = () => {
               />
             </span>
             <div className="cdh-header__brand-text">
-              <span className="cdh-header__company-name">Guga</span>
+              <span className="cdh-header__company-name">Jashi Logistics</span>
               <span className="cdh-header__portal-subtitle">Carrier Portal</span>
             </div>
           </Link>

@@ -61,7 +61,7 @@ export default function CarrierCookies() {
           <h2>Contact</h2>
           <p>
             Questions? Email <strong>privacy@guga.com</strong> or call{" "}
-            <strong>1-800-GUGA-CARRIERS</strong>.
+            <strong>1-800-JASHI-CARRIERS</strong>.
           </p>
         </section>
       </main>

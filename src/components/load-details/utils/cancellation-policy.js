@@ -6,7 +6,7 @@ import { SHIPMENT_STATUS, normalizeStatus } from './status-map';
 
 export const STAGE = { A: 'A', B: 'B', C: 'C', D: 'D' };
 export const CARRIER_DISPATCH_FEE = 50;
-export const PLATFORM_FEE_PERCENT = 3;
+export const PLATFORM_FEE_PERCENT = 6;
 
 export const stageForStatus = (status) => {
   const s = normalizeStatus(status);
@@ -64,7 +64,7 @@ export const evaluateCustomerCancel = (status) => {
       carrierDispatchFee: 0,
       platformFeeRefundable: false,
       headline: 'Platform fee is non-refundable',
-      detail: 'A carrier has accepted but has not yet started driving. The 3% platform fee is non-refundable.',
+      detail: 'A carrier has accepted but has not yet started driving. The 6% platform fee is non-refundable.',
     };
   }
 
@@ -77,7 +77,7 @@ export const evaluateCustomerCancel = (status) => {
     headline: `Carrier dispatch fee applies ($${CARRIER_DISPATCH_FEE})`,
     detail: `The carrier is already ${
       normalized === SHIPMENT_STATUS.ARRIVED_AT_PICKUP ? 'on-site at pickup' : 'en route to pickup'
-    }. A $${CARRIER_DISPATCH_FEE} dispatch fee applies and the 3% platform fee is non-refundable.`,
+    }. A $${CARRIER_DISPATCH_FEE} dispatch fee applies and the 6% platform fee is non-refundable.`,
   };
 };
 

@@ -7,7 +7,7 @@ import "./about.css";
 
 export default function About() {
   useEffect(() => {
-    document.title = "About Guga — Transparent, Fair Auto Transport Platform";
+    document.title = "About Jashi Logistics — Transparent, Fair Auto Transport Platform";
   }, []);
 
   return (
@@ -15,11 +15,11 @@ export default function About() {
       <PublicHeader />
       <main className="static-page">
         <div className="static-page-container">
-          <div className="about-eyebrow">ABOUT GUGA</div>
+          <div className="about-eyebrow">ABOUT JASHI LOGISTICS</div>
           <h1>The first auto transport platform where customers set their own price</h1>
 
           <p className="about-subheading">
-            Guga combines transparent pricing, verified carriers, and instant communication tools to give
+            Jashi Logistics combines transparent pricing, verified carriers, and instant communication tools to give
             you complete control over your vehicle transport experience.
           </p>
 
@@ -31,7 +31,7 @@ export default function About() {
           <div className="about-section">
             <h2 className="about-section-title">Built from Real Experience</h2>
             <p>
-              At Guga, our mission is to make vehicle shipping fair, transparent, and empowering for everyone. After years of experience in logistics and transport, I saw how traditional brokers overcharged customers, hid real carrier rates, and complicated a process that should be simple and honest. Guga was created to change that — giving people the power to set their own price, connect directly with verified carriers, and ship with confidence. Every feature of our platform was designed with one goal in mind: to create a smarter, more transparent, and customer-driven auto transport experience.
+              At Jashi Logistics, our mission is to make vehicle shipping fair, transparent, and empowering for everyone. After years of experience in logistics and transport, I saw how traditional brokers overcharged customers, hid real carrier rates, and complicated a process that should be simple and honest. Jashi Logistics was created to change that — giving people the power to set their own price, connect directly with verified carriers, and ship with confidence. Every feature of our platform was designed with one goal in mind: to create a smarter, more transparent, and customer-driven auto transport experience.
             </p>
             <p className="founder-signature">
               — Founder, Giorgi Jashi
@@ -39,7 +39,7 @@ export default function About() {
           </div>
 
           <div className="about-benefits">
-            <h2>Why Choose Guga</h2>
+            <h2>Why Choose Jashi Logistics</h2>
             <ul className="benefit-list">
               <li>Set your own price and see real-time dispatch probability</li>
               <li>Connect directly with verified, licensed carriers</li>

@@ -36,12 +36,12 @@ const ModernFeatures = () => {
         <div className="modern-hero-section">
           <h2 className="modern-hero-title">Revolutionizing Car Shipping</h2>
           <p className="modern-hero-subtitle">The first U.S. platform where you control your price.</p>
-          <p className="modern-hero-highlight">Just 3% fee — the lowest in the industry.</p>
+          <p className="modern-hero-highlight">Just 6% fee — the lowest in the industry.</p>
         </div>
 
         <div className="modern-value-bar">
           <span>Save</span>
-          <span className="modern-accent">80%</span>
+          <span className="modern-accent">60%</span>
           <span>on fees compared to traditional brokers</span>
           <span className="modern-separator">•</span>
           <span>Keep more money in your pocket</span>

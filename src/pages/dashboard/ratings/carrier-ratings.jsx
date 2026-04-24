@@ -40,7 +40,7 @@ const CarrierRatings = () => {
         <header className="cr-header">
           <h1>Carrier Ratings &amp; Reviews</h1>
           <p className="cr-subtitle">
-            How ratings work at Guga and what you’ll see after delivery.
+            How ratings work at Jashi Logistics and what you’ll see after delivery.
           </p>
         </header>
 
@@ -134,7 +134,7 @@ const CarrierRatings = () => {
         </section>
 
         <p className="cr-disclaimer">
-          Ratings are informational. Guga may review, moderate, or remove content that
+          Ratings are informational. Jashi Logistics may review, moderate, or remove content that
           violates policy or cannot be verified.
         </p>
       </main>

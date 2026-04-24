@@ -12,7 +12,7 @@ import { useAuth } from '../../../store/auth-context.jsx';
 import { usePortal } from '../index.jsx';
 import * as bookingApi from '../../../services/booking.api.js';
 import * as quotesApi from '../../../services/quotes.api.js';
-import { computeFeeBreakdown, roundMoney, formatMoney } from '../../../utils/money';
+import { computeFeeBreakdown, formatMoney, PLATFORM_FEE_RATE } from '../../../utils/money';
 import PolicyModal from '../components/policy-modal.jsx';
 import './sections.css';
 
@@ -148,10 +148,9 @@ export default function Payment() {
     return 0;
   })();
 
-  const platformFeeRate = 0.03;
   const { base: offerBase, fee: platformFee, total: totalAmount } = computeFeeBreakdown(
     offerAmount,
-    platformFeeRate,
+    PLATFORM_FEE_RATE,
   );
   const cardChargeAmount = paymentMode === 'full_card_charge' ? totalAmount : platformFee;
 
@@ -445,7 +444,7 @@ export default function Payment() {
                     <div className="sp-payment-mode-details">
                       <div className="sp-payment-mode-label">Pay carrier directly</div>
                       <div className="sp-payment-mode-description">
-                        Only the 3% platform fee is charged to your card.
+                        Only the 6% platform fee is charged to your card.
                       </div>
                     </div>
                   </div>
@@ -593,7 +592,7 @@ export default function Payment() {
 
                 <div className="sp-summary-row-minimal sp-summary-row-highlight-softer">
                   <div className="sp-summary-label-with-note">
-                    <span className="sp-summary-label-minimal">Platform Fee (3%)</span>
+                    <span className="sp-summary-label-minimal">Platform Fee (6%)</span>
                     <span className="sp-summary-note-minimal">Charged when accepted</span>
                   </div>
                   <span className="sp-summary-value-minimal">${formatMoney(platformFee)}</span>
@@ -650,10 +649,10 @@ export default function Payment() {
                   <strong>Before a carrier accepts:</strong> Free cancellation, full refund of platform fee.
                 </li>
                 <li className="sp-cancellation-policy-item">
-                  <strong>After acceptance, before the carrier starts driving:</strong> You may cancel. 3% platform fee is non-refundable.
+                  <strong>After acceptance, before the carrier starts driving:</strong> You may cancel. 6% platform fee is non-refundable.
                 </li>
                 <li className="sp-cancellation-policy-item">
-                  <strong>After the carrier has been dispatched:</strong> You may cancel. 3% platform fee non-refundable + $50 carrier dispatch fee.
+                  <strong>After the carrier has been dispatched:</strong> You may cancel. 6% platform fee non-refundable + $50 carrier dispatch fee.
                 </li>
                 <li className="sp-cancellation-policy-item">
                   <strong>After your vehicle is picked up:</strong> Normal cancellation is no longer available — contact support for emergencies.

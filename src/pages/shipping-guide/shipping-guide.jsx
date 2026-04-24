@@ -7,7 +7,7 @@ import "./shipping-guide.css";
 
 export default function ShippingGuide() {
   useEffect(() => {
-    document.title = "Shipping Guide — Guga Auto Transport";
+    document.title = "Shipping Guide — Jashi Logistics Auto Transport";
   }, []);
 
   return (
@@ -40,7 +40,7 @@ export default function ShippingGuide() {
           <section>
             <h2>During Transit (What to Expect)</h2>
             <ul>
-              <li>Your order shows live status in Guga; we'll notify you of pickup/ETA changes</li>
+              <li>Your order shows live status in Jashi Logistics; we'll notify you of pickup/ETA changes</li>
               <li>Long-haul timing depends on distance, weather, and DOT rules. Delays happen — we'll keep you posted and escalate if needed</li>
               <li>Keep your phone available for quick coordination; you may get a 2–4 hour delivery window the day prior</li>
               <li>Tip: If you can't be there, designate an adult contact in your order with their phone and name</li>
@@ -54,8 +54,8 @@ export default function ShippingGuide() {
               <li>Compare to your pickup photos. Take new photos (same angles + any new concerns)</li>
               <li>Note issues on the Bill of Lading (BOL) before signing. Your signed BOL becomes the official Proof of Delivery (POD)</li>
               <li>Start the vehicle; check lights, windows, and basic functions</li>
-              <li>Complete the short POD steps in Guga to close out the shipment</li>
-              <li>If something doesn't look right: note it on the BOL, take photos, and contact Guga Support from the order page. We'll guide you on next steps</li>
+              <li>Complete the short POD steps in Jashi Logistics to close out the shipment</li>
+              <li>If something doesn't look right: note it on the BOL, take photos, and contact Jashi Support from the order page. We'll guide you on next steps</li>
             </ul>
           </section>
 
@@ -65,7 +65,7 @@ export default function ShippingGuide() {
               <ul>
                 <li>Your assigned carrier provides cargo coverage per FMCSA rules</li>
                 <li>Coverage requires that any damage is documented on the BOL/POD at delivery and supported with photos</li>
-                <li>Report concerns to Guga within 48 hours so we can help coordinate</li>
+                <li>Report concerns to Jashi Logistics within 48 hours so we can help coordinate</li>
               </ul>
             </div>
           </section>
@@ -82,7 +82,7 @@ export default function ShippingGuide() {
           <div className="help-section">
             <h2>Need Help?</h2>
             <p>
-              Questions about pricing, dispatch odds, or timing? Live chat from the bottom-right bubble or email support@guga.com
+              Questions about pricing, dispatch odds, or timing? Live chat from the bottom-right bubble or email support@jashilogistics.com
             </p>
             <p>
               Ready to book? Get a quote and see your dispatch likelihood instantly.

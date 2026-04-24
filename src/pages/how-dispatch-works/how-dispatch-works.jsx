@@ -7,7 +7,7 @@ import "./how-dispatch-works.css";
 
 export default function HowDispatchWorks() {
   useEffect(() => {
-    document.title = "How Dispatch Works — Guga Auto Transport";
+    document.title = "How Dispatch Works — Jashi Logistics Auto Transport";
   }, []);
 
   return (
@@ -17,7 +17,7 @@ export default function HowDispatchWorks() {
         <div className="static-page-container">
           <h1>How Dispatch Works</h1>
           <p>
-            Understanding how Guga dispatch works helps you get results faster. Here's a step-by-step 
+            Understanding how Jashi Logistics dispatch works helps you get results faster. Here's a step-by-step 
             look at our transparent process from start to finish.
           </p>
           
@@ -50,7 +50,7 @@ export default function HowDispatchWorks() {
               <div className="step-number">4</div>
               <div className="step-content">
                 <h3>Transit & Delivery</h3>
-                <p>Track your vehicle's progress through the Guga platform and stay in contact with your carrier throughout transport.</p>
+                <p>Track your vehicle's progress through the Jashi Logistics platform and stay in contact with your carrier throughout transport.</p>
               </div>
             </div>
             

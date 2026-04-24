@@ -75,7 +75,7 @@ export default function Terms() {
             <h2>6. Quotes, Rates &amp; Fees</h2>
             <ul>
               <li><strong>Quotes:</strong> Estimates; final charges may change with actual details or approved add-ons.</li>
-              <li><strong>Customer fee:</strong> 3% service fee on completed transactions unless stated otherwise.</li>
+              <li><strong>Customer fee:</strong> 6% service fee on completed transactions unless stated otherwise.</li>
               <li><strong>Carrier fee:</strong> No commission unless expressly agreed in writing.</li>
               <li><strong>Accessorials:</strong> Detention/Layover/TONU typically capped at <strong>$50 per qualifying event</strong> unless the RateCon states otherwise.</li>
             </ul>
@@ -202,7 +202,7 @@ export default function Terms() {
             <h2>Contact</h2>
             <ul>
               <li>Email: legal@guga.com</li>
-              <li>Phone: 1-800-GUGA-HELP</li>
+              <li>Phone: 1-800-JASHI-HELP</li>
               <li>Address: [Your Company Address]</li>
             </ul>
           </section>

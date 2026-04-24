@@ -10,7 +10,7 @@ function CTASection() {
         <div className="cta-content">
           <h2 className="cta-title">Ready to Ship Smarter?</h2>
           <p className="cta-subtitle">
-            Set your price, see dispatch likelihood, and book with our 3% fee.
+            Set your price, see dispatch likelihood, and book with our 6% fee.
           </p>
           <Link to="/quote" className="btn cta-button">
             Start Your Quote

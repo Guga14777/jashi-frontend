@@ -46,7 +46,7 @@ const COLORS = {
 
 // Company Configuration
 const COMPANY_INFO = {
-  name: process.env.COMPANY_NAME || 'Guga',
+  name: process.env.COMPANY_NAME || 'Jashi Logistics',
   type: 'Shipper',
   addressLine1: process.env.COMPANY_ADDRESS_1 || '123 Transport Way',
   addressLine2: process.env.COMPANY_ADDRESS_2 || 'New York, NY 10001',

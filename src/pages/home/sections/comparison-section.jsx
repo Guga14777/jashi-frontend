@@ -7,12 +7,12 @@ function ComparisonSection() {
   // Calculation for 344 miles sedan:
   // Base shipping: $774.80
   // Market average (base × 1.08): $836.97
-  // Customer service fee (3%): $25.11
-  // Customer paid: $862.08
+  // Customer service fee (6%): $50.22
+  // Customer paid: $887.19
   // Carrier fee (12.5% of base): $96.85
   // Carrier gets: $677.95
   // Carrier per mile: $1.97
-  // Customer fee %: 2.91%
+  // Customer fee %: 5.66%
   
   const tableData = {
     headers: [
@@ -32,14 +32,14 @@ function ComparisonSection() {
       model: 'mercedes amg cla 45 2025',
       route: 'NY (10001) → VA (23220)',
       miles: '344',
-      customerPaid: '862.08',
+      customerPaid: '887.19',
       shippingPrice: '836.97',
-      serviceFee: '25.11',
+      serviceFee: '50.22',
       carrierFeePercent: '12.5',
       carrierFeeDollar: '96.85',
       carrierGets: '677.95',
       carrierPerMile: '1.97',
-      customerFeePercent: '2.91'
+      customerFeePercent: '5.66'
     }
   };
 
@@ -79,7 +79,7 @@ function ComparisonSection() {
         </div>
 
         <p className="table-footnote">
-          * Example for illustration. Live quotes will reflect Guga's current 3% service fee.
+          * Example for illustration. Live quotes will reflect Jashi Logistics' current 6% service fee.
         </p>
 
         <div className="comparison-cta">

@@ -33,7 +33,7 @@ const FAQS = [
   {
     id: "timing",
     q: "When will my shipment be picked up and delivered?",
-    a: "Timing depends on how competitive your offer is. A higher dispatch-likelihood means faster acceptance. You control the price—and with our 3% fee (vs brokers up to 15%), you can ship faster and more affordably."
+    a: "Timing depends on how competitive your offer is. A higher dispatch-likelihood means faster acceptance. You control the price—and with our 6% fee (vs brokers up to 15%), you can ship faster and more affordably."
   },
   {
     id: "tracking",
@@ -43,12 +43,12 @@ const FAQS = [
   {
     id: "payments",
     q: "What payment methods do you accept and when am I charged?",
-    a: "Customers pay a 3% platform fee once a carrier accepts their offer. The remaining balance is paid directly to the carrier by your preferred method—cash, check, card, or digital payments such as Zelle or Cash App."
+    a: "Customers pay a 6% platform fee once a carrier accepts their offer. The remaining balance is paid directly to the carrier by your preferred method—cash, check, card, or digital payments such as Zelle or Cash App."
   },
   {
     id: "refunds",
     q: "What's your cancellation and refund policy?",
-    a: "You're not charged before a carrier accepts your offer. Once accepted, the 3% platform fee is non-refundable if you cancel. Refunds go back to the original payment method if applicable."
+    a: "You're not charged before a carrier accepts your offer. Once accepted, the 6% platform fee is non-refundable if you cancel. Refunds go back to the original payment method if applicable."
   }
 ];
 

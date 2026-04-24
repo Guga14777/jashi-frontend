@@ -136,9 +136,9 @@ export default function SafetyInsurance() {
               </li>
             </ul>
             <p className="note tight">
-              Questions? Call <strong>1-800-GUGA-CARRIERS</strong> or{" "}
-              <a href="mailto:carrier-support@guga.com">
-                carrier-support@guga.com
+              Questions? Call <strong>1-800-JASHI-CARRIERS</strong> or{" "}
+              <a href="mailto:carrier-support@jashilogistics.com">
+                carrier-support@jashilogistics.com
               </a>.
             </p>
           </div>
