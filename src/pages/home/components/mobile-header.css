@@ -150,6 +150,9 @@
   cursor: pointer;
   padding: 0;
   margin: 0;
+  /* Block scroll/zoom from bleeding to the page behind even if the
+     iOS body-fix lock momentarily race-conditions on rapid open/close. */
+  touch-action: none;
 }
 
 .mh-sheet-card {

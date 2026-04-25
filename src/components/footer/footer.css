@@ -483,49 +483,50 @@
 }
 /* ================================
    MOBILE FOOTER ADAPTATIONS
-   On phones, the dark-navy desktop markup still renders, but the long
-   marketing lists collapse away. What remains: brand + tagline + social
-   + support email + phone + legal + copyright. Reads as a compact
-   premium footer instead of a tall stacked list.
+   On phones the markup still renders, but everything non-essential is
+   collapsed. What remains: logo + phone + email + Privacy / Terms +
+   copyright. Reads as a compact premium footer.
    ================================ */
 @media (max-width: 768px) {
-  /* Collapse the heavy marketing lists — too tall when stacked. */
+  /* Hide everything not in the essentials list. */
   .footer-links-column,
   .footer-why-column,
-  .footer-contact-item--chat {
+  .footer-contact-item--chat,
+  .footer-brand-name,
+  .footer-tagline,
+  .footer-social,
+  .footer-separator--cookie,
+  .footer-legal-link--cookie {
     display: none !important;
   }
 
-  /* Hide the contact column heading — the two contact items are
+  /* Hide the contact column heading — phone + email rows are
      self-evident with their icons. */
   .footer-contact-column .footer-heading {
     display: none;
   }
 
-  /* Compact the surviving contact column: tight gap, smaller list-row
-     padding, no left-aligned indentation. */
+  /* Tighten the surviving contact column. */
   .footer-contact-column {
-    padding-top: 16px !important;
+    padding-top: 12px !important;
   }
 
   .footer-contact {
-    gap: 8px !important;
+    gap: 6px !important;
   }
 
-  /* Tighten the whole stack rhythm. */
+  /* Tighten the whole stack rhythm — another ~12% off. */
   .footer {
-    /* Compact top/bottom padding; bottom clears the floating chat
-       bubble (~66px) + iOS Safari toolbar. */
-    padding: 26px 0 calc(96px + env(safe-area-inset-bottom, 0)) !important;
+    padding: 22px 0 calc(86px + env(safe-area-inset-bottom, 0)) !important;
   }
 
   .footer-main {
-    gap: 16px !important;
-    margin-bottom: 16px !important;
+    gap: 12px !important;
+    margin-bottom: 12px !important;
   }
 
   .footer-main > * + * {
-    padding-top: 16px !important;
+    padding-top: 12px !important;
   }
 
   .footer-brand-column {
@@ -533,11 +534,7 @@
     padding-bottom: 0 !important;
   }
 
-  .footer-tagline {
-    margin-bottom: 12px !important;
-  }
-
   .footer-bottom {
-    padding-top: 14px !important;
+    padding-top: 12px !important;
   }
 }

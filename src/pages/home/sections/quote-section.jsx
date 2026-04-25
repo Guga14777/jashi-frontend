@@ -104,9 +104,9 @@ function QuoteSection() {
 
   const steps = [
     { number: '1', title: 'Set Your Price', description: 'Name your offer and choose what you want to pay.' },
-    { number: '2', title: 'Schedule Pickup', description: 'Enter pickup and delivery details with your preferred time window.' },
-    { number: '3', title: 'Secure Payment', description: 'Pay the platform fee to create your shipment order.' },
-    { number: '4', title: 'Carrier Accepts', description: 'Verified carriers review your order and accept it through the carrier portal.' },
+    { number: '2', title: 'Schedule Pickup', description: 'Add pickup, delivery, and your preferred time window.' },
+    { number: '3', title: 'Secure Payment', description: 'Pay the 6% platform fee — your shipment order is created.' },
+    { number: '4', title: 'Carrier Accepts Your Shipment', description: 'Verified carriers review and accept through the carrier portal.' },
   ];
 
   const features = [

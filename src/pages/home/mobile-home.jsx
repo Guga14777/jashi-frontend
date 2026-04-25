@@ -28,17 +28,17 @@ const STEPS = [
   {
     icon: IoCalendarOutline,
     title: 'Schedule Pickup',
-    body: 'Enter pickup and delivery details with your preferred time window.',
+    body: 'Add pickup, delivery, and your preferred time window.',
   },
   {
     icon: IoCardOutline,
     title: 'Secure Payment',
-    body: 'Pay the platform fee to create your shipment order.',
+    body: 'Pay the 6% platform fee — your shipment order is created.',
   },
   {
     icon: IoCarSportOutline,
-    title: 'Carrier Accepts',
-    body: 'Verified carriers review your order and accept it through the carrier portal.',
+    title: 'Carrier Accepts Your Shipment',
+    body: 'Verified carriers review and accept through the carrier portal.',
   },
 ];
 

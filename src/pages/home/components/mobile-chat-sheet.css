@@ -90,6 +90,8 @@
   cursor: pointer;
   padding: 0;
   margin: 0;
+  /* Block scroll/zoom passing through the scrim to the page behind. */
+  touch-action: none;
 }
 
 .mcs-sheet-card {

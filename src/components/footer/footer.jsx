@@ -165,8 +165,8 @@ function Footer() {
               <Link to="/privacy">Privacy Policy</Link>
               <span className="footer-separator">·</span>
               <Link to="/terms">Terms of Service</Link>
-              <span className="footer-separator">·</span>
-              <Link to="/cookies">Cookie Policy</Link>
+              <span className="footer-separator footer-separator--cookie" aria-hidden="true">·</span>
+              <Link to="/cookies" className="footer-legal-link--cookie">Cookie Policy</Link>
             </div>
           </div>
         </div>
