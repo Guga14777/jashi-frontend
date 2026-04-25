@@ -436,6 +436,8 @@
     flex: 1 1 auto;
     overflow-y: auto;
     -webkit-overflow-scrolling: touch;
+    /* iOS rubber-band kept inside the modal. */
+    overscroll-behavior: contain;
     padding:
       calc(24px + env(safe-area-inset-top, 0))
       20px

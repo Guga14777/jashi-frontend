@@ -2,6 +2,7 @@ import React, { useEffect, useRef, useState } from 'react';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { IoClose, IoPersonOutline, IoCarSportOutline } from 'react-icons/io5';
 
+import useBodyScrollLock from '../../../hooks/use-body-scroll-lock';
 import './mobile-header.css';
 
 function MobileHomeHeader() {
@@ -37,13 +38,9 @@ function MobileHomeHeader() {
     };
   }, []);
 
-  // Lock background scroll while the sheet is open.
-  useEffect(() => {
-    if (!isMenuOpen) return;
-    const prev = document.body.style.overflow;
-    document.body.style.overflow = 'hidden';
-    return () => { document.body.style.overflow = prev; };
-  }, [isMenuOpen]);
+  // Lock the page behind the sheet — iOS-friendly (fixes body in place
+   // and restores the original scrollY on close).
+  useBodyScrollLock(isMenuOpen);
 
   const closeMenu = () => setIsMenuOpen(false);
 

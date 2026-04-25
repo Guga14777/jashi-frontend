@@ -58,7 +58,7 @@ function MobileComparison({ form }) {
       <header className="mh-compare-head">
         <span className="mh-compare-eyebrow">A new way to ship</span>
         <h2 className="mh-compare-title">
-          The first shipping platform where you control the price.
+          The first platform where you control the price.
         </h2>
         <p className="mh-compare-lead">
           Traditional brokers set pricing. Jashi lets you make the offer.

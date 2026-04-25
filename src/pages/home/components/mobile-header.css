@@ -8,21 +8,23 @@
   left: 0;
   right: 0;
   z-index: 1000;
-  background: rgba(255, 255, 255, 0.94);
-  backdrop-filter: saturate(140%) blur(10px);
-  -webkit-backdrop-filter: saturate(140%) blur(10px);
+  /* Solid white, NOT backdrop-filter blur. iOS Safari has a long-standing
+     bug where backdrop-filter on a position:fixed element clips the
+     painted box of children below it during scroll, which manifested as
+     hero titles appearing "stuck" or "cut in half" under the chrome.
+     A solid background eliminates the entire class of bugs and matches
+     SaaS/product navbars (Stripe, Linear) anyway. */
+  background: #FFFFFF;
   border-bottom: 1px solid transparent;
-  /* Only animate background / border / shadow — never height. The
-     transition list deliberately excludes any size property so the
-     header's geometry is locked. */
-  transition: border-color 0.18s ease, box-shadow 0.18s ease, background-color 0.18s ease;
+  /* Only animate border / shadow — never height or opacity. */
+  transition: border-color 0.18s ease, box-shadow 0.18s ease;
   padding-top: env(safe-area-inset-top, 0);
   /* Lock the header height so iOS Safari address-bar collapse,
      overscroll bounce, viewport resize, or font load can never squeeze
      it. min-height accounts for the safe-area inset on notched devices.
-     NOTE: deliberately no `contain: paint` — combined with backdrop-filter
-     it can clip the header's painted box on iOS Safari, which made the
-     hero title appear stuck under the chrome. */
+     Deliberately NO `contain` and NO `transform` / `will-change` /
+     `filter` — any of those create a stacking context that interacts
+     badly with iOS Safari's compositor on scroll. */
   box-sizing: border-box;
   min-height: calc(56px + env(safe-area-inset-top, 0px));
 }
@@ -158,6 +160,8 @@
   padding: 6px 14px calc(20px + env(safe-area-inset-bottom, 0));
   max-height: 88vh;
   overflow-y: auto;
+  /* Keep iOS rubber-band inside the sheet — never bleeds to the page. */
+  overscroll-behavior: contain;
   animation: mhSheetSlideUp 0.22s cubic-bezier(0.16, 1, 0.3, 1);
 }
 

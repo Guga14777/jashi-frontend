@@ -1,6 +1,7 @@
 import React, { useEffect, useState, useRef } from 'react';
 import { useSearchParams, useNavigate, useLocation } from 'react-router-dom';
 import { useAuth } from '../../store/auth-context.jsx';
+import useBodyScrollLock from '../../hooks/use-body-scroll-lock';
 import CustomerSignupForm from './customersignupform.jsx';
 import CustomerLoginForm from './customerloginform.jsx';
 import CarrierSignupForm from './carriersignupform.jsx';
@@ -21,7 +22,11 @@ function GlobalAuthModal() {
   const redirectParam = searchParams.get('redirect');
 
   const [isOpen, setIsOpen] = useState(false);
-  
+
+  // Lock the page behind the modal — iOS-friendly. The modal renders
+  // full-screen on mobile, so the page behind must not rubber-band scroll.
+  useBodyScrollLock(isOpen);
+
   // ✅ Track if the form itself handled the redirect
   const formHandledRedirect = useRef(false);
 

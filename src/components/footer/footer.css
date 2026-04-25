@@ -483,28 +483,61 @@
 }
 /* ================================
    MOBILE FOOTER ADAPTATIONS
-   On phones, the dark-navy desktop markup still renders, but most of
-   the four-column content collapses away. What remains: brand + tagline
-   + social + support email + legal + copyright. Reads as a compact
+   On phones, the dark-navy desktop markup still renders, but the long
+   marketing lists collapse away. What remains: brand + tagline + social
+   + support email + phone + legal + copyright. Reads as a compact
    premium footer instead of a tall stacked list.
    ================================ */
 @media (max-width: 768px) {
-  /* Collapse marketing content — too heavy when stacked vertically. */
+  /* Collapse the heavy marketing lists — too tall when stacked. */
   .footer-links-column,
   .footer-why-column,
-  .footer-contact-item--phone,
   .footer-contact-item--chat {
     display: none !important;
   }
 
-  /* Compact contact column — only the support email survives. */
+  /* Hide the contact column heading — the two contact items are
+     self-evident with their icons. */
   .footer-contact-column .footer-heading {
     display: none;
   }
 
+  /* Compact the surviving contact column: tight gap, smaller list-row
+     padding, no left-aligned indentation. */
+  .footer-contact-column {
+    padding-top: 16px !important;
+  }
+
+  .footer-contact {
+    gap: 8px !important;
+  }
+
+  /* Tighten the whole stack rhythm. */
   .footer {
-    /* Clear the floating chat bubble (~66px) + iOS Safari dynamic
-       toolbar; safe-area-inset-bottom for notched devices. */
-    padding-bottom: calc(110px + env(safe-area-inset-bottom, 0)) !important;
+    /* Compact top/bottom padding; bottom clears the floating chat
+       bubble (~66px) + iOS Safari toolbar. */
+    padding: 26px 0 calc(96px + env(safe-area-inset-bottom, 0)) !important;
+  }
+
+  .footer-main {
+    gap: 16px !important;
+    margin-bottom: 16px !important;
+  }
+
+  .footer-main > * + * {
+    padding-top: 16px !important;
+  }
+
+  .footer-brand-column {
+    margin-bottom: 0 !important;
+    padding-bottom: 0 !important;
+  }
+
+  .footer-tagline {
+    margin-bottom: 12px !important;
+  }
+
+  .footer-bottom {
+    padding-top: 14px !important;
   }
 }

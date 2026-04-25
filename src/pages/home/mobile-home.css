@@ -88,11 +88,13 @@ html {
 }
 
 .mh-compare-title {
-  font-size: 18px;
+  font-size: 17px;
   font-weight: 700;
   margin: 0 0 4px 0;
-  letter-spacing: -0.015em;
+  letter-spacing: -0.018em;
+  line-height: 1.28;
   color: var(--mh-text);
+  max-width: 28ch;
 }
 
 .mh-compare-lead {
@@ -594,6 +596,9 @@ html {
   grid-template-columns: 1fr 1fr;
   gap: 8px;
   padding: 0 16px;
+  /* Default `align-items: stretch` already equalises row heights;
+     making it explicit so the cards line up regardless of copy length. */
+  align-items: stretch;
 }
 
 .mhome-feature-card {
@@ -605,6 +610,8 @@ html {
   flex-direction: column;
   gap: 4px;
   box-shadow: var(--mh-shadow-card);
+  /* Fill the grid cell so paired cards in the same row are equal height. */
+  height: 100%;
 }
 
 .mhome-feature-ico {

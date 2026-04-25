@@ -3,21 +3,23 @@
    UI. Replaces the shared LiveChat panel on mobile homepage / public
    info pages. Desktop chat is unaffected. */
 
+/* Compact pill: [icon] Chat. Floats bottom-right; collapses to icon-only
+   on the very narrow phones so it never crowds form CTAs. */
 .mcs-bubble {
   position: fixed;
   right: 16px;
   bottom: calc(24px + env(safe-area-inset-bottom, 0));
-  width: 42px;
-  height: 42px;
-  padding: 0;
-  display: inline-grid;
-  place-items: center;
+  height: 40px;
+  padding: 0 14px 0 12px;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
   background: #1d4ed8;
   color: #FFFFFF;
   border: 0;
-  border-radius: 50%;
+  border-radius: 999px;
   cursor: pointer;
-  /* Softer single-layer shadow — less visual bulk against the page. */
+  /* Softer single-layer shadow — calm against the page. */
   box-shadow: 0 4px 14px rgba(15, 23, 42, 0.10);
   z-index: 60;
   transition: transform 0.18s ease, background-color 0.18s ease;
@@ -25,9 +27,31 @@
 }
 
 .mcs-bubble svg {
-  width: 19px;
-  height: 19px;
+  width: 18px;
+  height: 18px;
   display: block;
+  flex-shrink: 0;
+}
+
+.mcs-bubble-label {
+  font-size: 13.5px;
+  font-weight: 600;
+  letter-spacing: -0.005em;
+  line-height: 1;
+}
+
+/* Very narrow phones — collapse to icon-only circle. */
+@media (max-width: 360px) {
+  .mcs-bubble {
+    width: 40px;
+    height: 40px;
+    padding: 0;
+    border-radius: 50%;
+    justify-content: center;
+  }
+  .mcs-bubble-label {
+    display: none;
+  }
 }
 
 .mcs-bubble:active {
@@ -189,6 +213,8 @@
   flex: 1 1 auto;
   overflow-y: auto;
   -webkit-overflow-scrolling: touch;
+  /* Block iOS rubber-band scroll from bleeding into the page behind. */
+  overscroll-behavior: contain;
   padding: 16px 14px 8px;
   display: flex;
   flex-direction: column;

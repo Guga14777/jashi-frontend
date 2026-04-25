@@ -46,22 +46,22 @@ const FEATURES = [
   {
     icon: IoPeopleOutline,
     title: 'Direct Driver Access',
-    body: 'Talk directly with your carrier — no brokers, no hidden fees.',
+    body: 'Talk directly with carriers.',
   },
   {
     icon: IoFlashOutline,
     title: 'Set Your Price',
-    body: "You're in control — set the price you want to pay.",
+    body: 'Choose the price you want.',
   },
   {
     icon: IoHeadsetOutline,
     title: 'Dedicated Support',
-    body: 'Our team is available 7 days a week.',
+    body: 'Help available 7 days.',
   },
   {
     icon: IoLocateOutline,
     title: 'Live Tracking',
-    body: 'Track your shipment from pickup through delivery.',
+    body: 'Track pickup to delivery.',
   },
 ];
 

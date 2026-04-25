@@ -1,6 +1,7 @@
 import React, { useEffect, useRef, useState } from 'react';
 import { HiOutlineChat, HiX, HiPaperAirplane } from 'react-icons/hi';
 
+import useBodyScrollLock from '../../../hooks/use-body-scroll-lock';
 import './mobile-chat-sheet.css';
 
 const INITIAL_MESSAGES = [
@@ -33,13 +34,8 @@ function MobileChatSheet() {
   const messagesEndRef = useRef(null);
   const inputRef = useRef(null);
 
-  // Lock background scroll while the sheet is open.
-  useEffect(() => {
-    if (!open) return;
-    const prev = document.body.style.overflow;
-    document.body.style.overflow = 'hidden';
-    return () => { document.body.style.overflow = prev; };
-  }, [open]);
+  // Lock the page behind the chat sheet — iOS-friendly.
+  useBodyScrollLock(open);
 
   // Esc closes (helps with paired keyboards).
   useEffect(() => {
@@ -88,6 +84,7 @@ function MobileChatSheet() {
         onClick={() => setOpen(true)}
       >
         <HiOutlineChat aria-hidden="true" />
+        <span className="mcs-bubble-label">Chat</span>
       </button>
 
       {open && (
