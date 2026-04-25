@@ -453,3 +453,45 @@
     font-size: 12px;
   }
 }
+/* ================================
+   MOBILE FOOTER (footer--mobile)
+   Renders on viewports ≤ 768px so info pages get the same minimal
+   pattern as the homepage instead of the squashed 4-column desktop
+   footer. Generous bottom padding keeps the floating chat bubble
+   from overlapping the legal links.
+   ================================ */
+.footer--mobile {
+  margin-top: 8px;
+  padding: 24px 16px calc(140px + env(safe-area-inset-bottom, 0));
+  background: #FFFFFF;
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  border-top: 1px solid #ECEFF3;
+}
+
+.footer-mobile-links {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 6px;
+  font-size: 12.5px;
+}
+
+.footer-mobile-links a {
+  color: #475569;
+  text-decoration: none;
+  font-weight: 500;
+  padding: 4px 2px;
+  transition: color 0.18s ease;
+}
+.footer-mobile-links a:active { color: #1d4ed8; }
+
+.footer-mobile-links span { color: #CBD5E1; }
+
+.footer-mobile-copy {
+  font-size: 11.5px;
+  color: #64748B;
+}

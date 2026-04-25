@@ -57,19 +57,25 @@ function MobileComparison({ form }) {
     <section className="mh-compare" aria-label="Pricing comparison">
       <header className="mh-compare-head">
         <span className="mh-compare-eyebrow">See the difference</span>
-        <h2 className="mh-compare-title">Why customers save with Jashi</h2>
+        <h2 className="mh-compare-title">
+          Traditional brokers set the price. Jashi lets you make the offer.
+        </h2>
         <p className="mh-compare-meta">
           {hasQuote ? vehicleLabel : DEMO_SAMPLE.vehicleLabel} · {routeLabel}
         </p>
       </header>
 
       <div className="mh-compare-card">
-        {/* Traditional broker — 4 rows */}
+        {/* Traditional broker */}
         <div className="mh-compare-row mh-compare-row--broker">
           <div className="mh-compare-row-head">
             <span className="mh-compare-tag mh-compare-tag--bad">Traditional broker</span>
             <span className="mh-compare-fee">{BROKER_FEE_PCT_LABEL} fee</span>
           </div>
+          <ul className="mh-compare-attrs">
+            <li>Broker controls price</li>
+            <li>{BROKER_FEE_PCT_LABEL} fee</li>
+          </ul>
           <dl className="mh-compare-lines">
             <div className="mh-compare-line">
               <dt>Carrier pay</dt>
@@ -92,12 +98,16 @@ function MobileComparison({ form }) {
 
         <div className="mh-compare-divider" aria-hidden="true" />
 
-        {/* Jashi Logistics — 4 rows */}
+        {/* Jashi Logistics */}
         <div className="mh-compare-row mh-compare-row--jashi">
           <div className="mh-compare-row-head">
             <span className="mh-compare-tag mh-compare-tag--good">Jashi Logistics</span>
             <span className="mh-compare-fee">{PLATFORM_FEE_PCT_LABEL} fee</span>
           </div>
+          <ul className="mh-compare-attrs">
+            <li>You set your offer</li>
+            <li>{PLATFORM_FEE_PCT_LABEL} platform fee</li>
+          </ul>
           <dl className="mh-compare-lines">
             <div className="mh-compare-line">
               <dt>Carrier pay</dt>

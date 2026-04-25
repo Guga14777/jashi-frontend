@@ -2,12 +2,15 @@ import React, { useEffect, useRef, useState } from "react";
 import { Link, useNavigate, useLocation } from "react-router-dom";
 import { IoChevronDown, IoPersonOutline, IoCarSportOutline } from "react-icons/io5";
 import { useAuth } from "../../../store/auth-context.jsx";
+import useIsMobile from "../../../hooks/use-is-mobile";
+import MobileHomeHeader from "../../../pages/home/components/mobile-header";
 import "./publicheader.css";
 
 const PublicHeader = () => {
   const navigate = useNavigate();
   const location = useLocation();
   const { isAuthenticated, user, isLoading } = useAuth();
+  const isMobile = useIsMobile();
 
   const [activeMenu, setActiveMenu] = useState(null);
   const [isScrolled, setIsScrolled] = useState(false);
@@ -119,6 +122,14 @@ const PublicHeader = () => {
     setActiveMenu(null);
     navigate(`${location.pathname}?auth=carrier-signup`);
   };
+
+  // On mobile, the public marketing chrome is the same simplified header
+  // used by the homepage: brand + single "Account" sheet. Prevents the
+  // dual login/create-account buttons from cramping the mobile viewport
+  // and gives every public page the same navigation pattern.
+  if (isMobile) {
+    return <MobileHomeHeader />;
+  }
 
   if (isLoading) {
     return (

@@ -1,0 +1,296 @@
+/* src/pages/home/components/mobile-chat-sheet.css
+   Mobile-only chat: small floating bubble + bottom-sheet conversation
+   UI. Replaces the shared LiveChat panel on mobile homepage / public
+   info pages. Desktop chat is unaffected. */
+
+.mcs-bubble {
+  position: fixed;
+  right: 16px;
+  bottom: calc(24px + env(safe-area-inset-bottom, 0));
+  width: 44px;
+  height: 44px;
+  padding: 0;
+  display: inline-grid;
+  place-items: center;
+  background: #1d4ed8;
+  color: #FFFFFF;
+  border: 0;
+  border-radius: 50%;
+  cursor: pointer;
+  box-shadow: 0 1px 2px rgba(15, 23, 42, 0.06), 0 6px 16px rgba(15, 23, 42, 0.10);
+  z-index: 60;
+  transition: transform 0.18s ease, background-color 0.18s ease;
+  font-family: inherit;
+}
+
+.mcs-bubble svg {
+  width: 20px;
+  height: 20px;
+  display: block;
+}
+
+.mcs-bubble:active {
+  transform: translateY(1px);
+  background: #1e3a8a;
+}
+
+.mcs-bubble:focus-visible {
+  outline: 2px solid #2563EB;
+  outline-offset: 3px;
+}
+
+/* ============================================
+   SHEET
+   ============================================ */
+.mcs-sheet {
+  position: fixed;
+  inset: 0;
+  z-index: 1100;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+  animation: mcsFadeIn 0.16s ease;
+}
+
+@keyframes mcsFadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+.mcs-sheet-scrim {
+  position: absolute;
+  inset: 0;
+  background: rgba(15, 23, 42, 0.42);
+  border: 0;
+  cursor: pointer;
+  padding: 0;
+  margin: 0;
+}
+
+.mcs-sheet-card {
+  position: relative;
+  background: #FFFFFF;
+  border-radius: 20px 20px 0 0;
+  box-shadow: 0 -16px 40px rgba(15, 23, 42, 0.20);
+  /* dvh tracks the visual viewport on iOS Safari / Chrome — the panel
+     stays above the on-screen keyboard. vh is a fallback. */
+  height: 70vh;
+  height: 70dvh;
+  max-height: 640px;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  padding-bottom: env(safe-area-inset-bottom, 0);
+  animation: mcsSlideUp 0.22s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+@keyframes mcsSlideUp {
+  from { transform: translateY(28px); opacity: 0; }
+  to { transform: translateY(0); opacity: 1; }
+}
+
+.mcs-sheet-handle {
+  width: 38px;
+  height: 4px;
+  background: #CBD5E1;
+  border-radius: 999px;
+  margin: 8px auto 6px;
+  flex-shrink: 0;
+}
+
+/* ----- Header ----- */
+.mcs-sheet-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 6px 14px 12px;
+  border-bottom: 1px solid #ECEFF3;
+  flex-shrink: 0;
+}
+
+.mcs-sheet-identity {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  min-width: 0;
+}
+
+.mcs-sheet-avatar {
+  width: 36px;
+  height: 36px;
+  display: grid;
+  place-items: center;
+  background: #1d4ed8;
+  color: #FFFFFF;
+  font-weight: 700;
+  font-size: 15px;
+  border-radius: 10px;
+  flex-shrink: 0;
+}
+
+.mcs-sheet-meta {
+  display: flex;
+  flex-direction: column;
+  gap: 1px;
+  min-width: 0;
+}
+
+.mcs-sheet-title {
+  font-size: 15px;
+  font-weight: 700;
+  color: #0B1220;
+  margin: 0;
+  letter-spacing: -0.01em;
+}
+
+.mcs-sheet-status {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  font-size: 12px;
+  color: #64748B;
+}
+
+.mcs-sheet-status-dot {
+  width: 6px;
+  height: 6px;
+  background: #10B981;
+  border-radius: 50%;
+}
+
+.mcs-sheet-close {
+  width: 36px;
+  height: 36px;
+  display: grid;
+  place-items: center;
+  background: #F1F5F9;
+  border: 0;
+  border-radius: 10px;
+  color: #0B1220;
+  cursor: pointer;
+  flex-shrink: 0;
+  font-family: inherit;
+}
+
+.mcs-sheet-close svg {
+  width: 18px;
+  height: 18px;
+}
+.mcs-sheet-close:active { background: #E2E8F0; }
+
+/* ----- Body ----- */
+.mcs-sheet-body {
+  flex: 1 1 auto;
+  overflow-y: auto;
+  -webkit-overflow-scrolling: touch;
+  padding: 14px 14px 6px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  background: #F8FAFC;
+}
+
+.mcs-msg {
+  max-width: 80%;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.mcs-msg--agent { align-self: flex-start; align-items: flex-start; }
+.mcs-msg--user  { align-self: flex-end;   align-items: flex-end; }
+
+.mcs-msg-text {
+  margin: 0;
+  padding: 9px 12px;
+  font-size: 14px;
+  line-height: 1.45;
+  border-radius: 14px;
+  background: #FFFFFF;
+  color: #0B1220;
+  border: 1px solid #ECEFF3;
+}
+
+.mcs-msg--user .mcs-msg-text {
+  background: #1d4ed8;
+  color: #FFFFFF;
+  border-color: #1d4ed8;
+  border-bottom-right-radius: 4px;
+}
+
+.mcs-msg--agent .mcs-msg-text {
+  border-bottom-left-radius: 4px;
+}
+
+.mcs-msg-time {
+  font-size: 10.5px;
+  color: #94A3B8;
+  padding: 0 4px;
+}
+
+/* ----- Input ----- */
+.mcs-sheet-input-row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 10px 12px 12px;
+  background: #FFFFFF;
+  border-top: 1px solid #ECEFF3;
+  flex-shrink: 0;
+}
+
+.mcs-sheet-input {
+  flex: 1 1 auto;
+  height: 40px;
+  padding: 0 14px;
+  border: 1px solid #E2E8F0;
+  border-radius: 999px;
+  background: #F8FAFC;
+  /* iOS: prevent input zoom on focus. */
+  font-size: 16px;
+  font-family: inherit;
+  color: #0B1220;
+  outline: none;
+  transition: background-color 0.15s ease, border-color 0.15s ease, box-shadow 0.15s ease;
+}
+
+.mcs-sheet-input:focus {
+  background: #FFFFFF;
+  border-color: #2563EB;
+  box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.10);
+}
+
+.mcs-sheet-input::placeholder {
+  color: #94A3B8;
+}
+
+.mcs-sheet-send {
+  width: 40px;
+  height: 40px;
+  display: grid;
+  place-items: center;
+  border: 0;
+  border-radius: 50%;
+  background: #1d4ed8;
+  color: #FFFFFF;
+  cursor: pointer;
+  flex-shrink: 0;
+  font-family: inherit;
+  transition: background-color 0.15s ease, transform 0.15s ease;
+}
+
+.mcs-sheet-send svg {
+  width: 18px;
+  height: 18px;
+  transform: translateX(1px);
+}
+
+.mcs-sheet-send:disabled {
+  background: #CBD5E1;
+  cursor: not-allowed;
+}
+
+.mcs-sheet-send:not(:disabled):active {
+  background: #1e3a8a;
+  transform: translateY(1px);
+}

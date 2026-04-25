@@ -1,13 +1,13 @@
 import React, { useEffect, useRef, useState } from 'react';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
-import { IoMenu, IoClose, IoCallOutline, IoPersonOutline, IoCarSportOutline, IoHelpCircleOutline } from 'react-icons/io5';
+import { IoClose, IoCallOutline, IoPersonOutline, IoCarSportOutline, IoHelpCircleOutline } from 'react-icons/io5';
 
 import './mobile-header.css';
 
 const SUPPORT_PHONE_E164 = '+18001234567';
 const SUPPORT_PHONE_LABEL = '1 (800) 123-4567';
 
-function MobileHomeHeader({ onCtaClick }) {
+function MobileHomeHeader() {
   const navigate = useNavigate();
   const location = useLocation();
   const headerRef = useRef(null);
@@ -55,17 +55,6 @@ function MobileHomeHeader({ onCtaClick }) {
     navigate(`${location.pathname}?auth=${mode}`);
   };
 
-  const handleCta = () => {
-    closeMenu();
-    if (typeof onCtaClick === 'function') {
-      onCtaClick();
-      return;
-    }
-    // Default: scroll to the quote widget.
-    const target = document.getElementById('quote-widget');
-    if (target) target.scrollIntoView({ behavior: 'smooth', block: 'start' });
-  };
-
   return (
     <>
       <header
@@ -83,31 +72,14 @@ function MobileHomeHeader({ onCtaClick }) {
           </Link>
 
           <div className="mh-actions">
-            <a
-              href={`tel:${SUPPORT_PHONE_E164}`}
-              className="mh-icon-btn mh-icon-btn--phone"
-              aria-label={`Call support at ${SUPPORT_PHONE_LABEL}`}
-            >
-              <IoCallOutline aria-hidden="true" />
-            </a>
-
             <button
               type="button"
               className="mh-cta"
-              onClick={handleCta}
-            >
-              Get Quote
-            </button>
-
-            <button
-              type="button"
-              className="mh-icon-btn mh-icon-btn--menu"
-              aria-label="Open menu"
               aria-expanded={isMenuOpen}
               aria-controls="mh-menu-sheet"
               onClick={() => setIsMenuOpen(true)}
             >
-              <IoMenu aria-hidden="true" />
+              Account
             </button>
           </div>
         </div>
@@ -130,7 +102,7 @@ function MobileHomeHeader({ onCtaClick }) {
           <div className="mh-sheet-card">
             <div className="mh-sheet-handle" aria-hidden="true" />
             <div className="mh-sheet-header">
-              <div className="mh-sheet-title">Menu</div>
+              <div className="mh-sheet-title">Account</div>
               <button
                 type="button"
                 className="mh-sheet-close"

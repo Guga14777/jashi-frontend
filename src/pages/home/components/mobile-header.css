@@ -59,14 +59,14 @@
 }
 
 .mh-brand-name {
-  font-size: 14px;
-  /* Match the desktop public header brand wordmark exactly:
-     same color (#0a58ff) and same weight (800). Desktop has no
-     :hover / :active state on .pub-name, so we don't add one here.
+  /* Bigger, bolder, more present — anchors the header now that the
+     right side is just a single Account button. Color + weight match
+     the desktop public header brand wordmark exactly.
      See src/components/header/public/publicheader.css → .pub-name. */
+  font-size: 17px;
   font-weight: 800;
   color: #0a58ff;
-  letter-spacing: -0.005em;
+  letter-spacing: 0.1px;
   white-space: nowrap;
   overflow: hidden;
   text-overflow: clip;
@@ -81,82 +81,28 @@
   flex-shrink: 0;
 }
 
+/* Single right-side action — "Account" — opens the bottom-sheet menu.
+   No phone icon, no quote CTA, no hamburger. The page itself surfaces the
+   primary "Start My Quote" action in the hero. */
 .mh-cta {
-  height: 34px;
-  padding: 0 13px;
+  height: 36px;
+  padding: 0 14px;
   border-radius: 9px;
-  border: 0;
-  background: #1d4ed8;
-  color: #FFFFFF;
-  font-size: 12.5px;
+  border: 1px solid #E2E8F0;
+  background: #FFFFFF;
+  color: #0F172A;
+  font-size: 13px;
   font-weight: 600;
-  letter-spacing: 0.005em;
+  letter-spacing: -0.005em;
   cursor: pointer;
   font-family: inherit;
-  box-shadow: 0 1px 2px rgba(29, 78, 216, 0.20);
-  transition: transform 0.15s ease, background-color 0.15s ease;
+  transition: background-color 0.15s ease, border-color 0.15s ease;
   white-space: nowrap;
 }
 
 .mh-cta:active {
-  transform: translateY(1px);
-  background: #1e40af;
-}
-
-.mh-icon-btn {
-  width: 34px;
-  height: 34px;
-  display: inline-grid;
-  place-items: center;
   background: #F1F5F9;
-  border: 0;
-  border-radius: 9px;
-  color: #0F172A;
-  cursor: pointer;
-  font-size: 18px;
-  text-decoration: none;
-  font-family: inherit;
-  transition: background-color 0.15s ease, color 0.15s ease;
-}
-
-.mh-icon-btn svg {
-  width: 18px;
-  height: 18px;
-}
-
-.mh-icon-btn:active {
-  background: #E2E8F0;
-  color: #0a58ff;
-}
-
-.mh-icon-btn--phone {
-  /* Slightly lifted so the call action reads as warm/easy. */
-  background: #ECFDF5;
-  color: #047857;
-}
-.mh-icon-btn--phone:active {
-  background: #D1FAE5;
-}
-
-/* On the narrowest phones, hide the brand wordmark — the badge is enough
-   and we save horizontal room for the primary CTA. */
-@media (max-width: 360px) {
-  .mh-brand-name {
-    position: absolute;
-    width: 1px;
-    height: 1px;
-    margin: -1px;
-    padding: 0;
-    overflow: hidden;
-    clip: rect(0, 0, 0, 0);
-    white-space: nowrap;
-    border-width: 0;
-  }
-
-  .mh-cta {
-    padding: 0 12px;
-    font-size: 12.5px;
-  }
+  border-color: #CBD5E1;
 }
 
 /* ============================================

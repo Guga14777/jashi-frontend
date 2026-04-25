@@ -89,16 +89,34 @@ html {
   font-size: 15px;
   line-height: 1.55;
   color: var(--mh-text-soft);
-  margin: 0 0 22px 0;
+  margin: 0 0 6px 0;
   font-weight: 400;
+}
+
+.mhome-hero-micro {
+  font-size: 13px;
+  line-height: 1.5;
+  color: var(--mh-text-muted);
+  margin: 0 0 22px 0;
 }
 
 .mhome-hero-ctas {
   display: flex;
-  gap: 10px;
+  align-items: center;
+  gap: 14px;
   margin-bottom: 18px;
   flex-wrap: wrap;
 }
+
+.mhome-hero-link {
+  color: var(--mh-blue-700);
+  font-size: 14px;
+  font-weight: 600;
+  letter-spacing: -0.005em;
+  text-decoration: none;
+  white-space: nowrap;
+}
+.mhome-hero-link:active { color: var(--mh-blue-800); }
 
 .mhome-trust {
   list-style: none;
@@ -239,6 +257,41 @@ html {
   align-items: center;
   justify-content: space-between;
   margin-bottom: 8px;
+}
+
+/* Two-line attributes summary above the dollar breakdown — communicates
+   the "control" advantage (Broker controls price / You set your offer)
+   alongside the fee number. Sits between the row head and the breakdown. */
+.mh-compare-attrs {
+  list-style: none;
+  margin: 0 0 10px 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.mh-compare-attrs li {
+  position: relative;
+  padding-left: 16px;
+  font-size: 12.5px;
+  color: var(--mh-text-soft);
+  line-height: 1.45;
+}
+
+.mh-compare-attrs li::before {
+  content: "";
+  position: absolute;
+  left: 4px;
+  top: 8px;
+  width: 4px;
+  height: 4px;
+  border-radius: 50%;
+  background: var(--mh-text-muted);
+}
+
+.mh-compare-row--jashi .mh-compare-attrs li::before {
+  background: var(--mh-blue-700);
 }
 
 /* Breakdown rows inside each side of the comparison. Carrier pay,

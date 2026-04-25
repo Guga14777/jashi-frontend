@@ -16,7 +16,7 @@ import QuoteWidget from '../../components/quote-widget/quote-widget';
 
 import MobileHomeHeader from './components/mobile-header';
 import MobileComparison from './components/mobile-comparison';
-import MobileSupportBubble from './components/mobile-support-bubble';
+import MobileChatSheet from './components/mobile-chat-sheet';
 
 import './mobile-home.css';
 
@@ -103,17 +103,20 @@ function MobileHome() {
 
   return (
     <div className="mhome">
-      <MobileHomeHeader onCtaClick={scrollToQuote} />
+      <MobileHomeHeader />
 
       <main className="mhome-main">
         {/* ===== HERO ===== */}
         <section className="mhome-hero" aria-label="Hero">
           <h1 className="mhome-hero-title">
-            Ship Your Vehicle with{' '}
-            <span className="mhome-hero-accent">Complete Control</span>
+            Set Your Price.{' '}
+            <span className="mhome-hero-accent">Let Carriers Bid.</span>
           </h1>
           <p className="mhome-hero-sub">
-            Set your price. Direct carrier access. Only a 6% fee.
+            Ship your vehicle with direct carrier access and a flat 6% platform fee.
+          </p>
+          <p className="mhome-hero-micro">
+            You choose the offer. Verified carriers compete for the job.
           </p>
 
           <div className="mhome-hero-ctas">
@@ -122,21 +125,21 @@ function MobileHome() {
               className="mhome-btn mhome-btn--primary"
               onClick={scrollToQuote}
             >
-              Get My Quote
+              Start My Quote
             </button>
-            <Link to="/how-dispatch-works" className="mhome-btn mhome-btn--ghost">
-              How It Works
+            <Link to="/how-dispatch-works" className="mhome-hero-link">
+              See How It Works →
             </Link>
           </div>
 
           <ul className="mhome-trust" aria-label="Trust">
             <li>
               <IoShieldCheckmarkOutline aria-hidden="true" />
-              FMCSA Verified
+              6% Flat Fee
             </li>
-            <li>Insured</li>
-            <li>No Hidden Fees</li>
             <li>Direct Carrier Access</li>
+            <li>No Hidden Fees</li>
+            <li>Verified Carriers</li>
           </ul>
         </section>
 
@@ -151,10 +154,10 @@ function MobileHome() {
           aria-label="Get a quote"
         >
           <header className="mhome-quote-head">
-            <span className="mhome-quote-eyebrow">Step 1 · Tell us about your shipment</span>
+            <span className="mhome-quote-eyebrow">Step 1 · Build your offer</span>
             <h2 className="mhome-quote-title">Build your quote</h2>
             <p className="mhome-quote-sub">
-              Enter your route and vehicle to see your dispatch chance instantly.
+              Enter your route, vehicle, and offer to see your dispatch chance.
             </p>
           </header>
           <div className="mhome-quote-card">
@@ -234,7 +237,7 @@ function MobileHome() {
         </div>
       </footer>
 
-      <MobileSupportBubble />
+      <MobileChatSheet />
     </div>
   );
 }

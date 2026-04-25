@@ -390,20 +390,57 @@
    RESPONSIVE
    =========================================================================== */
 
-@media (max-width: 600px) {
+/* On mobile the modal becomes a true full-screen sheet so it doesn't
+   read as a popup floating in space, never zooms with iOS Safari, and
+   scrolls properly inside its own bounds (header + close stay visible
+   while the form scrolls). */
+@media (max-width: 768px) {
   .global-auth-modal-overlay {
-    padding: 12px;
-    align-items: flex-start;
-    padding-top: 16px;
+    padding: 0;
+    align-items: stretch;
+    justify-content: stretch;
   }
 
   .global-auth-modal-container {
-    border-radius: 14px;
-    max-height: calc(100vh - 32px);
+    width: 100%;
+    max-width: 100%;
+    height: 100vh;
+    height: 100dvh;
+    max-height: 100dvh;
+    border-radius: 0;
+    /* The inner content scrolls; the container itself does not, so the
+       close button can stay pinned at the top edge. */
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+  }
+
+  .global-auth-modal-container::before {
+    border-radius: 0;
+  }
+
+  .auth-modal-close-btn {
+    position: fixed;
+    top: calc(10px + env(safe-area-inset-top, 0));
+    right: 12px;
+    background: rgba(255, 255, 255, 0.92);
+    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
+    z-index: 20;
   }
 
   .auth-modal-content {
-    padding: 32px 22px 26px 22px;
+    /* Scrollable body. Top padding clears the safe area + the floating
+       close button. Bottom padding keeps the submit button above the
+       safe-area / Safari toolbar. */
+    flex: 1 1 auto;
+    overflow-y: auto;
+    -webkit-overflow-scrolling: touch;
+    padding:
+      calc(24px + env(safe-area-inset-top, 0))
+      20px
+      calc(24px + env(safe-area-inset-bottom, 0))
+      20px;
   }
 
   .auth-modal-header {
@@ -421,29 +458,25 @@
   .auth-modal-body {
     max-width: 100%;
   }
+
+  /* iOS Safari: prevent input zoom-on-focus across all auth form fields,
+     regardless of their per-form CSS. Inputs never report a logical font
+     smaller than 16px while focus is in flight. */
+  .global-auth-modal-container input,
+  .global-auth-modal-container select,
+  .global-auth-modal-container textarea {
+    font-size: 16px !important;
+  }
 }
 
 @media (max-width: 380px) {
-  .global-auth-modal-overlay {
-    padding: 8px;
-    padding-top: 10px;
-  }
-
-  .global-auth-modal-container {
-    border-radius: 12px;
-  }
-
   .auth-modal-content {
-    padding: 28px 16px 22px 16px;
+    padding-left: 16px;
+    padding-right: 16px;
   }
 
   .auth-modal-title {
     font-size: 20px;
-  }
-
-  .auth-modal-close-btn {
-    top: 12px;
-    right: 12px;
   }
 }
 
