@@ -56,7 +56,9 @@
   text-decoration: none;
   min-width: 0;
   flex: 1 1 auto;
-  overflow: hidden;
+  /* No `overflow: hidden` here — the wordmark already uses
+     white-space: nowrap to prevent horizontal overflow, and removing
+     this lets descenders ("g" in "Logistics") render fully. */
 }
 
 .mh-brand-badge {
@@ -68,27 +70,34 @@
   place-items: center;
   overflow: hidden;
   flex-shrink: 0;
-  box-shadow: 0 2px 6px rgba(10, 88, 255, 0.18);
+  /* No box-shadow — flat brand mark; no blue glow. */
 }
 
 .mh-brand-badge img {
   width: 74%;
   height: 74%;
   object-fit: contain;
+  /* No halo / glow on the logo mark itself. */
+  filter: none;
+  box-shadow: none;
 }
 
 .mh-brand-name {
   /* Stronger brand presence — closer to the desktop wordmark (24px / 800)
      scaled for the 56px mobile chrome. Color + weight match desktop's
-     .pub-name exactly. See publicheader.css → .pub-name. */
+     .pub-name exactly. See publicheader.css → .pub-name.
+     line-height bumped from 1.1 → 1.3 so descenders like "g" never get
+     clipped at the baseline; no `overflow: hidden` on this element so
+     the descender always renders fully. */
   font-size: 19px;
   font-weight: 800;
   color: #0a58ff;
   letter-spacing: 0.15px;
   white-space: nowrap;
-  overflow: hidden;
-  text-overflow: clip;
-  line-height: 1.1;
+  line-height: 1.3;
+  /* Tiny right pad so italic-style kerning at the end never visually
+     touches the Account button. */
+  padding-right: 1px;
 }
 
 /* ----- Right-hand actions ----- */
