@@ -13,10 +13,10 @@ import {
 } from 'react-icons/io5';
 
 import QuoteWidget from '../../components/quote-widget/quote-widget';
-import LiveChat from '../../components/live-chat/live-chat';
 
 import MobileHomeHeader from './components/mobile-header';
 import MobileComparison from './components/mobile-comparison';
+import MobileSupportBubble from './components/mobile-support-bubble';
 
 import './mobile-home.css';
 
@@ -218,18 +218,6 @@ function MobileHome() {
           </div>
         </section>
 
-        {/* ===== CLOSING CTA ===== */}
-        <section className="mhome-closer" aria-label="Get started">
-          <h2>Ready to set your price?</h2>
-          <p>It takes about a minute. No account needed to see your dispatch chance.</p>
-          <button
-            type="button"
-            className="mhome-btn mhome-btn--primary mhome-btn--block"
-            onClick={scrollToQuote}
-          >
-            Start My Quote
-          </button>
-        </section>
       </main>
 
       {/* ===== MINIMAL FOOTER ===== */}
@@ -246,7 +234,7 @@ function MobileHome() {
         </div>
       </footer>
 
-      <LiveChat />
+      <MobileSupportBubble />
     </div>
   );
 }

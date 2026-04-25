@@ -1,0 +1,167 @@
+/* src/pages/home/components/mobile-support-bubble.css
+   Mobile-only support bubble + contact modal. Replaces the zoom-prone
+   shared LiveChat panel on the mobile homepage. */
+
+.msb-bubble {
+  position: fixed;
+  right: 16px;
+  bottom: calc(24px + env(safe-area-inset-bottom, 0));
+  width: 44px;
+  height: 44px;
+  padding: 0;
+  display: inline-grid;
+  place-items: center;
+  background: #1d4ed8;
+  color: #FFFFFF;
+  border: 0;
+  border-radius: 50%;
+  cursor: pointer;
+  box-shadow: 0 1px 2px rgba(15, 23, 42, 0.06), 0 6px 16px rgba(15, 23, 42, 0.10);
+  /* Sit above the page but below modals. */
+  z-index: 60;
+  transition: transform 0.18s ease, background-color 0.18s ease;
+  font-family: inherit;
+}
+
+.msb-bubble svg {
+  width: 20px;
+  height: 20px;
+  display: block;
+}
+
+.msb-bubble:active {
+  transform: translateY(1px);
+  background: #1e3a8a;
+}
+
+.msb-bubble:focus-visible {
+  outline: 2px solid #2563EB;
+  outline-offset: 3px;
+}
+
+/* ---------- Modal ---------- */
+.msb-modal {
+  position: fixed;
+  inset: 0;
+  z-index: 1100;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 16px;
+  animation: msbFadeIn 0.16s ease;
+}
+
+@keyframes msbFadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+.msb-modal-scrim {
+  position: absolute;
+  inset: 0;
+  background: rgba(15, 23, 42, 0.42);
+  border: 0;
+  cursor: pointer;
+  padding: 0;
+  margin: 0;
+}
+
+.msb-modal-card {
+  position: relative;
+  width: 100%;
+  max-width: 420px;
+  background: #FFFFFF;
+  border-radius: 16px;
+  padding: 18px 18px calc(16px + env(safe-area-inset-bottom, 0));
+  box-shadow: 0 20px 50px rgba(15, 23, 42, 0.22);
+  animation: msbCardIn 0.20s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+@keyframes msbCardIn {
+  from { transform: translateY(12px); opacity: 0; }
+  to { transform: translateY(0); opacity: 1; }
+}
+
+.msb-modal-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  margin-bottom: 6px;
+}
+
+.msb-modal-title {
+  font-size: 17px;
+  font-weight: 700;
+  color: #0B1220;
+  letter-spacing: -0.015em;
+  margin: 0;
+}
+
+.msb-modal-close {
+  width: 36px;
+  height: 36px;
+  display: grid;
+  place-items: center;
+  background: #F1F5F9;
+  border: 0;
+  border-radius: 10px;
+  color: #0B1220;
+  cursor: pointer;
+  font-family: inherit;
+}
+
+.msb-modal-close svg {
+  width: 18px;
+  height: 18px;
+}
+
+.msb-modal-close:active { background: #E2E8F0; }
+
+.msb-modal-body {
+  font-size: 13.5px;
+  line-height: 1.5;
+  color: #475569;
+  margin: 0 0 14px 0;
+}
+
+.msb-modal-cta {
+  display: block;
+  width: 100%;
+  text-align: center;
+  background: #1d4ed8;
+  color: #FFFFFF;
+  text-decoration: none;
+  font-size: 15px;
+  font-weight: 600;
+  letter-spacing: -0.005em;
+  padding: 12px 14px;
+  border-radius: 10px;
+  font-family: inherit;
+  /* iOS: prevent zoom on input-like interactions; mailto links don't focus
+     but keeping ≥16px is a defensive default. */
+}
+
+.msb-modal-cta:active {
+  background: #1e3a8a;
+}
+
+.msb-modal-secondary {
+  display: block;
+  width: 100%;
+  margin-top: 8px;
+  background: transparent;
+  color: #475569;
+  border: 0;
+  font-size: 13.5px;
+  font-weight: 500;
+  padding: 10px 12px;
+  cursor: pointer;
+  border-radius: 10px;
+  font-family: inherit;
+}
+
+.msb-modal-secondary:active {
+  background: #F1F5F9;
+  color: #0B1220;
+}

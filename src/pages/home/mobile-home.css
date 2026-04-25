@@ -33,10 +33,27 @@
   display: flex;
   flex-direction: column;
   overflow-x: hidden;
+  /* Anchor jumps (e.g. the header CTA scrolling to the quote widget) need
+     to land below the fixed header. scroll-padding-top covers the
+     html-level scroll position; scroll-margin-top on individual targets
+     covers programmatic scrollIntoView. */
+  scroll-padding-top: calc(var(--real-header-height, 56px) + env(safe-area-inset-top, 0px) + 8px);
+}
+
+html {
+  scroll-padding-top: calc(var(--real-header-height, 56px) + env(safe-area-inset-top, 0px) + 8px);
 }
 
 .mhome-main {
-  padding-top: calc(var(--real-header-height, 56px) + 4px);
+  /* Robust against the iOS notch + the brief moment before mobile-header.jsx
+     publishes --real-header-height: the calc fallback already includes
+     env(safe-area-inset-top), so the hero is never tucked under the
+     fixed header even on first paint. The +8px breathing room sits
+     between the chrome and the headline. */
+  padding-top: calc(
+    var(--real-header-height, calc(56px + env(safe-area-inset-top, 0px)))
+    + 8px
+  );
   padding-bottom: 16px;
   display: flex;
   flex-direction: column;
@@ -221,7 +238,52 @@
   display: flex;
   align-items: center;
   justify-content: space-between;
-  margin-bottom: 4px;
+  margin-bottom: 8px;
+}
+
+/* Breakdown rows inside each side of the comparison. Carrier pay,
+   fee, broker-markup / estimated-savings — small monospaced figures
+   so they line up cleanly without feeling promotional. */
+.mh-compare-lines {
+  margin: 0 0 8px 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.mh-compare-line {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 8px;
+  font-size: 12.5px;
+  line-height: 1.4;
+}
+
+.mh-compare-line dt {
+  margin: 0;
+  color: var(--mh-text-soft);
+  font-weight: 500;
+}
+
+.mh-compare-line dd {
+  margin: 0;
+  color: var(--mh-text);
+  font-family: 'SF Mono', 'Monaco', 'Inconsolata', monospace;
+  font-variant-numeric: tabular-nums;
+  font-weight: 500;
+  letter-spacing: -0.01em;
+}
+
+.mh-compare-line--accent-bad dt,
+.mh-compare-line--accent-bad dd {
+  color: var(--mh-bad);
+}
+
+.mh-compare-line--accent-good dt,
+.mh-compare-line--accent-good dd {
+  color: var(--mh-blue-700);
 }
 
 .mh-compare-tag {
@@ -274,8 +336,15 @@
   font-variant-numeric: tabular-nums;
 }
 
-.mh-compare-amount--bad .mh-compare-amount-value { color: var(--mh-text-muted); text-decoration: line-through; text-decoration-thickness: 1px; }
+.mh-compare-amount--bad .mh-compare-amount-value { color: var(--mh-text); }
 .mh-compare-amount--good .mh-compare-amount-value { color: var(--mh-text); }
+
+/* Hairline above the totals row so "Customer pays" reads as the summary
+   of the breakdown above it, not just another line. */
+.mh-compare-amount {
+  padding-top: 8px;
+  border-top: 1px solid var(--mh-border);
+}
 
 .mh-compare-divider {
   position: relative;
@@ -563,65 +632,22 @@
 }
 
 /* ============================================
-   CLOSING CTA
-   ============================================ */
-.mhome-closer {
-  margin: 0 16px;
-  background: #0B1220;
-  color: #FFFFFF;
-  border-radius: var(--mh-radius-card);
-  padding: 18px 18px 18px;
-  text-align: center;
-  position: relative;
-  overflow: hidden;
-}
-
-.mhome-closer::after { content: none; }
-
-.mhome-closer h2 {
-  font-size: 17px;
-  font-weight: 600;
-  letter-spacing: -0.02em;
-  margin: 0 0 4px 0;
-  color: #FFFFFF;
-}
-
-.mhome-closer p {
-  font-size: 13px;
-  color: rgba(255, 255, 255, 0.55);
-  margin: 0 0 14px 0;
-  line-height: 1.5;
-  letter-spacing: -0.005em;
-}
-
-.mhome-closer .mhome-btn--primary {
-  background: #FFFFFF;
-  color: #0B1220;
-  border-color: transparent;
-  box-shadow: none;
-  height: 42px;
-  font-weight: 600;
-}
-.mhome-closer .mhome-btn--primary:active {
-  background: #E2E8F0;
-}
-
-/* ============================================
    FOOTER
    ============================================ */
 .mhome-footer {
   margin-top: 8px;
-  /* Extra bottom padding so the floating chat bubble never sits on top of
-     the Privacy / Terms / Contact links. */
-  padding: 24px 16px calc(72px + env(safe-area-inset-bottom, 0));
+  /* Generous bottom padding so the floating support bubble (24px above
+     the safe area) never overlaps the legal links, and so iOS Safari's
+     dynamic bottom toolbar never crops the copyright line. */
+  padding: 24px 16px calc(140px + env(safe-area-inset-bottom, 0));
   background: #FFFFFF;
   text-align: center;
   display: flex;
   flex-direction: column;
   gap: 10px;
   /* Hairline section separator. Restrained — no border-top on individual
-     marketing sections; just one between the closing card and the legal
-     row to anchor the bottom of the page. */
+     marketing sections; just one above the legal row to anchor the
+     bottom of the page. */
   border-top: 1px solid var(--mh-border);
 }
 
@@ -655,75 +681,10 @@
   color: var(--mh-text-muted);
 }
 
-/* ============================================
-   CHAT BUTTON / PANEL — mobile-only overrides.
-   We don't fork live-chat.jsx; we pin the bubble to a safe corner and
-   turn the panel into a clean bottom sheet on mobile.
-   ============================================ */
-/* Icon-only circular bubble — Intercom / Apple-Maps style. The "Chat"
-   wordmark on a marketing homepage was reading as promotional; the icon
-   alone is calmer and matches the rest of the page's restraint. */
-.mhome .live-chat-button {
-  bottom: calc(24px + env(safe-area-inset-bottom, 0)) !important;
-  right: 14px !important;
-  width: 44px !important;
-  height: 44px !important;
-  padding: 0 !important;
-  gap: 0 !important;
-  display: inline-grid !important;
-  place-items: center !important;
-  border-radius: 50% !important;
-  box-shadow: 0 1px 2px rgba(15, 23, 42, 0.06), 0 6px 16px rgba(15, 23, 42, 0.08) !important;
-  z-index: 60 !important;
-}
-
-.mhome .live-chat-icon { width: 20px !important; height: 20px !important; }
-.mhome .live-chat-text { display: none !important; }
-
-/* Bottom-sheet variant of the chat panel on mobile.
-   The shared component still uses its own .live-chat-panel class; we
-   just override the geometry so it docks to the bottom and leaves room
-   for the keyboard. */
-.mhome .live-chat-panel {
-  position: fixed !important;
-  left: 0 !important;
-  right: 0 !important;
-  bottom: 0 !important;
-  top: auto !important;
-  width: 100% !important;
-  /* dvh tracks the visual viewport on iOS / Android, so the panel never
-     hides behind the on-screen keyboard. vh is a fallback. */
-  height: 65vh !important;
-  height: 65dvh !important;
-  max-height: 560px !important;
-  border-radius: 20px 20px 0 0 !important;
-  box-shadow: 0 -16px 40px rgba(15, 23, 42, 0.20) !important;
-  display: flex !important;
-  flex-direction: column !important;
-  z-index: 1100 !important;
-  padding-bottom: env(safe-area-inset-bottom, 0);
-  overflow: hidden;
-}
-
-.mhome .live-chat-body {
-  flex: 1 1 auto;
-  -webkit-overflow-scrolling: touch;
-}
-
-.mhome .live-chat-footer {
-  position: sticky;
-  bottom: 0;
-  background: #FFFFFF;
-}
-
-.mhome .live-chat-input {
-  font-size: 16px !important; /* iOS: prevent input zoom */
-}
-
-.mhome .live-chat-minimize {
-  width: 38px;
-  height: 38px;
-}
+/* The shared <LiveChat> panel is no longer rendered on the mobile
+   homepage — see <MobileSupportBubble /> in mobile-home.jsx — so the
+   per-element overrides that used to live here are gone with it. The
+   bubble + modal styles for mobile live in mobile-support-bubble.css. */
 
 /* ============================================
    iOS SAFARI: prevent input auto-zoom on QuoteWidget inputs.
