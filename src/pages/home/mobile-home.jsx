@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect, useRef, useState } from 'react';
+import React, { useCallback, useRef, useState } from 'react';
 import { Link } from 'react-router-dom';
 import {
   IoFlashOutline,
@@ -67,14 +67,6 @@ const FEATURES = [
 ];
 
 function MobileHome() {
-  // TEMP verification — confirms the new mobile homepage tree is mounted.
-  // Remove this log once you've confirmed it on the deployed site.
-  useEffect(() => {
-    console.log('[MOBILE HOME ACTIVE]');
-    document.documentElement.setAttribute('data-mhome', 'v2');
-    return () => document.documentElement.removeAttribute('data-mhome');
-  }, []);
-
   const quoteRef = useRef(null);
 
   // Comparison cards live above the form, so we mirror the QuoteWidget state
