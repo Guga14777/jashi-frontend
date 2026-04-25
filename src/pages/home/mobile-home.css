@@ -37,11 +37,11 @@
      mid-scroll, which was making the hero title appear stuck under the
      chrome. The page already has html/body overflow-x: hidden so we
      don't need it on this root too. */
-  scroll-padding-top: calc(56px + env(safe-area-inset-top, 0px) + 8px);
+  scroll-padding-top: calc(60px + env(safe-area-inset-top, 0px) + 8px);
 }
 
 html {
-  scroll-padding-top: calc(56px + env(safe-area-inset-top, 0px) + 8px);
+  scroll-padding-top: calc(60px + env(safe-area-inset-top, 0px) + 8px);
 }
 
 .mhome-main {
@@ -51,7 +51,7 @@ html {
      the fixed header on first paint or after iOS Safari toolbar collapse.
      This calc matches the header's own min-height exactly + a small
      visual gap so the title never touches the chrome. */
-  padding-top: calc(56px + env(safe-area-inset-top, 0px) + 12px);
+  padding-top: calc(60px + env(safe-area-inset-top, 0px) + 12px);
   padding-bottom: 16px;
   display: flex;
   flex-direction: column;
@@ -370,7 +370,7 @@ html {
    ============================================ */
 .mhome-quote {
   padding: 0 16px;
-  scroll-margin-top: calc(56px + env(safe-area-inset-top, 0px) + 12px);
+  scroll-margin-top: calc(60px + env(safe-area-inset-top, 0px) + 12px);
 }
 
 /* The quote section now carries the page-level title — page opens
@@ -382,11 +382,12 @@ html {
 
 .mhome-quote-title {
   /* Sized so "Ship On Your Terms." (the longer of the two lines) fits
-     on one line at the narrowest iPhone (320px SE). Line height 1.12
-     gives breathing room without making the lockup feel airy. */
+     on one line at the narrowest iPhone (320px SE). Line-height
+     tightened from 1.12 → 1.05 so the two-line lockup reads as one
+     intentional block, not two stacked lines. */
   font-size: clamp(24px, 6.6vw, 28px);
   font-weight: 800;
-  line-height: 1.12;
+  line-height: 1.05;
   letter-spacing: -0.028em;
   color: var(--mh-text);
   margin: 0 0 8px 0;
@@ -396,16 +397,16 @@ html {
 }
 
 /* Force the headline into exactly two lines: "Set Your Price." on top,
-   "Ship On Your Terms." on bottom (brand blue). The accent span renders
-   as its own block + nowrap, which prevents the orphaned "Terms." that
-   was happening when the browser was free to wrap inside the span. */
+   "Ship On Your Terms." on bottom (brand blue). display: block + nowrap
+   prevents the orphaned "Terms." wrap. No margin-top so the two lines
+   sit tight as one editorial lockup. */
 .mhome-quote-title-accent {
   display: block;
   white-space: nowrap;
   color: var(--mh-blue);
   font-weight: 800;
   letter-spacing: -0.028em;
-  margin-top: 2px;
+  margin-top: 0;
 }
 
 .mhome-quote-sub {
@@ -517,9 +518,9 @@ html {
 
 .mhome-timeline-item {
   display: grid;
-  grid-template-columns: 36px 1fr;
-  gap: 14px;
-  padding-bottom: 18px;
+  grid-template-columns: 32px 1fr;
+  gap: 12px;
+  padding-bottom: 14px;
 }
 
 .mhome-timeline-item:last-child {
@@ -534,33 +535,37 @@ html {
 }
 
 .mhome-timeline-dot {
-  width: 36px;
-  height: 36px;
+  width: 32px;
+  height: 32px;
   border-radius: 50%;
   background: linear-gradient(135deg, var(--mh-blue) 0%, var(--mh-blue-800) 100%);
   color: #FFFFFF;
   display: grid;
   place-items: center;
   flex-shrink: 0;
-  box-shadow: 0 6px 14px rgba(10, 88, 255, 0.28);
+  /* Calmer shadow — premium SaaS onboarding rail, not promotional. */
+  box-shadow: 0 2px 6px rgba(10, 88, 255, 0.22);
 }
 
 .mhome-timeline-dot svg {
-  width: 18px;
-  height: 18px;
+  width: 16px;
+  height: 16px;
 }
 
 .mhome-timeline-line {
   flex: 1 1 auto;
-  width: 2px;
+  /* Thinner connector — premium product timeline feel. */
+  width: 1.5px;
   background: var(--mh-border);
   margin-top: 4px;
   border-radius: 999px;
-  min-height: 22px;
+  min-height: 14px;
 }
 
 .mhome-timeline-body {
-  padding-top: 2px;
+  /* No padding-top — the body's eyebrow now starts at the same y as
+     the dot's top, so each step reads as one tightly-coupled block. */
+  padding-top: 0;
   /* Prevent the title block from forcing the column wider than the
      grid track on long titles like "Carrier Accepts Your Shipment". */
   min-width: 0;
@@ -610,15 +615,29 @@ html {
 
 .mhome-feature-card {
   background: #FFFFFF;
-  border: 1px solid var(--mh-border);
+  /* Slightly stronger border than the default --mh-border so cards
+     feel intentional rather than washed-out, but still calm. */
+  border: 1px solid var(--mh-border-strong);
   border-radius: var(--mh-radius-card);
-  padding: 12px 12px 12px;
+  /* Equal vertical padding top/bottom for symmetry. */
+  padding: 14px 12px;
   display: flex;
   flex-direction: column;
   gap: 4px;
   box-shadow: var(--mh-shadow-card);
   /* Fill the grid cell so paired cards in the same row are equal height. */
   height: 100%;
+  transition: border-color 0.18s ease, box-shadow 0.18s ease, transform 0.18s ease;
+}
+
+/* Subtle desktop hover only — phones stay static (touch hover would
+   make tap feedback feel sluggish). */
+@media (hover: hover) and (pointer: fine) {
+  .mhome-feature-card:hover {
+    border-color: #CBD5E1;
+    box-shadow: var(--mh-shadow-card-strong);
+    transform: translateY(-1px);
+  }
 }
 
 .mhome-feature-ico {

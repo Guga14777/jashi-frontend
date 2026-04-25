@@ -26,7 +26,9 @@
      `filter` — any of those create a stacking context that interacts
      badly with iOS Safari's compositor on scroll. */
   box-sizing: border-box;
-  min-height: calc(56px + env(safe-area-inset-top, 0px));
+  /* 60px gives the wordmark + descenders room to breathe without
+     making the chrome feel tall. Pairs with .mhome-main padding-top. */
+  min-height: calc(60px + env(safe-area-inset-top, 0px));
 }
 
 .mh-header[data-scrolled="true"] {
@@ -36,10 +38,10 @@
 }
 
 .mh-header-inner {
-  height: 56px;
+  height: 60px;
   /* Refuse to shrink below the explicit chrome height — pairs with the
      parent's min-height to make the header geometry hard-locked. */
-  min-height: 56px;
+  min-height: 60px;
   flex-shrink: 0;
   padding: 0 12px;
   display: flex;
