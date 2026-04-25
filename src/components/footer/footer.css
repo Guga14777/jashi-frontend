@@ -318,77 +318,104 @@
   }
 }
 
-/* Mobile Responsive */
+/* Mobile Responsive — premium stacked footer.
+   Each column becomes a centered block with a subtle hairline divider
+   between them, keeping the dark navy gradient luxe and the typography
+   readable at phone size. */
 @media (max-width: 768px) {
   .footer {
-    padding: 32px 0;
+    padding: 36px 0 28px;
     margin-top: 0;
   }
-  
+
   .footer-container {
     padding: 0 20px;
   }
 
   .footer-main {
     grid-template-columns: 1fr;
-    gap: 32px;
-    margin-bottom: 32px;
+    gap: 28px;
+    margin-bottom: 24px;
+  }
+
+  /* Hairline divider between stacked columns — premium / clean */
+  .footer-main > * + * {
+    padding-top: 28px;
+    border-top: 1px solid rgba(255, 255, 255, 0.07);
   }
 
   .footer-brand-column {
     order: 1;
     align-items: center;
     text-align: center;
-    margin-bottom: 16px;
-    padding-bottom: 16px;
-  }
-  
-  .footer-links-column {
-    order: 2;
-  }
-  
-  .footer-why-column {
-    order: 3;
-  }
-  
-  .footer-contact-column {
-    order: 4;
+    margin-bottom: 0;
+    padding-bottom: 0;
   }
 
+  .footer-links-column { order: 2; text-align: center; }
+  .footer-why-column   { order: 3; text-align: center; }
+  .footer-contact-column { order: 4; text-align: center; }
+
   .footer-logo {
-    height: 56px;
+    height: 52px;
   }
 
   .footer-brand-name {
-    font-size: 28px;
+    font-size: 24px;
+    letter-spacing: 0.01em;
   }
 
-  /* UPDATED: Better mobile handling */
   .footer-tagline {
     font-size: 13px;
     text-align: center;
-    white-space: normal;  /* CHANGED: Allow wrap on mobile */
-    max-width: 90%;       /* ADDED: Use most of available width */
-    margin: 0 auto 20px;
+    white-space: normal;
+    max-width: 30ch;
+    margin: 0 auto 18px;
+    line-height: 1.55;
+    color: rgba(255, 255, 255, 0.62);
   }
 
   .footer-social {
     justify-content: center;
+    gap: 10px;
   }
 
   .footer-heading {
-    font-size: 12px;
+    font-size: 11px;
+    letter-spacing: 0.14em;
+    margin-bottom: 14px;
+    /* Center the heading + hide the desktop accent underline pattern */
+    justify-content: center;
+  }
+
+  .footer-heading-accent {
+    display: none;
+  }
+
+  .footer-links,
+  .footer-contact,
+  .footer-features {
+    align-items: center;
   }
 
   .footer-links a,
   .footer-contact li,
   .footer-features li {
-    font-size: 13px;
+    font-size: 13.5px;
+    justify-content: center;
   }
 
   .footer-links,
   .footer-features {
-    gap: 14px;
+    gap: 12px;
+  }
+
+  .footer-contact {
+    gap: 12px;
+  }
+
+  .footer-bottom {
+    padding-top: 20px;
   }
 
   .footer-bottom-content {
@@ -399,6 +426,7 @@
 
   .footer-legal {
     justify-content: center;
+    gap: 10px;
   }
 }
 

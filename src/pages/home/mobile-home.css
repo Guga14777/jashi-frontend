@@ -47,18 +47,18 @@ html {
 .mhome-main {
   /* Robust against the iOS notch + the brief moment before mobile-header.jsx
      publishes --real-header-height: the calc fallback already includes
-     env(safe-area-inset-top), so the hero is never tucked under the
-     fixed header even on first paint. The +8px breathing room sits
-     between the chrome and the headline. */
+     env(safe-area-inset-top), so the headline is never tucked under the
+     fixed header on first paint. Tightened breathing (8px → 2px) so the
+     quote form starts higher above the fold. */
   padding-top: calc(
     var(--real-header-height, calc(56px + env(safe-area-inset-top, 0px)))
-    + 8px
+    + 2px
   );
   padding-bottom: 16px;
   display: flex;
   flex-direction: column;
-  /* Slightly looser rhythm between sections — Stripe-style breathing. */
-  gap: 32px;
+  /* Section rhythm tightened from 32 → 26px — still calm, less air. */
+  gap: 26px;
 }
 
 /* The dedicated hero section was removed — the new layout opens directly
@@ -374,24 +374,28 @@ html {
 }
 
 /* The quote section now carries the page-level title — page opens
-   directly into the conversion surface. Title size matches the previous
-   hero so brand presence is unchanged; only its position moved. */
+   directly into the conversion surface. Tighter rhythm: bolder line 1,
+   blue-accent line 2, balanced subtitle. */
 .mhome-quote-head {
-  padding: 8px 4px 14px;
+  padding: 4px 4px 12px;
 }
 
 .mhome-quote-title {
   font-size: clamp(26px, 7.2vw, 30px);
-  font-weight: 700;
-  line-height: 1.12;
-  letter-spacing: -0.025em;
+  font-weight: 800;
+  line-height: 1.1;
+  letter-spacing: -0.028em;
   color: var(--mh-text);
-  margin: 0 0 10px 0;
+  margin: 0 0 8px 0;
 }
 
 .mhome-quote-title-accent {
+  display: inline;
   color: var(--mh-blue);
-  font-weight: 700;
+  font-weight: 800;
+  /* Same tracking + weight as line 1 so the brand-blue accent reads as
+     a continuation, not a separate decoration. */
+  letter-spacing: -0.028em;
 }
 
 .mhome-quote-sub {
@@ -399,9 +403,46 @@ html {
   color: var(--mh-text-soft);
   margin: 0;
   line-height: 1.5;
-  /* Constrain the subtitle width so it never breaks into a single
-     dangling word on phablets — keeps the block visually balanced. */
+  /* Constrain subtitle width so it never breaks into a single dangling
+     word on phablets — keeps the block visually balanced. */
   max-width: 38ch;
+}
+
+/* Trust micro-claims under the quote form — three plain-text items
+   separated by hairlines. Designed to vanish into the page chrome
+   while still registering as third-party validation. */
+.mhome-trust-strip {
+  list-style: none;
+  margin: 12px 0 0 0;
+  padding: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0;
+  flex-wrap: wrap;
+  font-size: 11.5px;
+  font-weight: 500;
+  letter-spacing: 0.02em;
+  color: var(--mh-text-muted);
+}
+
+.mhome-trust-strip li {
+  display: inline-flex;
+  align-items: center;
+  padding: 0 12px;
+  position: relative;
+  white-space: nowrap;
+}
+
+.mhome-trust-strip li + li::before {
+  content: "";
+  position: absolute;
+  left: 0;
+  top: 50%;
+  width: 1px;
+  height: 11px;
+  background: var(--mh-border-strong);
+  transform: translateY(-50%);
 }
 
 .mhome-quote-card {
@@ -614,25 +655,176 @@ html {
   font-size: 16px;
 }
 
-/* QuoteWidget mobile polish — primary CTA reads as "Check Dispatch Chance"
-   on mobile, and we tighten the empty likelihood card so the form doesn't
-   feel like dead vertical space before the user has filled anything in. */
-.mhome .qw-submit-btn {
-  height: 50px !important;
-  font-weight: 800 !important;
-  letter-spacing: 0.005em !important;
-  border-radius: 12px !important;
+/* ============================================
+   QuoteWidget — MOBILE OVERRIDES
+   The shared widget keeps its desktop styling unchanged; these
+   mobile-only rules tighten form padding by ~12%, normalise field
+   spacing, enlarge chip tap targets, and polish the offer / likelihood
+   area into a calmer, app-like surface. Scoped to .mhome so every
+   change stops at the homepage boundary.
+   ============================================ */
+
+/* Outer card padding — the quote-card already has 0 outer chrome, so
+   adjust the widget's own internal pad. ~12% tighter than desktop. */
+.mhome .quote-widget {
+  padding: 16px 14px !important;
 }
 
-.mhome .likelihood-empty {
-  padding: 14px 16px !important;
+/* Vertical rhythm between groups: consistent 16px instead of widget
+   default (which mixes margin-bottom values). */
+.mhome .quote-widget .form-group {
+  margin-bottom: 16px !important;
+}
+.mhome .quote-widget .form-group:last-of-type {
+  margin-bottom: 12px !important;
+}
+
+/* Field spacing inside groups */
+.mhome .quote-widget .form-row {
+  gap: 8px !important;
+}
+
+.mhome .quote-widget .form-label {
+  font-size: 13px !important;
+  font-weight: 600 !important;
+  color: var(--mh-text) !important;
+  margin-bottom: 6px !important;
+  letter-spacing: -0.005em !important;
+}
+
+.mhome .quote-widget .form-input {
+  /* iOS no-zoom + larger tap target */
+  font-size: 16px !important;
+  height: 48px !important;
+  border-radius: 10px !important;
+}
+
+.mhome .quote-widget .field-label {
+  font-size: 11.5px !important;
+  color: var(--mh-text-muted) !important;
+  letter-spacing: 0.02em !important;
+}
+
+.mhome .quote-widget .vehicles-helper {
+  font-size: 11.5px !important;
+  color: var(--mh-text-muted) !important;
+  display: block !important;
+  margin: -2px 0 8px 0 !important;
+}
+
+/* Vehicle / transport chip tap targets — bump to 44px so they meet
+   iOS Human Interface Guidelines minimum. */
+.mhome .quote-widget .qw-chip,
+.mhome .quote-widget .pill-chip {
+  min-height: 44px !important;
+  padding: 0 14px !important;
+  border-radius: 10px !important;
+}
+
+.mhome .quote-widget .vehicle-chips-row {
+  gap: 8px !important;
+}
+
+.mhome .quote-widget .transport-pills-container {
+  gap: 8px !important;
+}
+
+.mhome .quote-widget .pill-chip .pill-label {
+  font-size: 14px !important;
+  font-weight: 600 !important;
+}
+
+.mhome .quote-widget .pill-chip .pill-sublabel {
+  font-size: 11.5px !important;
+}
+
+/* Offer input — slightly more presence (the widget's primary action
+   surface) without breaking the rhythm. */
+.mhome .quote-widget .offer-input {
+  font-size: 18px !important;
+  font-weight: 600 !important;
+  letter-spacing: -0.01em !important;
+}
+
+.mhome .quote-widget .price-helper {
+  font-size: 11.5px !important;
+  color: var(--mh-text-muted) !important;
+  margin-top: 6px !important;
+  display: block !important;
+}
+
+/* Distance-row badge — calmer, smaller. */
+.mhome .quote-widget .distance-badge {
+  font-size: 12px !important;
+  padding: 5px 10px !important;
+  border-radius: 8px !important;
+}
+
+/* Likelihood — polished card surface. */
+.mhome .quote-widget .likelihood-section {
+  margin-top: 4px !important;
+}
+
+.mhome .quote-widget .likelihood-card,
+.mhome .quote-widget .likelihood-empty {
   background: var(--mh-bg) !important;
-  border: 1px dashed var(--mh-border) !important;
+  border: 1px solid var(--mh-border) !important;
   border-radius: 12px !important;
+  padding: 14px 14px !important;
 }
 
-.mhome .likelihood-empty .empty-message {
+.mhome .quote-widget .likelihood-empty {
+  border-style: dashed !important;
+}
+
+.mhome .quote-widget .likelihood-empty .empty-message {
   font-size: 13px !important;
   margin: 4px 0 0 0 !important;
   color: var(--mh-text-muted) !important;
+}
+
+.mhome .quote-widget .likelihood-label {
+  font-size: 12px !important;
+  font-weight: 600 !important;
+  letter-spacing: 0.05em !important;
+  text-transform: uppercase !important;
+  color: var(--mh-text-muted) !important;
+}
+
+.mhome .quote-widget .market-badge {
+  font-size: 11.5px !important;
+  background: #FFFFFF !important;
+  border: 1px solid var(--mh-border) !important;
+  border-radius: 6px !important;
+  padding: 3px 8px !important;
+  color: var(--mh-text-soft) !important;
+  font-weight: 500 !important;
+}
+
+.mhome .quote-widget .percentage-number {
+  font-size: 28px !important;
+  font-weight: 800 !important;
+  letter-spacing: -0.02em !important;
+}
+
+/* Primary submit — bigger tap target, brand blue. */
+.mhome .quote-widget .qw-submit-btn {
+  height: 52px !important;
+  font-size: 15px !important;
+  font-weight: 700 !important;
+  letter-spacing: 0.005em !important;
+  border-radius: 12px !important;
+  background: var(--mh-blue-700) !important;
+  box-shadow: 0 2px 6px rgba(29, 78, 216, 0.20) !important;
+}
+
+.mhome .quote-widget .qw-policy-note {
+  font-size: 11.5px !important;
+  color: var(--mh-text-muted) !important;
+  text-align: center !important;
+  margin-top: 8px !important;
+}
+
+.mhome .quote-widget .qw-footer {
+  margin-top: 4px !important;
 }

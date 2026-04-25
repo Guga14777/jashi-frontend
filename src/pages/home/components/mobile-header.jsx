@@ -1,6 +1,6 @@
 import React, { useEffect, useRef, useState } from 'react';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
-import { IoClose } from 'react-icons/io5';
+import { IoClose, IoPersonOutline, IoCarSportOutline } from 'react-icons/io5';
 
 import './mobile-header.css';
 
@@ -110,26 +110,44 @@ function MobileHomeHeader() {
               </button>
             </div>
 
-            <div className="mh-sheet-section">
-              <div className="mh-sheet-section-label">For Shippers</div>
-              <button type="button" className="mh-sheet-row" onClick={() => goAuth('shipper-login')}>
-                <span>Log In</span>
-              </button>
-              <button type="button" className="mh-sheet-row mh-sheet-row--primary" onClick={() => goAuth('shipper-signup')}>
-                <span>Create Account</span>
-              </button>
+            <div className="mh-portal-card">
+              <div className="mh-portal-head">
+                <span className="mh-portal-ico" aria-hidden="true">
+                  <IoPersonOutline />
+                </span>
+                <div className="mh-portal-meta">
+                  <div className="mh-portal-title">For Shippers</div>
+                  <div className="mh-portal-sub">Book and track your shipment</div>
+                </div>
+              </div>
+              <div className="mh-portal-actions">
+                <button type="button" className="mh-sheet-row" onClick={() => goAuth('shipper-login')}>
+                  Log In
+                </button>
+                <button type="button" className="mh-sheet-row mh-sheet-row--primary" onClick={() => goAuth('shipper-signup')}>
+                  Create Account
+                </button>
+              </div>
             </div>
 
-            <div className="mh-sheet-divider" aria-hidden="true" />
-
-            <div className="mh-sheet-section">
-              <div className="mh-sheet-section-label">For Carriers</div>
-              <button type="button" className="mh-sheet-row" onClick={() => goAuth('carrier-login')}>
-                <span>Carrier Login</span>
-              </button>
-              <button type="button" className="mh-sheet-row mh-sheet-row--primary" onClick={() => goAuth('carrier-signup')}>
-                <span>Join as Carrier</span>
-              </button>
+            <div className="mh-portal-card">
+              <div className="mh-portal-head">
+                <span className="mh-portal-ico" aria-hidden="true">
+                  <IoCarSportOutline />
+                </span>
+                <div className="mh-portal-meta">
+                  <div className="mh-portal-title">For Carriers</div>
+                  <div className="mh-portal-sub">Bid on loads and grow your business</div>
+                </div>
+              </div>
+              <div className="mh-portal-actions">
+                <button type="button" className="mh-sheet-row" onClick={() => goAuth('carrier-login')}>
+                  Carrier Login
+                </button>
+                <button type="button" className="mh-sheet-row mh-sheet-row--primary" onClick={() => goAuth('carrier-signup')}>
+                  Join as Carrier
+                </button>
+              </div>
             </div>
           </div>
         </div>

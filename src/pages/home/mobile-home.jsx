@@ -124,6 +124,15 @@ function MobileHome() {
               footerNote="No commitment required. Flat 6% fee only when you book."
             />
           </div>
+
+          {/* Lightweight trust strip — sits immediately below the form
+              for max conversion impact. Three micro-claims, no
+              decoration. */}
+          <ul className="mhome-trust-strip" aria-label="Trust">
+            <li>FMCSA Verified</li>
+            <li>No Hidden Fees</li>
+            <li>Direct Carrier Access</li>
+          </ul>
         </section>
 
         {/* ===== PRICING COMPARISON (below quote on mobile) ===== */}

@@ -7,8 +7,8 @@
   position: fixed;
   right: 16px;
   bottom: calc(24px + env(safe-area-inset-bottom, 0));
-  width: 44px;
-  height: 44px;
+  width: 42px;
+  height: 42px;
   padding: 0;
   display: inline-grid;
   place-items: center;
@@ -17,15 +17,16 @@
   border: 0;
   border-radius: 50%;
   cursor: pointer;
-  box-shadow: 0 1px 2px rgba(15, 23, 42, 0.06), 0 6px 16px rgba(15, 23, 42, 0.10);
+  /* Softer single-layer shadow — less visual bulk against the page. */
+  box-shadow: 0 4px 14px rgba(15, 23, 42, 0.10);
   z-index: 60;
   transition: transform 0.18s ease, background-color 0.18s ease;
   font-family: inherit;
 }
 
 .mcs-bubble svg {
-  width: 20px;
-  height: 20px;
+  width: 19px;
+  height: 19px;
   display: block;
 }
 
@@ -70,7 +71,7 @@
 .mcs-sheet-card {
   position: relative;
   background: #FFFFFF;
-  border-radius: 20px 20px 0 0;
+  border-radius: 18px 18px 0 0;
   box-shadow: 0 -16px 40px rgba(15, 23, 42, 0.20);
   /* dvh tracks the visual viewport on iOS Safari / Chrome — the panel
      stays above the on-screen keyboard. vh is a fallback. */

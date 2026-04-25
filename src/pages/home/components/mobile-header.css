@@ -150,9 +150,9 @@
 .mh-sheet-card {
   position: relative;
   background: #FFFFFF;
-  border-radius: 22px 22px 0 0;
+  border-radius: 18px 18px 0 0;
   box-shadow: 0 -16px 40px rgba(15, 23, 42, 0.18);
-  padding: 6px 16px calc(20px + env(safe-area-inset-bottom, 0));
+  padding: 6px 14px calc(20px + env(safe-area-inset-bottom, 0));
   max-height: 88vh;
   overflow-y: auto;
   animation: mhSheetSlideUp 0.22s cubic-bezier(0.16, 1, 0.3, 1);
@@ -199,36 +199,75 @@
 }
 .mh-sheet-close:active { background: #E2E8F0; }
 
-.mh-sheet-section {
-  margin-top: 16px;
+/* Two clean portal cards — Shippers, Carriers — separated by white space.
+   Each card has an icon header + descriptor + two action rows. Reads as
+   a deliberate "choose your path" pattern, not a dense menu list. */
+.mh-portal-card {
+  margin-top: 14px;
+  background: #FFFFFF;
+  border: 1px solid #ECEFF3;
+  border-radius: 14px;
+  padding: 14px;
+  box-shadow: 0 1px 1px rgba(15, 23, 42, 0.03), 0 2px 8px rgba(15, 23, 42, 0.03);
+}
+
+.mh-portal-card:first-of-type {
+  margin-top: 6px;
+}
+
+.mh-portal-head {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 12px;
+}
+
+.mh-portal-ico {
+  width: 38px;
+  height: 38px;
+  display: grid;
+  place-items: center;
+  background: rgba(10, 88, 255, 0.08);
+  color: #1d4ed8;
+  border-radius: 10px;
+  flex-shrink: 0;
+}
+
+.mh-portal-ico svg {
+  width: 20px;
+  height: 20px;
+}
+
+.mh-portal-meta {
+  display: flex;
+  flex-direction: column;
+  gap: 1px;
+  min-width: 0;
+}
+
+.mh-portal-title {
+  font-size: 14.5px;
+  font-weight: 700;
+  color: #0B1220;
+  letter-spacing: -0.005em;
+}
+
+.mh-portal-sub {
+  font-size: 12px;
+  color: #64748B;
+  letter-spacing: -0.005em;
+  line-height: 1.4;
+}
+
+.mh-portal-actions {
   display: flex;
   flex-direction: column;
   gap: 8px;
 }
 
-.mh-sheet-section:first-of-type {
-  margin-top: 8px;
-}
-
-.mh-sheet-section-label {
-  font-size: 11px;
-  font-weight: 700;
-  letter-spacing: 0.10em;
-  text-transform: uppercase;
-  color: #64748B;
-  padding: 0 4px;
-  margin-bottom: 2px;
-}
-
-.mh-sheet-divider {
-  height: 1px;
-  background: #ECEFF3;
-  margin: 18px 4px 0;
-}
-
-/* Two equally-weighted action rows per section: a quiet "log in" button
-   on top and a stronger primary action below it. Stripe / Linear style
-   — restrained, legible, easy to scan. */
+/* Two equally-weighted action rows per portal card: a quiet "log in"
+   button on top and a stronger primary action below it. Stripe / Linear
+   style — restrained, legible, easy to scan. */
 .mh-sheet-row {
   display: inline-flex;
   align-items: center;
@@ -236,13 +275,13 @@
   width: 100%;
   text-align: center;
   padding: 0 16px;
-  height: 48px;
-  border-radius: 12px;
+  height: 44px;
+  border-radius: 10px;
   border: 1px solid #E2E8F0;
   background: #FFFFFF;
   color: #0B1220;
   font-family: inherit;
-  font-size: 14.5px;
+  font-size: 14px;
   font-weight: 600;
   letter-spacing: -0.005em;
   cursor: pointer;
