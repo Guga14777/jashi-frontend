@@ -22,6 +22,28 @@ const EMPTY_FORM_STATE = {
   marketAvg: 0,
 };
 
+// Default illustrative state used by the comparison cards before the user
+// enters real ZIPs. The numbers come from the original sample shipment
+// (Mercedes AMG CLA 45 2025, NY → VA, 344 mi, $836.97 market avg) so the
+// fee-savings story is visible at first paint instead of a blank placeholder.
+const DEMO_SAMPLE = {
+  vehicleLabel: 'Mercedes AMG CLA 45 2025',
+  routeLabel: 'NY (10001) → VA (23220) · 344 mi',
+  marketAverage: 836.97,
+};
+
+const DEMO_FEES = (() => {
+  const base = roundMoney(DEMO_SAMPLE.marketAverage);
+  const typical = computeFeeBreakdown(base, BROKER_FEE_RATE);
+  const jashi = computeFeeBreakdown(base, PLATFORM_FEE_RATE);
+  return {
+    marketAverage: base,
+    typical: { brokerFee: typical.fee, total: typical.total },
+    jashi: { platformFee: jashi.fee, total: jashi.total },
+    savings: { total: addMoney(typical.total, -jashi.total) },
+  };
+})();
+
 function QuoteSection() {
   // Single source of truth for the comparison cards: the live widget state.
   // distanceMi / marketAvg / ZIPs come straight from the form, so every
@@ -93,65 +115,69 @@ function QuoteSection() {
     { title: 'Trusted & Insured', description: 'Secure payments with vetted, insured carriers.' },
   ];
 
+  // Render demo data when the user hasn't calculated a real quote yet, so
+  // both cards always tell the savings story instead of showing a blank
+  // placeholder. Live values transparently replace the demo once ZIPs +
+  // vehicle yield a marketAvg from the widget.
+  const cardData = hasQuote
+    ? { vehicle: vehicleLabel, route: routeLabel, fees, isDemo: false }
+    : { vehicle: DEMO_SAMPLE.vehicleLabel, route: DEMO_SAMPLE.routeLabel, fees: DEMO_FEES, isDemo: true };
+
   const renderTypicalCard = () => (
     <div className="qs-comparison-card qs-comparison-typical">
       <h4 className="qs-comparison-title">Typical Broker ({BROKER_FEE_PCT_LABEL} fee)</h4>
       <div className="qs-comparison-details">
-        {hasQuote ? (
-          <>
-            <div className="qs-comparison-vehicle">{vehicleLabel}</div>
-            <div className="qs-comparison-route">{routeLabel}</div>
-            <div className="qs-comparison-breakdown">
-              <div className="qs-comparison-line">
-                <span>Base market rate:</span>
-                <span className="qs-comparison-value">${formatMoney(fees.marketAverage)}</span>
-              </div>
-              <div className="qs-comparison-line">
-                <span>Broker fee {BROKER_FEE_PCT_LABEL}:</span>
-                <span className="qs-comparison-value qs-fee-danger">${formatMoney(fees.typical.brokerFee)}</span>
-              </div>
-            </div>
-            <div className="qs-comparison-total">
-              <span className="qs-total-label">You pay:</span>
-              <span className="qs-total-value qs-total-danger">${formatMoney(fees.typical.total)}</span>
-            </div>
-          </>
-        ) : (
-          <div className="qs-comparison-placeholder">Enter ZIPs to calculate distance</div>
+        {cardData.isDemo && (
+          <div className="qs-comparison-demo-tag">Example based on sample shipment</div>
         )}
+        <div className="qs-comparison-vehicle">{cardData.vehicle}</div>
+        <div className="qs-comparison-route">{cardData.route}</div>
+        <div className="qs-comparison-breakdown">
+          <div className="qs-comparison-line">
+            <span>Carrier pay:</span>
+            <span className="qs-comparison-value">${formatMoney(cardData.fees.marketAverage)}</span>
+          </div>
+          <div className="qs-comparison-line">
+            <span>Broker fee {BROKER_FEE_PCT_LABEL}:</span>
+            <span className="qs-comparison-value qs-fee-danger">${formatMoney(cardData.fees.typical.brokerFee)}</span>
+          </div>
+        </div>
+        <div className="qs-comparison-total">
+          <span className="qs-total-label">Customer pays:</span>
+          <span className="qs-total-value qs-total-danger">${formatMoney(cardData.fees.typical.total)}</span>
+        </div>
       </div>
     </div>
   );
 
   const renderJashiCard = () => (
     <div className="qs-comparison-card qs-comparison-guga">
-      {hasQuote && (
-        <div className="qs-savings-badge">You save {SAVINGS_PCT_ON_FEES_LABEL} on fees</div>
-      )}
+      <div className="qs-savings-badge">You save {SAVINGS_PCT_ON_FEES_LABEL} on fees</div>
       <h4 className="qs-comparison-title">Jashi Logistics ({PLATFORM_FEE_PCT_LABEL} fee)</h4>
       <div className="qs-comparison-details">
-        {hasQuote ? (
-          <>
-            <div className="qs-comparison-vehicle">{vehicleLabel}</div>
-            <div className="qs-comparison-route">{routeLabel}</div>
-            <div className="qs-comparison-breakdown">
-              <div className="qs-comparison-line">
-                <span>Base market rate:</span>
-                <span className="qs-comparison-value">${formatMoney(fees.marketAverage)}</span>
-              </div>
-              <div className="qs-comparison-line">
-                <span>Platform fee {PLATFORM_FEE_PCT_LABEL}:</span>
-                <span className="qs-comparison-value qs-fee-success">${formatMoney(fees.jashi.platformFee)}</span>
-              </div>
-            </div>
-            <div className="qs-comparison-total">
-              <span className="qs-total-label">You pay:</span>
-              <span className="qs-total-value qs-total-success">${formatMoney(fees.jashi.total)}</span>
-            </div>
-          </>
-        ) : (
-          <div className="qs-comparison-placeholder">Enter ZIPs to calculate distance</div>
+        {cardData.isDemo && (
+          <div className="qs-comparison-demo-tag">Example based on sample shipment</div>
         )}
+        <div className="qs-comparison-vehicle">{cardData.vehicle}</div>
+        <div className="qs-comparison-route">{cardData.route}</div>
+        <div className="qs-comparison-breakdown">
+          <div className="qs-comparison-line">
+            <span>Carrier pay:</span>
+            <span className="qs-comparison-value">${formatMoney(cardData.fees.marketAverage)}</span>
+          </div>
+          <div className="qs-comparison-line">
+            <span>Platform fee {PLATFORM_FEE_PCT_LABEL}:</span>
+            <span className="qs-comparison-value qs-fee-success">${formatMoney(cardData.fees.jashi.platformFee)}</span>
+          </div>
+          <div className="qs-comparison-savings-row">
+            <span>Estimated savings:</span>
+            <span className="qs-comparison-savings-value">${formatMoney(cardData.fees.savings.total)}</span>
+          </div>
+        </div>
+        <div className="qs-comparison-total">
+          <span className="qs-total-label">Customer pays:</span>
+          <span className="qs-total-value qs-total-success">${formatMoney(cardData.fees.jashi.total)}</span>
+        </div>
       </div>
     </div>
   );

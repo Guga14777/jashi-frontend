@@ -317,6 +317,21 @@ text-align: center;
 line-height: 1.5;
 }
 
+/* Small label that flags the card as illustrative demo content */
+.qs-comparison-demo-tag {
+align-self: flex-start;
+font-size: 10px;
+font-weight: 600;
+text-transform: uppercase;
+letter-spacing: 0.6px;
+color: #64748B;
+background: rgba(15, 23, 42, 0.05);
+padding: 3px 8px;
+border-radius: 999px;
+margin: 0 0 8px 0;
+line-height: 1.4;
+}
+
 /* Vehicle info - FIXED: Natural height */
 .qs-comparison-vehicle {
 font-size: 13px;
@@ -389,6 +404,33 @@ font-size: 15px;
 color: #10B981;
 font-weight: 700;
 font-size: 15px;
+}
+
+/* Highlighted "Estimated savings" chip on the Jashi card */
+.qs-comparison-savings-row {
+display: flex;
+justify-content: space-between;
+align-items: center;
+margin: 4px 0 0 0;
+padding: 8px 10px;
+background: linear-gradient(135deg, rgba(16, 185, 129, 0.12), rgba(5, 150, 105, 0.08));
+border: 1px solid rgba(16, 185, 129, 0.25);
+border-radius: 8px;
+}
+
+.qs-comparison-savings-row span:first-child {
+color: #047857;
+font-weight: 600;
+font-size: 12px;
+text-transform: uppercase;
+letter-spacing: 0.4px;
+}
+
+.qs-comparison-savings-value {
+color: #047857;
+font-weight: 800;
+font-size: 16px;
+letter-spacing: -0.3px;
 }
 
 .qs-comparison-total {
