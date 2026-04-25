@@ -317,19 +317,27 @@ text-align: center;
 line-height: 1.5;
 }
 
-/* Small label that flags the card as illustrative demo content */
+/* Reserves equal vertical space at the top of both cards so the
+   demo-state tag (broker + Jashi) and the no-tag live state both
+   land at the same internal height. Without the slot, only one
+   card would render the tag and the cards would diverge by ~20px. */
+.qs-comparison-tag-slot {
+min-height: 18px;
+display: flex;
+align-items: center;
+margin: 0 0 6px 0;
+}
+
+/* Subtle disclosure pill — should read as a footnote, not a headline */
 .qs-comparison-demo-tag {
-align-self: flex-start;
-font-size: 10px;
-font-weight: 600;
-text-transform: uppercase;
-letter-spacing: 0.6px;
-color: #64748B;
-background: rgba(15, 23, 42, 0.05);
-padding: 3px 8px;
+font-size: 9.5px;
+font-weight: 500;
+letter-spacing: 0.4px;
+color: #94A3B8;
+background: rgba(148, 163, 184, 0.1);
+padding: 2px 7px;
 border-radius: 999px;
-margin: 0 0 8px 0;
-line-height: 1.4;
+line-height: 1.3;
 }
 
 /* Vehicle info - FIXED: Natural height */
@@ -406,31 +414,57 @@ font-weight: 700;
 font-size: 15px;
 }
 
-/* Highlighted "Estimated savings" chip on the Jashi card */
-.qs-comparison-savings-row {
+/* Mirror callout row — identical geometry on both cards (red on broker
+   "Extra fees paid", green on Jashi "Estimated savings") so the cards
+   line up row-for-row and the bottom totals always sit at the same
+   y-coordinate. Tuned to feel like a quiet stat chip, not a banner. */
+.qs-comparison-callout {
 display: flex;
 justify-content: space-between;
 align-items: center;
 margin: 4px 0 0 0;
-padding: 8px 10px;
-background: linear-gradient(135deg, rgba(16, 185, 129, 0.12), rgba(5, 150, 105, 0.08));
-border: 1px solid rgba(16, 185, 129, 0.25);
+padding: 7px 10px;
+border: 1px solid;
 border-radius: 8px;
 }
 
-.qs-comparison-savings-row span:first-child {
-color: #047857;
+.qs-comparison-callout span:first-child {
 font-weight: 600;
-font-size: 12px;
+font-size: 11.5px;
 text-transform: uppercase;
 letter-spacing: 0.4px;
 }
 
-.qs-comparison-savings-value {
+.qs-comparison-callout-value {
+font-weight: 700;
+font-size: 14.5px;
+letter-spacing: -0.2px;
+}
+
+.qs-callout-danger {
+background: rgba(220, 38, 38, 0.06);
+border-color: rgba(220, 38, 38, 0.2);
+}
+
+.qs-callout-danger span:first-child {
+color: #B91C1C;
+}
+
+.qs-callout-value-danger {
+color: #B91C1C;
+}
+
+.qs-callout-success {
+background: rgba(16, 185, 129, 0.08);
+border-color: rgba(16, 185, 129, 0.22);
+}
+
+.qs-callout-success span:first-child {
 color: #047857;
-font-weight: 800;
-font-size: 16px;
-letter-spacing: -0.3px;
+}
+
+.qs-callout-value-success {
+color: #047857;
 }
 
 .qs-comparison-total {

@@ -23,13 +23,14 @@ const EMPTY_FORM_STATE = {
 };
 
 // Default illustrative state used by the comparison cards before the user
-// enters real ZIPs. The numbers come from the original sample shipment
-// (Mercedes AMG CLA 45 2025, NY → VA, 344 mi, $836.97 market avg) so the
-// fee-savings story is visible at first paint instead of a blank placeholder.
+// enters real ZIPs. Mileage and marketAverage are kept in sync with what
+// the widget actually computes for NY 10001 → VA 23220 (sedan, open):
+// 338 mi → $350 flat + 100·$1.80 + 138·$1.70 = $764.60 base
+// × 1.08 uplift × 0.85 calibration = $701.90 market avg.
 const DEMO_SAMPLE = {
   vehicleLabel: 'Mercedes AMG CLA 45 2025',
-  routeLabel: 'NY (10001) → VA (23220) · 344 mi',
-  marketAverage: 836.97,
+  routeLabel: 'NY (10001) → VA (23220) · 338 mi',
+  marketAverage: 701.90,
 };
 
 const DEMO_FEES = (() => {
@@ -123,13 +124,19 @@ function QuoteSection() {
     ? { vehicle: vehicleLabel, route: routeLabel, fees, isDemo: false }
     : { vehicle: DEMO_SAMPLE.vehicleLabel, route: DEMO_SAMPLE.routeLabel, fees: DEMO_FEES, isDemo: true };
 
+  // Both cards render an identical row skeleton so heights match exactly:
+  //   demo tag (or empty placeholder) → vehicle → route → 3 breakdown rows → total
+  // The 3rd breakdown row mirrors across cards: broker shows the dollar
+  // overhead the customer eats, Jashi shows the matching savings.
   const renderTypicalCard = () => (
     <div className="qs-comparison-card qs-comparison-typical">
       <h4 className="qs-comparison-title">Typical Broker ({BROKER_FEE_PCT_LABEL} fee)</h4>
       <div className="qs-comparison-details">
-        {cardData.isDemo && (
-          <div className="qs-comparison-demo-tag">Example based on sample shipment</div>
-        )}
+        <div className="qs-comparison-tag-slot">
+          {cardData.isDemo && (
+            <span className="qs-comparison-demo-tag">Example based on sample shipment</span>
+          )}
+        </div>
         <div className="qs-comparison-vehicle">{cardData.vehicle}</div>
         <div className="qs-comparison-route">{cardData.route}</div>
         <div className="qs-comparison-breakdown">
@@ -140,6 +147,10 @@ function QuoteSection() {
           <div className="qs-comparison-line">
             <span>Broker fee {BROKER_FEE_PCT_LABEL}:</span>
             <span className="qs-comparison-value qs-fee-danger">${formatMoney(cardData.fees.typical.brokerFee)}</span>
+          </div>
+          <div className="qs-comparison-callout qs-callout-danger">
+            <span>Extra fees paid:</span>
+            <span className="qs-comparison-callout-value qs-callout-value-danger">${formatMoney(cardData.fees.savings.total)}</span>
           </div>
         </div>
         <div className="qs-comparison-total">
@@ -155,9 +166,11 @@ function QuoteSection() {
       <div className="qs-savings-badge">You save {SAVINGS_PCT_ON_FEES_LABEL} on fees</div>
       <h4 className="qs-comparison-title">Jashi Logistics ({PLATFORM_FEE_PCT_LABEL} fee)</h4>
       <div className="qs-comparison-details">
-        {cardData.isDemo && (
-          <div className="qs-comparison-demo-tag">Example based on sample shipment</div>
-        )}
+        <div className="qs-comparison-tag-slot">
+          {cardData.isDemo && (
+            <span className="qs-comparison-demo-tag">Example based on sample shipment</span>
+          )}
+        </div>
         <div className="qs-comparison-vehicle">{cardData.vehicle}</div>
         <div className="qs-comparison-route">{cardData.route}</div>
         <div className="qs-comparison-breakdown">
@@ -169,9 +182,9 @@ function QuoteSection() {
             <span>Platform fee {PLATFORM_FEE_PCT_LABEL}:</span>
             <span className="qs-comparison-value qs-fee-success">${formatMoney(cardData.fees.jashi.platformFee)}</span>
           </div>
-          <div className="qs-comparison-savings-row">
+          <div className="qs-comparison-callout qs-callout-success">
             <span>Estimated savings:</span>
-            <span className="qs-comparison-savings-value">${formatMoney(cardData.fees.savings.total)}</span>
+            <span className="qs-comparison-callout-value qs-callout-value-success">${formatMoney(cardData.fees.savings.total)}</span>
           </div>
         </div>
         <div className="qs-comparison-total">
