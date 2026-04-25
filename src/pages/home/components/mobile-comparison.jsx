@@ -108,7 +108,10 @@ function MobileComparison({ form }) {
             <span className="mh-compare-fee">{PLATFORM_FEE_PCT_LABEL} fee</span>
           </div>
           <ul className="mh-compare-attrs">
-            <li className="mh-compare-attrs--lead">You set your offer</li>
+            <li className="mh-compare-attrs--lead">
+              <span className="mh-compare-attrs-badge" aria-hidden="true">Core</span>
+              You set your offer
+            </li>
             <li>{PLATFORM_FEE_PCT_LABEL} platform fee</li>
           </ul>
           <dl className="mh-compare-lines">

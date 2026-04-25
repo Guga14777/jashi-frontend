@@ -111,7 +111,7 @@ function MobileChatSheet() {
               <div className="mcs-sheet-identity">
                 <div className="mcs-sheet-avatar" aria-hidden="true">J</div>
                 <div className="mcs-sheet-meta">
-                  <h2 id="mcs-sheet-title" className="mcs-sheet-title">Jashi Support</h2>
+                  <h2 id="mcs-sheet-title" className="mcs-sheet-title">Logistics Specialist</h2>
                   <span className="mcs-sheet-status">
                     <span className="mcs-sheet-status-dot" aria-hidden="true" />
                     Online now

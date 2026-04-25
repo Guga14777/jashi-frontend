@@ -139,12 +139,15 @@ html {
   white-space: nowrap;
 }
 
-/* Lead pill — surfaces the core proposition first in the trust row. */
+/* Lead pill — surfaces the core proposition first in the trust row.
+   Reads as the dominant pill without screaming: solid brand-blue text,
+   a slightly fuller tinted fill, and a stronger 1.5px outline. */
 .mhome-trust li.mhome-trust--accent {
-  background: rgba(10, 88, 255, 0.06);
-  border-color: rgba(10, 88, 255, 0.20);
+  background: rgba(10, 88, 255, 0.10);
+  border: 1.5px solid rgba(10, 88, 255, 0.32);
   color: var(--mh-blue-700);
-  font-weight: 600;
+  font-weight: 700;
+  letter-spacing: -0.005em;
 }
 
 /* ============================================
@@ -304,17 +307,37 @@ html {
 }
 
 /* Elevate the "You set your offer" line — this is the core proposition,
-   so it reads as the brand-blue lead, not just a bullet. */
+   so it reads as the brand-blue lead, not just a bullet. Tiny "Core"
+   badge gives the eye an anchor inside the card without breaking the
+   restrained Stripe/Linear card language. */
 .mh-compare-attrs li.mh-compare-attrs--lead {
   color: var(--mh-blue-700);
-  font-weight: 600;
+  font-weight: 700;
+  font-size: 13px;
+  letter-spacing: -0.01em;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  /* Drop the leading bullet — the Core badge replaces it. */
+  padding-left: 0;
 }
 .mh-compare-attrs li.mh-compare-attrs--lead::before {
+  display: none;
+}
+
+.mh-compare-attrs-badge {
+  display: inline-flex;
+  align-items: center;
+  height: 18px;
+  padding: 0 7px;
   background: var(--mh-blue);
-  width: 6px;
-  height: 6px;
-  top: 7px;
-  left: 3px;
+  color: #FFFFFF;
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  border-radius: 5px;
+  flex-shrink: 0;
 }
 
 /* Breakdown rows inside each side of the comparison. Carrier pay,

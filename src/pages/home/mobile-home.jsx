@@ -122,7 +122,7 @@ function MobileHome() {
               className="mhome-btn mhome-btn--primary"
               onClick={scrollToQuote}
             >
-              Start My Quote
+              Set My Price
             </button>
             <Link to="/how-dispatch-works" className="mhome-hero-link">
               See How It Works →
