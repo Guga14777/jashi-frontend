@@ -149,7 +149,7 @@ function QuoteSection() {
             <span className="qs-comparison-value qs-fee-danger">${formatMoney(cardData.fees.typical.brokerFee)}</span>
           </div>
           <div className="qs-comparison-callout qs-callout-danger">
-            <span>Extra fees paid:</span>
+            <span>Broker markup:</span>
             <span className="qs-comparison-callout-value qs-callout-value-danger">${formatMoney(cardData.fees.savings.total)}</span>
           </div>
         </div>
@@ -163,7 +163,7 @@ function QuoteSection() {
 
   const renderJashiCard = () => (
     <div className="qs-comparison-card qs-comparison-guga">
-      <div className="qs-savings-badge">You save {SAVINGS_PCT_ON_FEES_LABEL} on fees</div>
+      <div className="qs-savings-badge">Save {SAVINGS_PCT_ON_FEES_LABEL} on platform fees</div>
       <h4 className="qs-comparison-title">Jashi Logistics ({PLATFORM_FEE_PCT_LABEL} fee)</h4>
       <div className="qs-comparison-details">
         <div className="qs-comparison-tag-slot">
