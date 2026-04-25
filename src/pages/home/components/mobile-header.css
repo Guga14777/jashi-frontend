@@ -4,7 +4,9 @@
 
 .mh-header {
   position: fixed;
-  inset: 0 0 auto 0;
+  top: 0;
+  left: 0;
+  right: 0;
   z-index: 1000;
   background: rgba(255, 255, 255, 0.94);
   backdrop-filter: saturate(140%) blur(10px);
@@ -17,11 +19,12 @@
   padding-top: env(safe-area-inset-top, 0);
   /* Lock the header height so iOS Safari address-bar collapse,
      overscroll bounce, viewport resize, or font load can never squeeze
-     it. min-height accounts for the safe-area inset on notched devices. */
+     it. min-height accounts for the safe-area inset on notched devices.
+     NOTE: deliberately no `contain: paint` — combined with backdrop-filter
+     it can clip the header's painted box on iOS Safari, which made the
+     hero title appear stuck under the chrome. */
   box-sizing: border-box;
   min-height: calc(56px + env(safe-area-inset-top, 0px));
-  /* Block sub-pixel rounding from rendering a 0.5px shorter row. */
-  contain: layout paint;
 }
 
 .mh-header[data-scrolled="true"] {
@@ -203,23 +206,23 @@
    Each card has an icon header + descriptor + two action rows. Reads as
    a deliberate "choose your path" pattern, not a dense menu list. */
 .mh-portal-card {
-  margin-top: 14px;
+  margin-top: 12px;
   background: #FFFFFF;
   border: 1px solid #ECEFF3;
   border-radius: 14px;
-  padding: 14px;
+  padding: 12px;
   box-shadow: 0 1px 1px rgba(15, 23, 42, 0.03), 0 2px 8px rgba(15, 23, 42, 0.03);
 }
 
 .mh-portal-card:first-of-type {
-  margin-top: 6px;
+  margin-top: 4px;
 }
 
 .mh-portal-head {
   display: flex;
   align-items: center;
   gap: 12px;
-  margin-bottom: 12px;
+  margin-bottom: 10px;
 }
 
 .mh-portal-ico {
@@ -265,9 +268,12 @@
   gap: 8px;
 }
 
-/* Two equally-weighted action rows per portal card: a quiet "log in"
-   button on top and a stronger primary action below it. Stripe / Linear
-   style — restrained, legible, easy to scan. */
+/* Two action rows per portal card.
+   - Default (Log In / Carrier Login): premium tinted-blue secondary —
+     light-blue fill, blue border, blue text. Reads as a deliberate
+     button, not a flat box.
+   - --primary (Create Account / Join as Carrier): solid brand-blue,
+     stronger weight, subtle drop-shadow. */
 .mh-sheet-row {
   display: inline-flex;
   align-items: center;
@@ -277,30 +283,47 @@
   padding: 0 16px;
   height: 44px;
   border-radius: 10px;
-  border: 1px solid #E2E8F0;
-  background: #FFFFFF;
-  color: #0B1220;
+  border: 1px solid rgba(10, 88, 255, 0.22);
+  background: rgba(10, 88, 255, 0.06);
+  color: #1d4ed8;
   font-family: inherit;
   font-size: 14px;
   font-weight: 600;
   letter-spacing: -0.005em;
   cursor: pointer;
   text-decoration: none;
-  transition: background-color 0.15s ease, border-color 0.15s ease;
+  transition: background-color 0.15s ease, border-color 0.15s ease, color 0.15s ease;
+}
+
+.mh-sheet-row:hover {
+  background: rgba(10, 88, 255, 0.10);
+  border-color: rgba(10, 88, 255, 0.36);
+  color: #1e3a8a;
 }
 
 .mh-sheet-row:active {
-  background: #F1F5F9;
-  border-color: #CBD5E1;
+  background: rgba(10, 88, 255, 0.14);
+  border-color: rgba(10, 88, 255, 0.42);
+  color: #1e3a8a;
 }
 
 .mh-sheet-row--primary {
   background: #1d4ed8;
   border-color: #1d4ed8;
   color: #FFFFFF;
+  font-weight: 700;
+  box-shadow: 0 1px 2px rgba(29, 78, 216, 0.22);
+}
+
+.mh-sheet-row--primary:hover {
+  background: #1e40af;
+  border-color: #1e40af;
+  color: #FFFFFF;
 }
 
 .mh-sheet-row--primary:active {
   background: #1e3a8a;
   border-color: #1e3a8a;
+  color: #FFFFFF;
+  box-shadow: 0 1px 1px rgba(29, 78, 216, 0.18);
 }

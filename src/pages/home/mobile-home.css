@@ -32,32 +32,30 @@
   color: var(--mh-text);
   display: flex;
   flex-direction: column;
-  overflow-x: hidden;
-  /* Anchor jumps (e.g. the header CTA scrolling to the quote widget) need
-     to land below the fixed header. scroll-padding-top covers the
-     html-level scroll position; scroll-margin-top on individual targets
-     covers programmatic scrollIntoView. */
-  scroll-padding-top: calc(var(--real-header-height, 56px) + env(safe-area-inset-top, 0px) + 8px);
+  /* No overflow-x: hidden here — on iOS Safari it can interact badly
+     with backdrop-filter on the fixed header and clip painted descendants
+     mid-scroll, which was making the hero title appear stuck under the
+     chrome. The page already has html/body overflow-x: hidden so we
+     don't need it on this root too. */
+  scroll-padding-top: calc(56px + env(safe-area-inset-top, 0px) + 8px);
 }
 
 html {
-  scroll-padding-top: calc(var(--real-header-height, 56px) + env(safe-area-inset-top, 0px) + 8px);
+  scroll-padding-top: calc(56px + env(safe-area-inset-top, 0px) + 8px);
 }
 
 .mhome-main {
-  /* Robust against the iOS notch + the brief moment before mobile-header.jsx
-     publishes --real-header-height: the calc fallback already includes
-     env(safe-area-inset-top), so the headline is never tucked under the
-     fixed header on first paint. Tightened breathing (8px → 2px) so the
-     quote form starts higher above the fold. */
-  padding-top: calc(
-    var(--real-header-height, calc(56px + env(safe-area-inset-top, 0px)))
-    + 2px
-  );
+  /* Deterministic CSS-only offset — no longer depends on the JS-published
+     --real-header-height variable, which had a brief race window before
+     the ResizeObserver fired and could cause the hero title to land under
+     the fixed header on first paint or after iOS Safari toolbar collapse.
+     This calc matches the header's own min-height exactly + a small
+     visual gap so the title never touches the chrome. */
+  padding-top: calc(56px + env(safe-area-inset-top, 0px) + 12px);
   padding-bottom: 16px;
   display: flex;
   flex-direction: column;
-  /* Section rhythm tightened from 32 → 26px — still calm, less air. */
+  /* Section rhythm — calm but not airy. */
   gap: 26px;
 }
 
@@ -370,7 +368,7 @@ html {
    ============================================ */
 .mhome-quote {
   padding: 0 16px;
-  scroll-margin-top: calc(var(--real-header-height, 56px) + 12px);
+  scroll-margin-top: calc(56px + env(safe-area-inset-top, 0px) + 12px);
 }
 
 /* The quote section now carries the page-level title — page opens
@@ -381,21 +379,28 @@ html {
 }
 
 .mhome-quote-title {
-  font-size: clamp(26px, 7.2vw, 30px);
+  /* Sized so "Ship On Your Terms." (the longer of the two lines) fits
+     on one line at the narrowest iPhone (320px SE). Line height 1.12
+     gives breathing room without making the lockup feel airy. */
+  font-size: clamp(24px, 6.6vw, 28px);
   font-weight: 800;
-  line-height: 1.1;
+  line-height: 1.12;
   letter-spacing: -0.028em;
   color: var(--mh-text);
   margin: 0 0 8px 0;
 }
 
+/* Force the headline into exactly two lines: "Set Your Price." on top,
+   "Ship On Your Terms." on bottom (brand blue). The accent span renders
+   as its own block + nowrap, which prevents the orphaned "Terms." that
+   was happening when the browser was free to wrap inside the span. */
 .mhome-quote-title-accent {
-  display: inline;
+  display: block;
+  white-space: nowrap;
   color: var(--mh-blue);
   font-weight: 800;
-  /* Same tracking + weight as line 1 so the brand-blue accent reads as
-     a continuation, not a separate decoration. */
   letter-spacing: -0.028em;
+  margin-top: 2px;
 }
 
 .mhome-quote-sub {

@@ -483,21 +483,28 @@
 }
 /* ================================
    MOBILE FOOTER ADAPTATIONS
-   The full dark-navy desktop footer renders on every breakpoint now.
-   These rules adjust the existing markup for phones: hide the phone
-   row and the duplicate "Live Chat" row (chat is already a global
-   bubble), and add generous bottom padding so the floating bubble
-   never overlaps the legal links / Safari toolbar can't crop them.
+   On phones, the dark-navy desktop markup still renders, but most of
+   the four-column content collapses away. What remains: brand + tagline
+   + social + support email + legal + copyright. Reads as a compact
+   premium footer instead of a tall stacked list.
    ================================ */
 @media (max-width: 768px) {
+  /* Collapse marketing content — too heavy when stacked vertically. */
+  .footer-links-column,
+  .footer-why-column,
   .footer-contact-item--phone,
   .footer-contact-item--chat {
+    display: none !important;
+  }
+
+  /* Compact contact column — only the support email survives. */
+  .footer-contact-column .footer-heading {
     display: none;
   }
 
   .footer {
-    /* Clear the floating chat bubble (≈68px) + iOS Safari dynamic
+    /* Clear the floating chat bubble (~66px) + iOS Safari dynamic
        toolbar; safe-area-inset-bottom for notched devices. */
-    padding-bottom: calc(96px + env(safe-area-inset-bottom, 0)) !important;
+    padding-bottom: calc(110px + env(safe-area-inset-bottom, 0)) !important;
   }
 }
