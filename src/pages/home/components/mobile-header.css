@@ -60,8 +60,12 @@
 
 .mh-brand-name {
   font-size: 14px;
-  font-weight: 700;
-  color: #0F172A;
+  /* Match the desktop public header brand wordmark exactly:
+     same color (#0a58ff) and same weight (800). Desktop has no
+     :hover / :active state on .pub-name, so we don't add one here.
+     See src/components/header/public/publicheader.css → .pub-name. */
+  font-weight: 800;
+  color: #0a58ff;
   letter-spacing: -0.005em;
   white-space: nowrap;
   overflow: hidden;
