@@ -21,7 +21,7 @@ import './quote-widget.css';
 // 6. Pickup/SUV/Van/Minivan must ALWAYS be more expensive than Sedan (same route)
 // 7. SINGLE VEHICLE SELECTION ONLY (max 1 vehicle per quote)
 // ======================================================
-function QuoteWidget({ onStateChange } = {}) {
+function QuoteWidget({ onStateChange, submitLabel, footerNote } = {}) {
   const navigate = useNavigate();
   const location = useLocation();
   const { isAuthenticated, token } = useAuth();
@@ -820,9 +820,11 @@ function QuoteWidget({ onStateChange } = {}) {
             className={`qw-submit-btn ${!canSubmit ? 'qw-disabled' : ''} ${isSubmitting ? 'qw-loading' : ''}`}
             disabled={!canSubmit || isSubmitting}
           >
-            {isSubmitting ? <span>Submitting…</span> : <span>Submit Offer</span>}
+            {isSubmitting
+              ? <span>Submitting…</span>
+              : <span>{submitLabel || 'Submit Offer'}</span>}
           </button>
-          <p className="qw-policy-note">No commitment required. Flat 6% fee only when you book.</p>
+          <p className="qw-policy-note">{footerNote || 'No commitment required. Flat 6% fee only when you book.'}</p>
         </div>
       </form>
     </div>

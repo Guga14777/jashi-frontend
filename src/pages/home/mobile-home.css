@@ -1,189 +1,656 @@
 /* src/pages/home/mobile-home.css
-   App-like mobile layout for the home page.
-   Only loaded when the screen is ≤ 768px (via the <MobileHome /> branch in home.jsx).
-   Desktop styles live in home.css / hero.css — they don't apply here. */
+   App-like mobile layout for the home page. Only loaded when the screen is
+   ≤ 768px (via the <MobileHome /> branch in home.jsx). Desktop styles live
+   in home.css / hero.css — they don't apply here. */
+
+:root {
+  --mh-blue: #0a58ff;
+  --mh-blue-700: #1d4ed8;
+  --mh-blue-800: #1e40af;
+  --mh-gold: #f5b400;
+  --mh-text: #0F172A;
+  --mh-text-soft: #475569;
+  --mh-text-muted: #64748B;
+  --mh-border: #E2E8F0;
+  --mh-bg: #F8FAFC;
+  --mh-good-bg: #ECFDF5;
+  --mh-good-border: #BBF7D0;
+  --mh-good: #047857;
+  --mh-bad-bg: #FEF2F2;
+  --mh-bad-border: #FECACA;
+  --mh-bad: #B91C1C;
+  --mh-shadow-card: 0 6px 20px rgba(15, 23, 42, 0.06);
+  --mh-shadow-card-strong: 0 14px 36px rgba(15, 23, 42, 0.10);
+}
 
 .mhome {
   min-height: 100vh;
   background: #FFFFFF;
-  color: #0F172A;
+  color: var(--mh-text);
   display: flex;
   flex-direction: column;
   overflow-x: hidden;
 }
 
+/* Leave room for sticky bottom CTA (visible) */
 .mhome-main {
-  padding-top: calc(var(--real-header-height, 64px) + 10px);
-  padding-bottom: 24px;
+  padding-top: calc(var(--real-header-height, 60px) + 6px);
+  padding-bottom: 96px;
   display: flex;
   flex-direction: column;
-  gap: 16px;
+  gap: 28px;
 }
 
 /* ============================================
-   MINI HERO — one punchy line + one subline
-   No big image, no large whitespace.
+   HERO
    ============================================ */
 .mhome-hero {
-  padding: 4px 18px 0;
+  padding: 22px 18px 4px;
   text-align: left;
 }
 
 .mhome-hero-title {
-  font-size: clamp(22px, 6.2vw, 28px);
-  line-height: 1.15;
+  font-size: clamp(26px, 7.4vw, 32px);
+  line-height: 1.12;
   font-weight: 800;
   letter-spacing: -0.02em;
-  color: #0F172A;
-  margin: 0 0 6px 0;
+  color: var(--mh-text);
+  margin: 0 0 10px 0;
 }
 
-.mhome-accent {
-  color: #0066FF;
+.mhome-hero-accent {
+  color: var(--mh-blue);
+  position: relative;
+  white-space: nowrap;
 }
 
 .mhome-hero-sub {
-  font-size: 14px;
-  line-height: 1.45;
-  color: #475569;
-  margin: 0;
+  font-size: 15px;
+  line-height: 1.5;
+  color: var(--mh-text-soft);
+  margin: 0 0 18px 0;
   font-weight: 400;
 }
 
-/* ============================================
-   QUOTE — this is the screen. It should dominate.
-   ============================================ */
-.mhome-quote {
-  padding: 0 12px;
+.mhome-hero-ctas {
+  display: flex;
+  gap: 10px;
+  margin-bottom: 16px;
+  flex-wrap: wrap;
 }
 
-.mhome-quote .quote-widget {
-  max-width: 100%;
-  width: 100%;
-  margin: 0 auto;
-}
-
-/* Keep the widget tight — the existing widget padding (24px) is fine,
-   but on very narrow phones we want every pixel. */
-@media (max-width: 380px) {
-  .mhome-quote {
-    padding: 0 8px;
-  }
-}
-
-/* ============================================
-   TRUST STRIP — 3 tiny chips. No large cards.
-   Reads like an app onboarding footer: "6% · 0 · 24/7".
-   ============================================ */
 .mhome-trust {
-  margin: 4px 16px 0;
-  padding: 14px 8px;
-  background: #F8FAFC;
-  border: 1px solid #E2E8F0;
-  border-radius: 14px;
+  list-style: none;
+  margin: 6px 0 0 0;
+  padding: 0;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px 10px;
+  font-size: 12.5px;
+  color: var(--mh-text-soft);
+  font-weight: 500;
+}
+
+.mhome-trust li {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  background: var(--mh-bg);
+  padding: 6px 10px;
+  border: 1px solid var(--mh-border);
+  border-radius: 999px;
+  white-space: nowrap;
+}
+
+.mhome-trust li svg {
+  width: 13px;
+  height: 13px;
+  color: var(--mh-blue);
+}
+
+/* ============================================
+   BUTTONS
+   ============================================ */
+.mhome-btn {
+  height: 46px;
+  padding: 0 18px;
+  border-radius: 12px;
+  font-size: 14.5px;
+  font-weight: 700;
+  letter-spacing: 0.005em;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  cursor: pointer;
+  font-family: inherit;
+  border: 1px solid transparent;
+  text-decoration: none;
+  transition: transform 0.12s ease, background-color 0.15s ease, box-shadow 0.15s ease;
+  white-space: nowrap;
+}
+
+.mhome-btn--primary {
+  background: linear-gradient(180deg, #2563EB 0%, var(--mh-blue-700) 100%);
+  color: #FFFFFF;
+  box-shadow: 0 6px 14px rgba(29, 78, 216, 0.28);
+  flex: 1 1 auto;
+}
+.mhome-btn--primary:active {
+  transform: translateY(1px);
+  box-shadow: 0 3px 8px rgba(29, 78, 216, 0.24);
+}
+
+.mhome-btn--ghost {
+  background: #FFFFFF;
+  color: var(--mh-blue-700);
+  border-color: #CBD5E1;
+}
+.mhome-btn--ghost:active {
+  background: #F1F5F9;
+  border-color: var(--mh-blue);
+}
+
+.mhome-btn--block {
+  width: 100%;
+}
+
+/* ============================================
+   COMPARISON CARD
+   The single most important conversion section. Sits above the quote
+   form on mobile (inverse of desktop where the form leads). Numbers are
+   identical to desktop's QuoteSection (pulled from src/utils/money.js).
+   ============================================ */
+.mhome-compare {
+  padding: 0 16px;
+}
+
+.mh-compare-head {
+  margin: 0 4px 12px;
+}
+
+.mh-compare-eyebrow {
+  display: inline-block;
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--mh-blue);
+  margin-bottom: 4px;
+}
+
+.mh-compare-title {
+  font-size: 20px;
+  font-weight: 800;
+  margin: 0 0 4px 0;
+  letter-spacing: -0.01em;
+  color: var(--mh-text);
+}
+
+.mh-compare-meta {
+  font-size: 12.5px;
+  color: var(--mh-text-muted);
+  margin: 0;
+  line-height: 1.4;
+}
+
+.mh-compare-card {
+  background: #FFFFFF;
+  border: 1px solid var(--mh-border);
+  border-radius: 18px;
+  box-shadow: var(--mh-shadow-card);
+  overflow: hidden;
+}
+
+.mh-compare-row {
+  padding: 14px 16px 12px;
+  position: relative;
+}
+
+.mh-compare-row--broker {
+  background: linear-gradient(180deg, #FFF7F7 0%, #FFFFFF 100%);
+}
+
+.mh-compare-row--jashi {
+  background: linear-gradient(180deg, #F0FDF6 0%, #FFFFFF 100%);
+}
+
+.mh-compare-row-head {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  gap: 4px;
+  margin-bottom: 6px;
 }
 
-.mhome-trust-item {
-  flex: 1 1 0;
+.mh-compare-tag {
+  display: inline-flex;
+  align-items: center;
+  font-size: 12.5px;
+  font-weight: 700;
+  padding: 4px 9px;
+  border-radius: 999px;
+  border: 1px solid transparent;
+  letter-spacing: 0.005em;
+}
+.mh-compare-tag--bad {
+  color: var(--mh-bad);
+  background: var(--mh-bad-bg);
+  border-color: var(--mh-bad-border);
+}
+.mh-compare-tag--good {
+  color: var(--mh-good);
+  background: var(--mh-good-bg);
+  border-color: var(--mh-good-border);
+}
+
+.mh-compare-fee {
+  font-size: 11.5px;
+  font-weight: 600;
+  color: var(--mh-text-muted);
+  letter-spacing: 0.02em;
+}
+
+.mh-compare-amount {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 10px;
+}
+
+.mh-compare-amount-prefix {
+  font-size: 13px;
+  color: var(--mh-text-soft);
+  font-weight: 500;
+}
+
+.mh-compare-amount-value {
+  font-family: 'SF Mono', 'Monaco', 'Inconsolata', monospace;
+  font-size: 22px;
+  font-weight: 800;
+  letter-spacing: -0.01em;
+}
+
+.mh-compare-amount--bad .mh-compare-amount-value { color: var(--mh-bad); }
+.mh-compare-amount--good .mh-compare-amount-value { color: var(--mh-good); }
+
+.mh-compare-divider {
+  position: relative;
+  height: 0;
+  border-top: 1px dashed var(--mh-border);
+  margin: 0 16px;
+}
+
+.mh-compare-vs {
+  position: absolute;
+  top: -10px;
+  left: 50%;
+  transform: translateX(-50%);
+  background: #FFFFFF;
+  color: var(--mh-text-muted);
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  padding: 0 10px;
+  text-transform: uppercase;
+}
+
+.mh-compare-savings {
+  background: linear-gradient(135deg, var(--mh-blue) 0%, var(--mh-blue-800) 100%);
+  color: #FFFFFF;
+  padding: 14px 16px;
   display: flex;
   flex-direction: column;
-  align-items: center;
   gap: 2px;
-  min-width: 0;
 }
 
-.mhome-trust-num {
-  font-size: 18px;
+.mh-compare-savings-line {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 12px;
+  font-size: 14px;
+  font-weight: 600;
+  letter-spacing: 0.01em;
+}
+
+.mh-compare-savings-line strong {
+  font-family: 'SF Mono', 'Monaco', 'Inconsolata', monospace;
+  font-size: 22px;
   font-weight: 800;
-  color: #0066FF;
   letter-spacing: -0.01em;
-  line-height: 1;
+  color: var(--mh-gold);
 }
 
-.mhome-trust-label {
+.mh-compare-savings-sub {
   font-size: 12px;
-  color: #475569;
+  color: rgba(255, 255, 255, 0.85);
   font-weight: 500;
   letter-spacing: 0.01em;
 }
 
-.mhome-trust-divider {
-  width: 1px;
-  height: 28px;
-  background: #E2E8F0;
-  flex-shrink: 0;
+.mh-compare-disclaimer {
+  margin: 8px 6px 0;
+  font-size: 11.5px;
+  color: var(--mh-text-muted);
+  font-style: italic;
 }
 
 /* ============================================
-   SECONDARY CTA — "I already have an account"
-   Ghost button, low visual weight. Login is not the primary action.
+   QUOTE SECTION — wraps the QuoteWidget as a product card.
+   We don't restyle the widget internals here; we just give it a clean
+   shell + header.
    ============================================ */
-.mhome-cta {
-  padding: 2px 16px 0;
+.mhome-quote {
+  padding: 0 12px;
+  scroll-margin-top: calc(var(--real-header-height, 60px) + 12px);
 }
 
-.mhome-cta-btn {
-  width: 100%;
-  height: 44px;
+.mhome-quote-head {
+  padding: 0 6px 10px;
+}
+
+.mhome-quote-eyebrow {
+  display: inline-block;
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--mh-blue);
+  margin-bottom: 4px;
+}
+
+.mhome-quote-title {
+  font-size: 22px;
+  font-weight: 800;
+  letter-spacing: -0.01em;
+  margin: 0 0 4px 0;
+}
+
+.mhome-quote-sub {
+  font-size: 13.5px;
+  color: var(--mh-text-soft);
+  margin: 0;
+  line-height: 1.45;
+}
+
+.mhome-quote-card {
+  background: #FFFFFF;
+  border: 1px solid var(--mh-border);
+  border-radius: 20px;
+  box-shadow: var(--mh-shadow-card-strong);
+  overflow: hidden;
+}
+
+/* The QuoteWidget renders its own padding — undo any extra outer chrome
+   coming from desktop styles when the widget mounts inside our card. */
+.mhome-quote-card .quote-widget {
+  margin: 0;
+  border: 0;
+  border-radius: inherit;
+  box-shadow: none;
   background: transparent;
-  color: #0066FF;
-  border: 1px solid #CBD5E1;
-  border-radius: 10px;
-  font-size: 14px;
-  font-weight: 600;
-  cursor: pointer;
-  font-family: inherit;
-  transition: background-color 0.15s ease, border-color 0.15s ease;
-}
-
-.mhome-cta-btn:active {
-  background: #F1F5F9;
-  border-color: #0066FF;
+  width: 100%;
+  max-width: 100%;
 }
 
 /* ============================================
-   MINIMAL FOOTER
-   Not the full desktop footer. Just brand + 3 links + copyright.
+   STEPS / TIMELINE
+   ============================================ */
+.mhome-section-head {
+  padding: 0 18px;
+  margin-bottom: 14px;
+}
+
+.mhome-section-eyebrow {
+  display: inline-block;
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--mh-blue);
+  margin-bottom: 4px;
+}
+
+.mhome-section-title {
+  font-size: 22px;
+  font-weight: 800;
+  letter-spacing: -0.01em;
+  margin: 0;
+  line-height: 1.2;
+}
+
+.mhome-steps {
+  padding: 4px 0;
+}
+
+.mhome-timeline {
+  list-style: none;
+  margin: 0;
+  padding: 0 18px;
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+}
+
+.mhome-timeline-item {
+  display: grid;
+  grid-template-columns: 36px 1fr;
+  gap: 14px;
+  padding-bottom: 18px;
+}
+
+.mhome-timeline-item:last-child {
+  padding-bottom: 0;
+}
+
+.mhome-timeline-rail {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.mhome-timeline-dot {
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, var(--mh-blue) 0%, var(--mh-blue-800) 100%);
+  color: #FFFFFF;
+  display: grid;
+  place-items: center;
+  flex-shrink: 0;
+  box-shadow: 0 6px 14px rgba(10, 88, 255, 0.28);
+}
+
+.mhome-timeline-dot svg {
+  width: 18px;
+  height: 18px;
+}
+
+.mhome-timeline-line {
+  flex: 1 1 auto;
+  width: 2px;
+  background: var(--mh-border);
+  margin-top: 4px;
+  border-radius: 999px;
+  min-height: 22px;
+}
+
+.mhome-timeline-body {
+  padding-top: 2px;
+}
+
+.mhome-timeline-step {
+  display: inline-block;
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--mh-text-muted);
+  margin-bottom: 2px;
+}
+
+.mhome-timeline-title {
+  font-size: 16px;
+  font-weight: 700;
+  margin: 0 0 4px 0;
+  letter-spacing: -0.005em;
+}
+
+.mhome-timeline-desc {
+  font-size: 13.5px;
+  color: var(--mh-text-soft);
+  margin: 0;
+  line-height: 1.5;
+}
+
+/* ============================================
+   FEATURE GRID
+   ============================================ */
+.mhome-features {
+  padding: 4px 0;
+}
+
+.mhome-feature-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 10px;
+  padding: 0 14px;
+}
+
+.mhome-feature-card {
+  background: #FFFFFF;
+  border: 1px solid var(--mh-border);
+  border-radius: 16px;
+  padding: 14px 12px;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  box-shadow: var(--mh-shadow-card);
+}
+
+.mhome-feature-ico {
+  width: 34px;
+  height: 34px;
+  border-radius: 10px;
+  display: grid;
+  place-items: center;
+  background: rgba(10, 88, 255, 0.1);
+  color: var(--mh-blue);
+  margin-bottom: 2px;
+}
+
+.mhome-feature-ico svg {
+  width: 18px;
+  height: 18px;
+}
+
+.mhome-feature-title {
+  font-size: 14px;
+  font-weight: 700;
+  margin: 0;
+  letter-spacing: -0.005em;
+}
+
+.mhome-feature-desc {
+  font-size: 12.5px;
+  line-height: 1.45;
+  color: var(--mh-text-soft);
+  margin: 0;
+}
+
+/* On the very narrow phones, drop to a single column when the cards
+   would otherwise feel cramped. */
+@media (max-width: 340px) {
+  .mhome-feature-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+/* ============================================
+   CLOSING CTA
+   ============================================ */
+.mhome-closer {
+  margin: 6px 16px 0;
+  background: linear-gradient(135deg, #0F172A 0%, var(--mh-blue-800) 100%);
+  color: #FFFFFF;
+  border-radius: 22px;
+  padding: 22px 18px 20px;
+  text-align: center;
+  position: relative;
+  overflow: hidden;
+}
+
+.mhome-closer::after {
+  content: '';
+  position: absolute;
+  inset: -1px;
+  border-radius: inherit;
+  background: radial-gradient(circle at 80% 0%, rgba(245, 180, 0, 0.18), transparent 60%);
+  pointer-events: none;
+}
+
+.mhome-closer h2 {
+  font-size: 20px;
+  font-weight: 800;
+  letter-spacing: -0.01em;
+  margin: 0 0 6px 0;
+}
+
+.mhome-closer p {
+  font-size: 13.5px;
+  color: rgba(255, 255, 255, 0.78);
+  margin: 0 0 14px 0;
+  line-height: 1.45;
+}
+
+.mhome-closer .mhome-btn--primary {
+  background: linear-gradient(180deg, #FFFFFF 0%, #F1F5F9 100%);
+  color: var(--mh-blue-800);
+  border-color: rgba(255, 255, 255, 0.3);
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.25);
+}
+
+/* ============================================
+   FOOTER
    ============================================ */
 .mhome-footer {
-  margin-top: 20px;
-  padding: 20px 20px calc(20px + env(safe-area-inset-bottom, 0));
-  border-top: 1px solid #E2E8F0;
+  margin-top: 16px;
+  padding: 18px 18px calc(20px + env(safe-area-inset-bottom, 0));
+  border-top: 1px solid var(--mh-border);
   background: #FFFFFF;
   text-align: center;
   display: flex;
   flex-direction: column;
-  gap: 6px;
+  gap: 4px;
 }
 
 .mhome-footer-brand {
   font-weight: 800;
-  color: #0a58ff;
+  color: var(--mh-blue);
   font-size: 16px;
   letter-spacing: 0.2px;
 }
 
 .mhome-footer-tag {
   font-size: 12.5px;
-  color: #64748B;
+  color: var(--mh-text-muted);
   line-height: 1.4;
+  margin: 0;
 }
 
 .mhome-footer-links {
   display: flex;
   justify-content: center;
   align-items: center;
-  gap: 8px;
+  flex-wrap: wrap;
+  gap: 6px;
   font-size: 13px;
-  margin-top: 4px;
+  margin-top: 6px;
 }
 
 .mhome-footer-links a {
-  color: #0066FF;
+  color: var(--mh-blue);
   text-decoration: none;
   font-weight: 500;
   padding: 4px 2px;
@@ -200,39 +667,172 @@
 .mhome-footer-copy {
   font-size: 11.5px;
   color: #94A3B8;
-  margin-top: 2px;
+  margin-top: 6px;
 }
 
 /* ============================================
-   CHAT BUTTON — sits in the bottom-right corner on mobile,
-   small enough to not cover the Submit Offer CTA.
-   Overrides any larger-screen positioning.
+   STICKY BOTTOM CTA
+   Hidden by default; shown after the user scrolls past the hero;
+   hidden again whenever a form input is focused so the bar can't
+   sit on top of the keyboard / IME.
+   ============================================ */
+.mhome-sticky-cta {
+  position: fixed;
+  left: 12px;
+  right: 12px;
+  bottom: calc(12px + env(safe-area-inset-bottom, 0));
+  z-index: 950;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 10px 12px;
+  background: rgba(15, 23, 42, 0.95);
+  color: #FFFFFF;
+  border-radius: 16px;
+  box-shadow: 0 18px 40px rgba(15, 23, 42, 0.28);
+  backdrop-filter: saturate(140%) blur(8px);
+  -webkit-backdrop-filter: saturate(140%) blur(8px);
+  transform: translateY(120%);
+  opacity: 0;
+  pointer-events: none;
+  transition: transform 0.22s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.18s ease;
+}
+
+.mhome-sticky-cta[data-visible="true"] {
+  transform: translateY(0);
+  opacity: 1;
+  pointer-events: auto;
+}
+
+.mhome-sticky-cta-btn {
+  flex: 1 1 auto;
+  height: 44px;
+  border: 0;
+  border-radius: 12px;
+  background: linear-gradient(180deg, var(--mh-gold) 0%, #d99700 100%);
+  color: #1F2937;
+  font-family: inherit;
+  font-size: 14.5px;
+  font-weight: 800;
+  letter-spacing: 0.005em;
+  cursor: pointer;
+  box-shadow: 0 4px 12px rgba(245, 180, 0, 0.32);
+}
+
+.mhome-sticky-cta-btn:active {
+  transform: translateY(1px);
+}
+
+.mhome-sticky-cta-note {
+  flex: 0 0 auto;
+  font-size: 11.5px;
+  color: rgba(255, 255, 255, 0.78);
+  font-weight: 500;
+  letter-spacing: 0.01em;
+  text-align: right;
+}
+
+@media (max-width: 360px) {
+  .mhome-sticky-cta-note {
+    display: none;
+  }
+}
+
+/* ============================================
+   CHAT BUTTON / PANEL — mobile-only overrides.
+   We don't fork live-chat.jsx; we pin the bubble to a safe spot and turn
+   the panel into a bottom sheet on mobile.
    ============================================ */
 .mhome .live-chat-button {
-  bottom: 14px !important;
-  right: 12px !important;
-  padding: 9px 14px !important;
+  bottom: calc(72px + env(safe-area-inset-bottom, 0)) !important;
+  right: 14px !important;
+  padding: 10px 14px !important;
   gap: 6px !important;
   border-radius: 999px !important;
-  box-shadow: 0 6px 18px rgba(0, 71, 171, 0.28) !important;
+  box-shadow: 0 8px 22px rgba(0, 71, 171, 0.30) !important;
+  z-index: 940 !important;
 }
 
-.mhome .live-chat-icon {
-  width: 16px !important;
-  height: 16px !important;
+.mhome .live-chat-icon { width: 18px !important; height: 18px !important; }
+.mhome .live-chat-text { font-size: 13px !important; font-weight: 600 !important; }
+
+/* Hide the chat bubble while the keyboard is open or we're scrolled at
+   the top — tied to the sticky CTA visibility so the two never fight
+   for the same corner. */
+.mhome:has(.mhome-sticky-cta[data-visible="true"]) .live-chat-button {
+  bottom: calc(76px + env(safe-area-inset-bottom, 0)) !important;
 }
 
-.mhome .live-chat-text {
-  font-size: 12.5px !important;
-  font-weight: 600 !important;
+/* Bottom-sheet variant of the chat panel on mobile.
+   The shared component still uses its own .live-chat-panel class; we
+   just override the geometry so it docks to the bottom and leaves room
+   for the keyboard. */
+.mhome .live-chat-panel {
+  position: fixed !important;
+  left: 0 !important;
+  right: 0 !important;
+  bottom: 0 !important;
+  top: auto !important;
+  width: 100% !important;
+  height: min(78vh, 560px) !important;
+  border-radius: 22px 22px 0 0 !important;
+  box-shadow: 0 -16px 40px rgba(15, 23, 42, 0.22) !important;
+  display: flex !important;
+  flex-direction: column !important;
+  z-index: 1000 !important;
+  /* dvh keeps the panel above the on-screen keyboard on iOS Safari /
+     Chrome Android — the visual viewport shrinks and dvh tracks it. */
+  height: min(78dvh, 560px) !important;
+  padding-bottom: env(safe-area-inset-bottom, 0);
+}
+
+.mhome .live-chat-body {
+  flex: 1 1 auto;
+  -webkit-overflow-scrolling: touch;
+}
+
+.mhome .live-chat-footer {
+  position: sticky;
+  bottom: 0;
+}
+
+.mhome .live-chat-input {
+  font-size: 16px !important; /* iOS: prevent input zoom */
+}
+
+.mhome .live-chat-minimize {
+  width: 38px;
+  height: 38px;
 }
 
 /* ============================================
-   iOS SAFARI: prevent input auto-zoom.
-   QuoteWidget inputs inherit from here.
+   iOS SAFARI: prevent input auto-zoom on QuoteWidget inputs.
    ============================================ */
 .mhome input,
 .mhome select,
 .mhome textarea {
   font-size: 16px;
+}
+
+/* QuoteWidget mobile polish — primary CTA reads as "Check Dispatch Chance"
+   on mobile, and we tighten the empty likelihood card so the form doesn't
+   feel like dead vertical space before the user has filled anything in. */
+.mhome .qw-submit-btn {
+  height: 50px !important;
+  font-weight: 800 !important;
+  letter-spacing: 0.005em !important;
+  border-radius: 12px !important;
+}
+
+.mhome .likelihood-empty {
+  padding: 14px 16px !important;
+  background: var(--mh-bg) !important;
+  border: 1px dashed var(--mh-border) !important;
+  border-radius: 12px !important;
+}
+
+.mhome .likelihood-empty .empty-message {
+  font-size: 13px !important;
+  margin: 4px 0 0 0 !important;
+  color: var(--mh-text-muted) !important;
 }
