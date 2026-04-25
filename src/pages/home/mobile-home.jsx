@@ -76,7 +76,6 @@ function MobileHome() {
   }, []);
 
   const quoteRef = useRef(null);
-  const heroRef = useRef(null);
 
   // Comparison cards live above the form, so we mirror the QuoteWidget state
   // up here. Same pattern as QuoteSection on desktop.
@@ -110,44 +109,13 @@ function MobileHome() {
     if (el) el.scrollIntoView({ behavior: 'smooth', block: 'start' });
   }, []);
 
-  // ---------- Sticky bottom CTA visibility ----------
-  // Show after the user has scrolled past the hero. Hide whenever an input
-  // is focused so the keyboard / IME never lands on top of the bar (and so
-  // the bar never covers the field the user is typing in).
-  const [showStickyCta, setShowStickyCta] = useState(false);
-  const [keyboardOpen, setKeyboardOpen] = useState(false);
-
-  useEffect(() => {
-    const onScroll = () => {
-      const heroBottom = heroRef.current?.getBoundingClientRect().bottom ?? 0;
-      setShowStickyCta(heroBottom < 80);
-    };
-    onScroll();
-    window.addEventListener('scroll', onScroll, { passive: true });
-    return () => window.removeEventListener('scroll', onScroll);
-  }, []);
-
-  useEffect(() => {
-    const FOCUSABLE = 'input,textarea,select,[contenteditable="true"]';
-    const onFocusIn = (e) => {
-      if (e.target?.matches?.(FOCUSABLE)) setKeyboardOpen(true);
-    };
-    const onFocusOut = () => setKeyboardOpen(false);
-    document.addEventListener('focusin', onFocusIn);
-    document.addEventListener('focusout', onFocusOut);
-    return () => {
-      document.removeEventListener('focusin', onFocusIn);
-      document.removeEventListener('focusout', onFocusOut);
-    };
-  }, []);
-
   return (
     <div className="mhome">
       <MobileHomeHeader onCtaClick={scrollToQuote} />
 
       <main className="mhome-main">
         {/* ===== HERO ===== */}
-        <section ref={heroRef} className="mhome-hero" aria-label="Hero">
+        <section className="mhome-hero" aria-label="Hero">
           <h1 className="mhome-hero-title">
             Ship Your Vehicle with{' '}
             <span className="mhome-hero-accent">Complete Control</span>
@@ -267,20 +235,14 @@ function MobileHome() {
             className="mhome-btn mhome-btn--primary mhome-btn--block"
             onClick={scrollToQuote}
           >
-            Get Free Quote
+            Start My Quote
           </button>
         </section>
       </main>
 
       {/* ===== MINIMAL FOOTER ===== */}
       <footer className="mhome-footer">
-        <div className="mhome-footer-brand">Jashi Logistics</div>
-        <p className="mhome-footer-tag">
-          Transparent auto transport — your price, your way.
-        </p>
         <nav className="mhome-footer-links" aria-label="Footer">
-          <a href="mailto:support@jashilogistics.com">Support</a>
-          <span aria-hidden="true">·</span>
           <Link to="/privacy">Privacy</Link>
           <span aria-hidden="true">·</span>
           <Link to="/terms">Terms</Link>
@@ -291,22 +253,6 @@ function MobileHome() {
           © {new Date().getFullYear()} Jashi Logistics
         </div>
       </footer>
-
-      {/* ===== STICKY BOTTOM CTA ===== */}
-      <div
-        className="mhome-sticky-cta"
-        data-visible={showStickyCta && !keyboardOpen}
-        aria-hidden={!(showStickyCta && !keyboardOpen)}
-      >
-        <button
-          type="button"
-          className="mhome-sticky-cta-btn"
-          onClick={scrollToQuote}
-        >
-          Get Free Quote
-        </button>
-        <span className="mhome-sticky-cta-note">6% fee · no hidden costs</span>
-      </div>
 
       <LiveChat />
     </div>

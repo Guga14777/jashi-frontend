@@ -148,9 +148,6 @@ function LiveChat() {
                 <HiPaperAirplane />
               </button>
             </form>
-            <div className="live-chat-powered">
-              <span>Powered by Jashi Logistics</span>
-            </div>
           </div>
         </div>
       )}

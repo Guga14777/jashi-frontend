@@ -320,13 +320,6 @@
   margin-left: 2px;
 }
 
-.live-chat-powered {
-  text-align: center;
-  font-size: 11px;
-  color: #999999;
-  letter-spacing: 0.02em;
-}
-
 /* Scrollbar - Minimal */
 .live-chat-body::-webkit-scrollbar {
   width: 6px;

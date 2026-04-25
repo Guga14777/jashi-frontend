@@ -4,14 +4,16 @@
    in home.css / hero.css — they don't apply here. */
 
 :root {
-  --mh-blue: #0a58ff;
+  /* Slightly lower-saturation primary so the page reads calmer.
+     Hue is the same family — content references stay consistent. */
+  --mh-blue: #2358ea;
   --mh-blue-700: #1d4ed8;
-  --mh-blue-800: #1e40af;
-  --mh-gold: #f5b400;
-  --mh-text: #0F172A;
+  --mh-blue-800: #1e3a8a;
+  --mh-text: #0B1220;
   --mh-text-soft: #475569;
   --mh-text-muted: #64748B;
-  --mh-border: #E2E8F0;
+  --mh-border: #ECEFF3;
+  --mh-border-strong: #E2E8F0;
   --mh-bg: #F8FAFC;
   --mh-good-bg: #ECFDF5;
   --mh-good-border: #BBF7D0;
@@ -19,8 +21,9 @@
   --mh-bad-bg: #FEF2F2;
   --mh-bad-border: #FECACA;
   --mh-bad: #B91C1C;
-  --mh-shadow-card: 0 6px 20px rgba(15, 23, 42, 0.06);
-  --mh-shadow-card-strong: 0 14px 36px rgba(15, 23, 42, 0.10);
+  --mh-shadow-card: 0 1px 1px rgba(15, 23, 42, 0.03), 0 2px 8px rgba(15, 23, 42, 0.03);
+  --mh-shadow-card-strong: 0 1px 1px rgba(15, 23, 42, 0.03), 0 6px 18px rgba(15, 23, 42, 0.05);
+  --mh-radius-card: 14px;
 }
 
 .mhome {
@@ -32,62 +35,63 @@
   overflow-x: hidden;
 }
 
-/* Leave room for sticky bottom CTA (visible) */
 .mhome-main {
-  padding-top: calc(var(--real-header-height, 60px) + 6px);
-  padding-bottom: 96px;
+  padding-top: calc(var(--real-header-height, 56px) + 4px);
+  padding-bottom: 16px;
   display: flex;
   flex-direction: column;
-  gap: 28px;
+  /* Slightly looser rhythm between sections — Stripe-style breathing. */
+  gap: 32px;
 }
 
 /* ============================================
    HERO
    ============================================ */
 .mhome-hero {
-  padding: 22px 18px 4px;
+  padding: 24px 16px 4px;
   text-align: left;
 }
 
 .mhome-hero-title {
-  font-size: clamp(26px, 7.4vw, 32px);
-  line-height: 1.12;
-  font-weight: 800;
-  letter-spacing: -0.02em;
+  font-size: clamp(26px, 7.2vw, 30px);
+  line-height: 1.1;
+  font-weight: 700;
+  letter-spacing: -0.025em;
   color: var(--mh-text);
-  margin: 0 0 10px 0;
+  margin: 0 0 12px 0;
 }
 
 .mhome-hero-accent {
   color: var(--mh-blue);
   position: relative;
   white-space: nowrap;
+  font-weight: 700;
 }
 
 .mhome-hero-sub {
   font-size: 15px;
-  line-height: 1.5;
+  line-height: 1.55;
   color: var(--mh-text-soft);
-  margin: 0 0 18px 0;
+  margin: 0 0 22px 0;
   font-weight: 400;
 }
 
 .mhome-hero-ctas {
   display: flex;
   gap: 10px;
-  margin-bottom: 16px;
+  margin-bottom: 18px;
   flex-wrap: wrap;
 }
 
 .mhome-trust {
   list-style: none;
-  margin: 6px 0 0 0;
+  margin: 4px 0 0 0;
   padding: 0;
   display: flex;
   flex-wrap: wrap;
-  gap: 6px 10px;
-  font-size: 12.5px;
-  color: var(--mh-text-soft);
+  gap: 6px 8px;
+  font-size: 12px;
+  color: var(--mh-text-muted);
   font-weight: 500;
 }
 
@@ -95,16 +99,16 @@
   display: inline-flex;
   align-items: center;
   gap: 5px;
-  background: var(--mh-bg);
-  padding: 6px 10px;
+  background: transparent;
+  padding: 5px 10px;
   border: 1px solid var(--mh-border);
   border-radius: 999px;
   white-space: nowrap;
 }
 
 .mhome-trust li svg {
-  width: 13px;
-  height: 13px;
+  width: 12px;
+  height: 12px;
   color: var(--mh-blue);
 }
 
@@ -112,12 +116,12 @@
    BUTTONS
    ============================================ */
 .mhome-btn {
-  height: 46px;
-  padding: 0 18px;
-  border-radius: 12px;
-  font-size: 14.5px;
-  font-weight: 700;
-  letter-spacing: 0.005em;
+  height: 44px;
+  padding: 0 16px;
+  border-radius: 10px;
+  font-size: 14px;
+  font-weight: 600;
+  letter-spacing: -0.005em;
   display: inline-flex;
   align-items: center;
   justify-content: center;
@@ -126,29 +130,30 @@
   font-family: inherit;
   border: 1px solid transparent;
   text-decoration: none;
-  transition: transform 0.12s ease, background-color 0.15s ease, box-shadow 0.15s ease;
+  transition: transform 0.18s ease, background-color 0.18s ease, box-shadow 0.18s ease, border-color 0.18s ease;
   white-space: nowrap;
 }
 
 .mhome-btn--primary {
-  background: linear-gradient(180deg, #2563EB 0%, var(--mh-blue-700) 100%);
+  background: var(--mh-blue-700);
   color: #FFFFFF;
-  box-shadow: 0 6px 14px rgba(29, 78, 216, 0.28);
+  box-shadow: 0 1px 2px rgba(29, 78, 216, 0.18);
   flex: 1 1 auto;
 }
 .mhome-btn--primary:active {
   transform: translateY(1px);
-  box-shadow: 0 3px 8px rgba(29, 78, 216, 0.24);
+  background: var(--mh-blue-800);
+  box-shadow: 0 1px 1px rgba(29, 78, 216, 0.16);
 }
 
 .mhome-btn--ghost {
   background: #FFFFFF;
-  color: var(--mh-blue-700);
-  border-color: #CBD5E1;
+  color: var(--mh-text);
+  border-color: var(--mh-border);
 }
 .mhome-btn--ghost:active {
-  background: #F1F5F9;
-  border-color: var(--mh-blue);
+  background: var(--mh-bg);
+  border-color: #CBD5E1;
 }
 
 .mhome-btn--block {
@@ -171,19 +176,19 @@
 
 .mh-compare-eyebrow {
   display: inline-block;
-  font-size: 11px;
-  font-weight: 700;
-  letter-spacing: 0.12em;
+  font-size: 10.5px;
+  font-weight: 600;
+  letter-spacing: 0.14em;
   text-transform: uppercase;
-  color: var(--mh-blue);
-  margin-bottom: 4px;
+  color: var(--mh-text-muted);
+  margin-bottom: 6px;
 }
 
 .mh-compare-title {
-  font-size: 20px;
-  font-weight: 800;
+  font-size: 18px;
+  font-weight: 700;
   margin: 0 0 4px 0;
-  letter-spacing: -0.01em;
+  letter-spacing: -0.015em;
   color: var(--mh-text);
 }
 
@@ -191,61 +196,58 @@
   font-size: 12.5px;
   color: var(--mh-text-muted);
   margin: 0;
-  line-height: 1.4;
+  line-height: 1.45;
 }
 
 .mh-compare-card {
   background: #FFFFFF;
   border: 1px solid var(--mh-border);
-  border-radius: 18px;
+  border-radius: var(--mh-radius-card);
   box-shadow: var(--mh-shadow-card);
   overflow: hidden;
 }
 
 .mh-compare-row {
-  padding: 14px 16px 12px;
+  padding: 12px 14px 10px;
   position: relative;
 }
 
-.mh-compare-row--broker {
-  background: linear-gradient(180deg, #FFF7F7 0%, #FFFFFF 100%);
-}
-
+.mh-compare-row--broker,
 .mh-compare-row--jashi {
-  background: linear-gradient(180deg, #F0FDF6 0%, #FFFFFF 100%);
+  background: #FFFFFF;
 }
 
 .mh-compare-row-head {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  margin-bottom: 6px;
+  margin-bottom: 4px;
 }
 
 .mh-compare-tag {
   display: inline-flex;
   align-items: center;
-  font-size: 12.5px;
-  font-weight: 700;
-  padding: 4px 9px;
-  border-radius: 999px;
+  font-size: 11.5px;
+  font-weight: 600;
+  padding: 3px 8px;
+  border-radius: 6px;
   border: 1px solid transparent;
-  letter-spacing: 0.005em;
+  letter-spacing: -0.005em;
 }
 .mh-compare-tag--bad {
-  color: var(--mh-bad);
-  background: var(--mh-bad-bg);
-  border-color: var(--mh-bad-border);
+  color: var(--mh-text-soft);
+  background: var(--mh-bg);
+  border-color: var(--mh-border);
 }
 .mh-compare-tag--good {
-  color: var(--mh-good);
-  background: var(--mh-good-bg);
-  border-color: var(--mh-good-border);
+  color: var(--mh-blue-700);
+  background: rgba(10, 88, 255, 0.07);
+  border-color: rgba(10, 88, 255, 0.18);
 }
 
 .mh-compare-fee {
-  font-size: 11.5px;
-  font-weight: 600;
+  font-size: 11px;
+  font-weight: 500;
   color: var(--mh-text-muted);
   letter-spacing: 0.02em;
 }
@@ -258,81 +260,72 @@
 }
 
 .mh-compare-amount-prefix {
-  font-size: 13px;
+  font-size: 12.5px;
   color: var(--mh-text-soft);
   font-weight: 500;
 }
 
 .mh-compare-amount-value {
   font-family: 'SF Mono', 'Monaco', 'Inconsolata', monospace;
-  font-size: 22px;
-  font-weight: 800;
-  letter-spacing: -0.01em;
+  font-size: 18px;
+  font-weight: 600;
+  letter-spacing: -0.015em;
+  color: var(--mh-text);
+  font-variant-numeric: tabular-nums;
 }
 
-.mh-compare-amount--bad .mh-compare-amount-value { color: var(--mh-bad); }
-.mh-compare-amount--good .mh-compare-amount-value { color: var(--mh-good); }
+.mh-compare-amount--bad .mh-compare-amount-value { color: var(--mh-text-muted); text-decoration: line-through; text-decoration-thickness: 1px; }
+.mh-compare-amount--good .mh-compare-amount-value { color: var(--mh-text); }
 
 .mh-compare-divider {
   position: relative;
   height: 0;
-  border-top: 1px dashed var(--mh-border);
-  margin: 0 16px;
-}
-
-.mh-compare-vs {
-  position: absolute;
-  top: -10px;
-  left: 50%;
-  transform: translateX(-50%);
-  background: #FFFFFF;
-  color: var(--mh-text-muted);
-  font-size: 11px;
-  font-weight: 700;
-  letter-spacing: 0.12em;
-  padding: 0 10px;
-  text-transform: uppercase;
+  border-top: 1px solid var(--mh-border);
+  margin: 0;
 }
 
 .mh-compare-savings {
-  background: linear-gradient(135deg, var(--mh-blue) 0%, var(--mh-blue-800) 100%);
-  color: #FFFFFF;
-  padding: 14px 16px;
-  display: flex;
-  flex-direction: column;
-  gap: 2px;
-}
-
-.mh-compare-savings-line {
+  background: var(--mh-bg);
+  color: var(--mh-text);
+  padding: 11px 14px;
   display: flex;
   align-items: baseline;
   justify-content: space-between;
   gap: 12px;
-  font-size: 14px;
-  font-weight: 600;
-  letter-spacing: 0.01em;
+  border-top: 1px solid var(--mh-border);
+}
+
+.mh-compare-savings-line {
+  display: inline-flex;
+  align-items: baseline;
+  gap: 8px;
+  font-size: 13px;
+  font-weight: 500;
+  color: var(--mh-text-soft);
+  letter-spacing: -0.005em;
 }
 
 .mh-compare-savings-line strong {
   font-family: 'SF Mono', 'Monaco', 'Inconsolata', monospace;
-  font-size: 22px;
-  font-weight: 800;
-  letter-spacing: -0.01em;
-  color: var(--mh-gold);
+  font-size: 15px;
+  font-weight: 600;
+  letter-spacing: -0.015em;
+  color: var(--mh-text);
+  font-variant-numeric: tabular-nums;
 }
 
 .mh-compare-savings-sub {
-  font-size: 12px;
-  color: rgba(255, 255, 255, 0.85);
+  font-size: 11.5px;
+  color: var(--mh-blue-700);
   font-weight: 500;
-  letter-spacing: 0.01em;
+  letter-spacing: -0.005em;
 }
 
 .mh-compare-disclaimer {
   margin: 8px 6px 0;
-  font-size: 11.5px;
+  font-size: 11px;
   color: var(--mh-text-muted);
-  font-style: italic;
+  font-style: normal;
 }
 
 /* ============================================
@@ -341,8 +334,8 @@
    shell + header.
    ============================================ */
 .mhome-quote {
-  padding: 0 12px;
-  scroll-margin-top: calc(var(--real-header-height, 60px) + 12px);
+  padding: 0 16px;
+  scroll-margin-top: calc(var(--real-header-height, 56px) + 12px);
 }
 
 .mhome-quote-head {
@@ -351,32 +344,32 @@
 
 .mhome-quote-eyebrow {
   display: inline-block;
-  font-size: 11px;
-  font-weight: 700;
-  letter-spacing: 0.12em;
+  font-size: 10.5px;
+  font-weight: 600;
+  letter-spacing: 0.14em;
   text-transform: uppercase;
-  color: var(--mh-blue);
-  margin-bottom: 4px;
+  color: var(--mh-text-muted);
+  margin-bottom: 6px;
 }
 
 .mhome-quote-title {
-  font-size: 22px;
-  font-weight: 800;
-  letter-spacing: -0.01em;
-  margin: 0 0 4px 0;
+  font-size: 20px;
+  font-weight: 700;
+  letter-spacing: -0.02em;
+  margin: 0 0 6px 0;
 }
 
 .mhome-quote-sub {
   font-size: 13.5px;
   color: var(--mh-text-soft);
   margin: 0;
-  line-height: 1.45;
+  line-height: 1.5;
 }
 
 .mhome-quote-card {
   background: #FFFFFF;
   border: 1px solid var(--mh-border);
-  border-radius: 20px;
+  border-radius: var(--mh-radius-card);
   box-shadow: var(--mh-shadow-card-strong);
   overflow: hidden;
 }
@@ -397,26 +390,27 @@
    STEPS / TIMELINE
    ============================================ */
 .mhome-section-head {
-  padding: 0 18px;
+  padding: 0 16px;
   margin-bottom: 14px;
 }
 
 .mhome-section-eyebrow {
   display: inline-block;
-  font-size: 11px;
-  font-weight: 700;
-  letter-spacing: 0.12em;
+  font-size: 10.5px;
+  font-weight: 600;
+  letter-spacing: 0.14em;
   text-transform: uppercase;
   color: var(--mh-blue);
-  margin-bottom: 4px;
+  margin-bottom: 6px;
 }
 
 .mhome-section-title {
-  font-size: 22px;
-  font-weight: 800;
-  letter-spacing: -0.01em;
+  font-size: 20px;
+  font-weight: 700;
+  letter-spacing: -0.02em;
   margin: 0;
-  line-height: 1.2;
+  line-height: 1.25;
+  color: var(--mh-text);
 }
 
 .mhome-steps {
@@ -426,7 +420,7 @@
 .mhome-timeline {
   list-style: none;
   margin: 0;
-  padding: 0 18px;
+  padding: 0 16px;
   display: flex;
   flex-direction: column;
   gap: 0;
@@ -514,48 +508,49 @@
 .mhome-feature-grid {
   display: grid;
   grid-template-columns: 1fr 1fr;
-  gap: 10px;
-  padding: 0 14px;
+  gap: 8px;
+  padding: 0 16px;
 }
 
 .mhome-feature-card {
   background: #FFFFFF;
   border: 1px solid var(--mh-border);
-  border-radius: 16px;
-  padding: 14px 12px;
+  border-radius: var(--mh-radius-card);
+  padding: 12px 12px 12px;
   display: flex;
   flex-direction: column;
-  gap: 6px;
+  gap: 4px;
   box-shadow: var(--mh-shadow-card);
 }
 
 .mhome-feature-ico {
-  width: 34px;
-  height: 34px;
-  border-radius: 10px;
+  width: 28px;
+  height: 28px;
+  border-radius: 8px;
   display: grid;
   place-items: center;
-  background: rgba(10, 88, 255, 0.1);
+  background: rgba(10, 88, 255, 0.08);
   color: var(--mh-blue);
-  margin-bottom: 2px;
+  margin-bottom: 4px;
 }
 
 .mhome-feature-ico svg {
-  width: 18px;
-  height: 18px;
+  width: 15px;
+  height: 15px;
 }
 
 .mhome-feature-title {
-  font-size: 14px;
-  font-weight: 700;
+  font-size: 13.5px;
+  font-weight: 600;
   margin: 0;
-  letter-spacing: -0.005em;
+  letter-spacing: -0.01em;
+  color: var(--mh-text);
 }
 
 .mhome-feature-desc {
-  font-size: 12.5px;
-  line-height: 1.45;
-  color: var(--mh-text-soft);
+  font-size: 12px;
+  line-height: 1.5;
+  color: var(--mh-text-muted);
   margin: 0;
 }
 
@@ -571,72 +566,63 @@
    CLOSING CTA
    ============================================ */
 .mhome-closer {
-  margin: 6px 16px 0;
-  background: linear-gradient(135deg, #0F172A 0%, var(--mh-blue-800) 100%);
+  margin: 0 16px;
+  background: #0B1220;
   color: #FFFFFF;
-  border-radius: 22px;
-  padding: 22px 18px 20px;
+  border-radius: var(--mh-radius-card);
+  padding: 18px 18px 18px;
   text-align: center;
   position: relative;
   overflow: hidden;
 }
 
-.mhome-closer::after {
-  content: '';
-  position: absolute;
-  inset: -1px;
-  border-radius: inherit;
-  background: radial-gradient(circle at 80% 0%, rgba(245, 180, 0, 0.18), transparent 60%);
-  pointer-events: none;
-}
+.mhome-closer::after { content: none; }
 
 .mhome-closer h2 {
-  font-size: 20px;
-  font-weight: 800;
-  letter-spacing: -0.01em;
-  margin: 0 0 6px 0;
+  font-size: 17px;
+  font-weight: 600;
+  letter-spacing: -0.02em;
+  margin: 0 0 4px 0;
+  color: #FFFFFF;
 }
 
 .mhome-closer p {
-  font-size: 13.5px;
-  color: rgba(255, 255, 255, 0.78);
+  font-size: 13px;
+  color: rgba(255, 255, 255, 0.55);
   margin: 0 0 14px 0;
-  line-height: 1.45;
+  line-height: 1.5;
+  letter-spacing: -0.005em;
 }
 
 .mhome-closer .mhome-btn--primary {
-  background: linear-gradient(180deg, #FFFFFF 0%, #F1F5F9 100%);
-  color: var(--mh-blue-800);
-  border-color: rgba(255, 255, 255, 0.3);
-  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.25);
+  background: #FFFFFF;
+  color: #0B1220;
+  border-color: transparent;
+  box-shadow: none;
+  height: 42px;
+  font-weight: 600;
+}
+.mhome-closer .mhome-btn--primary:active {
+  background: #E2E8F0;
 }
 
 /* ============================================
    FOOTER
    ============================================ */
 .mhome-footer {
-  margin-top: 16px;
-  padding: 18px 18px calc(20px + env(safe-area-inset-bottom, 0));
-  border-top: 1px solid var(--mh-border);
+  margin-top: 8px;
+  /* Extra bottom padding so the floating chat bubble never sits on top of
+     the Privacy / Terms / Contact links. */
+  padding: 24px 16px calc(72px + env(safe-area-inset-bottom, 0));
   background: #FFFFFF;
   text-align: center;
   display: flex;
   flex-direction: column;
-  gap: 4px;
-}
-
-.mhome-footer-brand {
-  font-weight: 800;
-  color: var(--mh-blue);
-  font-size: 16px;
-  letter-spacing: 0.2px;
-}
-
-.mhome-footer-tag {
-  font-size: 12.5px;
-  color: var(--mh-text-muted);
-  line-height: 1.4;
-  margin: 0;
+  gap: 10px;
+  /* Hairline section separator. Restrained — no border-top on individual
+     marketing sections; just one between the closing card and the legal
+     row to anchor the bottom of the page. */
+  border-top: 1px solid var(--mh-border);
 }
 
 .mhome-footer-links {
@@ -645,19 +631,19 @@
   align-items: center;
   flex-wrap: wrap;
   gap: 6px;
-  font-size: 13px;
-  margin-top: 6px;
+  font-size: 12.5px;
 }
 
 .mhome-footer-links a {
-  color: var(--mh-blue);
+  color: var(--mh-text-soft);
   text-decoration: none;
   font-weight: 500;
   padding: 4px 2px;
+  transition: color 0.18s ease;
 }
 
 .mhome-footer-links a:active {
-  color: #0848d6;
+  color: var(--mh-blue-700);
 }
 
 .mhome-footer-links span {
@@ -666,102 +652,33 @@
 
 .mhome-footer-copy {
   font-size: 11.5px;
-  color: #94A3B8;
-  margin-top: 6px;
-}
-
-/* ============================================
-   STICKY BOTTOM CTA
-   Hidden by default; shown after the user scrolls past the hero;
-   hidden again whenever a form input is focused so the bar can't
-   sit on top of the keyboard / IME.
-   ============================================ */
-.mhome-sticky-cta {
-  position: fixed;
-  left: 12px;
-  right: 12px;
-  bottom: calc(12px + env(safe-area-inset-bottom, 0));
-  z-index: 950;
-  display: flex;
-  align-items: center;
-  gap: 10px;
-  padding: 10px 12px;
-  background: rgba(15, 23, 42, 0.95);
-  color: #FFFFFF;
-  border-radius: 16px;
-  box-shadow: 0 18px 40px rgba(15, 23, 42, 0.28);
-  backdrop-filter: saturate(140%) blur(8px);
-  -webkit-backdrop-filter: saturate(140%) blur(8px);
-  transform: translateY(120%);
-  opacity: 0;
-  pointer-events: none;
-  transition: transform 0.22s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.18s ease;
-}
-
-.mhome-sticky-cta[data-visible="true"] {
-  transform: translateY(0);
-  opacity: 1;
-  pointer-events: auto;
-}
-
-.mhome-sticky-cta-btn {
-  flex: 1 1 auto;
-  height: 44px;
-  border: 0;
-  border-radius: 12px;
-  background: linear-gradient(180deg, var(--mh-gold) 0%, #d99700 100%);
-  color: #1F2937;
-  font-family: inherit;
-  font-size: 14.5px;
-  font-weight: 800;
-  letter-spacing: 0.005em;
-  cursor: pointer;
-  box-shadow: 0 4px 12px rgba(245, 180, 0, 0.32);
-}
-
-.mhome-sticky-cta-btn:active {
-  transform: translateY(1px);
-}
-
-.mhome-sticky-cta-note {
-  flex: 0 0 auto;
-  font-size: 11.5px;
-  color: rgba(255, 255, 255, 0.78);
-  font-weight: 500;
-  letter-spacing: 0.01em;
-  text-align: right;
-}
-
-@media (max-width: 360px) {
-  .mhome-sticky-cta-note {
-    display: none;
-  }
+  color: var(--mh-text-muted);
 }
 
 /* ============================================
    CHAT BUTTON / PANEL — mobile-only overrides.
-   We don't fork live-chat.jsx; we pin the bubble to a safe spot and turn
-   the panel into a bottom sheet on mobile.
+   We don't fork live-chat.jsx; we pin the bubble to a safe corner and
+   turn the panel into a clean bottom sheet on mobile.
    ============================================ */
+/* Icon-only circular bubble — Intercom / Apple-Maps style. The "Chat"
+   wordmark on a marketing homepage was reading as promotional; the icon
+   alone is calmer and matches the rest of the page's restraint. */
 .mhome .live-chat-button {
-  bottom: calc(72px + env(safe-area-inset-bottom, 0)) !important;
+  bottom: calc(24px + env(safe-area-inset-bottom, 0)) !important;
   right: 14px !important;
-  padding: 10px 14px !important;
-  gap: 6px !important;
-  border-radius: 999px !important;
-  box-shadow: 0 8px 22px rgba(0, 71, 171, 0.30) !important;
-  z-index: 940 !important;
+  width: 44px !important;
+  height: 44px !important;
+  padding: 0 !important;
+  gap: 0 !important;
+  display: inline-grid !important;
+  place-items: center !important;
+  border-radius: 50% !important;
+  box-shadow: 0 1px 2px rgba(15, 23, 42, 0.06), 0 6px 16px rgba(15, 23, 42, 0.08) !important;
+  z-index: 60 !important;
 }
 
-.mhome .live-chat-icon { width: 18px !important; height: 18px !important; }
-.mhome .live-chat-text { font-size: 13px !important; font-weight: 600 !important; }
-
-/* Hide the chat bubble while the keyboard is open or we're scrolled at
-   the top — tied to the sticky CTA visibility so the two never fight
-   for the same corner. */
-.mhome:has(.mhome-sticky-cta[data-visible="true"]) .live-chat-button {
-  bottom: calc(76px + env(safe-area-inset-bottom, 0)) !important;
-}
+.mhome .live-chat-icon { width: 20px !important; height: 20px !important; }
+.mhome .live-chat-text { display: none !important; }
 
 /* Bottom-sheet variant of the chat panel on mobile.
    The shared component still uses its own .live-chat-panel class; we
@@ -774,16 +691,18 @@
   bottom: 0 !important;
   top: auto !important;
   width: 100% !important;
-  height: min(78vh, 560px) !important;
-  border-radius: 22px 22px 0 0 !important;
-  box-shadow: 0 -16px 40px rgba(15, 23, 42, 0.22) !important;
+  /* dvh tracks the visual viewport on iOS / Android, so the panel never
+     hides behind the on-screen keyboard. vh is a fallback. */
+  height: 65vh !important;
+  height: 65dvh !important;
+  max-height: 560px !important;
+  border-radius: 20px 20px 0 0 !important;
+  box-shadow: 0 -16px 40px rgba(15, 23, 42, 0.20) !important;
   display: flex !important;
   flex-direction: column !important;
-  z-index: 1000 !important;
-  /* dvh keeps the panel above the on-screen keyboard on iOS Safari /
-     Chrome Android — the visual viewport shrinks and dvh tracks it. */
-  height: min(78dvh, 560px) !important;
+  z-index: 1100 !important;
   padding-bottom: env(safe-area-inset-bottom, 0);
+  overflow: hidden;
 }
 
 .mhome .live-chat-body {
@@ -794,6 +713,7 @@
 .mhome .live-chat-footer {
   position: sticky;
   bottom: 0;
+  background: #FFFFFF;
 }
 
 .mhome .live-chat-input {

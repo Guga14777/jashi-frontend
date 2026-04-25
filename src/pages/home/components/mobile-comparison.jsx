@@ -75,9 +75,7 @@ function MobileComparison({ form }) {
           </div>
         </div>
 
-        <div className="mh-compare-divider" aria-hidden="true">
-          <span className="mh-compare-vs">vs</span>
-        </div>
+        <div className="mh-compare-divider" aria-hidden="true" />
 
         <div className="mh-compare-row mh-compare-row--jashi">
           <div className="mh-compare-row-head">
