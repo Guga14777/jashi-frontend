@@ -49,6 +49,11 @@
   box-shadow: none;
   filter: none;
   background: transparent;
+  /* Isolate from any ancestor compositing (mix-blend-mode, opacity
+     stacks, backdrop layers) so the dark navy footer can't appear to
+     glow through the logo PNG's anti-aliased edges. */
+  isolation: isolate;
+  mix-blend-mode: normal;
 }
 
 .footer-brand-name {
@@ -519,9 +524,10 @@
     gap: 6px !important;
   }
 
-  /* Compact rhythm — last 6% off for the launch-ready footer. */
+  /* Compact rhythm. Bottom padding 70 → 80 preserves clearance under
+     the chat bubble after it was raised 10px (see mcs-bubble). */
   .footer {
-    padding: 16px 0 calc(70px + env(safe-area-inset-bottom, 0)) !important;
+    padding: 16px 0 calc(80px + env(safe-area-inset-bottom, 0)) !important;
   }
 
   .footer-main {

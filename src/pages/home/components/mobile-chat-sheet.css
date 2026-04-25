@@ -8,7 +8,11 @@
 .mcs-bubble {
   position: fixed;
   right: 16px;
-  bottom: calc(24px + env(safe-area-inset-bottom, 0));
+  /* Raised 10px (24 → 34) so the bubble's right edge can't sit on top
+     of the quote widget's submit button when the form is scrolled to
+     the bottom of the viewport. Footer padding-bottom is bumped to
+     match the new clearance need. */
+  bottom: calc(34px + env(safe-area-inset-bottom, 0));
   height: 38px;
   padding: 0 13px 0 11px;
   display: inline-flex;
