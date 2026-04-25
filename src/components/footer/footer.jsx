@@ -2,33 +2,10 @@ import React from 'react';
 import { Link } from 'react-router-dom';
 import { FaInstagram, FaFacebookF, FaLinkedinIn } from 'react-icons/fa';
 import { FaXTwitter } from 'react-icons/fa6';
-import useIsMobile from '../../hooks/use-is-mobile';
 import './footer.css';
 
 function Footer() {
   const currentYear = new Date().getFullYear();
-  const isMobile = useIsMobile();
-
-  // On mobile every public page renders the same minimal footer pattern
-  // used by the homepage — 4 legal/contact links, copyright, generous
-  // bottom padding so the floating chat bubble can't overlap. Avoids
-  // the 4-column desktop footer being squashed and clipped on phones.
-  if (isMobile) {
-    return (
-      <footer className="footer footer--mobile">
-        <nav className="footer-mobile-links" aria-label="Footer">
-          <Link to="/privacy">Privacy</Link>
-          <span aria-hidden="true">·</span>
-          <Link to="/terms">Terms</Link>
-          <span aria-hidden="true">·</span>
-          <a href="mailto:support@jashilogistics.com">Contact</a>
-        </nav>
-        <div className="footer-mobile-copy">
-          © {currentYear} Jashi Logistics
-        </div>
-      </footer>
-    );
-  }
 
   return (
     <footer className="footer">
@@ -134,7 +111,7 @@ function Footer() {
             </h3>
 
             <ul className="footer-contact">
-              <li>
+              <li className="footer-contact-item--phone">
                 <svg
                   viewBox="0 0 24 24"
                   fill="none"
@@ -161,7 +138,7 @@ function Footer() {
                 <span>support@jashilogistics.com</span>
               </li>
 
-              <li>
+              <li className="footer-contact-item--chat">
                 <svg
                   viewBox="0 0 24 24"
                   fill="none"

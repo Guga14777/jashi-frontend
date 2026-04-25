@@ -1,5 +1,4 @@
-import React, { useCallback, useRef, useState } from 'react';
-import { Link } from 'react-router-dom';
+import React, { useCallback, useState } from 'react';
 import {
   IoFlashOutline,
   IoPeopleOutline,
@@ -12,6 +11,7 @@ import {
 } from 'react-icons/io5';
 
 import QuoteWidget from '../../components/quote-widget/quote-widget';
+import Footer from '../../components/footer/footer';
 
 import MobileHomeHeader from './components/mobile-header';
 import MobileComparison from './components/mobile-comparison';
@@ -66,10 +66,9 @@ const FEATURES = [
 ];
 
 function MobileHome() {
-  const quoteRef = useRef(null);
-
-  // Comparison cards live above the form, so we mirror the QuoteWidget state
-  // up here. Same pattern as QuoteSection on desktop.
+  // Comparison cards live below the form. We still mirror the QuoteWidget
+  // state into mobile-home so the live numbers can update once the user
+  // fills in ZIPs / vehicle. Same pattern as QuoteSection on desktop.
   const [form, setForm] = useState({
     pickupZip: '',
     dropoffZip: '',
@@ -95,63 +94,27 @@ function MobileHome() {
     });
   }, []);
 
-  const scrollToQuote = useCallback(() => {
-    const el = document.getElementById('quote-widget') || quoteRef.current;
-    if (el) el.scrollIntoView({ behavior: 'smooth', block: 'start' });
-  }, []);
-
   return (
     <div className="mhome">
       <MobileHomeHeader />
 
       <main className="mhome-main">
-        {/* ===== HERO ===== */}
-        <section className="mhome-hero" aria-label="Hero">
-          <h1 className="mhome-hero-title">
-            Set Your Price.{' '}
-            <span className="mhome-hero-accent">Let Carriers Compete.</span>
-          </h1>
-          <p className="mhome-hero-sub">
-            The first vehicle shipping platform where{' '}
-            <strong>you make the offer</strong> and verified carriers compete for your shipment.
-          </p>
-
-          <div className="mhome-hero-ctas">
-            <button
-              type="button"
-              className="mhome-btn mhome-btn--primary"
-              onClick={scrollToQuote}
-            >
-              Set My Price
-            </button>
-            <Link to="/how-dispatch-works" className="mhome-hero-link">
-              See How It Works →
-            </Link>
-          </div>
-
-          <ul className="mhome-trust" aria-label="Trust">
-            <li className="mhome-trust--accent">You Set The Price</li>
-            <li>Carrier Competition</li>
-            <li>Flat 6% Fee</li>
-            <li>No Hidden Fees</li>
-          </ul>
-        </section>
-
-        {/* ===== PRICING COMPARISON (above quote form on mobile) ===== */}
-        <MobileComparison form={form} />
-
-        {/* ===== QUOTE WIDGET (product card) ===== */}
+        {/* ===== QUOTE WIDGET (above-the-fold) =====
+            Page opens directly into the conversion surface — title +
+            subtitle act as the hero, the form sits immediately below.
+            No marketing CTAs above the form. */}
         <section
-          ref={quoteRef}
           id="mhome-quote-section"
           className="mhome-quote"
           aria-label="Get a quote"
         >
           <header className="mhome-quote-head">
-            <span className="mhome-quote-eyebrow">Step 1 · Build your offer</span>
-            <h2 className="mhome-quote-title">Build your quote</h2>
+            <h1 className="mhome-quote-title">
+              Set Your Price.{' '}
+              <span className="mhome-quote-title-accent">Ship On Your Terms.</span>
+            </h1>
             <p className="mhome-quote-sub">
-              Enter your route, vehicle, and offer to see your dispatch chance.
+              Name your price and connect directly with verified carriers — transparent shipping, on your terms.
             </p>
           </header>
           <div className="mhome-quote-card">
@@ -162,6 +125,9 @@ function MobileHome() {
             />
           </div>
         </section>
+
+        {/* ===== PRICING COMPARISON (below quote on mobile) ===== */}
+        <MobileComparison form={form} />
 
         {/* ===== HOW IT WORKS - 4-STEP TIMELINE ===== */}
         <section className="mhome-steps" aria-label="How it works">
@@ -217,19 +183,11 @@ function MobileHome() {
 
       </main>
 
-      {/* ===== MINIMAL FOOTER ===== */}
-      <footer className="mhome-footer">
-        <nav className="mhome-footer-links" aria-label="Footer">
-          <Link to="/privacy">Privacy</Link>
-          <span aria-hidden="true">·</span>
-          <Link to="/terms">Terms</Link>
-          <span aria-hidden="true">·</span>
-          <a href="mailto:support@jashilogistics.com">Contact</a>
-        </nav>
-        <div className="mhome-footer-copy">
-          © {new Date().getFullYear()} Jashi Logistics
-        </div>
-      </footer>
+      {/* The shared <Footer> renders the full dark navy footer on every
+          breakpoint now — its responsive CSS stacks the four columns into
+          one on mobile and the global mobile-only rules below hide the
+          phone row. Premium brand presence preserved end-to-end. */}
+      <Footer />
 
       <MobileChatSheet />
     </div>

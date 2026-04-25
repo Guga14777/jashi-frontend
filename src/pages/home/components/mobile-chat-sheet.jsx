@@ -109,7 +109,9 @@ function MobileChatSheet() {
 
             <header className="mcs-sheet-header">
               <div className="mcs-sheet-identity">
-                <div className="mcs-sheet-avatar" aria-hidden="true">J</div>
+                <div className="mcs-sheet-avatar" aria-hidden="true">
+                  <img src="/images/logomercury1.png" alt="" />
+                </div>
                 <div className="mcs-sheet-meta">
                   <h2 id="mcs-sheet-title" className="mcs-sheet-title">Logistics Specialist</h2>
                   <span className="mcs-sheet-status">

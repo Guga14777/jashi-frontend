@@ -454,44 +454,22 @@
   }
 }
 /* ================================
-   MOBILE FOOTER (footer--mobile)
-   Renders on viewports ≤ 768px so info pages get the same minimal
-   pattern as the homepage instead of the squashed 4-column desktop
-   footer. Generous bottom padding keeps the floating chat bubble
-   from overlapping the legal links.
+   MOBILE FOOTER ADAPTATIONS
+   The full dark-navy desktop footer renders on every breakpoint now.
+   These rules adjust the existing markup for phones: hide the phone
+   row and the duplicate "Live Chat" row (chat is already a global
+   bubble), and add generous bottom padding so the floating bubble
+   never overlaps the legal links / Safari toolbar can't crop them.
    ================================ */
-.footer--mobile {
-  margin-top: 8px;
-  padding: 24px 16px calc(140px + env(safe-area-inset-bottom, 0));
-  background: #FFFFFF;
-  text-align: center;
-  display: flex;
-  flex-direction: column;
-  gap: 10px;
-  border-top: 1px solid #ECEFF3;
-}
+@media (max-width: 768px) {
+  .footer-contact-item--phone,
+  .footer-contact-item--chat {
+    display: none;
+  }
 
-.footer-mobile-links {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  flex-wrap: wrap;
-  gap: 6px;
-  font-size: 12.5px;
-}
-
-.footer-mobile-links a {
-  color: #475569;
-  text-decoration: none;
-  font-weight: 500;
-  padding: 4px 2px;
-  transition: color 0.18s ease;
-}
-.footer-mobile-links a:active { color: #1d4ed8; }
-
-.footer-mobile-links span { color: #CBD5E1; }
-
-.footer-mobile-copy {
-  font-size: 11.5px;
-  color: #64748B;
+  .footer {
+    /* Clear the floating chat bubble (≈68px) + iOS Safari dynamic
+       toolbar; safe-area-inset-bottom for notched devices. */
+    padding-bottom: calc(96px + env(safe-area-inset-bottom, 0)) !important;
+  }
 }

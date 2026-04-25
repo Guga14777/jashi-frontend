@@ -1,11 +1,8 @@
 import React, { useEffect, useRef, useState } from 'react';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
-import { IoClose, IoCallOutline, IoPersonOutline, IoCarSportOutline, IoHelpCircleOutline } from 'react-icons/io5';
+import { IoClose } from 'react-icons/io5';
 
 import './mobile-header.css';
-
-const SUPPORT_PHONE_E164 = '+18001234567';
-const SUPPORT_PHONE_LABEL = '1 (800) 123-4567';
 
 function MobileHomeHeader() {
   const navigate = useNavigate();
@@ -114,35 +111,25 @@ function MobileHomeHeader() {
             </div>
 
             <div className="mh-sheet-section">
-              <div className="mh-sheet-section-label">Account</div>
+              <div className="mh-sheet-section-label">For Shippers</div>
               <button type="button" className="mh-sheet-row" onClick={() => goAuth('shipper-login')}>
-                <IoPersonOutline className="mh-sheet-ico" aria-hidden="true" />
-                <span>Shipper login</span>
+                <span>Log In</span>
               </button>
-              <button type="button" className="mh-sheet-row" onClick={() => goAuth('carrier-login')}>
-                <IoCarSportOutline className="mh-sheet-ico" aria-hidden="true" />
-                <span>Carrier login</span>
-              </button>
-              <button type="button" className="mh-sheet-row" onClick={() => goAuth('shipper-signup')}>
-                <IoPersonOutline className="mh-sheet-ico" aria-hidden="true" />
-                <span>Create shipper account</span>
-              </button>
-              <button type="button" className="mh-sheet-row" onClick={() => goAuth('carrier-signup')}>
-                <IoCarSportOutline className="mh-sheet-ico" aria-hidden="true" />
-                <span>Create carrier account</span>
+              <button type="button" className="mh-sheet-row mh-sheet-row--primary" onClick={() => goAuth('shipper-signup')}>
+                <span>Create Account</span>
               </button>
             </div>
 
+            <div className="mh-sheet-divider" aria-hidden="true" />
+
             <div className="mh-sheet-section">
-              <div className="mh-sheet-section-label">Support</div>
-              <a className="mh-sheet-row" href={`tel:${SUPPORT_PHONE_E164}`} onClick={closeMenu}>
-                <IoCallOutline className="mh-sheet-ico" aria-hidden="true" />
-                <span>Call {SUPPORT_PHONE_LABEL}</span>
-              </a>
-              <Link className="mh-sheet-row" to="/help" onClick={closeMenu}>
-                <IoHelpCircleOutline className="mh-sheet-ico" aria-hidden="true" />
-                <span>Help center</span>
-              </Link>
+              <div className="mh-sheet-section-label">For Carriers</div>
+              <button type="button" className="mh-sheet-row" onClick={() => goAuth('carrier-login')}>
+                <span>Carrier Login</span>
+              </button>
+              <button type="button" className="mh-sheet-row mh-sheet-row--primary" onClick={() => goAuth('carrier-signup')}>
+                <span>Join as Carrier</span>
+              </button>
             </div>
           </div>
         </div>

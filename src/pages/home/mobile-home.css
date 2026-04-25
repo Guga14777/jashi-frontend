@@ -61,142 +61,9 @@ html {
   gap: 32px;
 }
 
-/* ============================================
-   HERO
-   ============================================ */
-.mhome-hero {
-  padding: 24px 16px 4px;
-  text-align: left;
-}
-
-.mhome-hero-title {
-  font-size: clamp(26px, 7.2vw, 30px);
-  line-height: 1.1;
-  font-weight: 700;
-  letter-spacing: -0.025em;
-  color: var(--mh-text);
-  margin: 0 0 12px 0;
-}
-
-.mhome-hero-accent {
-  color: var(--mh-blue);
-  position: relative;
-  white-space: nowrap;
-  font-weight: 700;
-}
-
-.mhome-hero-sub {
-  font-size: 15px;
-  line-height: 1.55;
-  color: var(--mh-text-soft);
-  margin: 0 0 22px 0;
-  font-weight: 400;
-}
-
-.mhome-hero-sub strong {
-  font-weight: 600;
-  color: var(--mh-text);
-}
-
-.mhome-hero-ctas {
-  display: flex;
-  align-items: center;
-  gap: 14px;
-  margin-bottom: 18px;
-  flex-wrap: wrap;
-}
-
-.mhome-hero-link {
-  color: var(--mh-blue-700);
-  font-size: 14px;
-  font-weight: 600;
-  letter-spacing: -0.005em;
-  text-decoration: none;
-  white-space: nowrap;
-}
-.mhome-hero-link:active { color: var(--mh-blue-800); }
-
-.mhome-trust {
-  list-style: none;
-  margin: 4px 0 0 0;
-  padding: 0;
-  display: flex;
-  flex-wrap: wrap;
-  gap: 6px 8px;
-  font-size: 12px;
-  color: var(--mh-text-muted);
-  font-weight: 500;
-}
-
-.mhome-trust li {
-  display: inline-flex;
-  align-items: center;
-  gap: 5px;
-  background: transparent;
-  padding: 5px 10px;
-  border: 1px solid var(--mh-border);
-  border-radius: 999px;
-  white-space: nowrap;
-}
-
-/* Lead pill — surfaces the core proposition first in the trust row.
-   Reads as the dominant pill without screaming: solid brand-blue text,
-   a slightly fuller tinted fill, and a stronger 1.5px outline. */
-.mhome-trust li.mhome-trust--accent {
-  background: rgba(10, 88, 255, 0.10);
-  border: 1.5px solid rgba(10, 88, 255, 0.32);
-  color: var(--mh-blue-700);
-  font-weight: 700;
-  letter-spacing: -0.005em;
-}
-
-/* ============================================
-   BUTTONS
-   ============================================ */
-.mhome-btn {
-  height: 44px;
-  padding: 0 16px;
-  border-radius: 10px;
-  font-size: 14px;
-  font-weight: 600;
-  letter-spacing: -0.005em;
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  gap: 6px;
-  cursor: pointer;
-  font-family: inherit;
-  border: 1px solid transparent;
-  text-decoration: none;
-  transition: transform 0.18s ease, background-color 0.18s ease, box-shadow 0.18s ease, border-color 0.18s ease;
-  white-space: nowrap;
-}
-
-.mhome-btn--primary {
-  background: var(--mh-blue-700);
-  color: #FFFFFF;
-  box-shadow: 0 1px 2px rgba(29, 78, 216, 0.18);
-  flex: 1 1 auto;
-}
-.mhome-btn--primary:active {
-  transform: translateY(1px);
-  background: var(--mh-blue-800);
-  box-shadow: 0 1px 1px rgba(29, 78, 216, 0.16);
-}
-
-.mhome-btn--ghost {
-  background: #FFFFFF;
-  color: var(--mh-text);
-  border-color: var(--mh-border);
-}
-.mhome-btn--ghost:active {
-  background: var(--mh-bg);
-  border-color: #CBD5E1;
-}
-
-.mhome-btn--block {
-  width: 100%;
-}
+/* The dedicated hero section was removed — the new layout opens directly
+   into the quote widget. The page-level title + subtitle live inside
+   .mhome-quote-head below. */
 
 /* ============================================
    COMPARISON CARD
@@ -506,32 +373,35 @@ html {
   scroll-margin-top: calc(var(--real-header-height, 56px) + 12px);
 }
 
+/* The quote section now carries the page-level title — page opens
+   directly into the conversion surface. Title size matches the previous
+   hero so brand presence is unchanged; only its position moved. */
 .mhome-quote-head {
-  padding: 0 6px 10px;
-}
-
-.mhome-quote-eyebrow {
-  display: inline-block;
-  font-size: 10.5px;
-  font-weight: 600;
-  letter-spacing: 0.14em;
-  text-transform: uppercase;
-  color: var(--mh-text-muted);
-  margin-bottom: 6px;
+  padding: 8px 4px 14px;
 }
 
 .mhome-quote-title {
-  font-size: 20px;
+  font-size: clamp(26px, 7.2vw, 30px);
   font-weight: 700;
-  letter-spacing: -0.02em;
-  margin: 0 0 6px 0;
+  line-height: 1.12;
+  letter-spacing: -0.025em;
+  color: var(--mh-text);
+  margin: 0 0 10px 0;
+}
+
+.mhome-quote-title-accent {
+  color: var(--mh-blue);
+  font-weight: 700;
 }
 
 .mhome-quote-sub {
-  font-size: 13.5px;
+  font-size: 14.5px;
   color: var(--mh-text-soft);
   margin: 0;
   line-height: 1.5;
+  /* Constrain the subtitle width so it never breaks into a single
+     dangling word on phablets — keeps the block visually balanced. */
+  max-width: 38ch;
 }
 
 .mhome-quote-card {
@@ -730,60 +600,10 @@ html {
   }
 }
 
-/* ============================================
-   FOOTER
-   ============================================ */
-.mhome-footer {
-  margin-top: 8px;
-  /* Generous bottom padding so the floating support bubble (24px above
-     the safe area) never overlaps the legal links, and so iOS Safari's
-     dynamic bottom toolbar never crops the copyright line. */
-  padding: 24px 16px calc(140px + env(safe-area-inset-bottom, 0));
-  background: #FFFFFF;
-  text-align: center;
-  display: flex;
-  flex-direction: column;
-  gap: 10px;
-  /* Hairline section separator. Restrained — no border-top on individual
-     marketing sections; just one above the legal row to anchor the
-     bottom of the page. */
-  border-top: 1px solid var(--mh-border);
-}
-
-.mhome-footer-links {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  flex-wrap: wrap;
-  gap: 6px;
-  font-size: 12.5px;
-}
-
-.mhome-footer-links a {
-  color: var(--mh-text-soft);
-  text-decoration: none;
-  font-weight: 500;
-  padding: 4px 2px;
-  transition: color 0.18s ease;
-}
-
-.mhome-footer-links a:active {
-  color: var(--mh-blue-700);
-}
-
-.mhome-footer-links span {
-  color: #CBD5E1;
-}
-
-.mhome-footer-copy {
-  font-size: 11.5px;
-  color: var(--mh-text-muted);
-}
-
-/* The shared <LiveChat> panel is no longer rendered on the mobile
-   homepage — see <MobileSupportBubble /> in mobile-home.jsx — so the
-   per-element overrides that used to live here are gone with it. The
-   bubble + modal styles for mobile live in mobile-support-bubble.css. */
+/* The dedicated mobile footer is gone — the shared <Footer> component
+   now renders its full dark-navy markup on every breakpoint. Mobile-only
+   adjustments (single column, hide phone row, chat-bubble clearance)
+   live in components/footer/footer.css. */
 
 /* ============================================
    iOS SAFARI: prevent input auto-zoom on QuoteWidget inputs.
