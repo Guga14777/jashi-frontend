@@ -56,10 +56,13 @@ function MobileComparison({ form }) {
   return (
     <section className="mh-compare" aria-label="Pricing comparison">
       <header className="mh-compare-head">
-        <span className="mh-compare-eyebrow">See the difference</span>
+        <span className="mh-compare-eyebrow">A new way to ship</span>
         <h2 className="mh-compare-title">
-          Traditional brokers set the price. Jashi lets you make the offer.
+          The first shipping platform where you control the price.
         </h2>
+        <p className="mh-compare-lead">
+          Traditional brokers set pricing. Jashi lets you make the offer.
+        </p>
         <p className="mh-compare-meta">
           {hasQuote ? vehicleLabel : DEMO_SAMPLE.vehicleLabel} · {routeLabel}
         </p>
@@ -105,7 +108,7 @@ function MobileComparison({ form }) {
             <span className="mh-compare-fee">{PLATFORM_FEE_PCT_LABEL} fee</span>
           </div>
           <ul className="mh-compare-attrs">
-            <li>You set your offer</li>
+            <li className="mh-compare-attrs--lead">You set your offer</li>
             <li>{PLATFORM_FEE_PCT_LABEL} platform fee</li>
           </ul>
           <dl className="mh-compare-lines">

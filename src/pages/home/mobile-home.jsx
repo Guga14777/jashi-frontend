@@ -9,7 +9,6 @@ import {
   IoCashOutline,
   IoHeadsetOutline,
   IoLocateOutline,
-  IoShieldCheckmarkOutline,
 } from 'react-icons/io5';
 
 import QuoteWidget from '../../components/quote-widget/quote-widget';
@@ -110,13 +109,11 @@ function MobileHome() {
         <section className="mhome-hero" aria-label="Hero">
           <h1 className="mhome-hero-title">
             Set Your Price.{' '}
-            <span className="mhome-hero-accent">Let Carriers Bid.</span>
+            <span className="mhome-hero-accent">Let Carriers Compete.</span>
           </h1>
           <p className="mhome-hero-sub">
-            Ship your vehicle with direct carrier access and a flat 6% platform fee.
-          </p>
-          <p className="mhome-hero-micro">
-            You choose the offer. Verified carriers compete for the job.
+            The first vehicle shipping platform where{' '}
+            <strong>you make the offer</strong> and verified carriers compete for your shipment.
           </p>
 
           <div className="mhome-hero-ctas">
@@ -133,13 +130,10 @@ function MobileHome() {
           </div>
 
           <ul className="mhome-trust" aria-label="Trust">
-            <li>
-              <IoShieldCheckmarkOutline aria-hidden="true" />
-              6% Flat Fee
-            </li>
-            <li>Direct Carrier Access</li>
+            <li className="mhome-trust--accent">You Set The Price</li>
+            <li>Carrier Competition</li>
+            <li>Flat 6% Fee</li>
             <li>No Hidden Fees</li>
-            <li>Verified Carriers</li>
           </ul>
         </section>
 

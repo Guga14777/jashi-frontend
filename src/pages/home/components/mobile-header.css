@@ -59,14 +59,13 @@
 }
 
 .mh-brand-name {
-  /* Bigger, bolder, more present — anchors the header now that the
-     right side is just a single Account button. Color + weight match
-     the desktop public header brand wordmark exactly.
-     See src/components/header/public/publicheader.css → .pub-name. */
-  font-size: 17px;
+  /* Stronger brand presence — closer to the desktop wordmark (24px / 800)
+     scaled for the 56px mobile chrome. Color + weight match desktop's
+     .pub-name exactly. See publicheader.css → .pub-name. */
+  font-size: 19px;
   font-weight: 800;
   color: #0a58ff;
-  letter-spacing: 0.1px;
+  letter-spacing: 0.15px;
   white-space: nowrap;
   overflow: hidden;
   text-overflow: clip;

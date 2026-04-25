@@ -7,12 +7,12 @@ const INITIAL_MESSAGES = [
   {
     id: 1,
     type: 'agent',
-    text: 'Hi! How can we help with your shipment today?',
+    text: "Hi — tell us where you're shipping from and to and we can help.",
     time: nowLabel(),
   },
 ];
 
-const REPLY_TEXT = 'Thanks — our team will follow up shortly.';
+const REPLY_TEXT = 'Thanks — a logistics specialist will follow up shortly.';
 
 function nowLabel() {
   return new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });

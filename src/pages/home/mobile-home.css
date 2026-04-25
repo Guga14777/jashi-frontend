@@ -89,15 +89,13 @@ html {
   font-size: 15px;
   line-height: 1.55;
   color: var(--mh-text-soft);
-  margin: 0 0 6px 0;
+  margin: 0 0 22px 0;
   font-weight: 400;
 }
 
-.mhome-hero-micro {
-  font-size: 13px;
-  line-height: 1.5;
-  color: var(--mh-text-muted);
-  margin: 0 0 22px 0;
+.mhome-hero-sub strong {
+  font-weight: 600;
+  color: var(--mh-text);
 }
 
 .mhome-hero-ctas {
@@ -141,10 +139,12 @@ html {
   white-space: nowrap;
 }
 
-.mhome-trust li svg {
-  width: 12px;
-  height: 12px;
-  color: var(--mh-blue);
+/* Lead pill — surfaces the core proposition first in the trust row. */
+.mhome-trust li.mhome-trust--accent {
+  background: rgba(10, 88, 255, 0.06);
+  border-color: rgba(10, 88, 255, 0.20);
+  color: var(--mh-blue-700);
+  font-weight: 600;
 }
 
 /* ============================================
@@ -227,6 +227,15 @@ html {
   color: var(--mh-text);
 }
 
+.mh-compare-lead {
+  font-size: 14px;
+  line-height: 1.5;
+  color: var(--mh-text-soft);
+  margin: 0 0 6px 0;
+  font-weight: 500;
+  letter-spacing: -0.005em;
+}
+
 .mh-compare-meta {
   font-size: 12.5px;
   color: var(--mh-text-muted);
@@ -292,6 +301,20 @@ html {
 
 .mh-compare-row--jashi .mh-compare-attrs li::before {
   background: var(--mh-blue-700);
+}
+
+/* Elevate the "You set your offer" line — this is the core proposition,
+   so it reads as the brand-blue lead, not just a bullet. */
+.mh-compare-attrs li.mh-compare-attrs--lead {
+  color: var(--mh-blue-700);
+  font-weight: 600;
+}
+.mh-compare-attrs li.mh-compare-attrs--lead::before {
+  background: var(--mh-blue);
+  width: 6px;
+  height: 6px;
+  top: 7px;
+  left: 3px;
 }
 
 /* Breakdown rows inside each side of the comparison. Carrier pay,

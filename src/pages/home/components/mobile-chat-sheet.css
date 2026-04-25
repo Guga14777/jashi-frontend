@@ -183,15 +183,15 @@
   flex: 1 1 auto;
   overflow-y: auto;
   -webkit-overflow-scrolling: touch;
-  padding: 14px 14px 6px;
+  padding: 16px 14px 8px;
   display: flex;
   flex-direction: column;
-  gap: 10px;
+  gap: 8px;
   background: #F8FAFC;
 }
 
 .mcs-msg {
-  max-width: 80%;
+  max-width: 78%;
   display: flex;
   flex-direction: column;
   gap: 2px;
@@ -200,32 +200,35 @@
 .mcs-msg--agent { align-self: flex-start; align-items: flex-start; }
 .mcs-msg--user  { align-self: flex-end;   align-items: flex-end; }
 
+/* iMessage-style bubbles: tight rounded corners with one square tail
+   corner pointing toward the speaker. Agent bubbles use a soft slate
+   surface; user bubbles use brand blue. */
 .mcs-msg-text {
   margin: 0;
-  padding: 9px 12px;
-  font-size: 14px;
-  line-height: 1.45;
-  border-radius: 14px;
-  background: #FFFFFF;
+  padding: 9px 13px;
+  font-size: 14.5px;
+  line-height: 1.42;
+  border-radius: 18px;
+  background: #ECEFF3;
   color: #0B1220;
-  border: 1px solid #ECEFF3;
+  border: 0;
+  word-wrap: break-word;
 }
 
 .mcs-msg--user .mcs-msg-text {
   background: #1d4ed8;
   color: #FFFFFF;
-  border-color: #1d4ed8;
-  border-bottom-right-radius: 4px;
+  border-bottom-right-radius: 6px;
 }
 
 .mcs-msg--agent .mcs-msg-text {
-  border-bottom-left-radius: 4px;
+  border-bottom-left-radius: 6px;
 }
 
 .mcs-msg-time {
   font-size: 10.5px;
   color: #94A3B8;
-  padding: 0 4px;
+  padding: 0 6px;
 }
 
 /* ----- Input ----- */
