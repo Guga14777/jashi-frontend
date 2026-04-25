@@ -341,7 +341,7 @@ export function dispatchLikelihood(offer, marketAvg) {
   if (ratio >= 1.0) {
     pct = LIKE_MAX;
     band = 'high';
-    message = 'Carriers likely compete; fast dispatch.';
+    message = 'Carriers likely to accept; fast dispatch.';
   } else {
     pct = LIKE_MAX * Math.pow(Math.max(0, ratio), LIKE_GAMMA);
     pct = Math.max(LIKE_MIN, pct);
@@ -349,7 +349,7 @@ export function dispatchLikelihood(offer, marketAvg) {
     
     if (pct >= 80) {
       band = 'high';
-      message = 'Carriers likely compete; fast dispatch.';
+      message = 'Carriers likely to accept; fast dispatch.';
     } else if (pct >= 60) {
       band = 'medium';
       message = 'Fair chance; may take longer.';

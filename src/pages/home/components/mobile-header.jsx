@@ -134,7 +134,7 @@ function MobileHomeHeader() {
                 </span>
                 <div className="mh-portal-meta">
                   <div className="mh-portal-title">For Carriers</div>
-                  <div className="mh-portal-sub">Bid on loads and grow your business</div>
+                  <div className="mh-portal-sub">Accept loads and grow your business</div>
                 </div>
               </div>
               <div className="mh-portal-actions">

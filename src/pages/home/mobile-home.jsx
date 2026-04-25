@@ -23,22 +23,22 @@ const STEPS = [
   {
     icon: IoCashOutline,
     title: 'Set Your Price',
-    body: "Name your offer — you're in control of the price.",
-  },
-  {
-    icon: IoCarSportOutline,
-    title: 'Carriers Bid',
-    body: 'Verified drivers compete to win your shipping job.',
+    body: 'Name your offer and choose what you want to pay.',
   },
   {
     icon: IoCalendarOutline,
     title: 'Schedule Pickup',
-    body: 'Pick the time window that fits your schedule.',
+    body: 'Enter pickup and delivery details with your preferred time window.',
   },
   {
     icon: IoCardOutline,
     title: 'Secure Payment',
-    body: 'Pay upfront or on delivery — card, transfer, or cash.',
+    body: 'Pay the platform fee to create your shipment order.',
+  },
+  {
+    icon: IoCarSportOutline,
+    title: 'Carrier Accepts',
+    body: 'Verified carriers review your order and accept it through the carrier portal.',
   },
 ];
 

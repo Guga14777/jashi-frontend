@@ -14,7 +14,7 @@ function LikelihoodMeter({ percentage }) {
     switch (tier) {
       case 'high':
         return {
-          headline: 'Great price — carriers will compete for this load.',
+          headline: 'Great price — carriers should accept this quickly.',
           support: 'Expect faster dispatch on this route. If timing is flexible, you can try lowering slightly and recheck.',
         };
       case 'medium':
