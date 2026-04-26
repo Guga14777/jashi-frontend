@@ -518,8 +518,8 @@ html {
 
 .mhome-timeline-item {
   display: grid;
-  grid-template-columns: 32px 1fr;
-  gap: 12px;
+  grid-template-columns: 30px 1fr;
+  gap: 10px;
   padding-bottom: 14px;
 }
 
@@ -535,8 +535,8 @@ html {
 }
 
 .mhome-timeline-dot {
-  width: 32px;
-  height: 32px;
+  width: 30px;
+  height: 30px;
   border-radius: 50%;
   background: linear-gradient(135deg, var(--mh-blue) 0%, var(--mh-blue-800) 100%);
   color: #FFFFFF;
@@ -590,10 +590,18 @@ html {
 }
 
 .mhome-timeline-desc {
-  font-size: 13.5px;
+  /* Sized so each one-sentence description fits on a single line at
+     the narrowest iPhone viewport (320px SE). 13.5 → 12.5 with slightly
+     tighter tracking gives ~10% more chars per line — enough that
+     "Verified carriers accept through portal." stops wrapping the
+     final word. text-wrap: pretty falls back to a balanced wrap if
+     the user has a custom font size that forces a 2-line render. */
+  font-size: 12.5px;
   color: var(--mh-text-soft);
   margin: 0;
-  line-height: 1.5;
+  line-height: 1.45;
+  letter-spacing: -0.005em;
+  text-wrap: pretty;
 }
 
 /* ============================================
@@ -665,10 +673,15 @@ html {
 }
 
 .mhome-feature-desc {
-  font-size: 12px;
-  line-height: 1.5;
+  font-size: 11.5px;
+  line-height: 1.45;
+  letter-spacing: -0.005em;
   color: var(--mh-text-muted);
   margin: 0;
+  /* If a description does need a second line (the longer copies in
+     row 1 will wrap on narrow phones), balance it visually instead of
+     letting it orphan a single word on line 2. */
+  text-wrap: balance;
   /* Clamp to two lines so all four cards are guaranteed visually
      balanced regardless of future copy length. */
   display: -webkit-box;

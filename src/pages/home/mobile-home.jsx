@@ -46,7 +46,7 @@ const FEATURES = [
   {
     icon: IoPeopleOutline,
     title: 'Direct Driver Access',
-    body: 'Connect directly with carriers.',
+    body: 'Connect directly with verified carriers.',
   },
   {
     icon: IoFlashOutline,
@@ -61,7 +61,7 @@ const FEATURES = [
   {
     icon: IoLocateOutline,
     title: 'Live Tracking',
-    body: 'Track every pickup and delivery.',
+    body: 'Track shipments from pickup to delivery.',
   },
 ];
 

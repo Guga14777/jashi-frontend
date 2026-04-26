@@ -79,6 +79,10 @@
   flex-direction: column;
   justify-content: flex-end;
   animation: mcsFadeIn 0.16s ease;
+  /* Block scrolling intent at the browser level — pairs with the
+     body-scroll-lock hook to make the page behind unscrollable. */
+  touch-action: none;
+  overscroll-behavior: contain;
 }
 
 @keyframes mcsFadeIn {
@@ -219,7 +223,10 @@
   flex: 1 1 auto;
   overflow-y: auto;
   -webkit-overflow-scrolling: touch;
-  /* Block iOS rubber-band scroll from bleeding into the page behind. */
+  /* Allow vertical pan inside the message list (parent .mcs-sheet has
+     touch-action:none, which would otherwise block scroll inside too).
+     Rubber-band stays contained so it can't bleed to the page. */
+  touch-action: pan-y;
   overscroll-behavior: contain;
   padding: 16px 14px 8px;
   display: flex;

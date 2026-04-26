@@ -146,6 +146,11 @@
   flex-direction: column;
   justify-content: flex-end;
   animation: mhSheetFadeIn 0.16s ease;
+  /* The whole modal layer rejects scrolling intent at the browser
+     level — combined with the body-scroll-lock hook this means iOS
+     Safari has nowhere to send a scroll/rubber-band gesture. */
+  touch-action: none;
+  overscroll-behavior: contain;
 }
 
 @keyframes mhSheetFadeIn {
@@ -174,7 +179,10 @@
   padding: 6px 14px calc(20px + env(safe-area-inset-bottom, 0));
   max-height: 88vh;
   overflow-y: auto;
-  /* Keep iOS rubber-band inside the sheet — never bleeds to the page. */
+  /* Allow vertical pan inside the sheet card (the parent .mh-sheet has
+     touch-action: none, which would otherwise also block this). Rubber
+     band is contained so it can't bleed to the page behind. */
+  touch-action: pan-y;
   overscroll-behavior: contain;
   animation: mhSheetSlideUp 0.22s cubic-bezier(0.16, 1, 0.3, 1);
 }

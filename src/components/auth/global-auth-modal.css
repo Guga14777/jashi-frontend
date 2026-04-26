@@ -13,9 +13,9 @@
   z-index: 9999;
   padding: 16px;
   animation: auth-fade-in 0.18s ease-out;
-  /* Layered scroll-bleed safeguards. The body-scroll-lock hook handles
-     the primary lock; these protect against any iOS edge case where
-     touch can still pass through during rapid open/close. */
+  /* Block scrolling intent at the browser level — pairs with the
+     body-scroll-lock hook to make the page behind unscrollable. */
+  touch-action: none;
   overscroll-behavior: contain;
 }
 
@@ -440,7 +440,10 @@
     flex: 1 1 auto;
     overflow-y: auto;
     -webkit-overflow-scrolling: touch;
-    /* iOS rubber-band kept inside the modal. */
+    /* Allow vertical pan inside the form (parent overlay has
+       touch-action:none which would otherwise block this too).
+       Rubber band kept inside the modal. */
+    touch-action: pan-y;
     overscroll-behavior: contain;
     padding:
       calc(24px + env(safe-area-inset-top, 0))
