@@ -491,70 +491,134 @@
   }
 }
 /* ================================
-   MOBILE FOOTER ADAPTATIONS
-   On phones the markup still renders, but everything non-essential is
-   collapsed. What remains: logo + phone + email + Privacy / Terms +
-   copyright. Reads as a compact premium footer.
+   MOBILE FOOTER — premium compact layout
+   Structure (top to bottom): logo · tagline · social row · contact row
+   (phone + email inline) · legal links (Privacy · Terms · Cookie on one
+   horizontal line) · copyright. No hairline dividers. No hover
+   underlines. Tight vertical rhythm.
    ================================ */
 @media (max-width: 768px) {
-  /* Hide everything not in the essentials list. */
+  /* Hide marketing columns + the redundant brand name (the logo plus
+     "Jashi Logistics" wordmark would double up) + the duplicate "Live
+     Chat" contact row. */
   .footer-links-column,
   .footer-why-column,
   .footer-contact-item--chat,
-  .footer-brand-name,
-  .footer-tagline,
-  .footer-social,
-  .footer-separator--cookie,
-  .footer-legal-link--cookie {
+  .footer-brand-name {
     display: none !important;
   }
 
-  /* Hide the contact column heading — phone + email rows are
-     self-evident with their icons. */
+  /* Drop the "Get in Touch" heading — the contact row is self-evident
+     with its icons. */
   .footer-contact-column .footer-heading {
     display: none;
   }
 
-  /* Tighten the surviving contact column. */
-  .footer-contact-column {
-    padding-top: 12px !important;
+  /* No hairline dividers between stacked columns on mobile — the user
+     called these out as clutter. The whitespace alone separates blocks. */
+  .footer-main > * + * {
+    padding-top: 0 !important;
+    border-top: 0 !important;
   }
 
-  .footer-contact {
-    gap: 6px !important;
-  }
-
-  /* Compact rhythm. Bottom padding 70 → 80 preserves clearance under
-     the chat bubble after it was raised 10px (see mcs-bubble). */
+  /* Footer outer padding. Bottom 96px clears the floating chat bubble
+     (raised 10px in this commit) + iOS Safari toolbar. */
   .footer {
-    padding: 16px 0 calc(80px + env(safe-area-inset-bottom, 0)) !important;
+    padding: 18px 0 calc(96px + env(safe-area-inset-bottom, 0)) !important;
   }
 
   .footer-main {
-    gap: 8px !important;
-    margin-bottom: 8px !important;
-  }
-
-  .footer-main > * + * {
-    padding-top: 8px !important;
+    gap: 14px !important;
+    margin-bottom: 14px !important;
   }
 
   .footer-brand-column {
     margin-bottom: 0 !important;
     padding-bottom: 0 !important;
+    align-items: center !important;
+    text-align: center !important;
   }
 
-  /* Smaller logo on the trimmed mobile footer so it doesn't hog
-     vertical space without the wordmark next to it. */
   .footer-logo {
     height: 40px !important;
   }
 
+  /* Tagline visible, calm. */
+  .footer-tagline {
+    display: block !important;
+    font-size: 12.5px !important;
+    line-height: 1.45 !important;
+    color: rgba(255, 255, 255, 0.62) !important;
+    margin: 8px auto 0 !important;
+    max-width: 32ch !important;
+    /* Override any desktop nowrap/ellipsis — tagline can wrap on phones. */
+    white-space: normal !important;
+    overflow: visible !important;
+    text-overflow: clip !important;
+  }
+
+  /* Social icons row — visible, centered, tight gap. */
+  .footer-social {
+    display: flex !important;
+    justify-content: center !important;
+    gap: 12px !important;
+    margin-top: 12px !important;
+  }
+
+  .footer-contact-column {
+    padding-top: 0 !important;
+    text-align: center !important;
+  }
+
+  /* Phone + email on ONE inline row, no underlines. Icons sit beside
+     their text values. */
+  .footer-contact {
+    flex-direction: row !important;
+    flex-wrap: wrap !important;
+    justify-content: center !important;
+    gap: 6px 18px !important;
+  }
+
+  .footer-contact li {
+    font-size: 13px !important;
+    color: rgba(255, 255, 255, 0.78) !important;
+  }
+
+  /* Kill the desktop hover-underline on phone/email — iOS sometimes
+     latches it after a tap and it reads as clutter. */
+  .footer-contact a,
+  .footer-contact a:hover {
+    text-decoration: none !important;
+  }
+
+  /* Legal: Privacy · Terms · Cookie on one horizontal centered line. */
   .footer-bottom {
-    padding-top: 8px !important;
+    padding-top: 0 !important;
+    border-top: 0 !important;
+    margin-top: 4px !important;
+  }
+
+  .footer-bottom-content {
+    flex-direction: column !important;
+    gap: 6px !important;
+    align-items: center !important;
+    text-align: center !important;
+  }
+
+  .footer-legal {
+    display: inline-flex !important;
+    flex-wrap: wrap !important;
+    justify-content: center !important;
+    align-items: center !important;
+    gap: 6px !important;
+  }
+
+  .footer-legal a {
+    font-size: 12px !important;
   }
 
   .footer-copyright {
     font-size: 11.5px !important;
+    color: rgba(255, 255, 255, 0.5) !important;
   }
 }

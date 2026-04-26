@@ -23,22 +23,22 @@ const STEPS = [
   {
     icon: IoCashOutline,
     title: 'Set Your Price',
-    body: 'Name your offer and choose what you want to pay.',
+    body: 'Choose the price you want to pay.',
   },
   {
     icon: IoCalendarOutline,
     title: 'Schedule Pickup',
-    body: 'Add pickup, delivery, and your preferred time window.',
+    body: 'Set pickup, delivery and timing.',
   },
   {
     icon: IoCardOutline,
     title: 'Secure Payment',
-    body: 'Pay the 6% platform fee — your shipment order is created.',
+    body: 'Pay the 6% fee and create your order.',
   },
   {
     icon: IoCarSportOutline,
-    title: 'Carrier Accepts Your Shipment',
-    body: 'Verified carriers review and accept through the carrier portal.',
+    title: 'Carrier Accepts Shipment',
+    body: 'Verified carriers accept through portal.',
   },
 ];
 
@@ -46,7 +46,7 @@ const FEATURES = [
   {
     icon: IoPeopleOutline,
     title: 'Direct Driver Access',
-    body: 'Talk directly with carriers.',
+    body: 'Connect directly with carriers.',
   },
   {
     icon: IoFlashOutline,
@@ -56,12 +56,12 @@ const FEATURES = [
   {
     icon: IoHeadsetOutline,
     title: 'Dedicated Support',
-    body: 'Help available 7 days.',
+    body: 'Support available 7 days a week.',
   },
   {
     icon: IoLocateOutline,
     title: 'Live Tracking',
-    body: 'Track pickup to delivery.',
+    body: 'Track every pickup and delivery.',
   },
 ];
 

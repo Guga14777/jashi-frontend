@@ -1,22 +1,26 @@
 import { useEffect } from 'react';
 
 /**
- * Reusable iOS-friendly body scroll lock. When `active` is true, the
- * page behind the open modal/sheet stops scrolling and the user's
- * scroll position is preserved when the lock releases.
+ * iOS-safe body scroll lock.
  *
- * iOS Safari quirks this addresses:
- *   - `overflow: hidden` on body alone doesn't stop the page from
- *     rubber-band scrolling — you must also fix the body in place.
- *   - When the body is fixed, the visible viewport "snaps" to top; we
- *     compensate by translating the body up by the current scrollY so
- *     the visible content stays in the same place.
- *   - On unlock, restore the saved styles AND scroll the window back to
- *     the original position so the page doesn't appear to jump.
+ * The simple `body { overflow: hidden }` lock leaks on iOS Safari — the
+ * browser will still rubber-band the page behind a fixed modal. The
+ * production-grade pattern is:
  *
- * Layered locks (e.g. modal opens chat) — last-released wins for restoring
- * scrollY because each instance saves the scrollY at the moment it
- * activates. That's normally what you want.
+ *   1. Save current `window.scrollY`.
+ *   2. Fix `<body>` in place at top: `-scrollY` so the visible viewport
+ *      stays where the user left it.
+ *   3. Lock `<html>`/`<body>` overflow + overscroll-behavior + touch-action.
+ *   4. Block `touchmove` on the document with preventDefault — but
+ *      ALLOW touchmove inside any descendant that's a real overflow
+ *      scroll container (the chat sheet body, the auth modal content).
+ *      That keeps internal scrolling alive while the page is frozen.
+ *   5. On unlock, restore everything and `window.scrollTo(0, scrollY)`
+ *      so the page doesn't appear to jump.
+ *
+ * Layered locks (e.g. user opens the auth modal from inside a sheet)
+ * each save their own scrollY at activation, so the deepest release
+ * restores correctly.
  */
 export default function useBodyScrollLock(active) {
   useEffect(() => {
@@ -28,12 +32,15 @@ export default function useBodyScrollLock(active) {
 
     const prev = {
       htmlOverflow: html.style.overflow,
+      htmlOverscrollBehavior: html.style.overscrollBehavior,
       bodyPosition: body.style.position,
       bodyTop: body.style.top,
       bodyLeft: body.style.left,
       bodyRight: body.style.right,
       bodyWidth: body.style.width,
       bodyOverflow: body.style.overflow,
+      bodyOverscrollBehavior: body.style.overscrollBehavior,
+      bodyTouchAction: body.style.touchAction,
     };
 
     body.style.position = 'fixed';
@@ -42,7 +49,35 @@ export default function useBodyScrollLock(active) {
     body.style.right = '0';
     body.style.width = '100%';
     body.style.overflow = 'hidden';
+    body.style.overscrollBehavior = 'none';
+    body.style.touchAction = 'none';
     html.style.overflow = 'hidden';
+    html.style.overscrollBehavior = 'none';
+
+    // Prevent touchmove from scrolling the page, except when the touch
+    // started inside a real overflow scroll container that has more
+    // content than fits.
+    const isInsideScrollContainer = (el) => {
+      let node = el;
+      while (node && node !== body) {
+        const style = window.getComputedStyle(node);
+        const oy = style.overflowY;
+        if ((oy === 'auto' || oy === 'scroll') && node.scrollHeight > node.clientHeight) {
+          return true;
+        }
+        node = node.parentElement;
+      }
+      return false;
+    };
+
+    const onTouchMove = (e) => {
+      if (e.touches && e.touches.length > 1) return; // pinch / multi — let it pass
+      if (isInsideScrollContainer(e.target)) return;
+      // Otherwise this touchmove would propagate to the page — block it.
+      if (e.cancelable) e.preventDefault();
+    };
+
+    document.addEventListener('touchmove', onTouchMove, { passive: false });
 
     return () => {
       body.style.position = prev.bodyPosition;
@@ -51,10 +86,14 @@ export default function useBodyScrollLock(active) {
       body.style.right = prev.bodyRight;
       body.style.width = prev.bodyWidth;
       body.style.overflow = prev.bodyOverflow;
+      body.style.overscrollBehavior = prev.bodyOverscrollBehavior;
+      body.style.touchAction = prev.bodyTouchAction;
       html.style.overflow = prev.htmlOverflow;
+      html.style.overscrollBehavior = prev.htmlOverscrollBehavior;
 
-      // Restore the user's scroll position. window.scrollTo with the
-      // 'instant' behavior avoids any animation that could feel laggy.
+      document.removeEventListener('touchmove', onTouchMove);
+
+      // Restore the user's scroll position.
       window.scrollTo(0, scrollY);
     };
   }, [active]);

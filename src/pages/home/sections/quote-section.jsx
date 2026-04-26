@@ -103,10 +103,10 @@ function QuoteSection() {
     : null;
 
   const steps = [
-    { number: '1', title: 'Set Your Price', description: 'Name your offer and choose what you want to pay.' },
-    { number: '2', title: 'Schedule Pickup', description: 'Add pickup, delivery, and your preferred time window.' },
-    { number: '3', title: 'Secure Payment', description: 'Pay the 6% platform fee — your shipment order is created.' },
-    { number: '4', title: 'Carrier Accepts Your Shipment', description: 'Verified carriers review and accept through the carrier portal.' },
+    { number: '1', title: 'Set Your Price', description: 'Choose the price you want to pay.' },
+    { number: '2', title: 'Schedule Pickup', description: 'Set pickup, delivery and timing.' },
+    { number: '3', title: 'Secure Payment', description: 'Pay the 6% fee and create your order.' },
+    { number: '4', title: 'Carrier Accepts Shipment', description: 'Verified carriers accept through portal.' },
   ];
 
   const features = [
