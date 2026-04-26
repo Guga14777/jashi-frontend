@@ -61,7 +61,7 @@ const FEATURES = [
   {
     icon: IoLocateOutline,
     title: 'Live Tracking',
-    body: 'Track shipments from pickup to delivery.',
+    body: 'Track your shipment from pickup to delivery.',
   },
 ];
 

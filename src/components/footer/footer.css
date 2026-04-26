@@ -611,16 +611,26 @@
     order: 1;
     display: inline-flex !important;
     /* No-wrap so Privacy · Terms · Cookie always stays on one
-       horizontal line. flex-wrap removed deliberately. */
+       horizontal line, even at 320px iPhone SE width. */
     flex-wrap: nowrap !important;
     white-space: nowrap !important;
     justify-content: center !important;
     align-items: center !important;
-    gap: 6px !important;
+    gap: 5px !important;
   }
 
   .footer-legal a {
-    font-size: 12px !important;
+    /* Fits "Privacy Policy · Terms of Service · Cookie Policy" on one
+       line at 320px viewport width (~270px of text + dots, plus 32px
+       container padding). */
+    font-size: 11px !important;
+    text-decoration: none !important;
+  }
+  .footer-legal a:hover {
+    text-decoration: none !important;
+  }
+  .footer-separator {
+    font-size: 11px !important;
   }
 
   .footer-copyright {
