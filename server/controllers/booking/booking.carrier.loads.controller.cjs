@@ -147,6 +147,63 @@ const normalizeBookingForCarrier = async (booking) => {
 };
 
 // ============================================================
+// HELPER: Slim list-view shape for carrier "My Loads".
+// Skips per-row Document fetches and the full enrich pipeline so the
+// list endpoint stays well under the 800ms target. The detail endpoint
+// (getLoadById) still uses the full normalizeBookingForCarrier.
+// ============================================================
+const shapeBookingForCarrierList = (booking) => {
+  const normalizedStatus = normalizeStatus(booking.status);
+  const pickupData = safeParseJson(booking.pickup);
+  const dropoffData = safeParseJson(booking.dropoff);
+  const vehicleFields = extractVehicleFields(booking.vehicleDetails);
+
+  const origin = pickupData.city && pickupData.state
+    ? `${pickupData.city}, ${pickupData.state}`
+    : booking.fromCity || pickupData.zip || '—';
+
+  const destination = dropoffData.city && dropoffData.state
+    ? `${dropoffData.city}, ${dropoffData.state}`
+    : booking.toCity || dropoffData.zip || '—';
+
+  return {
+    id: booking.id,
+    ref: booking.ref,
+    orderNumber: booking.orderNumber,
+    status: normalizedStatus,
+    statusStep: getStatusStep(normalizedStatus),
+    statusLabel: STATUS_LABELS[normalizedStatus],
+    origin,
+    destination,
+    from: origin,
+    to: destination,
+    pickup: pickupData,
+    dropoff: dropoffData,
+    miles: booking.miles || 0,
+    price: booking.price,
+    vehicle: booking.vehicle,
+    vehicleType: vehicleFields.vehicleType || booking.vehicleType || '',
+    vehicleYear: vehicleFields.vehicleYear || '',
+    vehicleMake: vehicleFields.vehicleMake || '',
+    vehicleModel: vehicleFields.vehicleModel || '',
+    transportType: booking.transportType,
+    pickupDate: booking.pickupDate,
+    dropoffDate: booking.dropoffDate,
+    createdAt: booking.createdAt,
+    updatedAt: booking.updatedAt,
+    assignedAt: booking.assignedAt || booking.carrierAcceptedAt,
+    pickedUpAt: booking.pickedUpAt || booking.pickupAt,
+    deliveredAt: booking.deliveredAt,
+    isCancelled: normalizedStatus === SHIPMENT_STATUS.CANCELLED,
+    customer: {
+      name: [booking.customerFirstName, booking.customerLastName].filter(Boolean).join(' ') || '—',
+      phone: booking.customerPhone || '',
+      email: booking.userEmail || '',
+    },
+  };
+};
+
+// ============================================================
 // GET CARRIER LOADS (My Loads)
 // GET /api/carrier/loads
 // ============================================================
@@ -171,15 +228,40 @@ const getCarrierLoads = async (req, res) => {
       Object.assign(where, statusMap[status] || { status: normalizeStatus(status) });
     }
 
+    // List view: SELECT only what the carrier-loads cards render. No
+    // documents include, no per-row enrich pipeline — that's reserved
+    // for the detail endpoint.
     const [bookings, total] = await Promise.all([
       prisma.booking.findMany({
         where,
-        include: {
-          user: { select: { id: true, email: true, firstName: true, lastName: true, phone: true } },
-          pickupGatePass: true,
-          dropoffGatePass: true,
-          documents: { orderBy: { createdAt: 'desc' } },
-          quoteRelation: { select: { likelihood: true, marketAvg: true } },
+        select: {
+          id: true,
+          ref: true,
+          orderNumber: true,
+          status: true,
+          pickup: true,
+          dropoff: true,
+          fromCity: true,
+          toCity: true,
+          miles: true,
+          price: true,
+          vehicle: true,
+          vehicleType: true,
+          vehicleDetails: true,
+          transportType: true,
+          pickupDate: true,
+          dropoffDate: true,
+          createdAt: true,
+          updatedAt: true,
+          assignedAt: true,
+          carrierAcceptedAt: true,
+          pickedUpAt: true,
+          pickupAt: true,
+          deliveredAt: true,
+          customerFirstName: true,
+          customerLastName: true,
+          customerPhone: true,
+          userEmail: true,
         },
         orderBy: { createdAt: 'desc' },
         skip,
@@ -188,14 +270,11 @@ const getCarrierLoads = async (req, res) => {
       prisma.booking.count({ where }),
     ]);
 
-    // Normalize all bookings
-    const normalizedBookings = await Promise.all(
-      bookings.map(booking => normalizeBookingForCarrier(booking))
-    );
+    const loads = bookings.map(shapeBookingForCarrierList);
 
     res.json({
       success: true,
-      loads: normalizedBookings,
+      loads,
       pagination: {
         page: parseInt(page),
         limit: parseInt(limit),

@@ -116,6 +116,12 @@ const CarrierActions = ({
   isFirstAttempt = true,
   // Error callback
   onArrivedError,
+  // Test-only override: when truthy AND canStartTrip, render a small
+  // "Force start (test mode)" link below the Start Trip button. Owner
+  // (the modal) decides who's allowed to see this — gate it to the
+  // configured test email. Calling this fires onStartTrip with force=true.
+  canForceStart = false,
+  onForceStartTrip,
 }) => {
   // Check time-based arrival window
   const arrivalCheck = useMemo(() => {
@@ -216,28 +222,41 @@ const CarrierActions = ({
       <div className="ca-actions">
         {/* Start Trip Button */}
         {canStartTrip && (
-          <button
-            className={`ca-btn ca-btn--primary ${!isAuthorized ? 'ca-btn--blocked' : ''}`}
-            onClick={handleStartTrip}
-            disabled={startTripLoading || !isAuthorized}
-            title={!isAuthorized ? authorizationResult?.primaryReasonLabel : 'Start trip to pickup location'}
-          >
-            {startTripLoading ? (
-              <SpinnerIcon />
-            ) : !isAuthorized ? (
-              <LockIcon />
-            ) : (
-              <TruckIcon />
-            )}
-            <span>
-              {startTripLoading ? 'Starting...' : 'Start Trip'}
-            </span>
-            {isProtected && isAuthorized && (
-              <span className="ca-btn__badge ca-btn__badge--protected" title="TONU/Detention protection applies">
-                Protected
+          <div className="ca-start-trip-wrapper">
+            <button
+              className={`ca-btn ca-btn--primary ${!isAuthorized ? 'ca-btn--blocked' : ''}`}
+              onClick={handleStartTrip}
+              disabled={startTripLoading || !isAuthorized}
+              title={!isAuthorized ? authorizationResult?.primaryReasonLabel : 'Start trip to pickup location'}
+            >
+              {startTripLoading ? (
+                <SpinnerIcon />
+              ) : !isAuthorized ? (
+                <LockIcon />
+              ) : (
+                <TruckIcon />
+              )}
+              <span>
+                {startTripLoading ? 'Starting...' : 'Start Trip'}
               </span>
+              {isProtected && isAuthorized && (
+                <span className="ca-btn__badge ca-btn__badge--protected" title="TONU/Detention protection applies">
+                  Protected
+                </span>
+              )}
+            </button>
+
+            {canForceStart && !startTripLoading && (
+              <button
+                type="button"
+                className="ca-force-start-link"
+                onClick={() => onForceStartTrip?.()}
+                title="Bypasses the time/auth gate so you can step through the full lifecycle. Visible only to test accounts."
+              >
+                Force start (test mode)
+              </button>
             )}
-          </button>
+          </div>
         )}
         
         {/* Mark Arrived Button */}

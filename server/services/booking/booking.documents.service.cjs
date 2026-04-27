@@ -37,21 +37,52 @@ const filterGatePassDocuments = (documents) => {
   return documents.filter(d => isGatePassType(d.type));
 };
 
-// Get pickup and dropoff gate passes
+// Get pickup and dropoff gate passes.
+//
+// Resolves a gate pass to a stage ONLY when we have a strong signal:
+// 1. The booking row's pickupGatePassId / dropoffGatePassId FK, or
+// 2. A Document whose `stage` column says 'pickup' or 'dropoff', or
+// 3. A Document whose type/name string explicitly contains 'pickup'
+//    or 'dropoff' (legacy fallback).
+//
+// We deliberately do NOT fall back to gatePassDocs[0] for pickup —
+// that bug produced a phantom "Gate Pass" button on the Pickup card
+// when only a drop-off gate pass had been uploaded. If no doc claims
+// the stage, the gate pass for that side stays null and the card
+// renders without the download row.
+const stageMatches = (doc, stage) => {
+  if (!doc) return false;
+  if (doc.stage && String(doc.stage).toLowerCase() === stage) return true;
+  const haystack = `${doc.type || ''} ${doc.originalName || ''} ${doc.fileName || ''}`.toLowerCase();
+  if (stage === 'pickup' && /(pickup|pick_up|pick-up)/.test(haystack)) return true;
+  if (stage === 'dropoff' && /(dropoff|drop_off|drop-off|delivery)/.test(haystack)) return true;
+  return false;
+};
+
 const getGatePasses = (documents, booking) => {
   const gatePassDocs = filterGatePassDocuments(documents);
-  
+
   let pickupGatePass = booking?.pickupGatePass || null;
   let dropoffGatePass = booking?.dropoffGatePass || null;
-  
-  if (!pickupGatePass && gatePassDocs.length > 0) {
-    pickupGatePass = gatePassDocs.find(d => d.type.toLowerCase().includes('pickup')) || gatePassDocs[0];
+
+  if (!pickupGatePass) {
+    pickupGatePass = gatePassDocs.find((d) => stageMatches(d, 'pickup')) || null;
   }
-  if (!dropoffGatePass && gatePassDocs.length > 1) {
-    dropoffGatePass = gatePassDocs.find(d => d.type.toLowerCase().includes('dropoff')) || gatePassDocs[1];
+  if (!dropoffGatePass) {
+    dropoffGatePass = gatePassDocs.find((d) => stageMatches(d, 'dropoff')) || null;
   }
-  
-  return { pickupGatePass, dropoffGatePass, gatePassDocs };
+
+  // Annotate each gate pass doc with its stage so the frontend can
+  // render them in the right card without re-deriving stage from
+  // ambiguous string fields.
+  const annotatedGatePassDocs = gatePassDocs.map((d) => {
+    if (d.stage) return d;
+    if (stageMatches(d, 'pickup')) return { ...d, stage: 'pickup' };
+    if (stageMatches(d, 'dropoff')) return { ...d, stage: 'dropoff' };
+    return d;
+  });
+
+  return { pickupGatePass, dropoffGatePass, gatePassDocs: annotatedGatePassDocs };
 };
 
 // Link documents from quote to booking

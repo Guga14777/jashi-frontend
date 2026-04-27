@@ -54,15 +54,18 @@
 .car-brand:active{ opacity:.75; }
 .car-brand:focus-visible{ outline:2px solid var(--primary); outline-offset:4px; }
 
+/* Badge — sized to match the public/marketing header (.pub-badge 56px) so
+   the logo never visually shifts when a carrier logs in. */
 .car-badge{
-  width:64px; height:64px; border-radius:50%; background:var(--primary); display:grid; place-items:center; overflow:hidden; position:relative; flex-shrink:0;
+  width:56px; height:56px; border-radius:50%; background:var(--primary); display:grid; place-items:center; overflow:hidden; position:relative; flex-shrink:0;
 }
 .car-badge img{ width:75%; height:75%; object-fit:contain; }
 .car-badge[data-fallback="true"] img{ display:none; }
-.badge-fallback{ display:none; color:#fff; font-size:22px; font-weight:700; text-transform:uppercase; letter-spacing:-.5px; }
+.badge-fallback{ display:none; color:#fff; font-size:20px; font-weight:700; text-transform:uppercase; letter-spacing:-.5px; }
 .car-badge[data-fallback="true"] .badge-fallback{ display:block; }
 
-.car-name{ color:var(--primary); font-size:26px; font-weight:800; letter-spacing:.2px; text-transform:capitalize; }
+/* Brand text — matches the public header (.pub-name 24px / 800 / .2px). */
+.car-name{ color:var(--primary); font-size:24px; font-weight:800; letter-spacing:.2px; text-transform:capitalize; line-height:1.1; }
 
 /* ========== Right Actions ========== */
 .car-actions{ display:flex; align-items:center; gap:14px; position:relative; z-index:50; overflow:visible; }
@@ -338,10 +341,11 @@
   :root{ --header-height:64px; }
   .car-header{ height:var(--header-height-mobile); }
   .car-inner{ padding:0 16px; }
-  .car-badge{ width:56px; height:56px; }
-  .car-badge img{ width:70%; height:70%; }
-  .badge-fallback{ font-size:18px; }
-  .car-name{ font-size:22px; }
+  /* Mobile sizes mirror .pub-badge / .pub-name @ ≤768px (40px / 17px). */
+  .car-badge{ width:40px; height:40px; }
+  .car-badge img{ width:75%; height:75%; }
+  .badge-fallback{ font-size:14px; }
+  .car-name{ font-size:17px; }
   .car-avatar{ width:36px; height:36px; }
   .car-avatar span{ font-size:14px; }
 
@@ -367,9 +371,10 @@
   .user-dropdown-menu-portal{ width:calc(100vw - 32px); max-width:320px; right:16px!important; }
 }
 @media (max-width:480px){
-  .car-badge{ width:48px; height:48px; }
-  .badge-fallback{ font-size:14px; }
-  .car-name{ font-size:20px; }
+  /* Mirror .pub-badge / .pub-name @ ≤380px (34px / 17px). */
+  .car-badge{ width:34px; height:34px; }
+  .badge-fallback{ font-size:12px; }
+  .car-name{ font-size:17px; }
   .car-avatar{ width:32px; height:32px; }
   .car-avatar span{ font-size:12px; }
   .notification-btn{ width:40px!important; height:40px!important; }

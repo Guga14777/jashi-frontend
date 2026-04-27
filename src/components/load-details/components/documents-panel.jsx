@@ -43,7 +43,10 @@ export const BolButton = ({ onClick, isLoading }) => {
   );
 };
 
-// Document Link
+// Document Link — same robust download flow as the shipper card and the
+// route-vehicle-card DocLink. Verifies res.ok and the response content
+// type before saving, so a 404 HTML body or JSON error can't be
+// downloaded as a corrupted ".pdf".
 const DocLink = ({ doc, label }) => {
   const getDownloadUrlForDoc = (doc) => {
     if (!doc) return null;
@@ -54,19 +57,36 @@ const DocLink = ({ doc, label }) => {
 
   const url = getDownloadUrlForDoc(doc);
   if (!url) return null;
-  
+
+  const filename = doc.originalName || doc.fileName || label;
+
   const handleClick = async (e) => {
     e.preventDefault();
     const token = localStorage.getItem('token');
     try {
-      const res = await fetch(url, { headers: { 'Authorization': `Bearer ${token}` } });
+      const res = await fetch(url, {
+        headers: token ? { Authorization: `Bearer ${token}` } : {},
+      });
+      if (!res.ok) {
+        throw new Error(`Download failed with status ${res.status}`);
+      }
+      const contentType = res.headers.get('content-type') || '';
+      if (contentType.includes('application/json')) {
+        throw new Error('Server returned JSON instead of a file');
+      }
       const blob = await res.blob();
+      if (blob.size === 0) {
+        throw new Error('Download was empty');
+      }
       const link = document.createElement('a');
       link.href = URL.createObjectURL(blob);
-      link.download = doc.originalName || label;
+      link.download = filename;
+      document.body.appendChild(link);
       link.click();
+      document.body.removeChild(link);
       URL.revokeObjectURL(link.href);
-    } catch {
+    } catch (err) {
+      console.warn('[DocLink] direct download failed, falling back to new tab:', err?.message);
       window.open(url, '_blank', 'noopener,noreferrer');
     }
   };

@@ -334,6 +334,14 @@
   font-feature-settings: "tnum";
 }
 
+/* "Placed" column — order-creation date, sits between ORDER ID and ROUTE */
+.active-shipments .placed-cell {
+  font-size: 13px;
+  color: var(--text-secondary, #475569);
+  font-feature-settings: "tnum";
+  white-space: nowrap;
+}
+
 /* Route information */
 .active-shipments .route-info {
   display: flex;

@@ -13,6 +13,7 @@ import {
   DISPLAY_STATUS_LABELS,
   toDisplayStatus,
 } from '../../../components/load-details/utils/status-map.js';
+import { formatShortDate } from '../../../utils/formatDate.js';
 import './active-shipments.css';
 
 const ActiveShipments = ({
@@ -297,6 +298,7 @@ const ActiveShipments = ({
           <thead>
             <tr>
               <th>Order ID</th>
+              <th>Placed</th>
               <th>Route</th>
               <th>Vehicle</th>
               <th>Price</th>
@@ -307,7 +309,7 @@ const ActiveShipments = ({
           <tbody>
             {!hasResults && (
               <tr className="table-empty-row">
-                <td colSpan={6} className="table-empty-cell">
+                <td colSpan={7} className="table-empty-cell">
                   {loading ? 'Searching…' : 'No orders found'}
                 </td>
               </tr>
@@ -319,6 +321,9 @@ const ActiveShipments = ({
                     <strong className="shipment-id">
                       #{getOrderId(shipment)}
                     </strong>
+                  </td>
+                  <td className="placed-cell">
+                    {formatShortDate(shipment.createdAt)}
                   </td>
                   <td>
                     {/* ✅ FIXED: Use helper functions with multiple fallbacks */}

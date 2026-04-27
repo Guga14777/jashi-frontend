@@ -4,7 +4,6 @@ import "./components/payments-components.css";
 
 import Transactions from "./components/transactions.jsx";
 import Toast from "../../../components/ui/toast.jsx";
-import CustomerDashboardFooter from "../../../components/footer/customer-dashboard-footer.jsx";
 import LiveChat from "../../../components/live-chat/live-chat.jsx";
 
 // Utils
@@ -141,7 +140,7 @@ This is a placeholder invoice. Replace with actual PDF generation.
           <Toast message={toast.message} type={toast.type} onClose={() => setToast(null)} />
         )}
       </div>
-      <CustomerDashboardFooter />
+      {/* Footer is rendered once by CustomerLayout — do not render it here. */}
       <LiveChat />
     </>
   );

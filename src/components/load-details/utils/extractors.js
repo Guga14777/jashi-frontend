@@ -92,6 +92,30 @@ const toAmPmLabel = (value) => {
   return s;
 };
 
+// Friendly labels for the auction/dealership "time preference" the
+// shipper portal lets customers pick instead of a strict window. Both
+// the granular vocabulary the booking flow may eventually expose
+// (early_morning / late_morning / early_afternoon / late_afternoon)
+// and the current coarse vocabulary (morning / afternoon / flexible)
+// resolve to the same human-readable strings.
+const TIME_PREFERENCE_LABELS = {
+  early_morning: 'Early Morning (8 AM – 10 AM)',
+  late_morning: 'Late Morning (10 AM – 12 PM)',
+  early_afternoon: 'Early Afternoon (12 PM – 2 PM)',
+  afternoon: 'Afternoon (12 PM – 5 PM)',
+  late_afternoon: 'Late Afternoon (4 PM – 6 PM)',
+  morning: 'Morning (8 AM – 12 PM)',
+  evening: 'Evening (5 PM – 8 PM)',
+  flexible: 'Flexible',
+  any: 'Flexible',
+};
+
+const formatTimePreference = (pref) => {
+  if (!pref) return null;
+  const key = String(pref).trim().toLowerCase();
+  return TIME_PREFERENCE_LABELS[key] || null;
+};
+
 /**
  * Format time window for display.
  *
@@ -101,12 +125,16 @@ const toAmPmLabel = (value) => {
  *   - preset IDs ("8-10", "10-12", … "16-18", "flexible")
  *   - 24-hour HH:MM strings stored on the booking row
  *   - already-formatted "h:mm AM/PM" strings
+ *   - a "time preference" string from the auction/dealership flow
+ *     ("morning", "afternoon", "flexible", or the granular early_*
+ *     / late_* variants) — these have no strict window, so we map
+ *     them to a friendly label like "Afternoon (12 PM – 5 PM)".
  *
  * Used in: shipment details modal, carrier load detail, admin orders,
  * and confirmation emails (when rendered server-side this helper is
  * mirrored — keep formats in sync).
  */
-export const formatTimeWindow = (start, end, preferred) => {
+export const formatTimeWindow = (start, end, preferred, timePreference) => {
   if (preferred) {
     if (typeof preferred === 'string' && preferred.toLowerCase() === 'flexible') {
       return 'Flexible';
@@ -117,6 +145,11 @@ export const formatTimeWindow = (start, end, preferred) => {
       const right = toAmPmLabel(b);
       if (left && right) return `${left} – ${right}`;
     }
+    // Final attempt — if the preferred value is a known preference
+    // label (e.g. "morning"), surface its friendly form rather than
+    // returning the raw token.
+    const prefLabel = formatTimePreference(preferred);
+    if (prefLabel) return prefLabel;
     return preferred;
   }
 
@@ -126,6 +159,11 @@ export const formatTimeWindow = (start, end, preferred) => {
   if (left && right) return `${left} – ${right}`;
   if (left) return `After ${left}`;
   if (right) return `Before ${right}`;
+
+  // No strict window — fall back to the auction/dealership preference
+  // so the schedule line never renders bare ("Apr 29, 2026" with no time).
+  const prefLabel = formatTimePreference(timePreference);
+  if (prefLabel) return prefLabel;
 
   return null;
 };
@@ -292,16 +330,35 @@ export const extractTimeWindows = (data) => {
   // Extract preferred windows
   const pickupPreferred = data.pickupPreferredWindow || s.pickupPreferredWindow || q?.pickupPreferredWindow || null;
   const dropoffPreferred = data.dropoffPreferredWindow || s.dropoffPreferredWindow || q?.dropoffPreferredWindow || null;
-  
+
+  // Auction/dealership "time preference" — coarse-grained scheduling
+  // that the customer can use instead of a strict window. When this
+  // is set and there is no strict window/preset, the formatter
+  // surfaces a friendly label like "Afternoon (12 PM – 5 PM)".
+  const pickupTimePreference =
+    data.pickupTimePreference ||
+    s.pickupTimePreference ||
+    pickup.timePreference ||
+    q?.pickupTimePreference ||
+    null;
+  const dropoffTimePreference =
+    data.dropoffTimePreference ||
+    s.dropoffTimePreference ||
+    dropoff.timePreference ||
+    q?.dropoffTimePreference ||
+    null;
+
   return {
-    pickup: formatTimeWindow(pickupWindowStart, pickupWindowEnd, pickupPreferred),
-    dropoff: formatTimeWindow(dropoffWindowStart, dropoffWindowEnd, dropoffPreferred),
+    pickup: formatTimeWindow(pickupWindowStart, pickupWindowEnd, pickupPreferred, pickupTimePreference),
+    dropoff: formatTimeWindow(dropoffWindowStart, dropoffWindowEnd, dropoffPreferred, dropoffTimePreference),
     pickupWindowStart,
     pickupWindowEnd,
     dropoffWindowStart,
     dropoffWindowEnd,
     pickupPreferredWindow: pickupPreferred,
     dropoffPreferredWindow: dropoffPreferred,
+    pickupTimePreference,
+    dropoffTimePreference,
   };
 };
 
@@ -381,16 +438,30 @@ export const extractVehicle = (data) => {
     }
   }
   
-  // Determine condition from operable field
+  // Determine condition from operable field. We also accept the
+  // backend's flattened `vehicleOperable` (set by extractVehicleFields
+  // on the booking detail response) so a booking that stores the
+  // operable bit only at the top level — not on the nested vehicles
+  // array — still resolves to "Operable" instead of "—".
   const getCondition = () => {
-    const operable = data.vehicleCondition || vd.operable || qvd.operable || 
-                     vdVehicle.operable || topVehicle.operable || nestedVehicle.operable ||
-                     bookingVehicle.operable;
+    const operable =
+      data.vehicleCondition ||
+      data.vehicleOperable ||
+      vd.operable ||
+      vd.vehicleOperable ||
+      qvd.operable ||
+      qvd.vehicleOperable ||
+      vdVehicle.operable ||
+      topVehicle.operable ||
+      nestedVehicle.operable ||
+      bookingVehicle.operable;
     if (!operable) return '';
     const val = String(operable).toLowerCase();
     if (['yes', 'true', 'operable', '1'].includes(val)) return 'Operable';
     if (['no', 'false', 'inoperable', '0'].includes(val)) return 'Inoperable';
-    return operable;
+    // Title-case anything else so "operable" doesn't render as a raw
+    // lowercase token in the UI.
+    return val.charAt(0).toUpperCase() + val.slice(1);
   };
 
   return {

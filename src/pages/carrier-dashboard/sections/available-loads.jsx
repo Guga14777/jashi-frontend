@@ -12,10 +12,12 @@
 import React, { useState, useMemo, useEffect, useCallback, useRef } from 'react';
 import './available-loads.css';
 import { formatPrice, formatRate, formatDate } from '../../../utils/formatters';
+import { formatShortDate } from '../../../utils/formatDate.js';
 import Pagination from '../../../components/ui/pagination.jsx';
 import LoadDetailsModal from '../../../components/load-details';
 import Skeleton from '../../../components/ui/skeleton';
 import ConfirmModal from '../../../components/ui/confirm-modal';
+import Toast from '../../../components/ui/toast.jsx';
 import { useAuth } from '../../../store/auth-context';
 import { Package, Clock, AlertCircle, MapPin, Calendar, Truck, RefreshCw } from 'lucide-react';
 import * as carrierApi from '../../../services/carrier.api.js';
@@ -144,6 +146,7 @@ const AvailableLoads = () => {
   const [acceptedLoads, setAcceptedLoads] = useState(new Set());
   const [loadingAccept, setLoadingAccept] = useState(null);
   const [lastOpenedId, setLastOpenedId] = useState(null);
+  const [toast, setToast] = useState(null);
 
   // Real data state - fetched from API
   const [loads, setLoads] = useState([]);
@@ -306,25 +309,33 @@ const AvailableLoads = () => {
   // Real API call to accept load
   const confirmAcceptOffer = async (loadId) => {
     if (!token) {
-      alert('Please log in to accept loads');
+      setToast({ type: 'error', message: 'Please log in to accept loads' });
       return;
     }
-    
+
+    const orderLabel = acceptModalLoad ? getOrderId(acceptModalLoad) : `#${String(loadId).slice(-6)}`;
+
     setLoadingAccept(loadId);
-    
+
     try {
       const response = await carrierApi.acceptLoad(loadId, token);
-      
+
       console.log('✅ Load accepted:', response);
-      
+
       setAcceptedLoads(prev => new Set([...prev, loadId]));
       setLoads(prev => prev.filter(l => l.id !== loadId));
-      
+
       closeAcceptModal();
-      
+      setToast({
+        type: 'success',
+        message: `Load ${orderLabel} accepted — added to My Loads`,
+      });
     } catch (err) {
       console.error('❌ Failed to accept load:', err);
-      alert(`Failed to accept load: ${err.message}`);
+      setToast({
+        type: 'error',
+        message: `Failed to accept load — ${err.message || 'please try again'}`,
+      });
     } finally {
       setLoadingAccept(null);
     }
@@ -719,7 +730,7 @@ const AvailableLoads = () => {
                     <div className="al-badges">
                       <span className="al-badge">
                         <Clock size={12} color="#94A3B8" strokeWidth={1.5} style={{ marginRight: '4px', verticalAlign: 'middle' }} />
-                        {formatPostedTime(load.postedAt || load.createdAt)}
+                        Posted {formatShortDate(load.postedAt || load.createdAt)}
                       </span>
                       {load.hasGatePass && (
                         <span className="al-badge photos">Gate Pass</span>
@@ -855,6 +866,15 @@ const AvailableLoads = () => {
           cancelLabel="Cancel"
           variant="primary"
           loading={loadingAccept === acceptModalLoad?.id}
+        />
+      )}
+
+      {toast && (
+        <Toast
+          message={toast.message}
+          type={toast.type}
+          duration={4000}
+          onClose={() => setToast(null)}
         />
       )}
     </section>

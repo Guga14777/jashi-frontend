@@ -641,9 +641,22 @@ const isArrivalTimeValid = (booking) => {
   }
 };
 
+// Test accounts allowed to bypass the start-trip authorization gate
+// via { force: true } in the POST body. Limited to a hard-coded test
+// email so a stray client send of force:true from a real carrier
+// account is rejected. Adding more accounts is a code change, not a
+// runtime toggle, on purpose.
+const FORCE_START_ALLOWED_EMAILS = new Set([
+  'gjashi10@gmail.com',
+]);
+
 // ============================================================
 // POST /api/carrier/loads/:id/start-trip
 // ✅ UPDATED: Now checks authorization before allowing start
+// ✅ Test override: { force: true } bypasses the time/auth gate so the
+//    test account can drive a load through the full status lifecycle
+//    even when pickup is days away. Status transition, ownership, and
+//    auth middleware checks still apply.
 // ============================================================
 const startTripToPickup = async (req, res) => {
   try {
@@ -651,10 +664,12 @@ const startTripToPickup = async (req, res) => {
     const carrierId = req.userId;
     if (!carrierId) return res.status(401).json({ error: 'Authentication required' });
 
+    const force = req.body?.force === true;
+
     // ✅ Include gate pass and documents for authorization check
     const booking = await prisma.booking.findFirst({
       where: { id, carrierId },
-      include: { 
+      include: {
         user: { select: { id: true } },
         pickupGatePass: true,
         documents: { where: { type: { in: ['gate_pass', 'pickup_gatepass'] } } },
@@ -672,9 +687,32 @@ const startTripToPickup = async (req, res) => {
       });
     }
 
-    // ✅ NEW: Check authorization before allowing start trip
-    const authResult = validateAuthorizationForTransition(booking, 'on_the_way_to_pickup');
-    
+    // Verify the caller is allowed to use the force flag, if they
+    // tried. We resolve the caller's email from the auth middleware
+    // (req.userEmail) and fall back to a fresh User lookup so a test
+    // tier added by email mid-session still works.
+    let allowForce = false;
+    if (force) {
+      let actorEmail = (req.userEmail || '').toLowerCase().trim();
+      if (!actorEmail) {
+        const actor = await prisma.user.findUnique({
+          where: { id: carrierId },
+          select: { email: true },
+        });
+        actorEmail = (actor?.email || '').toLowerCase().trim();
+      }
+      allowForce = FORCE_START_ALLOWED_EMAILS.has(actorEmail);
+      if (!allowForce) {
+        console.log(`🚫 [START TRIP] force=true rejected for non-test account ${actorEmail}`);
+      }
+    }
+
+    // ✅ NEW: Check authorization before allowing start trip — unless
+    // force was requested AND the caller is on the test allowlist.
+    const authResult = allowForce
+      ? { allowed: true, protected: false }
+      : validateAuthorizationForTransition(booking, 'on_the_way_to_pickup');
+
     if (!authResult.allowed) {
       console.log(`🚫 [START TRIP] Authorization blocked for ${id}: ${authResult.error}`);
       return res.status(400).json({
@@ -701,7 +739,7 @@ const startTripToPickup = async (req, res) => {
       },
     });
 
-    console.log(`🚗 [START TRIP] Carrier ${carrierId} started trip for booking ${id}${authResult.protected ? ' (PROTECTED)' : ''}`);
+    console.log(`🚗 [START TRIP] Carrier ${carrierId} started trip for booking ${id}${authResult.protected ? ' (PROTECTED)' : ''}${allowForce ? ' (FORCED)' : ''}`);
 
     try {
       const notify = require('../../services/notifications.service.cjs');

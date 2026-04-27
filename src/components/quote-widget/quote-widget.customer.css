@@ -1255,3 +1255,45 @@ button.centered-cta-button {
   gap: 16px !important;
   align-items: stretch !important;
 }
+/* ============================================================
+   "Your Price. Your Way." banner — shown when the customer
+   widget is rendered inside the dashboard Ship-My-Vehicle modal,
+   so the modal matches the homepage hero. Mirrors .qs-banner /
+   .qs-banner-title from src/pages/home/sections/quote-section.css
+   so any homepage tweak should be reflected here too.
+   ============================================================ */
+.quote-widget.qw-in-modal {
+  overflow: hidden;
+}
+
+.quote-widget.qw-in-modal .quote-form {
+  border-radius: 0 0 12px 12px;
+}
+
+.qw-modal-banner {
+  background: linear-gradient(135deg, #0066FF 0%, #0052CC 100%);
+  border-radius: 12px 12px 0 0;
+  padding: 16px 24px;
+  height: 60px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.qw-modal-banner-title {
+  font-size: 24px;
+  font-weight: 700;
+  color: #ffffff;
+  margin: 0;
+  letter-spacing: 0.2px;
+}
+
+@media (max-width: 600px) {
+  .qw-modal-banner {
+    height: 52px;
+    padding: 12px 16px;
+  }
+  .qw-modal-banner-title {
+    font-size: 20px;
+  }
+}

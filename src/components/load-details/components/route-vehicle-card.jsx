@@ -38,7 +38,13 @@ const LocationTypeBadge = ({ type }) => {
   );
 };
 
-// Document link component
+// Document link component.
+// Routes through GET /api/documents/:id/download which either streams the
+// file binary (with proper Content-Type) or 302-redirects to a Supabase
+// signed URL — same path the BOL download uses, so consistency is the
+// goal. Critically: we check res.ok before reading res.blob(), so a 404
+// HTML body or a JSON error never gets saved as a fake .pdf and shows up
+// in Chrome as "Failed to load PDF document".
 const DocLink = ({ doc, label }) => {
   const getDownloadUrlForDoc = (doc) => {
     if (!doc) return null;
@@ -49,19 +55,39 @@ const DocLink = ({ doc, label }) => {
 
   const url = getDownloadUrlForDoc(doc);
   if (!url) return null;
-  
+
+  const filename = doc.originalName || doc.fileName || label;
+
   const handleClick = async (e) => {
     e.preventDefault();
     const token = localStorage.getItem('token');
     try {
-      const res = await fetch(url, { headers: { 'Authorization': `Bearer ${token}` } });
+      const res = await fetch(url, {
+        headers: token ? { Authorization: `Bearer ${token}` } : {},
+      });
+      if (!res.ok) {
+        throw new Error(`Download failed with status ${res.status}`);
+      }
+      const contentType = res.headers.get('content-type') || '';
+      // If the backend mistakenly returned JSON (e.g. an auth/error body),
+      // abort instead of saving an unreadable "PDF" — the catch below
+      // opens the URL in a new tab so the user sees the real error.
+      if (contentType.includes('application/json')) {
+        throw new Error('Server returned JSON instead of a file');
+      }
       const blob = await res.blob();
+      if (blob.size === 0) {
+        throw new Error('Download was empty');
+      }
       const link = document.createElement('a');
       link.href = URL.createObjectURL(blob);
-      link.download = doc.originalName || label;
+      link.download = filename;
+      document.body.appendChild(link);
       link.click();
+      document.body.removeChild(link);
       URL.revokeObjectURL(link.href);
-    } catch {
+    } catch (err) {
+      console.warn('[DocLink] direct download failed, falling back to new tab:', err?.message);
       window.open(url, '_blank', 'noopener,noreferrer');
     }
   };
@@ -170,8 +196,28 @@ export const ScheduleCard = ({ dates, times, pickupAt, deliveredAt }) => {
   );
 };
 
-// Locations Card (for single vehicle)
+// Locations Card (for single vehicle).
+// A gate pass row only renders when BOTH conditions hold for that
+// stage: the location is an auction or dealership AND a real gate pass
+// document exists for that stage. Residences never need a gate pass,
+// so we don't show a "Gate Pass" button on a private/residential
+// pickup card even if a doc was somehow miswired into the wrong side.
+const isGatePassEligibleLocation = (locationType) => {
+  if (!locationType) return false;
+  const t = String(locationType).toLowerCase();
+  return t.includes('auction') || t.includes('dealer');
+};
+
 export const LocationsCard = ({ pickup, dropoff, locationTypes, showGatePass, pickupGatePass, dropoffGatePass, isPreviewOnly }) => {
+  const showPickupGatePass =
+    showGatePass &&
+    !!pickupGatePass &&
+    isGatePassEligibleLocation(locationTypes.pickup);
+  const showDropoffGatePass =
+    showGatePass &&
+    !!dropoffGatePass &&
+    isGatePassEligibleLocation(locationTypes.dropoff);
+
   return (
     <div className="ldm-section">
       <div className="ldm-section-label">Locations</div>
@@ -193,7 +239,7 @@ export const LocationsCard = ({ pickup, dropoff, locationTypes, showGatePass, pi
               </a>
             </div>
           )}
-          {showGatePass && pickupGatePass && <DocLink doc={pickupGatePass} label="Gate Pass" />}
+          {showPickupGatePass && <DocLink doc={pickupGatePass} label="Gate Pass" />}
         </div>
         <div className="ldm-box">
           <div className="ldm-field">
@@ -212,7 +258,7 @@ export const LocationsCard = ({ pickup, dropoff, locationTypes, showGatePass, pi
               </a>
             </div>
           )}
-          {showGatePass && dropoffGatePass && <DocLink doc={dropoffGatePass} label="Gate Pass" />}
+          {showDropoffGatePass && <DocLink doc={dropoffGatePass} label="Gate Pass" />}
         </div>
       </div>
     </div>

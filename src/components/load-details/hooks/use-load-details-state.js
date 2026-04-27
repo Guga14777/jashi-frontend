@@ -357,16 +357,39 @@ export const useLoadDetailsState = ({
   // ✅ FIXED: VEHICLE DATA EXTRACTION (Issue 4)
   // =====================================================
   
+  // Normalize a stored condition or operable string to the friendly
+  // label we want to render. Accepts the same lexicons the backend
+  // uses ("yes"/"no"/"operable"/"inoperable") so a booking row whose
+  // condition came in as a raw lowercase token still displays as
+  // "Operable" / "Inoperable" instead of "operable".
+  const friendlyCondition = (raw) => {
+    if (!raw) return '';
+    const val = String(raw).toLowerCase().trim();
+    if (['yes', 'true', 'operable', '1'].includes(val)) return 'Operable';
+    if (['no', 'false', 'inoperable', '0'].includes(val)) return 'Inoperable';
+    return val.charAt(0).toUpperCase() + val.slice(1);
+  };
+
   const vehicle = useMemo(() => {
     const extracted = extractVehicle(L);
-    
-    // Additional fallbacks from direct fields
+
+    // Additional fallbacks from direct fields. We also accept the
+    // backend's flattened `vehicleOperable` (set in extractVehicleFields
+    // on the booking detail response) — extractVehicle now handles it,
+    // but we keep an explicit fallback here to defend against any
+    // future shape change.
+    const condition =
+      extracted.condition ||
+      friendlyCondition(L.vehicleCondition) ||
+      friendlyCondition(L.vehicleOperable) ||
+      '';
+
     return {
       year: extracted.year || L.vehicleYear || '',
       make: extracted.make || L.vehicleMake || '',
       model: extracted.model || L.vehicleModel || '',
       type: extracted.type || L.vehicleType || '',
-      condition: extracted.condition || L.vehicleCondition || '',
+      condition,
       vin: extracted.vin || L.vin || '',
     };
   }, [L]);

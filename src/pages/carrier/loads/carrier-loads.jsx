@@ -15,6 +15,7 @@ import { useAuth } from '../../../store/auth-context';
 import { useDebounce } from '../../../hooks/use-debounce.js';
 import { TAB_STATUS_MAP } from '../../../utils/constants.js';
 import { Search, Calendar, Truck, Filter, Grid3x3, List, ChevronDown, MapPin, Clock, DollarSign, Package, X, RefreshCw, Camera, CheckCircle, Navigation, MapPinned } from 'lucide-react';
+import { formatShortDate } from '../../../utils/formatDate.js';
 
 // Canonical API base. Empty string in dev (Vite proxy handles /api) and in
 // prod with the Vercel→Railway rewrite. Cross-origin only when VITE_API_BASE
@@ -530,6 +531,15 @@ const CarrierLoads = () => {
               </div>
             </div>
           )}
+          {load.createdAt && (
+            <div className="cl-date-item">
+              <Calendar className="cl-date-icon" aria-hidden="true" />
+              <div>
+                <span className="cl-date-label">Posted</span>
+                <span className="cl-date-value">{formatShortDate(load.createdAt)}</span>
+              </div>
+            </div>
+          )}
         </div>
         
         {/* Price Section */}
@@ -572,15 +582,28 @@ const CarrierLoads = () => {
     );
   };
 
-  // Loading state
+  // Loading state — skeleton cards instead of a centered spinner so the
+  // visible chrome (header, counters, search row) appears immediately and
+  // the perceived load matches the actual sub-second backend.
   if (loading && !initialLoadDone) {
     return (
       <>
         <div className="cl-wrapper">
           <div className="cl-container">
-            <div className="cl-loading" role="status" aria-live="polite">
-              <RefreshCw className="cl-loading-spinner" size={24} />
-              <span>Loading your loads...</span>
+            <div className="cl-cover">
+              <header className="cl-header">
+                <h1 className="cl-title">My Loads</h1>
+              </header>
+            </div>
+            <div className="cl-skeleton-list" role="status" aria-live="polite" aria-label="Loading your loads">
+              {[0, 1, 2, 3, 4].map((i) => (
+                <div key={i} className="cl-skeleton-row">
+                  <div className="cl-skel cl-skel--id" />
+                  <div className="cl-skel cl-skel--route" />
+                  <div className="cl-skel cl-skel--meta" />
+                  <div className="cl-skel cl-skel--price" />
+                </div>
+              ))}
             </div>
           </div>
           <LiveChat />

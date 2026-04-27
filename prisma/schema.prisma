@@ -438,6 +438,9 @@ model Booking {
   @@index([orderNumber])
   @@index([carrierId])
   @@index([status, carrierId])
+  // Carrier "My Loads" filters by carrierId and orders by createdAt desc.
+  // Compound covers the hot path so the list view stays fast.
+  @@index([carrierId, createdAt(sort: Desc)])
   // Composite indexes for the customer dashboard list query, which filters by
   // userId (or userEmail in the OR-fallback branch) and orders by createdAt
   // DESC. Without these, Postgres can use only one of the single-column
@@ -542,6 +545,11 @@ model Document {
   mimeType     String?
   fileSize     Int?
   storageType  String? @default("local")
+
+  // Free-form metadata. Used today by carrier insurance docs to hang
+  // policy number / insurer / expiration / reminder settings off the
+  // file row instead of adding a side table.
+  metadata Json?
 
   // Vehicle-specific fields for multi-vehicle gate passes
   vehicleIndex  Int? // 0-based index of vehicle in booking's vehicles array

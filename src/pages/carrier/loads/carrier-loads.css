@@ -1183,3 +1183,40 @@
   border: 1px solid #f59e0b;
   font-weight: 600;
 }
+/* Skeleton cards used while the My Loads list is loading. Keeps the page
+   chrome stable so the perceived load matches the trimmed backend. */
+.cl-skeleton-list {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  padding: 16px 0;
+}
+.cl-skeleton-row {
+  display: grid;
+  grid-template-columns: 90px 1fr 220px 110px;
+  gap: 16px;
+  align-items: center;
+  padding: 16px;
+  background: #fff;
+  border: 1px solid #e5e7eb;
+  border-radius: 12px;
+}
+.cl-skel {
+  height: 14px;
+  border-radius: 6px;
+  background: linear-gradient(90deg, #f1f5f9 0%, #e2e8f0 50%, #f1f5f9 100%);
+  background-size: 200% 100%;
+  animation: cl-skeleton-shimmer 1.2s ease-in-out infinite;
+}
+.cl-skel--id    { width: 70px; height: 18px; }
+.cl-skel--route { height: 18px; }
+.cl-skel--meta  { height: 14px; width: 80%; }
+.cl-skel--price { height: 22px; width: 90px; justify-self: end; }
+@keyframes cl-skeleton-shimmer {
+  0%   { background-position: 200% 0; }
+  100% { background-position: -200% 0; }
+}
+@media (max-width: 640px) {
+  .cl-skeleton-row { grid-template-columns: 70px 1fr; }
+  .cl-skel--meta, .cl-skel--price { display: none; }
+}

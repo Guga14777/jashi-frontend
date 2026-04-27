@@ -22,7 +22,10 @@ import './quote-widget.css';
 // 6. Pickup/SUV/Van/Minivan must ALWAYS be more expensive than Sedan (same route)
 // 7. Only 1 vehicle can be selected per quote
 // ======================================================
-function QuoteWidgetCustomer() {
+function QuoteWidgetCustomer({ inModal = false, onModalClose, forceNewQuote = false } = {}) {
+  // `inModal` toggles the homepage-style "Your Price. Your Way." banner that
+  // sits above the form. The dashboard "Ship My Vehicle" button passes
+  // inModal so its modal matches the homepage hero exactly.
   const navigate = useNavigate();
   const location = useLocation();
   const { isAuthenticated, token } = useAuth();
@@ -512,7 +515,15 @@ function QuoteWidgetCustomer() {
   // RENDER
   // ============================================================================
   return (
-    <div className="quote-widget qw-scoped" id="quote-widget">
+    <div
+      className={`quote-widget qw-scoped${inModal ? ' qw-in-modal' : ''}`}
+      id="quote-widget"
+    >
+      {inModal && (
+        <div className="qw-modal-banner" role="presentation">
+          <h2 className="qw-modal-banner-title">Your Price. Your Way.</h2>
+        </div>
+      )}
       <form
         className="quote-form"
         onSubmit={(e) => { e.preventDefault(); e.stopPropagation(); }}

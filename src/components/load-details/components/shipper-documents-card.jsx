@@ -44,8 +44,16 @@ const downloadDocument = async (doc, fallbackName) => {
     const res = await fetch(url, {
       headers: token ? { Authorization: `Bearer ${token}` } : {},
     });
-    if (!res.ok) throw new Error('Download failed');
+    if (!res.ok) throw new Error(`Download failed with status ${res.status}`);
+    // If the backend returned JSON (e.g. an auth or "file not found"
+    // error body), don't save it as a fake .pdf — let the catch below
+    // open the URL in a new tab so the user sees the real error page.
+    const contentType = res.headers.get('content-type') || '';
+    if (contentType.includes('application/json')) {
+      throw new Error('Server returned JSON instead of a file');
+    }
     const blob = await res.blob();
+    if (blob.size === 0) throw new Error('Download was empty');
     const link = document.createElement('a');
     link.href = URL.createObjectURL(blob);
     link.download = doc.originalName || doc.fileName || fallbackName;
@@ -53,7 +61,8 @@ const downloadDocument = async (doc, fallbackName) => {
     link.click();
     document.body.removeChild(link);
     URL.revokeObjectURL(link.href);
-  } catch {
+  } catch (err) {
+    console.warn('[shipper-documents-card] direct download failed, opening in tab:', err?.message);
     window.open(url, '_blank', 'noopener,noreferrer');
   }
 };
@@ -138,7 +147,23 @@ const ShipperDocumentsCard = ({
   // that hides it is a cancelled booking (no shipment, no BOL).
   const bolAvailable = !isCancelled;
 
-  // Dedupe gate passes by id and split into pickup vs dropoff.
+  // Dedupe gate passes by id and split into pickup vs dropoff. Stage
+  // resolution prefers the explicit `stage` column on the Document row
+  // (set by the upload flow). Fall back to the legacy gatePassType
+  // marker, then to substring matching on type/name. Without this
+  // ordering, a booking with a single drop-off gate pass produced a
+  // phantom pickup gate pass row because the helper grabbed the
+  // first-by-index gate pass and tagged it as pickup.
+  const isStage = (gp, stage) => {
+    if (!gp) return false;
+    if (gp.stage && String(gp.stage).toLowerCase() === stage) return true;
+    if (gp.gatePassType === stage) return true;
+    const haystack = `${gp.type || ''} ${gp.originalName || ''} ${gp.fileName || ''}`.toLowerCase();
+    if (stage === 'pickup') return /(pickup|pick_up|pick-up)/.test(haystack);
+    if (stage === 'dropoff') return /(dropoff|drop_off|drop-off|delivery)/.test(haystack);
+    return false;
+  };
+
   const seen = new Set();
   const dedupedGatePasses = [];
   for (const gp of gatePasses) {
@@ -147,13 +172,8 @@ const ShipperDocumentsCard = ({
     dedupedGatePasses.push(gp);
   }
 
-  const pickupGatePass = dedupedGatePasses.find(
-    (g) => g.gatePassType === 'pickup' || /pickup/i.test(g.type || '')
-  );
-  const dropoffGatePass = dedupedGatePasses.find(
-    (g) => g.gatePassType === 'dropoff' ||
-           /(dropoff|drop_off|delivery)/i.test(g.type || '')
-  );
+  const pickupGatePass = dedupedGatePasses.find((g) => isStage(g, 'pickup'));
+  const dropoffGatePass = dedupedGatePasses.find((g) => isStage(g, 'dropoff'));
 
   // Anything the customer uploaded during the booking flow that isn't
   // a gate pass, a carrier-uploaded photo, or the POD. Auction/dealership

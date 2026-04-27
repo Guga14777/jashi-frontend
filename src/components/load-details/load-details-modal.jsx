@@ -11,6 +11,13 @@ import './load-details-modal.css';
 
 // Hooks
 import { useLoadDetailsState } from './hooks/use-load-details-state';
+import { useAuth } from '../../store/auth-context.jsx';
+
+// Test-only allowlist for the "Force start (test mode)" link rendered
+// below Start Trip. Mirrors the server-side allowlist in
+// server/controllers/booking/booking.carrier.status.controller.cjs —
+// keep both in sync. Adding more accounts is a code change, on purpose.
+const FORCE_START_ALLOWED_EMAILS = ['gjashi10@gmail.com'];
 
 // Components
 import {
@@ -91,6 +98,13 @@ const LoadDetailsModal = ({
   // Refs
   const backdropRef = useRef(null);
   const closeButtonRef = useRef(null);
+
+  const { user: currentUser } = useAuth();
+  const callerEmail = String(currentUser?.email || '').toLowerCase().trim();
+  const canForceStart =
+    portal === 'carrier' &&
+    !!callerEmail &&
+    FORCE_START_ALLOWED_EMAILS.includes(callerEmail);
 
   // Main state hook
   const state = useLoadDetailsState({
@@ -243,8 +257,9 @@ const LoadDetailsModal = ({
   };
 
   // Carrier action handlers
-  const handleStartTrip = async () => {
+  const handleStartTrip = async (options = {}) => {
     if (!L?.id) return;
+    const { force = false } = options;
     setStartTripLoading(true);
     setActionError(null);
     try {
@@ -252,6 +267,7 @@ const LoadDetailsModal = ({
       const response = await fetch(`${API_BASE}/api/carrier/loads/${L.id}/start-trip`, {
         method: 'POST',
         headers: { 'Authorization': `Bearer ${token}`, 'Content-Type': 'application/json' },
+        body: JSON.stringify(force ? { force: true } : {}),
       });
       const data = await response.json();
       if (!response.ok) throw new Error(data.error || 'Failed to start trip');
@@ -264,6 +280,8 @@ const LoadDetailsModal = ({
       setStartTripLoading(false);
     }
   };
+
+  const handleForceStartTrip = () => handleStartTrip({ force: true });
 
   const handleMarkArrived = async () => {
     if (!L?.id) return;
@@ -501,6 +519,11 @@ const LoadDetailsModal = ({
               hasAppointment={hasAppointment}
               weekendConfirmed={weekendConfirmed}
               isFirstAttempt={isFirstAttempt}
+              // Test-only override: shows a small "Force start (test mode)"
+              // link below the Start Trip button for the configured test
+              // account. Backend mirrors this allowlist.
+              canForceStart={canForceStart}
+              onForceStartTrip={handleForceStartTrip}
             />
           )}
 

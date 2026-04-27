@@ -97,6 +97,10 @@ const paymentsController = safeLoad('./server/controllers/payments.controller.cj
 const routesController = safeLoad('./server/controllers/routes.controller.cjs', 'routes.controller');
 const documentsController = safeLoad('./server/controllers/documents.controller.cjs', 'documents.controller');
 const adminDocumentsController = safeLoad('./server/controllers/admin-documents.controller.cjs', 'admin-documents.controller');
+const carrierInsuranceController = safeLoad(
+  './server/controllers/carrier/carrier.insurance.controller.cjs',
+  'carrier.insurance.controller'
+);
 const adminOrdersController = safeLoad('./server/controllers/admin-orders.controller.cjs', 'admin-orders.controller');
 const adminActionsController = safeLoad('./server/controllers/admin/admin.actions.controller.cjs', 'admin.actions.controller');
 const adminExportController = safeLoad('./server/controllers/admin/admin.export.controller.cjs', 'admin.export.controller');
@@ -571,14 +575,20 @@ app.patch('/api/admin/payouts/:id/status', requireAdminTier('ops'), paymentsCont
 // DOCUMENT ROUTES
 // ============================================================
 app.post('/api/documents/upload', authMiddleware, upload.single('file'), documentsController.uploadDocument);
+// Specific routes MUST come BEFORE the generic /:id route or Express
+// matches "/:id" first and treats "download" or "url" as a document id —
+// which is what was happening when the gate-pass download saved a
+// 404/JSON body as a .pdf and Chrome refused to render it.
+app.get('/api/documents/:id/download', authMiddleware, documentsController.downloadDocument);
+app.get('/api/documents/:id/url', authMiddleware, documentsController.getDocumentUrl);
 app.get('/api/documents/:id', authMiddleware, documentsController.getDocument);
 app.delete('/api/documents/:id', authMiddleware, documentsController.deleteDocument);
 
-// TODO: Implement these functions in documents.controller.cjs
-// app.get('/api/documents/:id/download', authMiddleware, documentsController.downloadDocument);
-// app.get('/api/documents', authMiddleware, documentsController.listMyDocuments);
-// app.get('/api/bookings/:bookingId/documents', authMiddleware, documentsController.listBookingDocuments);
-// app.get('/api/quotes/:quoteId/documents', authMiddleware, documentsController.listQuoteDocuments);
+// List the authenticated user's documents (used by the Customer Documents page).
+// Filters via ?type, ?bookingId, ?quoteId, ?vehicleIndex.
+app.get('/api/documents', authMiddleware, documentsController.getUserDocuments);
+app.get('/api/bookings/:bookingId/documents', authMiddleware, documentsController.getBookingDocuments);
+app.get('/api/quotes/:quoteId/documents', authMiddleware, documentsController.getQuoteDocuments);
 
 // ============================================================
 // ADMIN ROUTES
@@ -678,11 +688,17 @@ app.post('/api/carrier/loads/:id/cancel', authMiddleware, bookingController.canc
 // ✅ Get load documents for carriers
 app.get('/api/carrier/loads/:id/documents', authMiddleware, bookingController.getLoadDocuments);
 
-// TODO: Implement these functions in documents.controller.cjs
-// ✅ NEW: Carrier Insurance/COI routes
-// app.get('/api/carrier/insurance', authMiddleware, documentsController.getCarrierInsurance);
-// app.post('/api/carrier/insurance', authMiddleware, documentsController.saveCarrierInsurance);
-// app.delete('/api/carrier/insurance', authMiddleware, documentsController.deleteCarrierInsurance);
+// Carrier Insurance / COI — file lives in Document(type='insurance') with
+// policy + reminder metadata in Document.metadata. See
+// server/controllers/carrier/carrier.insurance.controller.cjs.
+app.get('/api/carrier/insurance', authMiddleware, carrierInsuranceController.getCarrierInsurance);
+app.post(
+  '/api/carrier/insurance',
+  authMiddleware,
+  carrierInsuranceController.upload,
+  carrierInsuranceController.saveCarrierInsurance
+);
+app.delete('/api/carrier/insurance', authMiddleware, carrierInsuranceController.deleteCarrierInsurance);
 
 // ============================================================
 // STATIC FILES (production)
