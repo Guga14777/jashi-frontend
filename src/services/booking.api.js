@@ -329,12 +329,17 @@ export async function getBolData(bookingId, token) {
  * @param {string} token - Auth token
  * @returns {Promise} Updated booking with pickup status
  */
-export async function markPickup(loadId, documentIds, token) {
+export async function markPickup(loadId, documentIds, token, options = {}) {
   console.log('📤 Marking load as picked up:', loadId, 'with documents:', documentIds);
 
   if (!token) {
     throw new Error('Authentication required');
   }
+
+  const body = { documentIds };
+  // Test-mode override — server-side allowlist still applies, so a stray
+  // force flag from a normal carrier is rejected.
+  if (options.force === true) body.force = true;
 
   const response = await fetch(`${API_BASE}/api/carrier/loads/${loadId}/pickup`, {
     method: 'POST',
@@ -342,7 +347,7 @@ export async function markPickup(loadId, documentIds, token) {
       'Content-Type': 'application/json',
       'Authorization': `Bearer ${token}`,
     },
-    body: JSON.stringify({ documentIds }),
+    body: JSON.stringify(body),
   });
 
   if (!response.ok) {
@@ -364,7 +369,7 @@ export async function markPickup(loadId, documentIds, token) {
  * @param {string} token - Auth token
  * @returns {Promise} Updated booking with delivered status
  */
-export async function markDelivered(loadId, deliveryDocumentIds, podDocumentId, token) {
+export async function markDelivered(loadId, deliveryDocumentIds, podDocumentId, token, options = {}) {
   console.log('📤 Marking load as delivered:', loadId);
   console.log('   Delivery photos:', deliveryDocumentIds);
   console.log('   POD document:', podDocumentId);
@@ -373,16 +378,16 @@ export async function markDelivered(loadId, deliveryDocumentIds, podDocumentId, 
     throw new Error('Authentication required');
   }
 
+  const body = { deliveryDocumentIds, podDocumentId };
+  if (options.force === true) body.force = true;
+
   const response = await fetch(`${API_BASE}/api/carrier/loads/${loadId}/deliver`, {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',
       'Authorization': `Bearer ${token}`,
     },
-    body: JSON.stringify({ 
-      deliveryDocumentIds,
-      podDocumentId,
-    }),
+    body: JSON.stringify(body),
   });
 
   if (!response.ok) {

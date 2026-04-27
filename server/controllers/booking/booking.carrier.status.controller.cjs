@@ -641,14 +641,65 @@ const isArrivalTimeValid = (booking) => {
   }
 };
 
-// Test accounts allowed to bypass the start-trip authorization gate
-// via { force: true } in the POST body. Limited to a hard-coded test
-// email so a stray client send of force:true from a real carrier
-// account is rejected. Adding more accounts is a code change, not a
+// Test accounts allowed to bypass authorization + time-window gates on
+// status transitions when { force: true } is sent in the POST body.
+// Limited to a hard-coded test email so a stray force:true from a real
+// carrier is rejected. Adding more accounts is a code change, not a
 // runtime toggle, on purpose.
-const FORCE_START_ALLOWED_EMAILS = new Set([
+const FORCE_ALLOWED_EMAILS = new Set([
   'gjashi10@gmail.com',
 ]);
+// Backwards-compat alias — keep the old name available.
+const FORCE_START_ALLOWED_EMAILS = FORCE_ALLOWED_EMAILS;
+
+/**
+ * Central "is the caller allowed to force a transition?" check.
+ *
+ * Resolves the caller's email from every shape the auth middleware
+ * may have populated (req.user.email is the canonical one, but older
+ * code paths set req.userEmail) and falls back to a fresh User row
+ * lookup so a test tier added by email mid-session still works.
+ *
+ * Returns true ONLY when:
+ *   - the request body carries { force: true }, AND
+ *   - the resolved email is on FORCE_ALLOWED_EMAILS.
+ *
+ * Logs the outcome so audit trail / "did the override actually fire?"
+ * questions are answerable from the server log.
+ */
+async function isForceAllowed(req, transitionLabel) {
+  const force = req.body?.force === true || req.body?.force === 'true';
+  if (!force) return false;
+
+  let actorEmail = '';
+  // Prefer the JWT-claimed email so we don't pay the DB round-trip on
+  // every override.
+  if (req.user?.email) {
+    actorEmail = String(req.user.email).toLowerCase().trim();
+  } else if (req.userEmail) {
+    actorEmail = String(req.userEmail).toLowerCase().trim();
+  }
+
+  if (!actorEmail && req.userId) {
+    try {
+      const actor = await prisma.user.findUnique({
+        where: { id: req.userId },
+        select: { email: true },
+      });
+      actorEmail = (actor?.email || '').toLowerCase().trim();
+    } catch (e) {
+      console.warn(`[FORCE] User lookup failed for ${req.userId}:`, e.message);
+    }
+  }
+
+  const allowed = !!actorEmail && FORCE_ALLOWED_EMAILS.has(actorEmail);
+  if (allowed) {
+    console.log(`[FORCED] ${transitionLabel} by ${actorEmail} on ${req.params?.id}`);
+  } else if (force) {
+    console.log(`🚫 [FORCE REJECTED] ${transitionLabel} requested by ${actorEmail || '<unknown>'} (not on allowlist)`);
+  }
+  return allowed;
+}
 
 // ============================================================
 // POST /api/carrier/loads/:id/start-trip
@@ -663,8 +714,6 @@ const startTripToPickup = async (req, res) => {
     const { id } = req.params;
     const carrierId = req.userId;
     if (!carrierId) return res.status(401).json({ error: 'Authentication required' });
-
-    const force = req.body?.force === true;
 
     // ✅ Include gate pass and documents for authorization check
     const booking = await prisma.booking.findFirst({
@@ -687,25 +736,7 @@ const startTripToPickup = async (req, res) => {
       });
     }
 
-    // Verify the caller is allowed to use the force flag, if they
-    // tried. We resolve the caller's email from the auth middleware
-    // (req.userEmail) and fall back to a fresh User lookup so a test
-    // tier added by email mid-session still works.
-    let allowForce = false;
-    if (force) {
-      let actorEmail = (req.userEmail || '').toLowerCase().trim();
-      if (!actorEmail) {
-        const actor = await prisma.user.findUnique({
-          where: { id: carrierId },
-          select: { email: true },
-        });
-        actorEmail = (actor?.email || '').toLowerCase().trim();
-      }
-      allowForce = FORCE_START_ALLOWED_EMAILS.has(actorEmail);
-      if (!allowForce) {
-        console.log(`🚫 [START TRIP] force=true rejected for non-test account ${actorEmail}`);
-      }
-    }
+    const allowForce = await isForceAllowed(req, 'START_TRIP');
 
     // ✅ NEW: Check authorization before allowing start trip — unless
     // force was requested AND the caller is on the test allowlist.
@@ -739,7 +770,7 @@ const startTripToPickup = async (req, res) => {
       },
     });
 
-    console.log(`🚗 [START TRIP] Carrier ${carrierId} started trip for booking ${id}${authResult.protected ? ' (PROTECTED)' : ''}${allowForce ? ' (FORCED)' : ''}`);
+    console.log(`🚗 [START TRIP] Carrier ${carrierId} started trip for booking ${id}${authResult.protected ? ' (PROTECTED)' : ''}${allowForce ? ' [FORCED]' : ''}`);
 
     try {
       const notify = require('../../services/notifications.service.cjs');
@@ -798,9 +829,14 @@ const markArrivedAtPickup = async (req, res) => {
       });
     }
 
-    // ✅ NEW: Check authorization before allowing arrival
-    const authResult = validateAuthorizationForTransition(booking, 'arrived_at_pickup');
-    
+    const allowForce = await isForceAllowed(req, 'ARRIVED');
+
+    // ✅ NEW: Check authorization before allowing arrival — unless
+    // force was requested AND the caller is on the test allowlist.
+    const authResult = allowForce
+      ? { allowed: true, protected: false }
+      : validateAuthorizationForTransition(booking, 'arrived_at_pickup');
+
     if (!authResult.allowed) {
       console.log(`🚫 [ARRIVED] Authorization blocked for ${id}: ${authResult.error}`);
       return res.status(400).json({
@@ -811,22 +847,24 @@ const markArrivedAtPickup = async (req, res) => {
       });
     }
 
-    // Check time window (existing logic)
-    const arrivalCheck = isArrivalTimeValid(booking);
-    if (!arrivalCheck.valid) {
-      console.log(`⛔ [ARRIVED] Blocked - ${arrivalCheck.code}: ${arrivalCheck.message}`);
-      return res.status(400).json({
-        error: arrivalCheck.message,
-        code: arrivalCheck.code,
-        scheduledDate: arrivalCheck.scheduledDate,
-        availableAt: arrivalCheck.availableAt,
-        pickupWindowStart: arrivalCheck.pickupWindowStart,
-        pickupWindowEnd: arrivalCheck.pickupWindowEnd,
-        timezone: arrivalCheck.timezone,
-        originType: arrivalCheck.originType,
-        earlyArrivalAllowed: arrivalCheck.earlyArrivalAllowed,
-        hint: 'You can only mark as arrived within the pickup time window',
-      });
+    // Check time window (existing logic) — also bypassed under force.
+    if (!allowForce) {
+      const arrivalCheck = isArrivalTimeValid(booking);
+      if (!arrivalCheck.valid) {
+        console.log(`⛔ [ARRIVED] Blocked - ${arrivalCheck.code}: ${arrivalCheck.message}`);
+        return res.status(400).json({
+          error: arrivalCheck.message,
+          code: arrivalCheck.code,
+          scheduledDate: arrivalCheck.scheduledDate,
+          availableAt: arrivalCheck.availableAt,
+          pickupWindowStart: arrivalCheck.pickupWindowStart,
+          pickupWindowEnd: arrivalCheck.pickupWindowEnd,
+          timezone: arrivalCheck.timezone,
+          originType: arrivalCheck.originType,
+          earlyArrivalAllowed: arrivalCheck.earlyArrivalAllowed,
+          hint: 'You can only mark as arrived within the pickup time window',
+        });
+      }
     }
 
     const now = new Date();
@@ -846,7 +884,7 @@ const markArrivedAtPickup = async (req, res) => {
       },
     });
 
-    console.log(`📍 [ARRIVED] Carrier ${carrierId} arrived at pickup for booking ${id}${authResult.protected ? ' (PROTECTED)' : ''}`);
+    console.log(`📍 [ARRIVED] Carrier ${carrierId} arrived at pickup for booking ${id}${authResult.protected ? ' (PROTECTED)' : ''}${allowForce ? ' [FORCED]' : ''}`);
 
     try {
       const notify = require('../../services/notifications.service.cjs');

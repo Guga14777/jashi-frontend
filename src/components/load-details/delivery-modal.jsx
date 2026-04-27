@@ -202,7 +202,15 @@ const DeliveryModal = ({
       const deliveryDocumentIds = deliveryPhotos.map(f => f.id);
       const podDocumentId = null;
 
-      const result = await markDelivered(load.id, deliveryDocumentIds, podDocumentId, token);
+      // Test-mode override: latched by handleForceStartTrip in
+      // load-details-modal.jsx. Lets gjashi10@gmail.com walk every
+      // transition without time gates blocking the next step.
+      let force = false;
+      try {
+        force = sessionStorage.getItem(`ldm:force-mode:${load.id}`) === '1';
+      } catch (_) { /* sessionStorage unavailable */ }
+
+      const result = await markDelivered(load.id, deliveryDocumentIds, podDocumentId, token, { force });
       
       console.log('✅ Delivery confirmed:', result);
       

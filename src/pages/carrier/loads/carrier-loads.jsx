@@ -66,7 +66,11 @@ const CarrierLoads = () => {
     dateTo: '',
     status: ''
   });
-  const [sort, setSort] = useState('updatedDesc');
+  // Default to newest-first by booking creation date so the most recently
+  // booked loads always sit on page 1. The previous default ("updatedDesc"
+  // by updatedAt) bubbled older loads to the top after every status
+  // change, which made freshly-booked rides hard to find.
+  const [sort, setSort] = useState('newestDesc');
   const [page, setPage] = useState(1);
   const [selectedLoad, setSelectedLoad] = useState(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -309,8 +313,16 @@ const CarrierLoads = () => {
       case 'milesAsc':
         data.sort((a, b) => a.miles - b.miles);
         break;
-      default:
+      case 'updatedDesc':
         data.sort((a, b) => new Date(b.updatedAt || b.pickupDate) - new Date(a.updatedAt || a.pickupDate));
+        break;
+      case 'newestDesc':
+      default:
+        data.sort(
+          (a, b) =>
+            new Date(b.createdAt || b.assignedAt || b.pickupDate) -
+            new Date(a.createdAt || a.assignedAt || a.pickupDate)
+        );
         break;
     }
     
@@ -582,9 +594,9 @@ const CarrierLoads = () => {
     );
   };
 
-  // Loading state — skeleton cards instead of a centered spinner so the
-  // visible chrome (header, counters, search row) appears immediately and
-  // the perceived load matches the actual sub-second backend.
+  // Loading state — skeleton cards laid out like the real cards so the
+  // page chrome appears instantly and the swap to real data is visually
+  // calm. Replaces the old centered spinner.
   if (loading && !initialLoadDone) {
     return (
       <>
@@ -593,16 +605,40 @@ const CarrierLoads = () => {
             <div className="cl-cover">
               <header className="cl-header">
                 <h1 className="cl-title">My Loads</h1>
+                <nav className="cl-counters" aria-hidden="true">
+                  <span className="cl-counter is-active">All</span>
+                  <span className="cl-counter">Scheduled</span>
+                  <span className="cl-counter">In Transit</span>
+                  <span className="cl-counter">Delivered</span>
+                </nav>
               </header>
             </div>
-            <div className="cl-skeleton-list" role="status" aria-live="polite" aria-label="Loading your loads">
+            <div
+              className="skeleton-list"
+              role="status"
+              aria-live="polite"
+              aria-label="Loading your loads"
+            >
               {[0, 1, 2, 3, 4].map((i) => (
-                <div key={i} className="cl-skeleton-row">
-                  <div className="cl-skel cl-skel--id" />
-                  <div className="cl-skel cl-skel--route" />
-                  <div className="cl-skel cl-skel--meta" />
-                  <div className="cl-skel cl-skel--price" />
-                </div>
+                <article key={i} className="skeleton-card" aria-hidden="true">
+                  <div className="skeleton-card__top">
+                    <div className="skeleton-bar skeleton-bar--id" />
+                    <div className="skeleton-bar skeleton-bar--status" />
+                  </div>
+                  <div className="skeleton-bar skeleton-bar--route" />
+                  <div className="skeleton-card__meta">
+                    <div className="skeleton-bar skeleton-bar--meta" />
+                    <div className="skeleton-bar skeleton-bar--meta" />
+                    <div className="skeleton-bar skeleton-bar--meta" />
+                  </div>
+                  <div className="skeleton-card__bottom">
+                    <div className="skeleton-bar skeleton-bar--price" />
+                    <div className="skeleton-card__buttons">
+                      <div className="skeleton-bar skeleton-bar--btn" />
+                      <div className="skeleton-bar skeleton-bar--btn" />
+                    </div>
+                  </div>
+                </article>
               ))}
             </div>
           </div>
@@ -778,6 +814,7 @@ const CarrierLoads = () => {
                   className="cl-sort"
                   aria-label="Sort loads"
                 >
+                  <option value="newestDesc">Newest First</option>
                   <option value="updatedDesc">Recently Updated</option>
                   <option value="pickupSoon">Pickup Soon</option>
                   <option value="priceDesc">Price (High to Low)</option>

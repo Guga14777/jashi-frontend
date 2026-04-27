@@ -19,6 +19,31 @@ import { useAuth } from '../../store/auth-context.jsx';
 // keep both in sync. Adding more accounts is a code change, on purpose.
 const FORCE_START_ALLOWED_EMAILS = ['gjashi10@gmail.com'];
 
+// Once the test account has clicked "Force start (test mode)" on a
+// given booking, every subsequent transition (Arrived, Picked Up,
+// Delivered) for that booking auto-passes `force: true` in the body
+// so a load can walk through every status without hitting the
+// time-window gates. The flag lives in sessionStorage so it does not
+// survive a tab close, but does survive a remount of the modal.
+const FORCE_MODE_KEY = (loadId) => `ldm:force-mode:${loadId}`;
+const isForceModeEnabled = (loadId) => {
+  if (!loadId) return false;
+  try {
+    return sessionStorage.getItem(FORCE_MODE_KEY(loadId)) === '1';
+  } catch (_) {
+    return false;
+  }
+};
+const setForceModeEnabled = (loadId, on) => {
+  if (!loadId) return;
+  try {
+    if (on) sessionStorage.setItem(FORCE_MODE_KEY(loadId), '1');
+    else sessionStorage.removeItem(FORCE_MODE_KEY(loadId));
+  } catch (_) {
+    // sessionStorage unavailable — accept silently.
+  }
+};
+
 // Components
 import {
   StatusStepper,
@@ -281,7 +306,14 @@ const LoadDetailsModal = ({
     }
   };
 
-  const handleForceStartTrip = () => handleStartTrip({ force: true });
+  const handleForceStartTrip = () => {
+    // Latch test mode for this booking — every subsequent transition
+    // (Arrived, Picked Up, Delivered) will auto-pass force:true so the
+    // tester can walk the full lifecycle in one session without time
+    // gates blocking each step.
+    if (L?.id) setForceModeEnabled(L.id, true);
+    return handleStartTrip({ force: true });
+  };
 
   const handleMarkArrived = async () => {
     if (!L?.id) return;
@@ -289,9 +321,11 @@ const LoadDetailsModal = ({
     setActionError(null);
     try {
       const token = localStorage.getItem('token');
+      const force = isForceModeEnabled(L.id);
       const response = await fetch(`${API_BASE}/api/carrier/loads/${L.id}/arrived-at-pickup`, {
         method: 'POST',
         headers: { 'Authorization': `Bearer ${token}`, 'Content-Type': 'application/json' },
+        body: JSON.stringify(force ? { force: true } : {}),
       });
       const data = await response.json();
       if (!response.ok) {

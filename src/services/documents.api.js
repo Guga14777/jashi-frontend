@@ -118,6 +118,69 @@ export const getViewUrl = (documentId) => {
   return `${API_BASE}/api/documents/${documentId}/view`;
 };
 
+/**
+ * Get a fetchable, no-auth-required URL for a document.
+ *
+ * The legacy `GET /api/documents/:id/download` endpoint requires a Bearer
+ * token, which a plain `<a href>` click cannot supply (and right-click
+ * "Open in new tab" / middle-click bypasses any onClick handler that would
+ * otherwise attach the header). This helper hits the auth-gated
+ * `/api/documents/:id/url` endpoint, which returns either a Supabase
+ * signed URL (cloud storage) or a `/uploads/...` path served by the
+ * static middleware (local storage). Either form is safe to open
+ * directly via window.open.
+ *
+ * @param {string} documentId
+ * @param {string} token - Bearer token from useAuth()
+ * @returns {Promise<string>} URL safe to open without further auth
+ */
+export const fetchDownloadUrl = async (documentId, token) => {
+  if (!documentId) throw new Error('documentId is required');
+  const headers = { 'Content-Type': 'application/json' };
+  if (token) headers['Authorization'] = `Bearer ${token}`;
+
+  const res = await fetch(`${API_BASE}/api/documents/${documentId}/url`, {
+    headers,
+  });
+
+  if (!res.ok) {
+    const body = await res.json().catch(() => ({}));
+    throw new Error(body.error || body.message || `Failed (${res.status})`);
+  }
+
+  const data = await res.json();
+  if (!data?.url) throw new Error('Server did not return a URL');
+
+  // Local-storage URLs come back as relative `/uploads/...`. Make them
+  // absolute against the API origin so window.open works regardless of
+  // where the SPA is served from.
+  const url = data.url.startsWith('http') ? data.url : `${API_BASE}${data.url}`;
+  return url;
+};
+
+/**
+ * Open a document in a new tab using a fresh signed/static URL.
+ * This replaces the old `<a href={getDownloadUrl(id)}>` pattern that was
+ * failing with "No token provided" because the link bypassed auth.
+ *
+ * @param {string} documentId
+ * @param {string} token
+ * @param {object} [options]
+ * @param {Function} [options.onError] - Called with the Error on failure.
+ */
+export const openDocumentInTab = async (documentId, token, options = {}) => {
+  try {
+    const url = await fetchDownloadUrl(documentId, token);
+    // window.open before any await would give us better popup-blocker
+    // friendliness, but we already awaited fetchDownloadUrl above so
+    // most browsers treat this as user-initiated still.
+    window.open(url, '_blank', 'noopener,noreferrer');
+  } catch (err) {
+    if (options.onError) options.onError(err);
+    else console.error('[openDocumentInTab] failed:', err);
+  }
+};
+
 // ============================================================================
 // DOCUMENT UPLOAD FUNCTIONS
 // ============================================================================

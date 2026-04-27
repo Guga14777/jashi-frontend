@@ -1183,40 +1183,68 @@
   border: 1px solid #f59e0b;
   font-weight: 600;
 }
-/* Skeleton cards used while the My Loads list is loading. Keeps the page
-   chrome stable so the perceived load matches the trimmed backend. */
-.cl-skeleton-list {
+/* Skeleton cards used while the My Loads list is loading. The card outline
+   mirrors a real load card so the swap to real data is visually calm.
+   Bars use a shimmer animation; the page chrome (header + counters)
+   appears immediately. */
+.skeleton-list {
   display: flex;
   flex-direction: column;
   gap: 12px;
   padding: 16px 0;
 }
-.cl-skeleton-row {
-  display: grid;
-  grid-template-columns: 90px 1fr 220px 110px;
-  gap: 16px;
-  align-items: center;
-  padding: 16px;
+.skeleton-card {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  padding: 18px 20px;
   background: #fff;
   border: 1px solid #e5e7eb;
-  border-radius: 12px;
+  border-radius: 14px;
+  box-shadow: 0 1px 2px rgba(15, 23, 42, 0.04);
 }
-.cl-skel {
+.skeleton-card__top,
+.skeleton-card__bottom {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+}
+.skeleton-card__meta {
+  display: flex;
+  gap: 16px;
+  flex-wrap: wrap;
+}
+.skeleton-card__buttons {
+  display: flex;
+  gap: 10px;
+}
+.skeleton-bar {
   height: 14px;
   border-radius: 6px;
-  background: linear-gradient(90deg, #f1f5f9 0%, #e2e8f0 50%, #f1f5f9 100%);
+  background: linear-gradient(
+    90deg,
+    var(--color-bg-tertiary, #e5e7eb) 0%,
+    #f1f5f9 50%,
+    var(--color-bg-tertiary, #e5e7eb) 100%
+  );
   background-size: 200% 100%;
-  animation: cl-skeleton-shimmer 1.2s ease-in-out infinite;
+  animation: shimmer 1.2s ease-in-out infinite;
 }
-.cl-skel--id    { width: 70px; height: 18px; }
-.cl-skel--route { height: 18px; }
-.cl-skel--meta  { height: 14px; width: 80%; }
-.cl-skel--price { height: 22px; width: 90px; justify-self: end; }
-@keyframes cl-skeleton-shimmer {
+.skeleton-bar--id     { width: 90px;  height: 20px; }
+.skeleton-bar--status { width: 110px; height: 22px; border-radius: 999px; }
+.skeleton-bar--route  { width: 70%;   height: 18px; }
+.skeleton-bar--meta   { width: 130px; height: 12px; }
+.skeleton-bar--price  { width: 110px; height: 24px; }
+.skeleton-bar--btn    { width: 110px; height: 36px; border-radius: 8px; }
+@keyframes shimmer {
   0%   { background-position: 200% 0; }
   100% { background-position: -200% 0; }
 }
 @media (max-width: 640px) {
-  .cl-skeleton-row { grid-template-columns: 70px 1fr; }
-  .cl-skel--meta, .cl-skel--price { display: none; }
+  .skeleton-card__meta { gap: 10px; }
+  .skeleton-bar--meta { width: 80px; }
+  .skeleton-card__bottom { flex-direction: column; align-items: stretch; }
+  .skeleton-card__buttons { justify-content: stretch; }
+  .skeleton-bar--btn { flex: 1; }
 }

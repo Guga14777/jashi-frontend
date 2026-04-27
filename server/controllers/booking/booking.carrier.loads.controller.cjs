@@ -23,6 +23,29 @@ const {
 } = require('../../services/booking/index.cjs');
 
 // ============================================================
+// In-memory list cache for /api/carrier/my-loads.
+// Keyed by carrierId + the page/status params so different filters
+// don't share entries. TTL is short (10s) — long enough to deduplicate
+// the burst of requests that fires when the carrier dashboard mounts,
+// short enough that newly-accepted loads appear without manual refresh.
+// invalidateCarrierLoadsCache(carrierId) is called from acceptLoad and
+// from the status-transition controllers when a load changes.
+// ============================================================
+const LIST_CACHE_TTL_MS = 10_000;
+const carrierLoadsCache = new Map(); // key -> { expires, payload }
+
+const buildCacheKey = (carrierId, status, page, limit) =>
+  `${carrierId}|${status || ''}|${page}|${limit}`;
+
+const invalidateCarrierLoadsCache = (carrierId) => {
+  if (!carrierId) return;
+  const prefix = `${carrierId}|`;
+  for (const k of carrierLoadsCache.keys()) {
+    if (k.startsWith(prefix)) carrierLoadsCache.delete(k);
+  }
+};
+
+// ============================================================
 // HELPER: Normalize booking data for carrier view
 // ============================================================
 const normalizeBookingForCarrier = async (booking) => {
@@ -208,6 +231,7 @@ const shapeBookingForCarrierList = (booking) => {
 // GET /api/carrier/loads
 // ============================================================
 const getCarrierLoads = async (req, res) => {
+  const t0 = Date.now();
   try {
     const carrierId = req.userId;
     if (!carrierId) {
@@ -215,6 +239,13 @@ const getCarrierLoads = async (req, res) => {
     }
 
     const { status, page = 1, limit = 20 } = req.query;
+    const cacheKey = buildCacheKey(carrierId, status, page, limit);
+    const cached = carrierLoadsCache.get(cacheKey);
+    if (cached && cached.expires > Date.now()) {
+      console.log(`[myloads] ${carrierId} cache hit (${Date.now() - t0}ms)`);
+      return res.json(cached.payload);
+    }
+
     const skip = (parseInt(page) - 1) * parseInt(limit);
 
     // Build where clause
@@ -272,7 +303,7 @@ const getCarrierLoads = async (req, res) => {
 
     const loads = bookings.map(shapeBookingForCarrierList);
 
-    res.json({
+    const payload = {
       success: true,
       loads,
       pagination: {
@@ -281,7 +312,15 @@ const getCarrierLoads = async (req, res) => {
         total,
         totalPages: Math.ceil(total / parseInt(limit)),
       },
+    };
+
+    carrierLoadsCache.set(cacheKey, {
+      expires: Date.now() + LIST_CACHE_TTL_MS,
+      payload,
     });
+
+    console.log(`[myloads] ${carrierId} ${loads.length}/${total} (${Date.now() - t0}ms)`);
+    res.json(payload);
   } catch (error) {
     console.error('❌ [CARRIER LOADS] Error:', error);
     res.status(500).json({ error: 'Failed to fetch loads', details: error.message });
@@ -405,6 +444,10 @@ const getAvailableLoads = async (req, res) => {
         ...vehicleFields,
         transportType: booking.transportType,
         pickupDate: booking.pickupDate,
+        // Card UI prints "Posted <date>" — front end falls back from
+        // postedAt → createdAt, but the backend wasn't exposing either.
+        createdAt: booking.createdAt,
+        postedAt: booking.createdAt,
         status: 'scheduled',
         statusLabel: 'Available',
         likelihood: booking.quoteRelation?.likelihood,
@@ -482,6 +525,10 @@ const acceptLoad = async (req, res) => {
 
     const normalizedBooking = await normalizeBookingForCarrier(updatedBooking);
 
+    // The load just moved into this carrier's My Loads list — drop their
+    // cached pages so the next /api/carrier/my-loads request returns fresh.
+    invalidateCarrierLoadsCache(carrierId);
+
     res.json({
       success: true,
       message: 'Load accepted successfully',
@@ -551,7 +598,10 @@ module.exports = {
   acceptLoad,
   getLoadCounts,
   normalizeBookingForCarrier,
-  
+  // Exported so booking.carrier.status.controller.cjs can drop the carrier's
+  // cached My Loads pages whenever a status transition fires.
+  invalidateCarrierLoadsCache,
+
   // ✅ Alias exports for server.cjs compatibility
   getAvailableLoadsForCarrier: getAvailableLoads,
   acceptLoadAsCarrier: acceptLoad,

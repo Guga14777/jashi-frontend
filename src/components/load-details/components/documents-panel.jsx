@@ -11,7 +11,8 @@ import {
   ZoomInIcon, ZoomOutIcon, ChevronLeftIcon, ChevronRightIcon, CloseIcon
 } from './icons';
 import { getFullImageUrl } from '../utils/formatters';
-import { getDownloadUrl } from '../../../services/documents.api';
+import { fetchDownloadUrl } from '../../../services/documents.api';
+import { useAuth } from '../../../store/auth-context.jsx';
 
 // Canonical API base. Empty string in dev (Vite proxy handles /api) and in
 // prod with the Vercel→Railway rewrite. Cross-origin only when VITE_API_BASE
@@ -43,56 +44,63 @@ export const BolButton = ({ onClick, isLoading }) => {
   );
 };
 
-// Document Link — same robust download flow as the shipper card and the
-// route-vehicle-card DocLink. Verifies res.ok and the response content
-// type before saving, so a 404 HTML body or JSON error can't be
-// downloaded as a corrupted ".pdf".
+// Document Link.
+//
+// Pattern: hit the auth-gated `/api/documents/:id/url` endpoint with a
+// Bearer header, receive a no-auth-required URL (Supabase signed URL for
+// cloud storage, or a `/uploads/...` static path for local storage), then
+// window.open the result. Plain `<a href>` is the trap that broke this in
+// production — middle-click / right-click bypasses any onClick that
+// would otherwise inject the auth header, so the user lands on a JSON
+// "No token provided" body instead of a PDF.
 const DocLink = ({ doc, label }) => {
-  const getDownloadUrlForDoc = (doc) => {
-    if (!doc) return null;
-    if (doc.id) return getDownloadUrl(doc.id);
-    const url = doc.fileUrl || doc.filePath;
-    return url?.startsWith('http') ? url : url ? `${API_BASE}${url}` : null;
-  };
+  const { token } = useAuth();
+  const [pending, setPending] = useState(false);
 
-  const url = getDownloadUrlForDoc(doc);
-  if (!url) return null;
+  if (!doc) return null;
 
-  const filename = doc.originalName || doc.fileName || label;
+  // Pre-uploaded/stub docs without an id sometimes have a direct fileUrl.
+  // Those don't need the URL handshake.
+  const directUrl = !doc.id
+    ? (() => {
+        const u = doc.fileUrl || doc.filePath;
+        if (!u) return null;
+        return u.startsWith('http') ? u : `${API_BASE}${u}`;
+      })()
+    : null;
+
+  if (!doc.id && !directUrl) return null;
 
   const handleClick = async (e) => {
     e.preventDefault();
-    const token = localStorage.getItem('token');
+    if (pending) return;
+    setPending(true);
     try {
-      const res = await fetch(url, {
-        headers: token ? { Authorization: `Bearer ${token}` } : {},
-      });
-      if (!res.ok) {
-        throw new Error(`Download failed with status ${res.status}`);
+      if (directUrl) {
+        window.open(directUrl, '_blank', 'noopener,noreferrer');
+        return;
       }
-      const contentType = res.headers.get('content-type') || '';
-      if (contentType.includes('application/json')) {
-        throw new Error('Server returned JSON instead of a file');
-      }
-      const blob = await res.blob();
-      if (blob.size === 0) {
-        throw new Error('Download was empty');
-      }
-      const link = document.createElement('a');
-      link.href = URL.createObjectURL(blob);
-      link.download = filename;
-      document.body.appendChild(link);
-      link.click();
-      document.body.removeChild(link);
-      URL.revokeObjectURL(link.href);
-    } catch (err) {
-      console.warn('[DocLink] direct download failed, falling back to new tab:', err?.message);
+      const url = await fetchDownloadUrl(doc.id, token);
       window.open(url, '_blank', 'noopener,noreferrer');
+    } catch (err) {
+      console.error('[DocLink] download failed:', err);
+      // Surface the failure to the user via a native alert instead of
+      // silently falling back — the silent fallback is what put us in
+      // the "looks normal but downloads JSON" trap before.
+      alert(`Could not open document: ${err.message || 'unknown error'}`);
+    } finally {
+      setPending(false);
     }
   };
 
   return (
-    <a href={url} onClick={handleClick} className="ldm-doc-link">
+    <a
+      href="#"
+      onClick={handleClick}
+      role="button"
+      className="ldm-doc-link"
+      aria-busy={pending}
+    >
       <DownloadIcon />{label}
     </a>
   );

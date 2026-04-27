@@ -165,7 +165,11 @@ export const formatTimeWindow = (start, end, preferred, timePreference) => {
   const prefLabel = formatTimePreference(timePreference);
   if (prefLabel) return prefLabel;
 
-  return null;
+  // Final fallback: when the booking genuinely doesn't carry a window
+  // or preference (most common on legacy drop-offs that pre-date the
+  // dropoff scheduling step), surface "Flexible" rather than nothing
+  // so the schedule line never reads as bare-date-only.
+  return 'Flexible';
 };
 
 /**

@@ -180,7 +180,15 @@ const PickupModal = ({
 
     try {
       const documentIds = uploadedFiles.map(f => f.id);
-      const result = await markPickup(load.id, documentIds, token);
+      // Test-mode override: when the carrier latched force mode by
+      // clicking "Force start (test mode)" earlier in this session,
+      // walk the rest of the lifecycle through with force:true so
+      // server-side time gates don't block subsequent transitions.
+      let force = false;
+      try {
+        force = sessionStorage.getItem(`ldm:force-mode:${load.id}`) === '1';
+      } catch (_) { /* sessionStorage unavailable */ }
+      const result = await markPickup(load.id, documentIds, token, { force });
       
       console.log('✅ Pickup confirmed:', result);
       

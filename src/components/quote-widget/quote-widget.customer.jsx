@@ -7,6 +7,7 @@ import { useAuth } from '../../store/auth-context.jsx';
 import { clearQuoteCache, setPendingQuotePayload } from '../../utils/quote-cache.js';
 
 import './quote-widget.css';
+import './quote-widget.customer.css';
 
 // ======================================================
 // QuoteWidget — CUSTOMER DASHBOARD VERSION

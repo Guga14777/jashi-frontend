@@ -7,7 +7,8 @@ import React, { useState } from 'react';
 import { ClockIcon, LocationTypeIcon, CarIcon, ChevronUpIcon, ChevronDownIcon, DownloadIcon } from './icons';
 import { capitalize, formatAddr, formatLocationType } from '../utils/formatters';
 import { formatDate } from '../../../utils/formatters';
-import { getDownloadUrl } from '../../../services/documents.api';
+import { fetchDownloadUrl } from '../../../services/documents.api';
+import { useAuth } from '../../../store/auth-context.jsx';
 
 // Canonical API base. Empty string in dev (Vite proxy handles /api) and in
 // prod with the Vercel→Railway rewrite. Cross-origin only when VITE_API_BASE
@@ -39,61 +40,59 @@ const LocationTypeBadge = ({ type }) => {
 };
 
 // Document link component.
-// Routes through GET /api/documents/:id/download which either streams the
-// file binary (with proper Content-Type) or 302-redirects to a Supabase
-// signed URL — same path the BOL download uses, so consistency is the
-// goal. Critically: we check res.ok before reading res.blob(), so a 404
-// HTML body or a JSON error never gets saved as a fake .pdf and shows up
-// in Chrome as "Failed to load PDF document".
+//
+// Hits the auth-gated `/api/documents/:id/url` endpoint to get a
+// no-auth-required URL (Supabase signed URL or static `/uploads/...`
+// path), then opens it in a new tab. This works around the trap the
+// previous "<a href={downloadEndpoint}>" pattern had: any middle-click
+// or right-click "Open in new tab" bypassed the onClick handler that
+// would otherwise attach the auth header, so the browser landed on the
+// raw JSON "No token provided" body.
 const DocLink = ({ doc, label }) => {
-  const getDownloadUrlForDoc = (doc) => {
-    if (!doc) return null;
-    if (doc.id) return getDownloadUrl(doc.id);
-    const url = doc.fileUrl || doc.filePath;
-    return url?.startsWith('http') ? url : url ? `${API_BASE}${url}` : null;
-  };
+  const { token } = useAuth();
+  const [pending, setPending] = useState(false);
 
-  const url = getDownloadUrlForDoc(doc);
-  if (!url) return null;
+  if (!doc) return null;
 
-  const filename = doc.originalName || doc.fileName || label;
+  // Pre-uploaded/stub docs without an id sometimes carry a direct
+  // fileUrl. Those don't need the URL handshake.
+  const directUrl = !doc.id
+    ? (() => {
+        const u = doc.fileUrl || doc.filePath;
+        if (!u) return null;
+        return u.startsWith('http') ? u : `${API_BASE}${u}`;
+      })()
+    : null;
+
+  if (!doc.id && !directUrl) return null;
 
   const handleClick = async (e) => {
     e.preventDefault();
-    const token = localStorage.getItem('token');
+    if (pending) return;
+    setPending(true);
     try {
-      const res = await fetch(url, {
-        headers: token ? { Authorization: `Bearer ${token}` } : {},
-      });
-      if (!res.ok) {
-        throw new Error(`Download failed with status ${res.status}`);
+      if (directUrl) {
+        window.open(directUrl, '_blank', 'noopener,noreferrer');
+        return;
       }
-      const contentType = res.headers.get('content-type') || '';
-      // If the backend mistakenly returned JSON (e.g. an auth/error body),
-      // abort instead of saving an unreadable "PDF" — the catch below
-      // opens the URL in a new tab so the user sees the real error.
-      if (contentType.includes('application/json')) {
-        throw new Error('Server returned JSON instead of a file');
-      }
-      const blob = await res.blob();
-      if (blob.size === 0) {
-        throw new Error('Download was empty');
-      }
-      const link = document.createElement('a');
-      link.href = URL.createObjectURL(blob);
-      link.download = filename;
-      document.body.appendChild(link);
-      link.click();
-      document.body.removeChild(link);
-      URL.revokeObjectURL(link.href);
-    } catch (err) {
-      console.warn('[DocLink] direct download failed, falling back to new tab:', err?.message);
+      const url = await fetchDownloadUrl(doc.id, token);
       window.open(url, '_blank', 'noopener,noreferrer');
+    } catch (err) {
+      console.error('[DocLink] download failed:', err);
+      alert(`Could not open document: ${err.message || 'unknown error'}`);
+    } finally {
+      setPending(false);
     }
   };
 
   return (
-    <a href={url} onClick={handleClick} className="ldm-doc-link">
+    <a
+      href="#"
+      onClick={handleClick}
+      role="button"
+      className="ldm-doc-link"
+      aria-busy={pending}
+    >
       <DownloadIcon />{label}
     </a>
   );
