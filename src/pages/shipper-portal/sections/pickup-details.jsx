@@ -1259,13 +1259,28 @@ export default function PickupDetails() {
             <Calendar size={14} />
             When will the vehicle be ready? <span className="sp-required">*</span>
           </label>
-          <input
-            type="date"
-            className={`sp-input ${errors.pickupDate ? 'sp-input--error' : ''}`}
-            value={scheduling.pickupDate || ''}
-            min={todayIso}
-            onChange={handleDateChange}
-          />
+          <div
+            className={`sp-date-input-wrap ${errors.pickupDate ? 'sp-date-input-wrap--error' : ''}`}
+            onClick={(e) => {
+              const input = e.currentTarget.querySelector('input[type="date"]');
+              if (!input) return;
+              if (typeof input.showPicker === 'function') {
+                try { input.showPicker(); return; } catch (_) {}
+              }
+              input.focus();
+            }}
+          >
+            <input
+              type="date"
+              className={`sp-input ${errors.pickupDate ? 'sp-input--error' : ''}`}
+              value={scheduling.pickupDate || ''}
+              min={todayIso}
+              onChange={handleDateChange}
+            />
+            <span className="sp-date-input-icon" aria-hidden="true">
+              <Calendar size={18} />
+            </span>
+          </div>
           {errors.pickupDate && (
             <span className="sp-error-text">{errors.pickupDate}</span>
           )}

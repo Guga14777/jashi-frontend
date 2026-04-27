@@ -41,6 +41,17 @@ const writeLocal = (key, value) => {
 export const NotificationsProvider = ({ children }) => {
   const { user, token } = useAuth();
 
+  // Carrier notifications endpoints are role-scoped on the server. Mounting
+  // this provider for a customer-only or admin-only session would 401 on
+  // every poll and waste a round-trip on every page mount. Gate fetch +
+  // polling on the user actually carrying the CARRIER role. Users with
+  // multiple roles (e.g. carrier+admin) still get the carrier stream.
+  const isCarrier = useMemo(() => {
+    const raw = user?.roles ?? user?.role ?? [];
+    const list = Array.isArray(raw) ? raw : String(raw).split(',');
+    return list.map((r) => String(r).trim().toUpperCase()).includes('CARRIER');
+  }, [user]);
+
   const [notifications, setNotifications] = useState([]);
   const [unreadCountFromServer, setUnreadCountFromServer] = useState(0);
   const [isPanelOpen, setIsPanelOpen] = useState(false);
@@ -65,7 +76,7 @@ export const NotificationsProvider = ({ children }) => {
   // ---- API calls ----------------------------------------------------------
 
   const fetchNotifications = useCallback(async () => {
-    if (!user || !token) return;
+    if (!user || !token || !isCarrier) return;
     setIsLoadingNotifications(true);
     try {
       // Keep in sync with the customer provider (server default = 50). Dropdown
@@ -83,7 +94,7 @@ export const NotificationsProvider = ({ children }) => {
     } finally {
       setIsLoadingNotifications(false);
     }
-  }, [user, token]);
+  }, [user, token, isCarrier]);
 
   useEffect(() => { fetchNotifications(); }, [fetchNotifications]);
 
@@ -91,15 +102,17 @@ export const NotificationsProvider = ({ children }) => {
   // 20s cadence — fast enough that admins see alert bells flip without
   // an explicit refresh, slow enough not to DoS the server.
   // Skip polling when the tab isn't visible to save server load.
+  // Skip entirely for non-carrier sessions so customer/admin pages don't
+  // burn an interval hitting an endpoint they're not authorized for.
   useEffect(() => {
-    if (!user || !token) return;
+    if (!user || !token || !isCarrier) return;
     const tick = () => {
       if (typeof document !== 'undefined' && document.hidden) return;
       fetchNotifications();
     };
     const id = setInterval(tick, 20000);
     return () => clearInterval(id);
-  }, [user, token, fetchNotifications]);
+  }, [user, token, isCarrier, fetchNotifications]);
 
   const markAsRead = useCallback(async (id) => {
     // Optimistic update — keeps the bell badge responsive even over slow networks.

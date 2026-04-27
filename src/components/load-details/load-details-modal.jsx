@@ -35,6 +35,7 @@ import {
   PhotosDocumentsSection,
   ImageLightbox,
   CancelConfirmModal,
+  ShipperDocumentsCard,
 } from './components';
 
 // Carrier sections
@@ -469,8 +470,10 @@ const LoadDetailsModal = ({
             </div>
           )}
 
-          {/* Download BOL Button */}
-          {(showBolButton || showBolButtonForQuote) && (
+          {/* Download BOL Button — kept for carrier and quote views.
+              Customer/shipper downloads happen in the consolidated
+              Documents card rendered below the Notes section. */}
+          {(showBolButton || showBolButtonForQuote) && !isCustomer && (
             <BolButton onClick={handleDownloadBol} isLoading={isDownloading} />
           )}
 
@@ -615,6 +618,22 @@ const LoadDetailsModal = ({
 
           {/* Notes */}
           {hasNotes && <NotesCard notes={notes} />}
+
+          {/* Documents — shipper portal. Consolidates BOL download +
+              gate passes + auction/dealership uploads in one section
+              below Notes. Carrier/quote views keep the existing
+              BolButton + GatePassSection layout above. */}
+          {isCustomer && !isPreviewOnly && !isQuote && (
+            <ShipperDocumentsCard
+              status={status}
+              isCancelled={isCancelled}
+              showBol={showBolButton}
+              bolDownloading={isDownloading}
+              onDownloadBol={handleDownloadBol}
+              documents={L.documents || []}
+              gatePasses={gatePasses || []}
+            />
+          )}
         </div>
 
         {/* Footer */}

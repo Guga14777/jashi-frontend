@@ -1150,10 +1150,25 @@ export default function DropoffDetails() {
   // ✅ Render Route Details info card — shown above any time-selection UI so
   // the customer always sees distance / drive time / earliest delivery and
   // a same-day availability hint, regardless of destination type.
+  //
+  // Distance is the FIRST line in the card. We resolve it from every
+  // reasonable source on the quote so a missing `quoteData.miles` doesn't
+  // hide the line: URL-derived `routeMiles`/`distance`, the quote object,
+  // or any nested booking quote payload.
   // ============================================================================
   const renderRouteInfo = () => {
-    const miles = Number(quoteData?.miles) || Number(quoteData?.distance) || 0;
-    const hours = Number(quoteData?.durationHours) || 0;
+    const miles =
+      Number(quoteData?.miles) ||
+      Number(quoteData?.distance) ||
+      Number(quoteData?.routeMiles) ||
+      Number(quoteData?.quote?.miles) ||
+      Number(quoteData?.quote?.distance) ||
+      0;
+    const hours =
+      Number(quoteData?.durationHours) ||
+      Number(quoteData?.driveHours) ||
+      Number(quoteData?.quote?.durationHours) ||
+      0;
 
     console.log('[ROUTE INFO]', {
       miles,
@@ -1178,6 +1193,16 @@ export default function DropoffDetails() {
       return `${h12}:${String(m).padStart(2, '0')} ${period}`;
     };
 
+    const formatDriveTime = (h) => {
+      if (!Number.isFinite(h) || h <= 0) return '';
+      const totalMin = Math.round(h * 60);
+      const hh = Math.floor(totalMin / 60);
+      const mm = totalMin % 60;
+      if (hh === 0) return `${mm}m`;
+      if (mm === 0) return `${hh}h`;
+      return `${hh}h ${mm}m`;
+    };
+
     let availabilityMsg = '';
     if (scheduling?.pickupDate) {
       availabilityMsg = (deliveryEstimate.earliestDate === scheduling.pickupDate)
@@ -1194,12 +1219,19 @@ export default function DropoffDetails() {
           </div>
           <div style={{ paddingLeft: 24, fontSize: 14, lineHeight: 1.7, width: '100%' }}>
             {miles > 0 && (
-              <div>Distance: <strong>{miles.toLocaleString('en-US')} miles</strong></div>
+              <div>
+                Distance: <strong>{miles.toLocaleString('en-US')} miles</strong>
+              </div>
             )}
-            {hours > 0 ? (
-              <div>Estimated drive time: <strong>{hours.toFixed(1)} hours</strong></div>
-            ) : miles > 0 && (
-              <div style={{ color: '#666' }}>Estimated drive time: based on mileage tiers</div>
+            {hours > 0 && (
+              <div>
+                Est. drive time: <strong>{formatDriveTime(hours)}</strong>
+              </div>
+            )}
+            {hours <= 0 && miles > 0 && (
+              <div style={{ color: '#666' }}>
+                Est. drive time: based on mileage tiers
+              </div>
             )}
             <div>
               Earliest delivery:{' '}
@@ -1241,16 +1273,31 @@ export default function DropoffDetails() {
             <Calendar size={14} />
             When should delivery occur? <span className="sp-required">*</span>
           </label>
-          <input
-            type="date"
-            className={`sp-input ${errors.dropoffDate ? 'sp-input--error' : ''}`}
-            value={scheduling.dropoffDate || ''}
-            min={minDropoffDate}
-            onChange={(e) => {
-              setScheduling({ ...scheduling, dropoffDate: e.target.value });
-              if (errors.dropoffDate) setErrors((prev) => ({ ...prev, dropoffDate: '' }));
+          <div
+            className={`sp-date-input-wrap ${errors.dropoffDate ? 'sp-date-input-wrap--error' : ''}`}
+            onClick={(e) => {
+              const input = e.currentTarget.querySelector('input[type="date"]');
+              if (!input) return;
+              if (typeof input.showPicker === 'function') {
+                try { input.showPicker(); return; } catch (_) {}
+              }
+              input.focus();
             }}
-          />
+          >
+            <input
+              type="date"
+              className={`sp-input ${errors.dropoffDate ? 'sp-input--error' : ''}`}
+              value={scheduling.dropoffDate || ''}
+              min={minDropoffDate}
+              onChange={(e) => {
+                setScheduling({ ...scheduling, dropoffDate: e.target.value });
+                if (errors.dropoffDate) setErrors((prev) => ({ ...prev, dropoffDate: '' }));
+              }}
+            />
+            <span className="sp-date-input-icon" aria-hidden="true">
+              <Calendar size={18} />
+            </span>
+          </div>
           {errors.dropoffDate && (
             <span className="sp-error-text">{errors.dropoffDate}</span>
           )}

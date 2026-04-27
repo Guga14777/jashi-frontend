@@ -333,3 +333,116 @@
     height: 60px;
   }
 }
+
+/* ============================================================
+   Shipper-side consolidated Documents card (BOL + gate passes +
+   booking-uploaded auction/dealership docs).
+   ============================================================ */
+
+.ldm-doc-list {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  padding: 0;
+}
+
+.ldm-doc-row {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  width: 100%;
+  padding: 12px 14px;
+  border: 1px solid #e2e8f0;
+  border-radius: 10px;
+  background: #ffffff;
+  text-align: left;
+  cursor: pointer;
+  transition: border-color 0.18s ease, background 0.18s ease, box-shadow 0.18s ease;
+  font-family: inherit;
+  font-size: 14px;
+  color: #0f172a;
+}
+
+.ldm-doc-row:hover:not(.ldm-doc-row--disabled) {
+  border-color: #14b8a6;
+  background: #f0fdfa;
+  box-shadow: 0 2px 6px rgba(20, 184, 166, 0.08);
+}
+
+.ldm-doc-row:focus-visible {
+  outline: none;
+  border-color: #14b8a6;
+  box-shadow: 0 0 0 3px rgba(20, 184, 166, 0.18);
+}
+
+.ldm-doc-row--disabled {
+  cursor: not-allowed;
+  background: #f8fafc;
+  border-color: #e2e8f0;
+}
+
+.ldm-doc-row__icon {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 32px;
+  height: 32px;
+  border-radius: 8px;
+  background: #f0fdfa;
+  color: #0f766e;
+  flex-shrink: 0;
+}
+
+.ldm-doc-row--disabled .ldm-doc-row__icon {
+  background: #f1f5f9;
+  color: #94a3b8;
+}
+
+.ldm-doc-row__body {
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+  min-width: 0;
+}
+
+.ldm-doc-row__title {
+  font-weight: 600;
+  color: #0f172a;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.ldm-doc-row--disabled .ldm-doc-row__title {
+  color: #475569;
+}
+
+.ldm-doc-row__subtitle {
+  font-size: 12px;
+  color: #64748b;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.ldm-doc-row__action {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 32px;
+  height: 32px;
+  border-radius: 8px;
+  background: transparent;
+  color: #0f766e;
+  flex-shrink: 0;
+  transition: background 0.18s ease, color 0.18s ease;
+}
+
+.ldm-doc-row:hover:not(.ldm-doc-row--disabled) .ldm-doc-row__action {
+  background: #14b8a6;
+  color: #ffffff;
+}
+
+.ldm-doc-row__action--locked {
+  color: #94a3b8;
+}

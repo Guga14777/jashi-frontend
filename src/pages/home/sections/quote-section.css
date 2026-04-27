@@ -340,17 +340,6 @@ border-radius: 999px;
 line-height: 1.3;
 }
 
-/* Vehicle info - FIXED: Natural height */
-.qs-comparison-vehicle {
-font-size: 13px;
-font-weight: 600;
-color: #0F172A;
-margin: 0 0 6px 0;
-text-transform: uppercase;
-letter-spacing: 0.3px;
-/* FIXED: Removed fixed height */
-}
-
 /* Route info - FIXED: Allow wrapping, no clipping */
 .qs-comparison-route {
 font-size: 13px; /* FIXED: Slightly larger for readability */

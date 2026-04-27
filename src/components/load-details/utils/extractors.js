@@ -49,23 +49,84 @@ export const formatLocationType = (type) => {
 };
 
 /**
- * Format time window for display
+ * Convert any time value (24h "HH:MM", "h:mm AM/PM", or a numeric hour
+ * like "8" or "14") to a "h:mm AM/PM" label. Returns the original string
+ * if it can't be parsed so we don't accidentally lose information.
+ */
+const toAmPmLabel = (value) => {
+  if (value === null || value === undefined) return '';
+  const s = String(value).trim();
+  if (!s) return '';
+
+  // Already in AM/PM form — normalize spacing and case.
+  const ampm = s.match(/^(\d{1,2}):(\d{2})\s*(AM|PM)$/i);
+  if (ampm) {
+    const h = parseInt(ampm[1], 10);
+    const m = ampm[2];
+    return `${h}:${m} ${ampm[3].toUpperCase()}`;
+  }
+
+  // 24-hour HH:MM
+  const m24 = s.match(/^(\d{1,2}):(\d{2})$/);
+  if (m24) {
+    let h = parseInt(m24[1], 10);
+    const m = m24[2];
+    if (Number.isNaN(h)) return s;
+    const period = h >= 12 ? 'PM' : 'AM';
+    h = h % 12;
+    if (h === 0) h = 12;
+    return `${h}:${m} ${period}`;
+  }
+
+  // Bare hour like "8" or "14"
+  const bareHour = s.match(/^(\d{1,2})$/);
+  if (bareHour) {
+    let h = parseInt(bareHour[1], 10);
+    if (Number.isNaN(h)) return s;
+    const period = h >= 12 ? 'PM' : 'AM';
+    h = h % 12;
+    if (h === 0) h = 12;
+    return `${h} ${period}`;
+  }
+
+  return s;
+};
+
+/**
+ * Format time window for display.
+ *
+ * Output is always "h:mm AM – h:mm PM" (en-dash, with AM/PM on both sides)
+ * when both endpoints are known. We accept a wide range of inputs because
+ * the booking pipeline stores windows as either:
+ *   - preset IDs ("8-10", "10-12", … "16-18", "flexible")
+ *   - 24-hour HH:MM strings stored on the booking row
+ *   - already-formatted "h:mm AM/PM" strings
+ *
+ * Used in: shipment details modal, carrier load detail, admin orders,
+ * and confirmation emails (when rendered server-side this helper is
+ * mirrored — keep formats in sync).
  */
 export const formatTimeWindow = (start, end, preferred) => {
   if (preferred) {
-    // Handle preset windows like "8:00-10:00"
-    if (preferred.includes('-')) {
-      const parts = preferred.split('-');
-      return `${parts[0]} - ${parts[1]}`;
+    if (typeof preferred === 'string' && preferred.toLowerCase() === 'flexible') {
+      return 'Flexible';
     }
-    if (preferred.toLowerCase() === 'flexible') return 'Flexible';
+    if (typeof preferred === 'string' && preferred.includes('-')) {
+      const [a, b] = preferred.split('-');
+      const left = toAmPmLabel(a);
+      const right = toAmPmLabel(b);
+      if (left && right) return `${left} – ${right}`;
+    }
     return preferred;
   }
-  
-  if (start && end) return `${start} - ${end}`;
-  if (start) return `After ${start}`;
-  if (end) return `Before ${end}`;
-  
+
+  const left = toAmPmLabel(start);
+  const right = toAmPmLabel(end);
+
+  if (left && right) return `${left} – ${right}`;
+  if (left) return `After ${left}`;
+  if (right) return `Before ${right}`;
+
   return null;
 };
 

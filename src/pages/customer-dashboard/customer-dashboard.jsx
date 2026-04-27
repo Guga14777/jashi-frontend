@@ -130,21 +130,62 @@ const CustomerDashboard = () => {
     return 'there';
   }, [user]);
 
-  // BOOKING SUCCESS TOAST
+  // BOOKING SUCCESS TOAST + OPTIMISTIC PREPEND
+  // When the customer redirects here from /shipper/payment we receive the
+  // freshly-created booking row via location.state. Prepend it to the
+  // shipments list immediately so the orders table doesn't sit on
+  // "Searching…" while the background list refresh runs.
   useEffect(() => {
-    if (location.state?.showSuccessToast && location.state?.message) {
+    if (!location.state?.showSuccessToast) return;
+
+    if (location.state?.message) {
       setSuccessMessage(location.state.message);
       setIsReactivationToast(false);
       setShowSuccessToast(true);
-
-      window.history.replaceState({}, document.title);
-
-      const timer = setTimeout(() => {
-        setShowSuccessToast(false);
-      }, 8000);
-
-      return () => clearTimeout(timer);
     }
+
+    const newBooking = location.state?.newBooking;
+    if (newBooking && newBooking.id) {
+      try {
+        const transformed = transformBookingToLoad(newBooking);
+        if (transformed) {
+          const optimistic = { ...transformed, id: String(transformed.id) };
+          setShipments((prev) => {
+            const alreadyPresent = prev.some(
+              (s) => String(s.id) === optimistic.id
+            );
+            const merged = alreadyPresent
+              ? prev.map((s) => (String(s.id) === optimistic.id ? optimistic : s))
+              : [optimistic, ...prev];
+            try {
+              localStorage.setItem(
+                'dashboard_shipments_cache',
+                JSON.stringify(merged)
+              );
+            } catch (_) {}
+            return merged;
+          });
+          setShipmentsPagination((prev) => ({
+            ...prev,
+            total: Math.max((prev.total || 0) + 1, 1),
+          }));
+        }
+      } catch (err) {
+        console.warn('Optimistic prepend failed:', err);
+      }
+    }
+
+    // Clear location.state so a refresh doesn't re-fire the toast or
+    // re-prepend the optimistic row.
+    window.history.replaceState({}, document.title);
+
+    if (!location.state?.message) return;
+
+    const timer = setTimeout(() => {
+      setShowSuccessToast(false);
+    }, 8000);
+
+    return () => clearTimeout(timer);
   }, [location.state]);
 
   // REACTIVATION TOAST

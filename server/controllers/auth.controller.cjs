@@ -283,7 +283,9 @@ exports.register = async (req, res) => {
 // ============================================================
 // LOGIN
 // POST /api/auth/login
-// ✅ FIXED: No crash if roles is array
+// Response is sent before any side-effect writes (account events,
+// reactivation update, welcome notification) so logging never blocks
+// the login round-trip.
 // ============================================================
 exports.login = async (req, res) => {
   try {
@@ -326,40 +328,6 @@ exports.login = async (req, res) => {
 
     const wasDeactivated = user.isActive === false;
 
-    if (wasDeactivated) {
-      await prisma.user.update({
-        where: { id: user.id },
-        data: {
-          isActive: true,
-          updatedAt: new Date()
-        }
-      });
-
-      await prisma.accountEvent.create({
-        data: {
-          userId: user.id,
-          eventType: 'account_reactivated',
-          eventData: {
-            timestamp: new Date().toISOString(),
-            method: 'login'
-          },
-        },
-      }).catch(err => console.error('Failed to log account event:', err));
-
-      await prisma.notification.create({
-        data: {
-          userId: user.id,
-          type: 'account',
-          title: 'Welcome Back!',
-          message: 'Your account has been reactivated. Welcome back to Jashi Logistics!',
-          category: 'account',
-          meta: {
-            timestamp: new Date().toISOString()
-          }
-        }
-      }).catch(err => console.error('Failed to create welcome notification:', err));
-    }
-
     const roleForToken = loginAs
       ? String(loginAs).toUpperCase().trim()
       : getPrimaryRole(user.roles);
@@ -375,22 +343,12 @@ exports.login = async (req, res) => {
       { expiresIn: JWT_EXPIRES_IN }
     );
 
-    await prisma.accountEvent.create({
-      data: {
-        userId: user.id,
-        eventType: 'login',
-        eventData: {
-          timestamp: new Date().toISOString(),
-          method: 'email',
-          reactivated: wasDeactivated,
-          loginAs: loginAs || null
-        },
-        ipAddress: req.ip || req.connection?.remoteAddress || null,
-        userAgent: req.headers['user-agent'],
-      },
-    }).catch(err => console.error('Failed to log account event:', err));
-
     const { password: _, ...userWithoutPassword } = user;
+
+    // Capture request metadata BEFORE sending the response. Express keeps req
+    // alive across the async tail, but reading eagerly is the safe pattern.
+    const ipAddress = req.ip || req.connection?.remoteAddress || null;
+    const userAgent = req.headers['user-agent'];
 
     res.json({
       success: true,
@@ -407,15 +365,67 @@ exports.login = async (req, res) => {
       reactivated: wasDeactivated
     });
 
+    // ---- Fire-and-forget side effects (after response is sent) ----
+    if (wasDeactivated) {
+      prisma.user.update({
+        where: { id: user.id },
+        data: {
+          isActive: true,
+          updatedAt: new Date()
+        }
+      }).catch(err => console.error('Failed to reactivate user:', err));
+
+      prisma.accountEvent.create({
+        data: {
+          userId: user.id,
+          eventType: 'account_reactivated',
+          eventData: {
+            timestamp: new Date().toISOString(),
+            method: 'login'
+          },
+        },
+      }).catch(err => console.error('Failed to log reactivation event:', err));
+
+      prisma.notification.create({
+        data: {
+          userId: user.id,
+          type: 'account',
+          title: 'Welcome Back!',
+          message: 'Your account has been reactivated. Welcome back to Jashi Logistics!',
+          category: 'account',
+          meta: {
+            timestamp: new Date().toISOString()
+          }
+        }
+      }).catch(err => console.error('Failed to create welcome notification:', err));
+    }
+
+    prisma.accountEvent.create({
+      data: {
+        userId: user.id,
+        eventType: 'login',
+        eventData: {
+          timestamp: new Date().toISOString(),
+          method: 'email',
+          reactivated: wasDeactivated,
+          loginAs: loginAs || null
+        },
+        ipAddress,
+        userAgent,
+      },
+    }).catch(err => console.error('Failed to log account event:', err));
+
   } catch (error) {
     const classified = classifyPrismaError(error);
     console.error('[auth.login] failed:', classified.reason, '-', classified.detail, error);
-    res.status(500).json({
-      error: 'Failed to login',
-      reason: classified.reason,
-      detail: classified.detail,
-      code: classified.code,
-    });
+    if (!res.headersSent) {
+      res.status(500).json({
+        error: 'Failed to login',
+        reason: classified.reason,
+        detail: classified.detail,
+        code: classified.code,
+      });
+    }
   }
 };
 

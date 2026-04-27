@@ -1,0 +1,255 @@
+// ============================================================
+// FILE: src/components/load-details/components/shipper-documents-card.jsx
+// Documents section rendered in the shipper-side Shipment Details modal.
+//
+// Lists every document a customer should be able to grab from one
+// place: the Bill of Lading (gated by status), pickup/dropoff gate
+// passes, and any other booking-linked documents (auction docs,
+// dealership uploads, etc.).
+// ============================================================
+
+import React from 'react';
+import { FileText, Download, FileWarning } from 'lucide-react';
+import { DocumentIcon, GatePassIcon } from './icons';
+import { getDownloadUrl } from '../../../services/documents.api';
+
+import { API_BASE } from '../../../lib/api-url.js';
+
+// Statuses that mean the BOL has been generated and the customer can
+// download it. Pre-pickup statuses get a disabled placeholder so the
+// row is still discoverable in the UI.
+const BOL_AVAILABLE_STATUSES = new Set(['picked_up', 'delivered']);
+
+const formatUploadedDate = (value) => {
+  if (!value) return '';
+  const d = new Date(value);
+  if (Number.isNaN(d.getTime())) return '';
+  return d.toLocaleDateString('en-US', {
+    month: 'short',
+    day: 'numeric',
+    year: 'numeric',
+  });
+};
+
+// Try every known way the backend may expose a downloadable URL on a
+// Document row. Returns null if we genuinely can't construct one.
+const getDocDownloadUrl = (doc) => {
+  if (!doc) return null;
+  if (doc.id) return getDownloadUrl(doc.id);
+  const url = doc.fileUrl || doc.filePath || doc.url || doc.downloadUrl;
+  if (!url) return null;
+  return url.startsWith('http') ? url : `${API_BASE}${url}`;
+};
+
+const downloadDocument = async (doc, fallbackName) => {
+  const url = getDocDownloadUrl(doc);
+  if (!url) return;
+  const token = localStorage.getItem('token');
+  try {
+    const res = await fetch(url, {
+      headers: token ? { Authorization: `Bearer ${token}` } : {},
+    });
+    if (!res.ok) throw new Error('Download failed');
+    const blob = await res.blob();
+    const link = document.createElement('a');
+    link.href = URL.createObjectURL(blob);
+    link.download = doc.originalName || doc.fileName || fallbackName;
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+    URL.revokeObjectURL(link.href);
+  } catch {
+    window.open(url, '_blank', 'noopener,noreferrer');
+  }
+};
+
+const isGatePassType = (type) => {
+  if (!type) return false;
+  const t = String(type).toLowerCase();
+  return t.includes('gate') || t.includes('pass');
+};
+
+const isPhotoOrPodType = (type) => {
+  if (!type) return false;
+  const t = String(type).toLowerCase();
+  return (
+    t === 'pickup_photo' ||
+    t === 'delivery_photo' ||
+    t === 'pod' ||
+    t.includes('photo')
+  );
+};
+
+const labelForType = (type, fallback) => {
+  if (!type) return fallback;
+  const t = String(type).toLowerCase();
+  if (t.includes('auction')) return 'Auction Document';
+  if (t.includes('dealer')) return 'Dealership Document';
+  if (t.includes('insurance')) return 'Insurance Document';
+  if (t === 'invoice') return 'Invoice';
+  if (t === 'receipt') return 'Receipt';
+  if (t === 'other' || t === 'document') return fallback;
+  return fallback;
+};
+
+const DocumentRow = ({ icon, title, subtitle, onClick, disabled, disabledHint }) => {
+  if (disabled) {
+    return (
+      <div className="ldm-doc-row ldm-doc-row--disabled">
+        <span className="ldm-doc-row__icon">{icon}</span>
+        <div className="ldm-doc-row__body">
+          <span className="ldm-doc-row__title">{title}</span>
+          <span className="ldm-doc-row__subtitle">{disabledHint || subtitle}</span>
+        </div>
+        <span className="ldm-doc-row__action ldm-doc-row__action--locked" aria-hidden="true">
+          <FileWarning size={16} />
+        </span>
+      </div>
+    );
+  }
+
+  return (
+    <button
+      type="button"
+      className="ldm-doc-row"
+      onClick={onClick}
+      aria-label={`Download ${title}`}
+    >
+      <span className="ldm-doc-row__icon">{icon}</span>
+      <div className="ldm-doc-row__body">
+        <span className="ldm-doc-row__title">{title}</span>
+        {subtitle && <span className="ldm-doc-row__subtitle">{subtitle}</span>}
+      </div>
+      <span className="ldm-doc-row__action" aria-hidden="true">
+        <Download size={16} />
+      </span>
+    </button>
+  );
+};
+
+const ShipperDocumentsCard = ({
+  status,
+  isCancelled,
+  showBol,
+  bolDownloading,
+  onDownloadBol,
+  documents = [],
+  gatePasses = [],
+}) => {
+  const bolAvailable = !isCancelled && BOL_AVAILABLE_STATUSES.has(String(status || '').toLowerCase());
+
+  // Dedupe gate passes by id and split into pickup vs dropoff.
+  const seen = new Set();
+  const dedupedGatePasses = [];
+  for (const gp of gatePasses) {
+    if (!gp || (gp.id && seen.has(gp.id))) continue;
+    if (gp.id) seen.add(gp.id);
+    dedupedGatePasses.push(gp);
+  }
+
+  const pickupGatePass = dedupedGatePasses.find(
+    (g) => g.gatePassType === 'pickup' || /pickup/i.test(g.type || '')
+  );
+  const dropoffGatePass = dedupedGatePasses.find(
+    (g) => g.gatePassType === 'dropoff' ||
+           /(dropoff|drop_off|delivery)/i.test(g.type || '')
+  );
+
+  // Anything the customer uploaded during the booking flow that isn't
+  // a gate pass, a carrier-uploaded photo, or the POD. Auction/dealership
+  // documents land here.
+  const otherDocs = documents.filter((d) => {
+    if (!d) return false;
+    if (d.id && seen.has(d.id)) return false;
+    if (isGatePassType(d.type)) return false;
+    if (isPhotoOrPodType(d.type)) return false;
+    return true;
+  });
+
+  // If we'd render absolutely nothing useful, skip the card so we don't
+  // show an empty "Documents" header.
+  const willRenderBol = showBol;
+  const willRenderAnything =
+    willRenderBol ||
+    pickupGatePass ||
+    dropoffGatePass ||
+    otherDocs.length > 0;
+
+  if (!willRenderAnything) return null;
+
+  return (
+    <div className="ldm-section">
+      <div className="ldm-section-label">Documents</div>
+      <div className="ldm-box ldm-doc-list">
+        {willRenderBol && (
+          <DocumentRow
+            icon={<DocumentIcon />}
+            title="Bill of Lading"
+            subtitle={
+              bolAvailable
+                ? bolDownloading
+                  ? 'Generating PDF…'
+                  : 'PDF • Download'
+                : undefined
+            }
+            disabled={!bolAvailable || bolDownloading}
+            disabledHint={
+              bolDownloading
+                ? 'Generating PDF…'
+                : 'Bill of Lading will be available after pickup'
+            }
+            onClick={onDownloadBol}
+          />
+        )}
+
+        {pickupGatePass && (
+          <DocumentRow
+            icon={<GatePassIcon />}
+            title="Gate Pass (Pickup)"
+            subtitle={[
+              pickupGatePass.originalName || pickupGatePass.fileName,
+              formatUploadedDate(pickupGatePass.createdAt),
+            ]
+              .filter(Boolean)
+              .join(' • ')}
+            onClick={() => downloadDocument(pickupGatePass, 'pickup-gate-pass')}
+          />
+        )}
+
+        {dropoffGatePass && (
+          <DocumentRow
+            icon={<GatePassIcon />}
+            title="Gate Pass (Drop-off)"
+            subtitle={[
+              dropoffGatePass.originalName || dropoffGatePass.fileName,
+              formatUploadedDate(dropoffGatePass.createdAt),
+            ]
+              .filter(Boolean)
+              .join(' • ')}
+            onClick={() => downloadDocument(dropoffGatePass, 'dropoff-gate-pass')}
+          />
+        )}
+
+        {otherDocs.map((doc) => {
+          const fallbackName = doc.originalName || doc.fileName || 'Document';
+          return (
+            <DocumentRow
+              key={doc.id || `${doc.type}-${doc.createdAt || fallbackName}`}
+              icon={<FileText size={16} />}
+              title={labelForType(doc.type, fallbackName)}
+              subtitle={[
+                doc.originalName || doc.fileName,
+                formatUploadedDate(doc.createdAt),
+              ]
+                .filter(Boolean)
+                .join(' • ')}
+              onClick={() => downloadDocument(doc, fallbackName)}
+            />
+          );
+        })}
+      </div>
+    </div>
+  );
+};
+
+export default ShipperDocumentsCard;

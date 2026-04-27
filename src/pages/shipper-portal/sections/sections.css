@@ -391,6 +391,60 @@
   background: #FEF2F2;
 }
 
+/* Date input shell — wraps a native <input type="date"> so we can render
+   a clickable calendar affordance on the right and signal "this is
+   interactive" to users who don't realize the bare field is clickable. */
+.sp-date-input-wrap {
+  position: relative;
+  display: flex;
+  align-items: stretch;
+  cursor: pointer;
+  border-radius: 10px;
+  transition: box-shadow 0.2s ease;
+}
+
+.sp-date-input-wrap > .sp-input {
+  flex: 1;
+  width: 100%;
+  padding-right: 52px;
+}
+
+.sp-date-input-wrap:hover > .sp-input:not(:focus):not(.sp-input--error) {
+  border-color: #14B8A6;
+  background: #F0FDFA;
+}
+
+.sp-date-input-wrap:hover > .sp-input--error {
+  border-color: #DC2626;
+}
+
+.sp-date-input-icon {
+  position: absolute;
+  right: 8px;
+  top: 50%;
+  transform: translateY(-50%);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 36px;
+  height: 36px;
+  border-radius: 8px;
+  background: #F0FDFA;
+  color: #0F766E;
+  pointer-events: none;
+  transition: background 0.2s ease, color 0.2s ease;
+}
+
+.sp-date-input-wrap:hover .sp-date-input-icon {
+  background: #14B8A6;
+  color: #FFFFFF;
+}
+
+.sp-date-input-wrap--error .sp-date-input-icon {
+  background: #FEE2E2;
+  color: #DC2626;
+}
+
 .sp-select {
   padding: 11px 14px;
   border: 2px solid #D1D5DB;
@@ -1654,21 +1708,39 @@
   color: #1E293B;
 }
 
-/* ✅ NEUTRAL: Link styled consistently with site */
+/* Reset the native <button> chrome (border, background, padding) and
+   render an inline brand link directly below the checkbox. Without
+   these resets, the browser's default button face shows up as an
+   "accidental empty bordered box" around the link text. */
 .sp-cancellation-policy-link {
+  align-self: flex-start;
   display: inline-flex;
   align-items: center;
+  gap: 4px;
+  margin: 0 0 0 30px;
+  padding: 0;
+  border: none;
+  background: transparent;
+  font: inherit;
   font-size: 14px;
-  font-weight: 500;
-  color: #2563EB;
+  font-weight: 600;
+  color: #0F766E;
   text-decoration: none;
-  margin-left: 30px;
-  transition: color 0.2s ease;
+  cursor: pointer;
+  transition: color 0.2s ease, text-decoration-color 0.2s ease;
 }
 
-.sp-cancellation-policy-link:hover {
-  color: #1D4ED8;
+.sp-cancellation-policy-link:hover,
+.sp-cancellation-policy-link:focus-visible {
+  color: #115E59;
   text-decoration: underline;
+  text-underline-offset: 3px;
+}
+
+.sp-cancellation-policy-link:focus-visible {
+  outline: 2px solid rgba(20, 184, 166, 0.45);
+  outline-offset: 3px;
+  border-radius: 4px;
 }
 
 /* Error state - only show when needed */

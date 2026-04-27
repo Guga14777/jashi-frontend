@@ -28,7 +28,6 @@ const EMPTY_FORM_STATE = {
 // 338 mi → $350 flat + 100·$1.80 + 138·$1.70 = $764.60 base
 // × 1.08 uplift × 0.85 calibration = $701.90 market avg.
 const DEMO_SAMPLE = {
-  vehicleLabel: 'Mercedes AMG CLA 45 2025',
   routeLabel: 'NY (10001) → VA (23220) · 338 mi',
   marketAverage: 701.90,
 };
@@ -44,6 +43,65 @@ const DEMO_FEES = (() => {
     savings: { total: addMoney(typical.total, -jashi.total) },
   };
 })();
+
+// ============================================================================
+// SEDAN-LOCKED MARKET AVG — used by the side comparison cards only.
+// Mirrors QuoteWidget's pricing math but pins the vehicle to Sedan so the
+// savings story doesn't shift when the user toggles Sedan/Pickup/SUV/Van/Other.
+// Source of truth lives in QuoteWidget; if that math changes, mirror it here.
+// ============================================================================
+const SEDAN_FLAT_FEE_FIRST_50 = 150;
+const SEDAN_FLAT_FEE_TO_100 = 350;
+const SEDAN_MARKET_UPLIFT = 0.08;
+const SEDAN_ENCLOSED_UPLIFT = 0.30;
+
+function sedanPerMileCost(milesAbove100) {
+  if (milesAbove100 <= 0) return 0;
+  let cost = 0;
+  let remaining = milesAbove100;
+  const tier1 = Math.min(remaining, 100);
+  cost += tier1 * 1.80;
+  remaining -= tier1;
+  if (remaining > 0) {
+    const tier2 = Math.min(remaining, 300);
+    cost += tier2 * 1.70;
+    remaining -= tier2;
+  }
+  if (remaining > 0) {
+    const tier3 = Math.min(remaining, 500);
+    cost += tier3 * 1.20;
+    remaining -= tier3;
+  }
+  if (remaining > 0) {
+    cost += remaining * 1.00;
+  }
+  // Sedan is NOT in PICKUP_FAMILY, so no 1.05× per-mile multiplier.
+  return cost;
+}
+
+function sedanCalibrationFactor(miles) {
+  if (miles <= 200) return 0.83;
+  if (miles <= 350) return 0.85;
+  if (miles <= 500) return 0.73;
+  if (miles <= 700) return 0.66;
+  return 0.60;
+}
+
+function computeSedanMarketAvg(miles, transportType) {
+  if (!Number.isFinite(miles) || miles <= 0) return 0;
+  let openBase;
+  if (miles <= 50) {
+    openBase = SEDAN_FLAT_FEE_FIRST_50;
+  } else if (miles <= 100) {
+    openBase = SEDAN_FLAT_FEE_TO_100;
+  } else {
+    openBase = SEDAN_FLAT_FEE_TO_100 + sedanPerMileCost(miles - 100);
+  }
+  const rawMarket = openBase * (1 + SEDAN_MARKET_UPLIFT);
+  const calibrated = rawMarket * sedanCalibrationFactor(miles);
+  const enclosedMultiplier = transportType === 'enclosed' ? (1 + SEDAN_ENCLOSED_UPLIFT) : 1;
+  return Math.round(calibrated * enclosedMultiplier * 100) / 100;
+}
 
 function QuoteSection() {
   // Single source of truth for the comparison cards: the live widget state.
@@ -74,7 +132,12 @@ function QuoteSection() {
 
   const fees = hasQuote
     ? (() => {
-        const marketAverage = roundMoney(form.marketAvg);
+        // Side cards are LOCKED to Sedan pricing for the current route, so the
+        // dollar amounts don't shift when the user toggles vehicle type in the
+        // center panel. (The center panel still reacts to vehicle type.)
+        const marketAverage = roundMoney(
+          computeSedanMarketAvg(form.distanceMi, form.transportType)
+        );
         const typical = computeFeeBreakdown(marketAverage, BROKER_FEE_RATE);
         const jashi = computeFeeBreakdown(marketAverage, PLATFORM_FEE_RATE);
         const miles = form.distanceMi;
@@ -92,11 +155,6 @@ function QuoteSection() {
         };
       })()
     : null;
-
-  const vehicleLabel = (() => {
-    const keys = Object.keys(form.selectedVehicles || {});
-    return keys.length > 0 ? keys.join(', ') : 'Your Vehicle';
-  })();
 
   const routeLabel = hasQuote
     ? `${form.pickupZip} → ${form.dropoffZip} · ${Math.round(form.distanceMi)} mi`
@@ -121,13 +179,15 @@ function QuoteSection() {
   // placeholder. Live values transparently replace the demo once ZIPs +
   // vehicle yield a marketAvg from the widget.
   const cardData = hasQuote
-    ? { vehicle: vehicleLabel, route: routeLabel, fees, isDemo: false }
-    : { vehicle: DEMO_SAMPLE.vehicleLabel, route: DEMO_SAMPLE.routeLabel, fees: DEMO_FEES, isDemo: true };
+    ? { route: routeLabel, fees, isDemo: false }
+    : { route: DEMO_SAMPLE.routeLabel, fees: DEMO_FEES, isDemo: true };
 
   // Both cards render an identical row skeleton so heights match exactly:
-  //   demo tag (or empty placeholder) → vehicle → route → 3 breakdown rows → total
+  //   demo tag (or empty placeholder) → route → 3 breakdown rows → total
   // The 3rd breakdown row mirrors across cards: broker shows the dollar
   // overhead the customer eats, Jashi shows the matching savings.
+  // Vehicle label is intentionally omitted — these cards are pinned to Sedan
+  // pricing regardless of which vehicle the user picks in the center panel.
   const renderTypicalCard = () => (
     <div className="qs-comparison-card qs-comparison-typical">
       <h4 className="qs-comparison-title">Typical Broker ({BROKER_FEE_PCT_LABEL} fee)</h4>
@@ -137,7 +197,6 @@ function QuoteSection() {
             <span className="qs-comparison-demo-tag">Example based on sample shipment</span>
           )}
         </div>
-        <div className="qs-comparison-vehicle">{cardData.vehicle}</div>
         <div className="qs-comparison-route">{cardData.route}</div>
         <div className="qs-comparison-breakdown">
           <div className="qs-comparison-line">
@@ -171,7 +230,6 @@ function QuoteSection() {
             <span className="qs-comparison-demo-tag">Example based on sample shipment</span>
           )}
         </div>
-        <div className="qs-comparison-vehicle">{cardData.vehicle}</div>
         <div className="qs-comparison-route">{cardData.route}</div>
         <div className="qs-comparison-breakdown">
           <div className="qs-comparison-line">

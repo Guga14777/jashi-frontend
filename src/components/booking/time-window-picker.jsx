@@ -484,15 +484,35 @@ export default function TimeWindowPicker({
           {errors.date && <span className="twp-error-text">{errors.date}</span>}
 
           <div className="twp-calendar-wrapper" ref={calendarRef}>
-            <input
-              type="text"
-              className={`twp-input ${errors.date ? 'twp-input--error' : ''}`}
-              value={formattedDate}
-              placeholder="Select date"
+            <div
+              className={`twp-input-shell ${errors.date ? 'twp-input-shell--error' : ''} ${disabled ? 'twp-input-shell--disabled' : ''}`}
               onClick={() => !disabled && setShowCalendar(!showCalendar)}
-              readOnly
-              disabled={disabled}
-            />
+              role="button"
+              tabIndex={disabled ? -1 : 0}
+              aria-haspopup="dialog"
+              aria-expanded={showCalendar}
+              aria-label={formattedDate ? `Selected date ${formattedDate}, click to change` : 'Click to select a date'}
+              onKeyDown={(e) => {
+                if (disabled) return;
+                if (e.key === 'Enter' || e.key === ' ') {
+                  e.preventDefault();
+                  setShowCalendar(!showCalendar);
+                }
+              }}
+            >
+              <input
+                type="text"
+                className="twp-input"
+                value={formattedDate}
+                placeholder="Select date"
+                readOnly
+                disabled={disabled}
+                tabIndex={-1}
+              />
+              <span className="twp-input-icon" aria-hidden="true">
+                <Calendar size={18} />
+              </span>
+            </div>
 
             {showCalendar && (
               <div className="twp-calendar-dropdown">

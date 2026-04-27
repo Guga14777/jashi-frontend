@@ -631,59 +631,77 @@ const createBooking = async (req, res) => {
       pickupDate: booking.pickupDate,
     });
 
-    // Link documents from quote
+    // Enrich vehicle data in parallel with the side-effect work below.
+    // The customer redirect to /dashboard only needs the booking row +
+    // enriched vehicles; document linking, payment row creation, quote
+    // status, and notifications are all background concerns that should
+    // not stall the HTTP response.
+    const enrichedVehicleDataPromise = enrichBookingWithVehicles(booking);
+
+    // Fire-and-forget: link uploaded quote documents to the new booking.
+    // Errors are already swallowed inside the helper, so the unhandled
+    // rejection guard is just defense-in-depth.
     if (incomingQuoteId) {
-      await linkQuoteDocumentsToBooking(incomingQuoteId, booking.id);
+      Promise.resolve(linkQuoteDocumentsToBooking(incomingQuoteId, booking.id))
+        .catch((err) => console.error('⚠️ [DOCUMENTS] link async failed:', err?.message));
     }
 
-    // Save payment information
+    // Fire-and-forget: payment row. We don't block the redirect on this
+    // because the row is only used by reconciliation/reporting; the user
+    // sees the booking in their dashboard regardless.
     if (data.cardNumber || data.cardFirstName || data.cardLastName) {
-      try {
-        const payment = await prisma.paymentTransaction.create({
-          data: {
-            userId,
-            bookingId: booking.id,
-            amount: parseFloat(data.totalAmount || data.platformFee || 0),
-            currency: 'USD',
-            status: 'pending',
-            paymentMethod: data.paymentMode === 'full_card_charge' ? 'card_full' : 'card_fee_only',
-            cardLast4: getCardLast4(data.cardNumber),
-            cardBrand: detectCardBrand(data.cardNumber),
-            cardholderFirstName: data.cardFirstName || null,
-            cardholderLastName: data.cardLastName || null,
-            paidAt: null,
-            metadata: { 
-              paymentMode: data.paymentMode, 
-              platformFee: data.platformFee, 
-              totalAmount: data.totalAmount, 
-              offerAmount: data.price, 
-              quoteId: incomingQuoteId 
+      (async () => {
+        try {
+          const payment = await prisma.paymentTransaction.create({
+            data: {
+              userId,
+              bookingId: booking.id,
+              amount: parseFloat(data.totalAmount || data.platformFee || 0),
+              currency: 'USD',
+              status: 'pending',
+              paymentMethod: data.paymentMode === 'full_card_charge' ? 'card_full' : 'card_fee_only',
+              cardLast4: getCardLast4(data.cardNumber),
+              cardBrand: detectCardBrand(data.cardNumber),
+              cardholderFirstName: data.cardFirstName || null,
+              cardholderLastName: data.cardLastName || null,
+              paidAt: null,
+              metadata: {
+                paymentMode: data.paymentMode,
+                platformFee: data.platformFee,
+                totalAmount: data.totalAmount,
+                offerAmount: data.price,
+                quoteId: incomingQuoteId,
+              },
             },
-          },
-        });
-        const reference = generatePaymentReference(orderNumber, payment.id);
-        await prisma.paymentTransaction.update({ where: { id: payment.id }, data: { reference } });
-      } catch (paymentError) {
-        console.error('⚠️ [PAYMENT] Failed to create payment record:', paymentError.message);
-      }
+          });
+          const reference = generatePaymentReference(orderNumber, payment.id);
+          await prisma.paymentTransaction.update({ where: { id: payment.id }, data: { reference } });
+        } catch (paymentError) {
+          console.error('⚠️ [PAYMENT] Failed to create payment record:', paymentError.message);
+        }
+      })();
     }
 
-    // Update quote status
+    // Fire-and-forget: mark the source quote as booked. Failure is
+    // recoverable and shouldn't block the redirect.
     if (booking.quoteId) {
-      try { 
-        await prisma.quote.update({ where: { id: booking.quoteId }, data: { status: 'booked' } }); 
-      } catch (e) {}
+      prisma.quote
+        .update({ where: { id: booking.quoteId }, data: { status: 'booked' } })
+        .catch(() => {});
     }
 
-    // Create notification
+    // Fire-and-forget: order-created notification. Notifications can be
+    // slow (email + DB write fanout) and the dashboard refresh used to
+    // visibly stall behind this. The user is already navigating away.
     try {
       const notify = require('../../services/notifications.service.cjs');
-      await notify.orderCreated({ ...booking, userId });
+      Promise.resolve(notify.orderCreated({ ...booking, userId }))
+        .catch((err) => console.error('Notify (order created) failed:', err?.message));
     } catch (notifError) {
-      console.error('Notify (order created) failed:', notifError.message);
+      console.error('Notify (order created) require failed:', notifError.message);
     }
 
-    const enrichedVehicleData = await enrichBookingWithVehicles(booking);
+    const enrichedVehicleData = await enrichedVehicleDataPromise;
     const responseBooking = { ...booking, ...enrichedVehicleData };
 
     res.status(201).json({ success: true, message: 'Booking created successfully', booking: responseBooking });

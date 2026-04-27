@@ -3,7 +3,7 @@
 // ✅ FIXED: Notifications are read-only - no modal on click
 // ============================================================
 
-import React, { createContext, useContext, useState, useCallback, useEffect } from 'react';
+import React, { createContext, useContext, useState, useCallback, useEffect, useMemo } from 'react';
 import { useAuth } from './auth-context';
 import { apiUrl } from '../lib/api-url.js';
 
@@ -38,10 +38,22 @@ const CustomerNotificationsContext = createContext();
 
 export const CustomerNotificationsProvider = ({ children }) => {
   const { user, token } = useAuth();
+
+  // Customer notifications endpoints are role-scoped on the server. Mounting
+  // this provider for a carrier-only or admin-only session would 401 on
+  // every poll and waste a round-trip on every page mount. Gate fetch +
+  // polling on the user actually carrying the CUSTOMER role. Users with
+  // multiple roles (e.g. customer+admin) still get the customer stream.
+  const isCustomer = useMemo(() => {
+    const raw = user?.roles ?? user?.role ?? [];
+    const list = Array.isArray(raw) ? raw : String(raw).split(',');
+    return list.map((r) => String(r).trim().toUpperCase()).includes('CUSTOMER');
+  }, [user]);
+
   const [notifications, setNotifications] = useState([]);
   const [isPanelOpen, setIsPanelOpen] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
-  
+
   // ✅ Keep selectedNotification for potential future use, but not triggered by clicks
   const [selectedNotification, setSelectedNotification] = useState(null);
 
@@ -50,7 +62,7 @@ export const CustomerNotificationsProvider = ({ children }) => {
 
   // ✅ FETCH NOTIFICATIONS FROM API
   const fetchNotifications = useCallback(async () => {
-    if (!user || !token) {
+    if (!user || !token || !isCustomer) {
       setNotifications([]);
       return;
     }
@@ -76,7 +88,7 @@ export const CustomerNotificationsProvider = ({ children }) => {
     } finally {
       setIsLoading(false);
     }
-  }, [user, token]);
+  }, [user, token, isCustomer]);
 
   // ✅ FETCH ON MOUNT AND WHEN USER CHANGES
   useEffect(() => {
@@ -84,15 +96,17 @@ export const CustomerNotificationsProvider = ({ children }) => {
   }, [fetchNotifications]);
 
   // 20s polling for live notification updates — paused when the tab is hidden.
+  // Skip entirely for non-customer sessions so carrier/admin pages don't burn
+  // an interval hitting an endpoint they're not authorized for.
   useEffect(() => {
-    if (!user || !token) return;
+    if (!user || !token || !isCustomer) return;
     const tick = () => {
       if (typeof document !== 'undefined' && document.hidden) return;
       fetchNotifications();
     };
     const id = setInterval(tick, 20000);
     return () => clearInterval(id);
-  }, [user, token, fetchNotifications]);
+  }, [user, token, isCustomer, fetchNotifications]);
 
   // ✅ MARK SINGLE AS READ
   const markAsRead = useCallback(async (id) => {

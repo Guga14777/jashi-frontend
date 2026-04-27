@@ -48,6 +48,7 @@ export { default as ModalFooter } from './modal-footer';
 // Info cards
 export { default as CustomerCard, CarrierCard } from './customer-card';
 export { default as PayoutLikelihoodCard } from './payout-likelihood-card';
+export { default as ShipperDocumentsCard } from './shipper-documents-card';
 
 // Cancel modal
 export { default as CancelConfirmModal } from './cancel-modal';

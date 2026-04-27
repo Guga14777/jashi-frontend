@@ -361,26 +361,32 @@ export default function Payment() {
       };
 
       console.log('📤 Payment: Sending booking with card info');
-      
+
       const response = await bookingApi.createBooking(bookingPayload, token);
       console.log('✅ Booking created:', response);
-      
+
       sessionStorage.removeItem('shipperPortalDraftCache');
-      
+
       const successMessage = paymentMode === 'full_card_charge'
         ? 'Your shipment request has been submitted!'
         : 'Your shipment request has been submitted!';
-      
+
+      // Pass the freshly-created booking through navigation state so the
+      // dashboard can optimistically prepend it to the orders table while
+      // the background refresh fetches the canonical paginated list.
+      const createdBooking = response?.booking || response?.bookingData || null;
+
       navigate('/dashboard', {
         replace: true,
         state: {
           success: true,
           message: successMessage,
-          bookingId: response.booking?.id || response.bookingId,
+          bookingId: createdBooking?.id || response?.bookingId,
+          newBooking: createdBooking,
           showSuccessToast: true,
         },
       });
-      
+
     } catch (error) {
       console.error('❌ Booking failed:', error);
       setErrors({ submit: error.message || 'Failed to process payment. Please try again.' });
