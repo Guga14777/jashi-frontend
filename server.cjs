@@ -318,16 +318,63 @@ app.get('/api/health', (req, res) => {
 // Diagnostic: confirms DB is reachable from the running process. Returns
 // the error message if Prisma throws — used to pinpoint "is DB broken?"
 // vs "is auth logic broken?" without needing Railway log access.
+//
+// Reports sanitized DB host (no user/password), row counts for key tables,
+// and whether DATABASE_URL is set. Never echoes the password.
 app.get('/api/health/db', async (req, res) => {
+  const parseDbHost = () => {
+    const url = process.env.DATABASE_URL;
+    if (!url) return { set: false };
+    try {
+      const u = new URL(url);
+      return {
+        set: true,
+        host: u.hostname,
+        port: u.port || null,
+        database: u.pathname.replace(/^\//, '') || null,
+        user: u.username ? `${u.username.slice(0, 3)}***` : null,
+        sslmode: u.searchParams.get('sslmode') || null,
+        pgbouncer: u.searchParams.get('pgbouncer') || null,
+      };
+    } catch {
+      return { set: true, host: 'unparseable' };
+    }
+  };
+
+  const database = parseDbHost();
   try {
     await prisma.$queryRaw`SELECT 1`;
-    const userCount = await prisma.user.count();
-    res.json({ status: 'ok', userCount, timestamp: new Date().toISOString() });
+    const [userCount, bookingCount, quoteCount, draftCount] = await Promise.all([
+      prisma.user.count(),
+      prisma.booking.count(),
+      prisma.quote.count(),
+      prisma.draft.count(),
+    ]);
+    res.json({
+      status: 'ok',
+      connected: true,
+      database,
+      counts: {
+        users: userCount,
+        bookings: bookingCount,
+        quotes: quoteCount,
+        drafts: draftCount,
+      },
+      env: {
+        NODE_ENV: process.env.NODE_ENV || null,
+        directUrlSet: !!process.env.DIRECT_URL,
+      },
+      timestamp: new Date().toISOString(),
+    });
   } catch (err) {
     res.status(500).json({
       status: 'error',
+      connected: false,
+      database,
       message: err?.message || String(err),
       code: err?.code,
+      name: err?.name,
+      timestamp: new Date().toISOString(),
     });
   }
 });

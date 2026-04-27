@@ -5,8 +5,10 @@
 // ============================================================
 
 import { api } from '../utils/request.js';
-
-const API_BASE = import.meta.env.VITE_API_URL || 'http://localhost:5177';
+// Canonical API base. Empty string in dev (Vite proxy handles /api) and in
+// prod with the Vercel→Railway rewrite. Cross-origin only when VITE_API_BASE
+// or VITE_API_URL is explicitly set. See src/lib/api-url.js for full docs.
+import { API_BASE } from '../lib/api-url.js';
 
 // ============================================================
 // BOOKINGS

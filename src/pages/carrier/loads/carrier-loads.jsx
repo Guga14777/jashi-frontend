@@ -16,7 +16,10 @@ import { useDebounce } from '../../../hooks/use-debounce.js';
 import { TAB_STATUS_MAP } from '../../../utils/constants.js';
 import { Search, Calendar, Truck, Filter, Grid3x3, List, ChevronDown, MapPin, Clock, DollarSign, Package, X, RefreshCw, Camera, CheckCircle, Navigation, MapPinned } from 'lucide-react';
 
-const API_BASE = import.meta.env.VITE_API_URL || 'http://localhost:5177';
+// Canonical API base. Empty string in dev (Vite proxy handles /api) and in
+// prod with the Vercel→Railway rewrite. Cross-origin only when VITE_API_BASE
+// or VITE_API_URL is explicitly set. See src/lib/api-url.js for full docs.
+import { API_BASE } from '../../../lib/api-url.js';
 
 // Formatter utilities
 const formatPrice = (n) => (n == null ? '—' : `$${n.toLocaleString()}`);

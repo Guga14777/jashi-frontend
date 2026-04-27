@@ -8,6 +8,7 @@ const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
 const prisma = require('../db.cjs');
 const { JWT_SECRET, JWT_EXPIRES_IN } = require('../config/jwt.cjs');
+const { classifyPrismaError } = require('../utils/prisma-error.cjs');
 
 // ============================================================
 // ROLE HELPERS
@@ -255,7 +256,8 @@ exports.register = async (req, res) => {
     });
 
   } catch (error) {
-    console.error('Register error:', error);
+    const classified = classifyPrismaError(error);
+    console.error('[auth.register] failed:', classified.reason, '-', classified.detail, error);
 
     if (error.code === 'P2002') {
       const field = error.meta?.target?.[0];
@@ -271,11 +273,9 @@ exports.register = async (req, res) => {
 
     res.status(500).json({
       error: 'Failed to register user',
-      // Surface the real reason so prod issues are debuggable from the
-      // browser network tab. Safe: we only include message + code, not
-      // the stack or query fragments.
-      detail: error?.message || String(error),
-      code: error?.code,
+      reason: classified.reason,
+      detail: classified.detail,
+      code: classified.code,
     });
   }
 };
@@ -408,11 +408,13 @@ exports.login = async (req, res) => {
     });
 
   } catch (error) {
-    console.error('Login error:', error);
+    const classified = classifyPrismaError(error);
+    console.error('[auth.login] failed:', classified.reason, '-', classified.detail, error);
     res.status(500).json({
       error: 'Failed to login',
-      detail: error?.message || String(error),
-      code: error?.code,
+      reason: classified.reason,
+      detail: classified.detail,
+      code: classified.code,
     });
   }
 };
@@ -613,8 +615,14 @@ exports.forgotPassword = async (req, res) => {
     }
 
   } catch (error) {
-    console.error('Forgot password error:', error);
-    res.status(500).json({ error: 'Failed to process request' });
+    const classified = classifyPrismaError(error);
+    console.error('[auth.forgotPassword] failed:', classified.reason, '-', classified.detail, error);
+    res.status(500).json({
+      error: 'Failed to process request',
+      reason: classified.reason,
+      detail: classified.detail,
+      code: classified.code,
+    });
   }
 };
 

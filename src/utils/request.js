@@ -21,12 +21,20 @@ async function http(method, endpoint, data = null, token = null) {
 
   if (!res.ok) {
     let msg = `HTTP ${res.status}`;
+    let body = null;
     try {
-      const j = await res.json();
-      msg = j.error || j.message || msg;
+      body = await res.json();
+      msg = body.error || body.message || msg;
+      // When the backend classifies a DB/connection failure it also sends
+      // `reason` + `detail`. Append them so users/ops can see the real cause
+      // in the browser toast, not just the generic "Failed to login".
+      if (body.detail && body.detail !== msg) msg = `${msg} — ${body.detail}`;
     } catch {}
     const err = new Error(msg);
     err.status = res.status;
+    err.reason = body?.reason || null;
+    err.detail = body?.detail || null;
+    err.code = body?.code || null;
     throw err;
   }
 

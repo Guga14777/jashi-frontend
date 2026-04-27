@@ -53,7 +53,8 @@
       "Bash(curl -sS -o /dev/null -w \"api:  %{http_code}\\\\n\" http://localhost:5182/api/health)",
       "Bash(npm install *)",
       "Bash(kill 41530 40332)",
-      "Bash(kill bz7ddz7eu *)"
+      "Bash(kill bz7ddz7eu *)",
+      "Bash(openssl rand *)"
     ]
   }
 }
