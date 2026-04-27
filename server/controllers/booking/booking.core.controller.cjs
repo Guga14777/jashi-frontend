@@ -366,34 +366,40 @@ const createBooking = async (req, res) => {
     }
     
     const incomingQuoteId = extractQuoteId(data);
-    let existingQuote = null;
-    if (incomingQuoteId) {
-      try {
-        existingQuote = await prisma.quote.findUnique({
-          where: { id: incomingQuoteId },
-          select: {
-            vehicle: true,
-            vehicles: true,
-            transportType: true,
-            miles: true,
-            fromZip: true,
-            toZip: true,
-            offer: true,
-            likelihood: true,
-            marketAvg: true
-          },
-        });
-        console.log('📦 [BOOKING] Linked quote:', existingQuote?.vehicle, existingQuote?.miles, 'mi');
-      } catch (quoteErr) {
-        console.warn('⚠️ [BOOKING] Could not fetch linked quote:', quoteErr.message);
-      }
-    }
+    // Kick off the linked-quote fetch eagerly. We don't await here — the
+    // fetch overlaps with the user fetch and all the synchronous data
+    // shaping below, then we await it just before we need its values
+    // when building bookingData.
+    const existingQuotePromise = incomingQuoteId
+      ? prisma.quote
+          .findUnique({
+            where: { id: incomingQuoteId },
+            select: {
+              vehicle: true,
+              vehicles: true,
+              transportType: true,
+              miles: true,
+              fromZip: true,
+              toZip: true,
+              offer: true,
+              likelihood: true,
+              marketAvg: true,
+            },
+          })
+          .catch((quoteErr) => {
+            console.warn('⚠️ [BOOKING] Could not fetch linked quote:', quoteErr.message);
+            return null;
+          })
+      : Promise.resolve(null);
 
     // ✅ Server-side delivery datetime validation. Mirrors the frontend rule
     // so a client that bypasses the form cannot submit an impossible delivery.
+    // Note: we don't read from existingQuote here — the frontend always sends
+    // miles/durationHours when it's relevant, and we don't want to block this
+    // sync validation on the in-flight quote fetch.
     {
       const sched = data.scheduling || {};
-      const milesForCheck = Number(data.miles) || Number(sched.miles) || Number(existingQuote?.miles) || 0;
+      const milesForCheck = Number(data.miles) || Number(sched.miles) || 0;
       const durationForCheck = Number(data.durationHours) || Number(sched.durationHours) || undefined;
       const pickupDateForCheck = data.pickupDate || sched.pickupDate;
       const dropoffDateForCheck = data.dropoffDate || sched.dropoffDate;
@@ -426,14 +432,22 @@ const createBooking = async (req, res) => {
     }
 
     const ref = generateRef();
-    const orderNumber = await generateOrderNumber();
+    // Run the order-number sequence read, the linked-quote fetch (already
+    // started above), and the user lookup in parallel. None depends on
+    // the others; they were previously serialized for no reason.
+    const [orderNumber, existingQuote, user] = await Promise.all([
+      generateOrderNumber(),
+      existingQuotePromise,
+      prisma.user.findUnique({
+        where: { id: userId },
+        select: { email: true, firstName: true, lastName: true, phone: true },
+      }),
+    ]);
+    if (existingQuote) {
+      console.log('📦 [BOOKING] Linked quote:', existingQuote.vehicle, existingQuote.miles, 'mi');
+    }
     const timeWindows = extractTimeWindowsFromScheduling(data.scheduling);
     const notesValue = extractNotesFromData(data);
-
-    const user = await prisma.user.findUnique({
-      where: { id: userId },
-      select: { email: true, firstName: true, lastName: true, phone: true }
-    });
 
     const pickupGatePassId = data.pickupGatePassId || extractGatePassId(data.auctionGatePass);
     const dropoffGatePassId = data.dropoffGatePassId || extractGatePassId(data.dropoffAuctionGatePass);
@@ -815,28 +829,45 @@ const getBookings = async (req, res) => {
 
     console.log('[BOOKINGS LIST]', { userId, userEmail, statusFilter, searchTerm, page: pageNum, limit: limitNum });
 
-    const [bookings, total] = await prisma.$transaction([
+    // Both queries are read-only and need no transactional consistency. Running
+    // them via Promise.all parallelizes them across the connection pool, saving
+    // one round-trip vs. prisma.$transaction([...]) which serializes inside a
+    // BEGIN/COMMIT.
+    //
+    // Gate-pass document objects are intentionally NOT included on the list
+    // response. The dashboard list view doesn't render them; the LoadDetailsModal
+    // re-fetches the full booking via GET /api/bookings/:id on open, which still
+    // includes pickupGatePass/dropoffGatePass/podDocument/documents. The scalar
+    // foreign-key columns (pickupGatePassId, dropoffGatePassId) remain on the
+    // row so any caller that only needs presence can keep working.
+    const [bookings, total] = await Promise.all([
       prisma.booking.findMany({
         where, skip, take: limitNum, orderBy: { createdAt: 'desc' },
         include: {
           user: { select: { id: true, email: true, firstName: true, lastName: true, phone: true } },
-          pickupGatePass: { select: { id: true, originalName: true, fileUrl: true, filePath: true, mimeType: true } },
-          dropoffGatePass: { select: { id: true, originalName: true, fileUrl: true, filePath: true, mimeType: true } },
           quoteRelation: { select: { likelihood: true, marketAvg: true } },
         },
       }),
       prisma.booking.count({ where }),
     ]);
 
-    // Batch-fetch carriers, multi-vehicle rows, and stops for ALL bookings on
-    // this page in three parallel round trips. Previously enrichBookingWithVehicles
-    // was awaited per row, which produced 2N extra Prisma queries (N+1) — the
-    // dominant cost on a Supabase-from-Railway path. Grouping the results in JS
-    // is cheap; the wins are network round trips, not CPU.
+    // Batch-fetch carriers and multi-vehicle rows for ALL bookings on this page
+    // in two parallel round trips. The bookingVehicle include pulls each
+    // vehicle's pickupStop/dropoffStop, so we no longer need a separate
+    // prisma.stop.findMany — enrichBookingWithVehicles derives the deduped
+    // stops array from those relations. Per-vehicle pickup/dropoff gate-pass
+    // documents are also dropped here for the same reason as the outer query:
+    // the modal's re-fetch repopulates them.
+    //
+    // Trade-off: orphan/legacy Stop rows that aren't referenced by any
+    // BookingVehicle won't appear in the list response. They never show in
+    // the dashboard table anyway; the modal re-fetch (which calls
+    // enrichBookingWithVehicles without pre-attached arrays) still picks
+    // them up via the legacy Stop.findMany fallback inside the service.
     const bookingIds = bookings.map(b => b.id);
     const carrierIds = [...new Set(bookings.filter(b => b.carrierId).map(b => b.carrierId))];
 
-    const [carriers, allBookingVehicles, allStops] = await Promise.all([
+    const [carriers, allBookingVehicles] = await Promise.all([
       carrierIds.length > 0
         ? prisma.user.findMany({
             where: { id: { in: carrierIds } },
@@ -849,16 +880,8 @@ const getBookings = async (req, res) => {
             include: {
               pickupStop: true,
               dropoffStop: true,
-              pickupGatePass: true,
-              dropoffGatePass: true,
             },
             orderBy: { vehicleIndex: 'asc' },
-          })
-        : Promise.resolve([]),
-      bookingIds.length > 0
-        ? prisma.stop.findMany({
-            where: { bookingId: { in: bookingIds } },
-            orderBy: { stopIndex: 'asc' },
           })
         : Promise.resolve([]),
     ]);
@@ -872,26 +895,27 @@ const getBookings = async (req, res) => {
       if (arr) arr.push(bv);
       else bookingVehiclesByBookingId.set(bv.bookingId, [bv]);
     }
-    const stopsByBookingId = new Map();
-    for (const st of allStops) {
-      const arr = stopsByBookingId.get(st.bookingId);
-      if (arr) arr.push(st);
-      else stopsByBookingId.set(st.bookingId, [st]);
-    }
 
-    // enrichBookingWithVehicles already prefers booking.bookingVehicles /
-    // booking.stops when present (services/booking/index.cjs:420-450), so
-    // pre-attaching the batched data lets it short-circuit the per-row fetch.
+    // Pre-attach an array (possibly empty) for every booking on this page.
+    // enrichBookingWithVehicles uses `=== undefined` to decide whether to hit
+    // the DB, so passing [] deliberately suppresses the per-row fetch on legacy
+    // bookings that have no BookingVehicle rows (avoids a hidden N+1).
+    // For multi-vehicle bookings we let the service derive `stops` from each
+    // vehicle's pickupStop/dropoffStop relations. For legacy bookings (empty
+    // bookingVehicles) we also pre-attach `stops: []` to suppress the fallback
+    // prisma.stop.findMany — legacy rows pre-date the Stop table, so the query
+    // would always return zero rows anyway.
     const transformedBookings = await Promise.all(bookings.map(async (booking) => {
       const pickupData = booking.pickup || {};
       const dropoffData = booking.dropoff || {};
       const vehicleFields = extractVehicleFields(booking.vehicleDetails);
       const normalizedStatus = normalizeStatus(booking.status);
       const statusStep = getStatusStep(normalizedStatus);
+      const bvsForBooking = bookingVehiclesByBookingId.get(booking.id) || [];
       const enrichedVehicleData = await enrichBookingWithVehicles({
         ...booking,
-        bookingVehicles: bookingVehiclesByBookingId.get(booking.id) || [],
-        stops: stopsByBookingId.get(booking.id) || [],
+        bookingVehicles: bvsForBooking,
+        ...(bvsForBooking.length === 0 ? { stops: [] } : {}),
       });
 
       return {
@@ -902,8 +926,8 @@ const getBookings = async (req, res) => {
         carrier: booking.carrierId ? carriersMap[booking.carrierId] || null : null,
         origin: [pickupData.city, pickupData.state].filter(Boolean).join(', ') || booking.fromCity,
         destination: [dropoffData.city, dropoffData.state].filter(Boolean).join(', ') || booking.toCity,
-        hasPickupGatePass: !!booking.pickupGatePass,
-        hasDropoffGatePass: !!booking.dropoffGatePass,
+        hasPickupGatePass: !!booking.pickupGatePassId,
+        hasDropoffGatePass: !!booking.dropoffGatePassId,
         ...vehicleFields,
         likelihood: booking.quoteRelation?.likelihood || null,
         marketAvg: booking.quoteRelation?.marketAvg || null,

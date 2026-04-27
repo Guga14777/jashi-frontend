@@ -5,7 +5,7 @@
 // ✅ UPDATED: New policy text aligned with scheduling rules
 // ============================================================
 
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { useNavigate, useLocation, useSearchParams } from 'react-router-dom';
 import { CreditCard, Lock, Info, HandCoins, CalendarCheck } from 'lucide-react';
 import { useAuth } from '../../../store/auth-context.jsx';
@@ -108,6 +108,10 @@ export default function Payment() {
   const [cvv, setCvv] = useState('');
   const [errors, setErrors] = useState({});
   const [isProcessing, setIsProcessing] = useState(false);
+  // Ref-based guard so a fast double-click can't fire two POST /api/bookings
+  // calls. setIsProcessing(true) on its own is async — by the time React
+  // re-renders the disabled button, a second click can already be in flight.
+  const submitInFlight = useRef(false);
   const [acceptedCancellationPolicy, setAcceptedCancellationPolicy] = useState(false);
   const [isPolicyOpen, setIsPolicyOpen] = useState(false);
   
@@ -263,7 +267,12 @@ export default function Payment() {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    
+
+    // Synchronous double-click guard — flips the ref BEFORE the async
+    // work and BEFORE setState, so a second click in the same tick is
+    // rejected even though `isProcessing` hasn't re-rendered yet.
+    if (submitInFlight.current) return;
+
     const validationErrors = validateCard();
     if (Object.keys(validationErrors).length > 0) {
       setErrors(validationErrors);
@@ -271,12 +280,13 @@ export default function Payment() {
     }
 
     const effectiveDraftId = draftId || quoteId;
-    
+
     if (!effectiveDraftId) {
       setErrors({ submit: 'Quote not found. Please go back and complete all steps.' });
       return;
     }
 
+    submitInFlight.current = true;
     setIsProcessing(true);
 
     try {
@@ -391,6 +401,7 @@ export default function Payment() {
       console.error('❌ Booking failed:', error);
       setErrors({ submit: error.message || 'Failed to process payment. Please try again.' });
       setIsProcessing(false);
+      submitInFlight.current = false;
     }
   };
 
@@ -726,7 +737,10 @@ export default function Payment() {
               disabled={isProcessing || !acceptedCancellationPolicy}
             >
               {isProcessing ? (
-                <><span className="sp-btn-spinner" />Processing...</>
+                <>
+                  <span className="sp-btn-spinner" />
+                  Confirming your booking…
+                </>
               ) : (
                 <>Complete Booking</>
               )}

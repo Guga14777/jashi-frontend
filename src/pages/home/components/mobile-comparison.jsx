@@ -1,58 +1,22 @@
 import React from 'react';
 
-import {
-  computeFeeBreakdown,
-  roundMoney,
-  addMoney,
-  formatMoney,
-  BROKER_FEE_RATE,
-  PLATFORM_FEE_RATE,
-  BROKER_FEE_PCT_LABEL,
-  PLATFORM_FEE_PCT_LABEL,
-  SAVINGS_PCT_ON_FEES_LABEL,
-} from '../../../utils/money';
-
-// Same illustrative state the desktop QuoteSection uses, kept in sync so the
-// mobile + desktop story tells the exact same dollar figures before the user
-// has entered ZIPs.
-const DEMO_SAMPLE = {
-  vehicleLabel: 'Mercedes AMG CLA 45 2025',
-  routeLabel: 'NY (10001) → VA (23220) · 338 mi',
-  marketAverage: 701.90,
-};
-
-function buildFees(marketAverage) {
-  const base = roundMoney(marketAverage);
-  const typical = computeFeeBreakdown(base, BROKER_FEE_RATE);
-  const jashi = computeFeeBreakdown(base, PLATFORM_FEE_RATE);
-  return {
-    marketAverage: base,
-    typical: { brokerFee: typical.fee, total: typical.total },
-    jashi: { platformFee: jashi.fee, total: jashi.total },
-    savings: { total: addMoney(typical.total, -jashi.total) },
-  };
-}
-
-const DEMO_FEES = buildFees(DEMO_SAMPLE.marketAverage);
-
-function MobileComparison({ form }) {
-  const hasQuote =
-    form &&
-    Number.isFinite(form.distanceMi) &&
-    form.distanceMi > 0 &&
-    form.marketAvg > 0;
-
-  const fees = hasQuote ? buildFees(form.marketAvg) : DEMO_FEES;
-
-  const vehicleLabel = (() => {
-    const keys = Object.keys(form?.selectedVehicles || {});
-    return keys.length > 0 ? keys.join(', ') : DEMO_SAMPLE.vehicleLabel;
-  })();
-
-  const routeLabel = hasQuote
-    ? `${form.pickupZip} → ${form.dropoffZip} · ${Math.round(form.distanceMi)} mi`
-    : DEMO_SAMPLE.routeLabel;
-
+// ============================================================================
+// Mobile pricing comparison — STATIC marketing infographic.
+//
+// Mirrors the desktop QuoteSection cards: never reacts to widget state
+// (vehicle selection, ZIPs, transport type, offer amount). Numbers are
+// hardcoded against a fixed sample:
+//
+//   Sample shipment: NY 10001 → VA 23220, 338 mi, sedan, open transport
+//   Carrier pay:  $701.90
+//   Broker fee   (15%): $105.29   →  Customer pays $807.19
+//   Platform fee  (6%): $42.11    →  Customer pays $744.01
+//   Savings on fees:    $63.18    (≈ 60% off platform fee)
+//
+// If you change pricing logic in QuoteWidget, update these numbers manually
+// (and the matching block in src/pages/home/sections/quote-section.jsx).
+// ============================================================================
+function MobileComparison() {
   return (
     <section className="mh-compare" aria-label="Pricing comparison">
       <header className="mh-compare-head">
@@ -64,7 +28,7 @@ function MobileComparison({ form }) {
           Traditional brokers set pricing. Jashi lets you make the offer.
         </p>
         <p className="mh-compare-meta">
-          {hasQuote ? vehicleLabel : DEMO_SAMPLE.vehicleLabel} · {routeLabel}
+          NY (10001) → VA (23220) · 338 mi
         </p>
       </header>
 
@@ -73,29 +37,29 @@ function MobileComparison({ form }) {
         <div className="mh-compare-row mh-compare-row--broker">
           <div className="mh-compare-row-head">
             <span className="mh-compare-tag mh-compare-tag--bad">Traditional broker</span>
-            <span className="mh-compare-fee">{BROKER_FEE_PCT_LABEL} fee</span>
+            <span className="mh-compare-fee">15% fee</span>
           </div>
           <ul className="mh-compare-attrs">
             <li>Broker controls price</li>
-            <li>{BROKER_FEE_PCT_LABEL} fee</li>
+            <li>15% fee</li>
           </ul>
           <dl className="mh-compare-lines">
             <div className="mh-compare-line">
               <dt>Carrier pay</dt>
-              <dd>${formatMoney(fees.marketAverage)}</dd>
+              <dd>$701.90</dd>
             </div>
             <div className="mh-compare-line">
-              <dt>Broker fee {BROKER_FEE_PCT_LABEL}</dt>
-              <dd>${formatMoney(fees.typical.brokerFee)}</dd>
+              <dt>Broker fee 15%</dt>
+              <dd>$105.29</dd>
             </div>
             <div className="mh-compare-line mh-compare-line--accent-bad">
               <dt>Broker markup</dt>
-              <dd>${formatMoney(fees.savings.total)}</dd>
+              <dd>$63.18</dd>
             </div>
           </dl>
           <div className="mh-compare-amount mh-compare-amount--bad">
             <span className="mh-compare-amount-prefix">Customer pays</span>
-            <span className="mh-compare-amount-value">${formatMoney(fees.typical.total)}</span>
+            <span className="mh-compare-amount-value">$807.19</span>
           </div>
         </div>
 
@@ -105,48 +69,48 @@ function MobileComparison({ form }) {
         <div className="mh-compare-row mh-compare-row--jashi">
           <div className="mh-compare-row-head">
             <span className="mh-compare-tag mh-compare-tag--good">Jashi Logistics</span>
-            <span className="mh-compare-fee">{PLATFORM_FEE_PCT_LABEL} fee</span>
+            <span className="mh-compare-fee">6% fee</span>
           </div>
           <ul className="mh-compare-attrs">
             <li className="mh-compare-attrs--lead">
               <span className="mh-compare-attrs-badge" aria-hidden="true">Core</span>
               You set your offer
             </li>
-            <li>{PLATFORM_FEE_PCT_LABEL} platform fee</li>
+            <li>6% platform fee</li>
           </ul>
           <dl className="mh-compare-lines">
             <div className="mh-compare-line">
               <dt>Carrier pay</dt>
-              <dd>${formatMoney(fees.marketAverage)}</dd>
+              <dd>$701.90</dd>
             </div>
             <div className="mh-compare-line">
-              <dt>Platform fee {PLATFORM_FEE_PCT_LABEL}</dt>
-              <dd>${formatMoney(fees.jashi.platformFee)}</dd>
+              <dt>Platform fee 6%</dt>
+              <dd>$42.11</dd>
             </div>
             <div className="mh-compare-line mh-compare-line--accent-good">
               <dt>Estimated savings</dt>
-              <dd>${formatMoney(fees.savings.total)}</dd>
+              <dd>$63.18</dd>
             </div>
           </dl>
           <div className="mh-compare-amount mh-compare-amount--good">
             <span className="mh-compare-amount-prefix">Customer pays</span>
-            <span className="mh-compare-amount-value">${formatMoney(fees.jashi.total)}</span>
+            <span className="mh-compare-amount-value">$744.01</span>
           </div>
         </div>
 
         <div className="mh-compare-savings">
           <div className="mh-compare-savings-line">
             <span>You save</span>
-            <strong>${formatMoney(fees.savings.total)}</strong>
+            <strong>$63.18</strong>
           </div>
           <div className="mh-compare-savings-sub">
-            {SAVINGS_PCT_ON_FEES_LABEL} less in platform fees
+            60% less in platform fees
           </div>
         </div>
       </div>
 
       <p className="mh-compare-disclaimer">
-        {hasQuote ? 'Live quote based on your route and vehicle.' : 'Example based on sample shipment.'}
+        Example based on sample shipment.
       </p>
     </section>
   );

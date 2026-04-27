@@ -174,13 +174,14 @@ const isMultiVehicleBooking = (data) => {
   return false;
 };
 
-// Safely include multi-vehicle relations
+// Safely include multi-vehicle relations.
+// The two findMany calls are independent and were previously awaited
+// sequentially — a noticeable cost on a remote Postgres for every
+// booking detail fetch and (worse) at the end of every booking create.
+// Run them in parallel so both round trips overlap.
 const safeIncludeMultiVehicle = async (bookingId) => {
-  let bookingVehicles = [];
-  let stops = [];
-  
-  try {
-    bookingVehicles = await prisma.bookingVehicle.findMany({
+  const settled = await Promise.allSettled([
+    prisma.bookingVehicle.findMany({
       where: { bookingId },
       orderBy: { vehicleIndex: 'asc' },
       include: {
@@ -188,29 +189,105 @@ const safeIncludeMultiVehicle = async (bookingId) => {
         dropoffStop: true,
         pickupGatePass: true,
         dropoffGatePass: true,
-      }
-    });
-  } catch (e) {
-    // Table doesn't exist yet
-  }
-  
-  try {
-    stops = await prisma.stop.findMany({
+      },
+    }),
+    prisma.stop.findMany({
       where: { bookingId },
       orderBy: [{ stage: 'asc' }, { stopIndex: 'asc' }],
-    });
-  } catch (e) {
-    // Table doesn't exist yet
-  }
-  
+    }),
+  ]);
+
+  const bookingVehicles = settled[0].status === 'fulfilled' ? settled[0].value : [];
+  const stops = settled[1].status === 'fulfilled' ? settled[1].value : [];
   return { bookingVehicles, stops };
 };
 
-// Enrich booking with vehicles array for response
+// Enrich booking with vehicles array for response.
+// Fast path: when the booking row itself says single-vehicle and there is
+// no multi-vehicle config, skip the BookingVehicle/Stop queries entirely
+// — they will return empty for a fresh booking and were costing two
+// round trips per create. The legacy generator can build the response
+// from the data we already have in memory.
 const enrichBookingWithVehicles = async (booking) => {
   const vd = safeParseJson(booking.vehicleDetails);
-  const { bookingVehicles, stops } = await safeIncludeMultiVehicle(booking.id);
-  
+  const declaredCount = Number(booking.vehiclesCount || vd.vehiclesCount || 0);
+  const isLikelySingle =
+    !booking.multiVehicleConfig &&
+    !vd.isMultiVehicle &&
+    (declaredCount === 0 || declaredCount === 1);
+
+  if (isLikelySingle) {
+    if (vd.vehicles && Array.isArray(vd.vehicles) && vd.vehicles.length > 0) {
+      const flattenedVehicles = vd.vehicles.map((v, idx) => {
+        const veh = v.vehicle || v;
+        return {
+          year: veh.year || '',
+          make: veh.make || '',
+          model: veh.model || '',
+          vin: veh.vin || null,
+          vehicleType: veh.vehicleType || veh.type || 'sedan',
+          operable: veh.operable || 'yes',
+          vehicleIndex: idx,
+          pickup: v.pickup || null,
+          dropoff: v.dropoff || null,
+        };
+      });
+      return {
+        vehicles: flattenedVehicles,
+        vehiclesCount: vd.vehiclesCount || flattenedVehicles.length,
+        isMultiVehicle: false,
+        bookingVehicles: [],
+        stops: [],
+      };
+    }
+    const legacyData = generateVehiclesFromLegacy(booking);
+    return { ...legacyData, bookingVehicles: [], stops: [] };
+  }
+
+  // Pre-attach support: a list-path caller may have already batch-fetched
+  // BookingVehicle rows (with pickupStop/dropoffStop relations) for every
+  // booking on the page in a single round trip. When that's the case, skip
+  // the per-row safeIncludeMultiVehicle() call to avoid a 2N round-trip N+1.
+  // We treat `undefined` as "not provided, fetch" and any value (including [])
+  // as "trust the caller" so legacy multi-vehicle bookings with no rows don't
+  // sneak back into the per-row path.
+  let bookingVehicles;
+  let stops;
+  if (booking.bookingVehicles !== undefined) {
+    bookingVehicles = booking.bookingVehicles;
+
+    if (booking.stops !== undefined) {
+      stops = booking.stops;
+    } else {
+      // Derive a deduped, ordered stops array from each vehicle's
+      // pickupStop/dropoffStop relations. Match the ordering produced by
+      // safeIncludeMultiVehicle() (pickup stage first, then by stopIndex)
+      // so downstream consumers see the same shape regardless of code path.
+      const seen = new Set();
+      const derived = [];
+      for (const bv of bookingVehicles) {
+        if (bv.pickupStop && !seen.has(bv.pickupStop.id)) {
+          seen.add(bv.pickupStop.id);
+          derived.push(bv.pickupStop);
+        }
+        if (bv.dropoffStop && !seen.has(bv.dropoffStop.id)) {
+          seen.add(bv.dropoffStop.id);
+          derived.push(bv.dropoffStop);
+        }
+      }
+      derived.sort((a, b) => {
+        const stageRank = (s) => (s.stage === 'pickup' ? 0 : 1);
+        const sa = stageRank(a);
+        const sb = stageRank(b);
+        if (sa !== sb) return sa - sb;
+        return (a.stopIndex ?? 0) - (b.stopIndex ?? 0);
+      });
+      stops = derived;
+    }
+  } else {
+    ({ bookingVehicles, stops } = await safeIncludeMultiVehicle(booking.id));
+  }
+
   // Priority 1: Use bookingVehicles from DB relations
   if (bookingVehicles && bookingVehicles.length > 0) {
     const vehiclesFromRelations = bookingVehicles.map((bv, idx) => ({

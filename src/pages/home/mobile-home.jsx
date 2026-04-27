@@ -1,4 +1,4 @@
-import React, { useCallback, useState } from 'react';
+import React from 'react';
 import {
   IoFlashOutline,
   IoPeopleOutline,
@@ -66,34 +66,8 @@ const FEATURES = [
 ];
 
 function MobileHome() {
-  // Comparison cards live below the form. We still mirror the QuoteWidget
-  // state into mobile-home so the live numbers can update once the user
-  // fills in ZIPs / vehicle. Same pattern as QuoteSection on desktop.
-  const [form, setForm] = useState({
-    pickupZip: '',
-    dropoffZip: '',
-    distanceMi: null,
-    selectedVehicles: {},
-    transportType: 'open',
-    marketAvg: 0,
-  });
-
-  const handleWidgetState = useCallback((next) => {
-    setForm((prev) => {
-      if (
-        prev.pickupZip === next.pickupZip &&
-        prev.dropoffZip === next.dropoffZip &&
-        prev.distanceMi === next.distanceMi &&
-        prev.transportType === next.transportType &&
-        prev.marketAvg === next.marketAvg &&
-        prev.selectedVehicles === next.selectedVehicles
-      ) {
-        return prev;
-      }
-      return { ...prev, ...next };
-    });
-  }, []);
-
+  // Comparison cards below the widget are a static infographic — they don't
+  // read widget state, so no plumbing is needed here.
   return (
     <div className="mhome">
       <MobileHomeHeader />
@@ -119,7 +93,6 @@ function MobileHome() {
           </header>
           <div className="mhome-quote-card">
             <QuoteWidget
-              onStateChange={handleWidgetState}
               submitLabel="Check Dispatch Chance →"
               footerNote="No commitment required. Flat 6% fee only when you book."
             />
@@ -136,7 +109,7 @@ function MobileHome() {
         </section>
 
         {/* ===== PRICING COMPARISON (below quote on mobile) ===== */}
-        <MobileComparison form={form} />
+        <MobileComparison />
 
         {/* ===== HOW IT WORKS - 4-STEP TIMELINE ===== */}
         <section className="mhome-steps" aria-label="How it works">

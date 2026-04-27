@@ -11,7 +11,7 @@ const require = createRequire(import.meta.url);
 
 const prisma = require('../server/db.cjs');
 const emailService = require('../server/services/email.service.cjs');
-const bcrypt = require('bcryptjs');
+const bcrypt = require('bcrypt');
 
 // Intercept the email stub so we can read the plaintext code without
 // scraping server stdout.

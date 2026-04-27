@@ -107,15 +107,15 @@
 }
 
 .twp-input-shell:hover:not(.twp-input-shell--disabled) {
-  border-color: #14B8A6;
-  background: #F0FDFA;
+  border-color: #2563EB;
+  background: #FFFFFF;
 }
 
 .twp-input-shell:focus,
 .twp-input-shell:focus-within {
   outline: none;
-  border-color: #14B8A6;
-  box-shadow: 0 0 0 3px rgba(20, 184, 166, 0.18);
+  border-color: #2563EB;
+  box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.18);
 }
 
 .twp-input-shell--error {
@@ -164,24 +164,29 @@
 }
 
 /* Right-side calendar affordance. Pointer-events disabled so the click
-   bubbles to the wrapper, which owns toggling the calendar. */
+   bubbles to the wrapper, which owns toggling the calendar. The icon is
+   intentionally minimal — a clean outline with no background fill. It
+   tints to brand blue only on hover/focus to signal interactivity. */
 .twp-input-icon {
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  width: 32px;
-  height: 32px;
+  width: 24px;
+  height: 24px;
   margin-left: 10px;
-  border-radius: 8px;
-  background: #F0FDFA;
-  color: #0F766E;
+  background: transparent;
+  color: #94A3B8;
   pointer-events: none;
-  transition: background 0.2s ease, color 0.2s ease;
+  transition: color 0.2s ease;
 }
 
-.twp-input-shell:hover:not(.twp-input-shell--disabled) .twp-input-icon {
-  background: #14B8A6;
-  color: #FFFFFF;
+.twp-input-shell:hover:not(.twp-input-shell--disabled) .twp-input-icon,
+.twp-input-shell:focus-within .twp-input-icon {
+  color: #2563EB;
+}
+
+.twp-input-shell--error .twp-input-icon {
+  color: #EF4444;
 }
 
 /* ============================================================

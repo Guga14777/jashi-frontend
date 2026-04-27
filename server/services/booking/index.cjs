@@ -413,91 +413,11 @@ const linkQuoteDocumentsToBooking = async (quoteId, bookingId) => {
 /**
  * Enrich booking with multi-vehicle data
  */
-const enrichBookingWithVehicles = async (booking) => {
-  if (!booking) return { vehicles: [], bookingVehicles: [], stops: [], vehiclesCount: 1, isMultiVehicle: false };
-  
-  // Check if already has booking vehicles
-  let bookingVehicles = booking.bookingVehicles || [];
-  let stops = booking.stops || [];
-  
-  // If not pre-loaded, fetch them
-  if (bookingVehicles.length === 0 && booking.id) {
-    try {
-      bookingVehicles = await prisma.bookingVehicle.findMany({
-        where: { bookingId: booking.id },
-        include: {
-          pickupStop: true,
-          dropoffStop: true,
-          pickupGatePass: true,
-          dropoffGatePass: true,
-        },
-        orderBy: { vehicleIndex: 'asc' },
-      });
-    } catch (e) {
-      bookingVehicles = [];
-    }
-  }
-  
-  if (stops.length === 0 && booking.id) {
-    try {
-      stops = await prisma.stop.findMany({
-        where: { bookingId: booking.id },
-        orderBy: { stopIndex: 'asc' },
-      });
-    } catch (e) {
-      stops = [];
-    }
-  }
-  
-  // Determine vehicle count
-  const vd = safeParseJson(booking.vehicleDetails);
-  const vehiclesCount = booking.vehiclesCount || vd.vehiclesCount || bookingVehicles.length || 1;
-  const isMultiVehicle = vehiclesCount > 1 || bookingVehicles.length > 1;
-  
-  // Build vehicles array from booking vehicles or vehicleDetails
-  let vehicles = [];
-  if (bookingVehicles.length > 0) {
-    vehicles = bookingVehicles.map((bv, i) => ({
-      id: bv.id,
-      vehicleIndex: bv.vehicleIndex ?? i,
-      year: bv.year || '',
-      make: bv.make || '',
-      model: bv.model || '',
-      type: bv.vehicleType || '',
-      vin: bv.vin || '',
-      operable: bv.operable || 'yes',
-      pickupStop: bv.pickupStop,
-      dropoffStop: bv.dropoffStop,
-      pickupGatePass: bv.pickupGatePass,
-      dropoffGatePass: bv.dropoffGatePass,
-    }));
-  } else if (vd.vehicles && Array.isArray(vd.vehicles)) {
-    vehicles = vd.vehicles.map((v, i) => {
-      const vi = v.vehicle || v;
-      return {
-        vehicleIndex: v.vehicleIndex ?? i,
-        year: vi.year || '',
-        make: vi.make || '',
-        model: vi.model || '',
-        type: vi.type || vi.vehicleType || '',
-        vin: vi.vin || '',
-        operable: vi.operable || 'yes',
-        pickupStop: v.pickup || null,
-        dropoffStop: v.dropoff || null,
-      };
-    });
-  }
-  
-  return {
-    vehicles,
-    bookingVehicles,
-    stops,
-    pickupStops: stops.filter(s => s.stage === 'pickup'),
-    dropoffStops: stops.filter(s => s.stage === 'dropoff'),
-    vehiclesCount,
-    isMultiVehicle,
-  };
-};
+// NOTE: The canonical enrichBookingWithVehicles lives in
+// ./booking.vehicle.service.cjs. The `module.exports` block at the bottom of
+// this file spreads `vehicleService` AFTER the local definitions, so an
+// in-file copy here would be silently shadowed. Don't add one — edit the
+// service file instead.
 
 // ============================================================
 // PAYOUT HELPERS
@@ -677,10 +597,10 @@ module.exports = {
   getGatePasses,
   linkPhotosToBooking,
   linkQuoteDocumentsToBooking,
-  
-  // Multi-vehicle helpers
-  enrichBookingWithVehicles,
-  
+
+  // Multi-vehicle helpers — exported via the spread of `vehicleService`
+  // in the second module.exports block below.
+
   // Payout helpers
   calculateTotalPayout,
   

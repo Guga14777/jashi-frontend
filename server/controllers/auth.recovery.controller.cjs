@@ -5,7 +5,7 @@
 //   3. /recovery/reset-password — user submits resetToken + new password → password updated.
 //   4. /recovery/resend   — same as request.
 
-const bcrypt = require('bcryptjs');
+const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
 const crypto = require('crypto');
 const prisma = require('../db.cjs');

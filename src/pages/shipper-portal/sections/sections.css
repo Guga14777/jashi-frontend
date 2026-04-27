@@ -393,7 +393,9 @@
 
 /* Date input shell — wraps a native <input type="date"> so we can render
    a clickable calendar affordance on the right and signal "this is
-   interactive" to users who don't realize the bare field is clickable. */
+   interactive" to users who don't realize the bare field is clickable.
+   Brand: matches the shipper portal blue (#2563EB). The icon itself is
+   a plain outline that tints to brand blue on hover/focus only. */
 .sp-date-input-wrap {
   position: relative;
   display: flex;
@@ -406,12 +408,11 @@
 .sp-date-input-wrap > .sp-input {
   flex: 1;
   width: 100%;
-  padding-right: 52px;
+  padding-right: 44px;
 }
 
 .sp-date-input-wrap:hover > .sp-input:not(:focus):not(.sp-input--error) {
-  border-color: #14B8A6;
-  background: #F0FDFA;
+  border-color: #2563EB;
 }
 
 .sp-date-input-wrap:hover > .sp-input--error {
@@ -420,28 +421,26 @@
 
 .sp-date-input-icon {
   position: absolute;
-  right: 8px;
+  right: 12px;
   top: 50%;
   transform: translateY(-50%);
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  width: 36px;
-  height: 36px;
-  border-radius: 8px;
-  background: #F0FDFA;
-  color: #0F766E;
+  width: 22px;
+  height: 22px;
+  background: transparent;
+  color: #94A3B8;
   pointer-events: none;
-  transition: background 0.2s ease, color 0.2s ease;
+  transition: color 0.2s ease;
 }
 
-.sp-date-input-wrap:hover .sp-date-input-icon {
-  background: #14B8A6;
-  color: #FFFFFF;
+.sp-date-input-wrap:hover .sp-date-input-icon,
+.sp-date-input-wrap:focus-within .sp-date-input-icon {
+  color: #2563EB;
 }
 
 .sp-date-input-wrap--error .sp-date-input-icon {
-  background: #FEE2E2;
   color: #DC2626;
 }
 
@@ -1711,7 +1710,8 @@
 /* Reset the native <button> chrome (border, background, padding) and
    render an inline brand link directly below the checkbox. Without
    these resets, the browser's default button face shows up as an
-   "accidental empty bordered box" around the link text. */
+   "accidental empty bordered box" around the link text. Color matches
+   the shipper portal brand blue (#2563EB / #1D4ED8 hover). */
 .sp-cancellation-policy-link {
   align-self: flex-start;
   display: inline-flex;
@@ -1724,7 +1724,7 @@
   font: inherit;
   font-size: 14px;
   font-weight: 600;
-  color: #0F766E;
+  color: #2563EB;
   text-decoration: none;
   cursor: pointer;
   transition: color 0.2s ease, text-decoration-color 0.2s ease;
@@ -1732,13 +1732,13 @@
 
 .sp-cancellation-policy-link:hover,
 .sp-cancellation-policy-link:focus-visible {
-  color: #115E59;
+  color: #1D4ED8;
   text-decoration: underline;
   text-underline-offset: 3px;
 }
 
 .sp-cancellation-policy-link:focus-visible {
-  outline: 2px solid rgba(20, 184, 166, 0.45);
+  outline: 2px solid rgba(37, 99, 235, 0.45);
   outline-offset: 3px;
   border-radius: 4px;
 }

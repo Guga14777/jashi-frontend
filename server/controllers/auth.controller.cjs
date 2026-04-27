@@ -4,7 +4,7 @@
  * Allows same email/phone for CUSTOMER and CARRIER roles
  */
 
-const bcrypt = require('bcryptjs');
+const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
 const prisma = require('../db.cjs');
 const { JWT_SECRET, JWT_EXPIRES_IN } = require('../config/jwt.cjs');
