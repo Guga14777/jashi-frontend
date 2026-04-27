@@ -810,23 +810,71 @@ const getBookings = async (req, res) => {
       prisma.booking.count({ where }),
     ]);
 
+    // Batch-fetch carriers, multi-vehicle rows, and stops for ALL bookings on
+    // this page in three parallel round trips. Previously enrichBookingWithVehicles
+    // was awaited per row, which produced 2N extra Prisma queries (N+1) — the
+    // dominant cost on a Supabase-from-Railway path. Grouping the results in JS
+    // is cheap; the wins are network round trips, not CPU.
+    const bookingIds = bookings.map(b => b.id);
     const carrierIds = [...new Set(bookings.filter(b => b.carrierId).map(b => b.carrierId))];
+
+    const [carriers, allBookingVehicles, allStops] = await Promise.all([
+      carrierIds.length > 0
+        ? prisma.user.findMany({
+            where: { id: { in: carrierIds } },
+            select: { id: true, email: true, firstName: true, lastName: true, phone: true, companyName: true },
+          })
+        : Promise.resolve([]),
+      bookingIds.length > 0
+        ? prisma.bookingVehicle.findMany({
+            where: { bookingId: { in: bookingIds } },
+            include: {
+              pickupStop: true,
+              dropoffStop: true,
+              pickupGatePass: true,
+              dropoffGatePass: true,
+            },
+            orderBy: { vehicleIndex: 'asc' },
+          })
+        : Promise.resolve([]),
+      bookingIds.length > 0
+        ? prisma.stop.findMany({
+            where: { bookingId: { in: bookingIds } },
+            orderBy: { stopIndex: 'asc' },
+          })
+        : Promise.resolve([]),
+    ]);
+
     const carriersMap = {};
-    if (carrierIds.length > 0) {
-      const carriers = await prisma.user.findMany({
-        where: { id: { in: carrierIds } },
-        select: { id: true, email: true, firstName: true, lastName: true, phone: true, companyName: true },
-      });
-      carriers.forEach(c => { carriersMap[c.id] = buildCarrierInfoForCustomer(c); });
+    carriers.forEach(c => { carriersMap[c.id] = buildCarrierInfoForCustomer(c); });
+
+    const bookingVehiclesByBookingId = new Map();
+    for (const bv of allBookingVehicles) {
+      const arr = bookingVehiclesByBookingId.get(bv.bookingId);
+      if (arr) arr.push(bv);
+      else bookingVehiclesByBookingId.set(bv.bookingId, [bv]);
+    }
+    const stopsByBookingId = new Map();
+    for (const st of allStops) {
+      const arr = stopsByBookingId.get(st.bookingId);
+      if (arr) arr.push(st);
+      else stopsByBookingId.set(st.bookingId, [st]);
     }
 
+    // enrichBookingWithVehicles already prefers booking.bookingVehicles /
+    // booking.stops when present (services/booking/index.cjs:420-450), so
+    // pre-attaching the batched data lets it short-circuit the per-row fetch.
     const transformedBookings = await Promise.all(bookings.map(async (booking) => {
       const pickupData = booking.pickup || {};
       const dropoffData = booking.dropoff || {};
       const vehicleFields = extractVehicleFields(booking.vehicleDetails);
       const normalizedStatus = normalizeStatus(booking.status);
       const statusStep = getStatusStep(normalizedStatus);
-      const enrichedVehicleData = await enrichBookingWithVehicles(booking);
+      const enrichedVehicleData = await enrichBookingWithVehicles({
+        ...booking,
+        bookingVehicles: bookingVehiclesByBookingId.get(booking.id) || [],
+        stops: stopsByBookingId.get(booking.id) || [],
+      });
 
       return {
         ...booking,

@@ -10,7 +10,7 @@ import React, { useEffect, useMemo, useState } from 'react';
 import { Outlet, useLocation, useNavigate } from 'react-router-dom';
 import { useAuth } from '../../store/auth-context';
 import * as quotesApi from '../../services/quotes.api';
-import { listMyBookings, getFullBooking, getCustomerDashboardStats } from '../../services/booking.api';
+import { listMyBookings, getCustomerDashboardStats } from '../../services/booking.api';
 import { transformBookingToLoad } from '../../utils/booking-transformers';
 
 import CustomerQuoteWidget from '../../components/quote-widget/quote-widget.customer.jsx';
@@ -114,8 +114,6 @@ const CustomerDashboard = () => {
   const [selectedLoad, setSelectedLoad] = useState(null);
   const [isLoadModalOpen, setIsLoadModalOpen] = useState(false);
   const [modalType, setModalType] = useState('booking');
-  // ✅ NEW: Loading state for shipment details
-  const [loadingShipmentDetails, setLoadingShipmentDetails] = useState(false);
 
   const [showSuccessToast, setShowSuccessToast] = useState(false);
   const [successMessage, setSuccessMessage] = useState('');
@@ -466,6 +464,13 @@ const CustomerDashboard = () => {
   }, [token]);
 
   const handleShipmentsPageChange = async (newPage) => {
+    // Optimistic update — bump the displayed active page to `newPage` BEFORE
+    // the fetch resolves so the pagination button visibly reacts on the first
+    // click. Without this, `pagination.page` only updates after the network
+    // round-trip, so on a slow connection the user thinks the click did
+    // nothing and clicks again. loadShipments overwrites this with the server
+    // response on success, which lands on the same value.
+    setShipmentsPagination((prev) => ({ ...prev, page: newPage }));
     try {
       await loadShipments(newPage, shipmentSearch, { statusFilter: shipmentStatusFilter });
     } catch (err) {
@@ -500,69 +505,24 @@ const CustomerDashboard = () => {
     setIsQuoteModalOpen(true);
   };
 
-  // ✅ FIXED: handleShipmentView - now fetches fresh data from API
-  const handleShipmentView = async (id) => {
-    console.log('🔍 handleShipmentView called with ID:', id);
-    
+  // Open the modal IMMEDIATELY with the cached list row. The modal's own
+  // hook (use-load-details-state.js) re-fetches the full booking in the
+  // background and merges the result, so the user sees the order populated
+  // right away while detail-only fields hydrate after the round-trip.
+  // Previously we awaited getFullBooking() before opening, which caused a
+  // multi-second blank "Loading shipment details…" overlay on every click.
+  const handleShipmentView = (id) => {
     const stringId = String(id);
-    
-    try {
-      setLoadingShipmentDetails(true);
-      
-      // ✅ FETCH FRESH DATA FROM API instead of using cached data
-      const response = await getFullBooking(stringId, token);
-      
-      console.log('📡 Booking API response:', response);
-      
-      let fullBooking = null;
-      
-      if (response.success === true && response.booking) {
-        fullBooking = response.booking;
-      } else if (response.booking) {
-        fullBooking = response.booking;
-      } else if (response.data?.booking) {
-        fullBooking = response.data.booking;
-      } else if (response.id) {
-        fullBooking = response;
-      }
-      
-      if (!fullBooking) {
-        console.error('❌ Booking not found in API response, falling back to cache');
-        // Fallback to cached data
-        fullBooking = shipments.find((s) => String(s.id) === stringId);
-        
-        if (!fullBooking) {
-          console.error('❌ Booking not found in cache either');
-          return;
-        }
-      } else {
-        // Transform the fresh booking data
-        fullBooking = transformBookingToLoad(fullBooking);
-      }
-      
-      console.log('✅ Setting booking for modal:', fullBooking.orderNumber || fullBooking.id, 'Status:', fullBooking.status);
-      
-      fullBooking.id = String(fullBooking.id);
-      
-      setSelectedLoad(fullBooking);
-      setModalType('booking');
-      setIsLoadModalOpen(true);
-      
-    } catch (err) {
-      console.error('❌ Failed to load booking details:', err);
-      
-      // Fallback to cached data on error
-      const cachedShipment = shipments.find((s) => String(s.id) === stringId);
-      
-      if (cachedShipment) {
-        console.log('⚠️ Using cached shipment as fallback');
-        setSelectedLoad(cachedShipment);
-        setModalType('booking');
-        setIsLoadModalOpen(true);
-      }
-    } finally {
-      setLoadingShipmentDetails(false);
+    const cachedShipment = shipments.find((s) => String(s.id) === stringId);
+
+    if (!cachedShipment) {
+      console.error('❌ handleShipmentView: shipment not in cache for id', stringId);
+      return;
     }
+
+    setSelectedLoad({ ...cachedShipment, id: stringId });
+    setModalType('booking');
+    setIsLoadModalOpen(true);
   };
 
 
@@ -777,33 +737,6 @@ const CustomerDashboard = () => {
             >
               ×
             </button>
-          </div>
-        </div>
-      )}
-
-      {/* ✅ NEW: Loading indicator for shipment details fetch */}
-      {loadingShipmentDetails && (
-        <div style={{
-          position: 'fixed',
-          top: 0,
-          left: 0,
-          right: 0,
-          bottom: 0,
-          background: 'rgba(0, 0, 0, 0.5)',
-          display: 'flex',
-          alignItems: 'center',
-          justifyContent: 'center',
-          zIndex: 9999
-        }}>
-          <div style={{
-            background: 'white',
-            padding: '24px',
-            borderRadius: '12px',
-            boxShadow: '0 4px 16px rgba(0, 0, 0, 0.1)',
-            textAlign: 'center'
-          }}>
-            <div className="spinner" style={{ margin: '0 auto 12px', width: 32, height: 32, border: '3px solid #e5e7eb', borderTopColor: '#3b82f6', borderRadius: '50%', animation: 'spin 1s linear infinite' }}></div>
-            <p style={{ margin: 0, color: '#6b7280' }}>Loading shipment details...</p>
           </div>
         </div>
       )}

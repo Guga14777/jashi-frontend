@@ -44,13 +44,17 @@ const getBookingById = async (req, res) => {
 
     if (!booking) return res.status(404).json({ error: 'Booking not found' });
 
-    // Fetch all documents (booking + quote)
+    // Run the three independent secondary fetches in parallel. Each was
+    // previously awaited sequentially, costing ~3 extra round trips on top
+    // of the initial findFirst. None of them depends on another's result.
     const quoteId = booking.quoteId || booking.quoteRelation?.id;
-    const allDocuments = await fetchBookingDocuments(booking.id, quoteId);
-    const { pickupGatePass, dropoffGatePass, gatePassDocs } = getGatePasses(allDocuments, booking);
+    const [allDocuments, carrierInfo, enrichedVehicleData] = await Promise.all([
+      fetchBookingDocuments(booking.id, quoteId),
+      booking.carrierId ? fetchCarrierForCustomer(booking.carrierId) : Promise.resolve(null),
+      enrichBookingWithVehicles(booking),
+    ]);
 
-    let carrierInfo = null;
-    if (booking.carrierId) carrierInfo = await fetchCarrierForCustomer(booking.carrierId);
+    const { pickupGatePass, dropoffGatePass, gatePassDocs } = getGatePasses(allDocuments, booking);
 
     const pickupData = booking.pickup || {};
     const dropoffData = booking.dropoff || {};
@@ -58,7 +62,6 @@ const getBookingById = async (req, res) => {
     const normalizedStatus = normalizeStatus(booking.status);
     const statusStep = getStatusStep(normalizedStatus);
 
-    const enrichedVehicleData = await enrichBookingWithVehicles(booking);
     const pickupStops = enrichedVehicleData.stops.filter(s => s.stage === 'pickup');
     const dropoffStops = enrichedVehicleData.stops.filter(s => s.stage === 'dropoff');
 
