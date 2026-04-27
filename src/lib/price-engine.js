@@ -215,27 +215,32 @@ function calibrateMarketAvg(rawMarket, miles, vehicleTypes) {
   // The +5% per-mile multiplier for Pickup/SUV/Van/Minivan already makes them
   // more expensive. Using equal calibration preserves that relationship.
   
-  if (miles <= 200) {
-    // 0-200 miles: All vehicle types use 0.83
-    return rawMarket * 0.83;
+  if (miles <= 100) {
+    // 0-100 miles: All vehicle types use 1.00 (minimum-trip floor)
+    return rawMarket * 1.00;
   }
-  
+
+  if (miles <= 200) {
+    // 101-200 miles: All vehicle types use 0.95
+    return rawMarket * 0.95;
+  }
+
   if (miles <= 350) {
     // 201-350 miles: All vehicle types use 0.85
     return rawMarket * 0.85;
   }
-  
+
   if (miles <= 500) {
     // 351-500 miles: All vehicle types use 0.73
     return rawMarket * 0.73;
   }
-  
+
   if (miles <= 700) {
     // 501-700 miles: All vehicle types use 0.66
     return rawMarket * 0.66;
   }
-  
-  // 700+ miles: All vehicle types use 0.60
+
+  // 701+ miles: All vehicle types use 0.60
   return rawMarket * 0.60;
 }
 
