@@ -46,13 +46,19 @@ export const BolButton = ({ onClick, isLoading }) => {
 
 // Document Link.
 //
-// Pattern: hit the auth-gated `/api/documents/:id/url` endpoint with a
-// Bearer header, receive a no-auth-required URL (Supabase signed URL for
-// cloud storage, or a `/uploads/...` static path for local storage), then
-// window.open the result. Plain `<a href>` is the trap that broke this in
-// production — middle-click / right-click bypasses any onClick that
-// would otherwise inject the auth header, so the user lands on a JSON
-// "No token provided" body instead of a PDF.
+// Rendered as a <button>, NOT an <a>. The previous "<a href={authUrl}>"
+// pattern broke in production because middle-click / right-click "Open
+// in new tab" bypassed the click handler that would otherwise inject
+// the auth header — and that landed the user on the SPA fallback,
+// which then bounced them to /dashboard.
+//
+// Flow:
+//   1. Hit /api/documents/:id/url with the Bearer header.
+//   2. Backend returns either a Supabase signed URL or a relative
+//      /api/uploads/... path that travels through the dev Vite proxy
+//      and the prod Vercel rewrite.
+//   3. window.open the URL — never window.location.href, never
+//      navigate(), so the current tab is never touched.
 const DocLink = ({ doc, label }) => {
   const { token } = useAuth();
   const [pending, setPending] = useState(false);
@@ -73,20 +79,21 @@ const DocLink = ({ doc, label }) => {
 
   const handleClick = async (e) => {
     e.preventDefault();
+    e.stopPropagation();
     if (pending) return;
     setPending(true);
     try {
-      if (directUrl) {
-        window.open(directUrl, '_blank', 'noopener,noreferrer');
-        return;
+      const url = directUrl
+        ? directUrl
+        : await fetchDownloadUrl(doc.id, token);
+      const opened = window.open(url, '_blank', 'noopener,noreferrer');
+      if (!opened) {
+        // Popup blocker swallowed the new tab. Don't navigate the
+        // current tab — alert the user so they can allow popups.
+        alert('Your browser blocked the popup. Please allow popups for this site and try again.');
       }
-      const url = await fetchDownloadUrl(doc.id, token);
-      window.open(url, '_blank', 'noopener,noreferrer');
     } catch (err) {
       console.error('[DocLink] download failed:', err);
-      // Surface the failure to the user via a native alert instead of
-      // silently falling back — the silent fallback is what put us in
-      // the "looks normal but downloads JSON" trap before.
       alert(`Could not open document: ${err.message || 'unknown error'}`);
     } finally {
       setPending(false);
@@ -94,15 +101,15 @@ const DocLink = ({ doc, label }) => {
   };
 
   return (
-    <a
-      href="#"
+    <button
+      type="button"
       onClick={handleClick}
-      role="button"
       className="ldm-doc-link"
       aria-busy={pending}
+      disabled={pending}
     >
       <DownloadIcon />{label}
-    </a>
+    </button>
   );
 };
 

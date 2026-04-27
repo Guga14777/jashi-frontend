@@ -645,10 +645,12 @@ const isArrivalTimeValid = (booking) => {
 // status transitions when { force: true } is sent in the POST body.
 // Limited to a hard-coded test email so a stray force:true from a real
 // carrier is rejected. Adding more accounts is a code change, not a
-// runtime toggle, on purpose.
-const FORCE_ALLOWED_EMAILS = new Set([
-  'gjashi10@gmail.com',
-]);
+// runtime toggle, on purpose. Stored normalized (lowercased + trimmed)
+// so the membership check below cannot miss because of casing or
+// whitespace from the JWT or DB.
+const FORCE_ALLOWED_EMAILS = new Set(
+  ['gjashi10@gmail.com'].map((e) => e.trim().toLowerCase())
+);
 // Backwards-compat alias — keep the old name available.
 const FORCE_START_ALLOWED_EMAILS = FORCE_ALLOWED_EMAILS;
 
@@ -668,16 +670,16 @@ const FORCE_START_ALLOWED_EMAILS = FORCE_ALLOWED_EMAILS;
  * questions are answerable from the server log.
  */
 async function isForceAllowed(req, transitionLabel) {
-  const force = req.body?.force === true || req.body?.force === 'true';
-  if (!force) return false;
+  const rawForce = req.body?.force;
+  const force = rawForce === true || rawForce === 'true';
 
+  // Resolve the caller email from every shape the auth middleware can
+  // populate (JWT-claimed first to avoid the DB round-trip).
   let actorEmail = '';
-  // Prefer the JWT-claimed email so we don't pay the DB round-trip on
-  // every override.
   if (req.user?.email) {
-    actorEmail = String(req.user.email).toLowerCase().trim();
+    actorEmail = String(req.user.email).trim().toLowerCase();
   } else if (req.userEmail) {
-    actorEmail = String(req.userEmail).toLowerCase().trim();
+    actorEmail = String(req.userEmail).trim().toLowerCase();
   }
 
   if (!actorEmail && req.userId) {
@@ -686,17 +688,29 @@ async function isForceAllowed(req, transitionLabel) {
         where: { id: req.userId },
         select: { email: true },
       });
-      actorEmail = (actor?.email || '').toLowerCase().trim();
+      actorEmail = (actor?.email || '').trim().toLowerCase();
     } catch (e) {
       console.warn(`[FORCE] User lookup failed for ${req.userId}:`, e.message);
     }
   }
 
-  const allowed = !!actorEmail && FORCE_ALLOWED_EMAILS.has(actorEmail);
+  const onAllowlist = !!actorEmail && FORCE_ALLOWED_EMAILS.has(actorEmail);
+  const allowed = force && onAllowlist;
+
+  // Verbose log so "did the override fire?" is answerable from a
+  // single grep of the server log.
+  console.log(
+    `[FORCE-CHECK] ${transitionLabel} bookingId=${req.params?.id} ` +
+    `body.force=${JSON.stringify(rawForce)} email=${actorEmail || '<unknown>'} ` +
+    `onAllowlist=${onAllowlist} allowed=${allowed}`
+  );
+
   if (allowed) {
     console.log(`[FORCED] ${transitionLabel} by ${actorEmail} on ${req.params?.id}`);
-  } else if (force) {
-    console.log(`🚫 [FORCE REJECTED] ${transitionLabel} requested by ${actorEmail || '<unknown>'} (not on allowlist)`);
+  } else if (force && !onAllowlist) {
+    console.log(
+      `🚫 [FORCE REJECTED] ${transitionLabel} requested by ${actorEmail || '<unknown>'} (not on allowlist)`
+    );
   }
   return allowed;
 }
@@ -714,6 +728,11 @@ const startTripToPickup = async (req, res) => {
     const { id } = req.params;
     const carrierId = req.userId;
     if (!carrierId) return res.status(401).json({ error: 'Authentication required' });
+
+    console.log(
+      `[START-TRIP] incoming bookingId=${id} carrierId=${carrierId} body=`,
+      req.body
+    );
 
     // ✅ Include gate pass and documents for authorization check
     const booking = await prisma.booking.findFirst({
@@ -808,10 +827,15 @@ const markArrivedAtPickup = async (req, res) => {
     const carrierId = req.userId;
     if (!carrierId) return res.status(401).json({ error: 'Authentication required' });
 
+    console.log(
+      `[ARRIVED] incoming bookingId=${id} carrierId=${carrierId} body=`,
+      req.body
+    );
+
     // ✅ Include gate pass and documents for authorization check
     const booking = await prisma.booking.findFirst({
       where: { id, carrierId },
-      include: { 
+      include: {
         user: { select: { id: true } },
         pickupGatePass: true,
         documents: { where: { type: { in: ['gate_pass', 'pickup_gatepass'] } } },
@@ -921,15 +945,23 @@ const markLoadAsPickedUp = async (req, res) => {
     const carrierId = req.userId;
     if (!carrierId) return res.status(401).json({ error: 'Authentication required' });
 
+    console.log(
+      `[PICKUP] incoming bookingId=${id} carrierId=${carrierId} body=`,
+      req.body
+    );
+
     const booking = await prisma.booking.findFirst({
       where: { id, carrierId },
       include: { user: { select: { id: true } } },
     });
     if (!booking) return res.status(404).json({ error: 'Load not found or not assigned to you' });
 
+    const allowForce = await isForceAllowed(req, 'PICKUP');
     const currentStatus = normalizeStatus(booking.status);
     const allowedStatuses = getPickupAllowedStatuses();
-    if (!allowedStatuses.includes(currentStatus)) {
+    // State-machine check still applies — but under force we accept
+    // any pre-delivery state so the tester can compress the lifecycle.
+    if (!allowForce && !allowedStatuses.includes(currentStatus)) {
       return res.status(400).json({
         error: `Cannot mark as picked up from status: ${currentStatus}`,
         allowedStatuses,
@@ -958,7 +990,7 @@ const markLoadAsPickedUp = async (req, res) => {
       });
       statusChanged = true;
 
-      console.log(`📦 [PICKUP] Carrier ${carrierId} picked up booking ${id}`);
+      console.log(`📦 [PICKUP] Carrier ${carrierId} picked up booking ${id}${allowForce ? ' [FORCED]' : ''}`);
 
       try {
         const notify = require('../../services/notifications.service.cjs');
@@ -998,15 +1030,21 @@ const markLoadAsDelivered = async (req, res) => {
     const carrierId = req.userId;
     if (!carrierId) return res.status(401).json({ error: 'Authentication required' });
 
+    console.log(
+      `[DELIVERED] incoming bookingId=${id} carrierId=${carrierId} body=`,
+      req.body
+    );
+
     const booking = await prisma.booking.findFirst({
       where: { id, carrierId },
       include: { user: { select: { id: true } } },
     });
     if (!booking) return res.status(404).json({ error: 'Load not found or not assigned to you' });
 
+    const allowForce = await isForceAllowed(req, 'DELIVERED');
     const currentStatus = normalizeStatus(booking.status);
     const allowedStatuses = getDeliveryAllowedStatuses();
-    if (!allowedStatuses.includes(currentStatus)) {
+    if (!allowForce && !allowedStatuses.includes(currentStatus)) {
       return res.status(400).json({
         error: `Cannot mark as delivered from status: ${currentStatus}. Must be 'picked_up'.`,
         hint: 'You must mark as picked up first',
@@ -1025,7 +1063,9 @@ const markLoadAsDelivered = async (req, res) => {
     let statusChanged = false;
     let updatedBooking = booking;
 
-    if (currentStatus === SHIPMENT_STATUS.PICKED_UP) {
+    // Under force, accept any pre-delivery state — the tester may have
+    // skipped the explicit "Picked Up" step in their lifecycle.
+    if (currentStatus === SHIPMENT_STATUS.PICKED_UP || allowForce) {
       updatedBooking = await prisma.booking.update({
         where: { id },
         data: {
@@ -1037,7 +1077,7 @@ const markLoadAsDelivered = async (req, res) => {
       });
       statusChanged = true;
 
-      console.log(`✅ [DELIVERED] Carrier ${carrierId} delivered booking ${id}`);
+      console.log(`✅ [DELIVERED] Carrier ${carrierId} delivered booking ${id}${allowForce ? ' [FORCED]' : ''}`);
 
       try {
         const payoutMethod = determinePayoutMethod ? determinePayoutMethod(booking) : 'ach';

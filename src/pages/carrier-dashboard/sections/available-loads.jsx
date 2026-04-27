@@ -140,9 +140,15 @@ const AvailableLoads = () => {
   const [selectedLoad, setSelectedLoad] = useState(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
   
-  // Accept confirmation modal state
-  const [acceptModalLoad, setAcceptModalLoad] = useState(null);
-  const [isAcceptModalOpen, setIsAcceptModalOpen] = useState(false);
+  // Accept confirmation modal state.
+  //
+  // Single source of truth: `pendingAcceptLoad` is the load awaiting
+  // confirmation. The modal renders when this is non-null. The previous
+  // dual-state pattern (load + isOpen flag) was prone to going out of
+  // sync — clicking Accept Offer could end up firing the API directly
+  // without the user seeing the modal first. Using one state value
+  // eliminates that race.
+  const [pendingAcceptLoad, setPendingAcceptLoad] = useState(null);
   const [acceptedLoads, setAcceptedLoads] = useState(new Set());
   const [loadingAccept, setLoadingAccept] = useState(null);
   const [lastOpenedId, setLastOpenedId] = useState(null);
@@ -295,37 +301,38 @@ const AvailableLoads = () => {
     }, 50);
   };
 
-  /** Handle Accept Offer */
-  const openAcceptModal = (load) => {
-    setAcceptModalLoad(load);
-    setIsAcceptModalOpen(true);
+  /** Open the confirmation modal for an Accept Offer click. */
+  const requestAcceptOffer = (load) => {
+    setPendingAcceptLoad(load);
   };
 
-  const closeAcceptModal = () => {
-    setIsAcceptModalOpen(false);
-    setAcceptModalLoad(null);
+  /** Close the confirmation modal without acting (Cancel button or backdrop). */
+  const cancelAcceptOffer = () => {
+    setPendingAcceptLoad(null);
   };
 
-  // Real API call to accept load
-  const confirmAcceptOffer = async (loadId) => {
+  /** Confirm path — only fires from the modal's Confirm button. */
+  const confirmAcceptOffer = async () => {
+    const load = pendingAcceptLoad;
+    if (!load) return;
+
     if (!token) {
       setToast({ type: 'error', message: 'Please log in to accept loads' });
+      setPendingAcceptLoad(null);
       return;
     }
 
-    const orderLabel = acceptModalLoad ? getOrderId(acceptModalLoad) : `#${String(loadId).slice(-6)}`;
-
-    setLoadingAccept(loadId);
+    const orderLabel = getOrderId(load);
+    setLoadingAccept(load.id);
 
     try {
-      const response = await carrierApi.acceptLoad(loadId, token);
-
+      const response = await carrierApi.acceptLoad(load.id, token);
       console.log('✅ Load accepted:', response);
 
-      setAcceptedLoads(prev => new Set([...prev, loadId]));
-      setLoads(prev => prev.filter(l => l.id !== loadId));
+      setAcceptedLoads((prev) => new Set([...prev, load.id]));
+      setLoads((prev) => prev.filter((l) => l.id !== load.id));
 
-      closeAcceptModal();
+      setPendingAcceptLoad(null);
       setToast({
         type: 'success',
         message: `Load ${orderLabel} accepted — added to My Loads`,
@@ -771,9 +778,13 @@ const AvailableLoads = () => {
                         <>
                           <button
                             className="al-btn-primary"
-                            onClick={(e) => { 
-                              e.stopPropagation(); 
-                              openAcceptModal(load); 
+                            onClick={(e) => {
+                              e.preventDefault();
+                              e.stopPropagation();
+                              // Open the confirmation modal — DO NOT call
+                              // the API here. The API only fires from
+                              // ConfirmModal's onConfirm below.
+                              requestAcceptOffer(load);
                             }}
                             disabled={loadingAccept === load.id}
                             aria-label={`Accept offer ${load.origin} to ${load.destination} for ${formatPrice(load.price)}`}
@@ -835,39 +846,54 @@ const AvailableLoads = () => {
         isPreviewOnly={true}
       />
       
-      {/* ✅ FIXED: Accept Offer Confirmation Modal - Compute rate from price/miles */}
-      {acceptModalLoad && (
-        <ConfirmModal
-          open={isAcceptModalOpen}
-          onClose={closeAcceptModal}
-          onConfirm={() => confirmAcceptOffer(acceptModalLoad.id)}
-          title="Confirm Offer Acceptance"
-          description={
+      {/* Accept Offer confirmation modal. Renders only when
+          pendingAcceptLoad is set; ConfirmModal already short-circuits
+          on `open === false` via createPortal so we double-gate by
+          conditionally rendering as well. */}
+      <ConfirmModal
+        open={!!pendingAcceptLoad}
+        onClose={cancelAcceptOffer}
+        onConfirm={confirmAcceptOffer}
+        title={
+          pendingAcceptLoad
+            ? `Accept this load? ${getOrderId(pendingAcceptLoad)}`
+            : 'Accept this load?'
+        }
+        description={
+          pendingAcceptLoad ? (
             <div className="accept-modal-content">
               <div className="accept-summary">
-                <p><strong>Order ID:</strong> {getOrderId(acceptModalLoad)}</p>
-                <p><strong>Route:</strong> {acceptModalLoad.origin} → {acceptModalLoad.destination}</p>
-                <p><strong>Distance:</strong> {acceptModalLoad.miles} miles</p>
-                <p><strong>Pickup Date:</strong> {formatDate(acceptModalLoad.pickupDate)}</p>
-                <p><strong>Vehicle Type:</strong> {acceptModalLoad.vehicleType}</p>
-                <p><strong>Transport Type:</strong> {acceptModalLoad.transportType}</p>
-                <div className="accept-price-highlight">
-                  <p><strong>Total Price:</strong> {formatPrice(acceptModalLoad.price)}</p>
-                  {/* ✅ FIXED: Compute rate from price/miles */}
-                  <p><strong>Rate:</strong> {formatRatePerMile(acceptModalLoad.price, acceptModalLoad.miles)}</p>
-                </div>
+                <p>
+                  Load <strong>{getOrderId(pendingAcceptLoad)}</strong> from{' '}
+                  <strong>{pendingAcceptLoad.origin}</strong> to{' '}
+                  <strong>{pendingAcceptLoad.destination}</strong> for{' '}
+                  <strong>{formatPrice(pendingAcceptLoad.price)}</strong>.
+                </p>
+                <p><strong>Distance:</strong> {pendingAcceptLoad.miles} miles</p>
+                <p><strong>Pickup Date:</strong> {formatDate(pendingAcceptLoad.pickupDate)}</p>
+                <p><strong>Vehicle:</strong> {pendingAcceptLoad.vehicleType} · {pendingAcceptLoad.transportType}</p>
+                <p><strong>Rate:</strong> {formatRatePerMile(pendingAcceptLoad.price, pendingAcceptLoad.miles)}</p>
               </div>
               <div className="accept-terms">
-                <p className="terms-note">By accepting this offer, you agree to pick up and deliver the vehicle according to the specified dates and conditions. The broker will contact you shortly with further details.</p>
+                <p className="terms-note">
+                  By accepting this offer, you agree to pick up and deliver the
+                  vehicle according to the specified dates and conditions. The
+                  broker will contact you shortly with further details.
+                </p>
               </div>
             </div>
-          }
-          confirmLabel={loadingAccept === acceptModalLoad?.id ? "Accepting..." : "Confirm & Accept"}
-          cancelLabel="Cancel"
-          variant="primary"
-          loading={loadingAccept === acceptModalLoad?.id}
-        />
-      )}
+          ) : null
+        }
+        confirmLabel={
+          loadingAccept === pendingAcceptLoad?.id
+            ? 'Accepting…'
+            : 'Confirm & Accept'
+        }
+        cancelLabel="Cancel"
+        variant="primary"
+        loading={loadingAccept === pendingAcceptLoad?.id}
+      />
+
 
       {toast && (
         <Toast

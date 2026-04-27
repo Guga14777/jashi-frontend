@@ -19,6 +19,12 @@ import { useAuth } from '../../store/auth-context.jsx';
 // keep both in sync. Adding more accounts is a code change, on purpose.
 const FORCE_START_ALLOWED_EMAILS = ['gjashi10@gmail.com'];
 
+const isAllowlistedTestEmail = (email) => {
+  if (!email) return false;
+  const normalized = String(email).trim().toLowerCase();
+  return FORCE_START_ALLOWED_EMAILS.includes(normalized);
+};
+
 // Once the test account has clicked "Force start (test mode)" on a
 // given booking, every subsequent transition (Arrived, Picked Up,
 // Delivered) for that booking auto-passes `force: true` in the body
@@ -43,6 +49,23 @@ const setForceModeEnabled = (loadId, on) => {
     // sessionStorage unavailable — accept silently.
   }
 };
+
+/**
+ * Resolve whether the current request should be sent with force=true.
+ *
+ * Two ways the override turns on:
+ *   1. Explicit: the user clicked "Force start (test mode)" earlier in
+ *      this session, which latches a sessionStorage flag.
+ *   2. Implicit: the authenticated user's email is on the test allowlist.
+ *      This is the safety net — if the sessionStorage flag is missing
+ *      because the modal remounted, the load id changed mid-flow, or
+ *      a third-party storage policy cleared it, the email check still
+ *      lets the tester walk the lifecycle. The server still validates
+ *      the email server-side, so this can't leak to non-allowlisted
+ *      carriers.
+ */
+const shouldForceTransition = (loadId, userEmail) =>
+  isForceModeEnabled(loadId) || isAllowlistedTestEmail(userEmail);
 
 // Components
 import {
@@ -321,7 +344,8 @@ const LoadDetailsModal = ({
     setActionError(null);
     try {
       const token = localStorage.getItem('token');
-      const force = isForceModeEnabled(L.id);
+      const force = shouldForceTransition(L.id, currentUser?.email);
+      console.log('[LDM] Arrived → force=', force, 'email=', currentUser?.email, 'loadId=', L.id);
       const response = await fetch(`${API_BASE}/api/carrier/loads/${L.id}/arrived-at-pickup`, {
         method: 'POST',
         headers: { 'Authorization': `Bearer ${token}`, 'Content-Type': 'application/json' },

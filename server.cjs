@@ -271,6 +271,12 @@ app.use((req, res, next) => {
 });
 
 app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
+// Mirror the static mount under /api/uploads so the URL travels through
+// the same dev (Vite) proxy and prod (Vercel) rewrite as every other
+// /api/* request. Without this, opening a `/uploads/...` URL in a new
+// tab would hit the SPA shell, fail to match a route, and fall through
+// to /dashboard — which is exactly the bug carriers reported.
+app.use('/api/uploads', express.static(path.join(__dirname, 'uploads')));
 
 // ============================================================
 // ROLE-BASED MIDDLEWARE HELPERS

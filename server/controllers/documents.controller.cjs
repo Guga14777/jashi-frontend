@@ -897,9 +897,22 @@ async function getDocumentUrl(req, res) {
       });
     }
 
-    res.json({ 
+    // Local storage: map legacy `/uploads/...` to the proxied/rewritten
+    // path `/api/uploads/...`. This is what the dev Vite proxy and the
+    // prod Vercel rewrite actually pass through to the backend; bare
+    // `/uploads/...` would hit the SPA shell instead and bounce the
+    // user to /dashboard.
+    let localUrl = document.fileUrl || '';
+    if (localUrl.startsWith('/uploads/')) {
+      localUrl = `/api${localUrl}`;
+    } else if (localUrl && !localUrl.startsWith('/api/uploads/') && !/^https?:\/\//.test(localUrl)) {
+      // Defensive: any other relative shape — prepend /api/uploads/.
+      localUrl = `/api/uploads/${localUrl.replace(/^\/+/, '')}`;
+    }
+
+    res.json({
       success: true,
-      url: document.fileUrl,
+      url: localUrl,
       vehicleIndex: document.vehicleIndex ?? null
     });
 

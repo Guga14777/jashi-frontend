@@ -44,7 +44,7 @@ const DeliveryModal = ({
   load, 
   onSuccess 
 }) => {
-  const { token } = useAuth();
+  const { token, user } = useAuth();
   const [deliveryPhotos, setDeliveryPhotos] = useState([]);
   const [isUploadingPhotos, setIsUploadingPhotos] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -202,13 +202,18 @@ const DeliveryModal = ({
       const deliveryDocumentIds = deliveryPhotos.map(f => f.id);
       const podDocumentId = null;
 
-      // Test-mode override: latched by handleForceStartTrip in
-      // load-details-modal.jsx. Lets gjashi10@gmail.com walk every
-      // transition without time gates blocking the next step.
-      let force = false;
+      // Test-mode override — same belt + suspenders as pickup-modal:
+      // sessionStorage latch (set by handleForceStartTrip) OR auth
+      // email on the allowlist (safety net). Server-side still
+      // validates the email so the latch can never leak.
+      let forceFromLatch = false;
       try {
-        force = sessionStorage.getItem(`ldm:force-mode:${load.id}`) === '1';
+        forceFromLatch = sessionStorage.getItem(`ldm:force-mode:${load.id}`) === '1';
       } catch (_) { /* sessionStorage unavailable */ }
+      const FORCE_ALLOWLIST = ['gjashi10@gmail.com'];
+      const email = (user?.email || '').trim().toLowerCase();
+      const force = forceFromLatch || FORCE_ALLOWLIST.includes(email);
+      console.log('[DeliveryModal] markDelivered → force=', force, 'fromLatch=', forceFromLatch, 'email=', email, 'loadId=', load.id);
 
       const result = await markDelivered(load.id, deliveryDocumentIds, podDocumentId, token, { force });
       

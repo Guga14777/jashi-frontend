@@ -26,7 +26,7 @@ const PickupModal = ({
   load, 
   onSuccess 
 }) => {
-  const { token } = useAuth();
+  const { token, user } = useAuth();
   const [uploadedFiles, setUploadedFiles] = useState([]);
   const [isUploading, setIsUploading] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -180,14 +180,21 @@ const PickupModal = ({
 
     try {
       const documentIds = uploadedFiles.map(f => f.id);
-      // Test-mode override: when the carrier latched force mode by
-      // clicking "Force start (test mode)" earlier in this session,
-      // walk the rest of the lifecycle through with force:true so
-      // server-side time gates don't block subsequent transitions.
-      let force = false;
+      // Test-mode override. Two paths:
+      //   1. sessionStorage latch — set when the carrier clicked
+      //      "Force start (test mode)" earlier in the session.
+      //   2. Auth-email fallback — covers the case where the latch
+      //      was cleared (modal remount, storage policy, etc.) by
+      //      letting the allowlisted email auto-force. Server still
+      //      validates the email, so this leaks nothing.
+      let forceFromLatch = false;
       try {
-        force = sessionStorage.getItem(`ldm:force-mode:${load.id}`) === '1';
+        forceFromLatch = sessionStorage.getItem(`ldm:force-mode:${load.id}`) === '1';
       } catch (_) { /* sessionStorage unavailable */ }
+      const FORCE_ALLOWLIST = ['gjashi10@gmail.com'];
+      const email = (user?.email || '').trim().toLowerCase();
+      const force = forceFromLatch || FORCE_ALLOWLIST.includes(email);
+      console.log('[PickupModal] markPickup → force=', force, 'fromLatch=', forceFromLatch, 'email=', email, 'loadId=', load.id);
       const result = await markPickup(load.id, documentIds, token, { force });
       
       console.log('✅ Pickup confirmed:', result);

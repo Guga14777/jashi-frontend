@@ -41,13 +41,11 @@ const LocationTypeBadge = ({ type }) => {
 
 // Document link component.
 //
-// Hits the auth-gated `/api/documents/:id/url` endpoint to get a
-// no-auth-required URL (Supabase signed URL or static `/uploads/...`
-// path), then opens it in a new tab. This works around the trap the
-// previous "<a href={downloadEndpoint}>" pattern had: any middle-click
-// or right-click "Open in new tab" bypassed the onClick handler that
-// would otherwise attach the auth header, so the browser landed on the
-// raw JSON "No token provided" body.
+// Rendered as a <button>, NOT an <a>. See the matching comment in
+// documents-panel.jsx for the full reasoning — short version: an
+// anchor tag let middle-click / right-click bypass the auth-injecting
+// onClick handler, which sent users to the SPA fallback and then to
+// /dashboard. A button has no href and no default navigation.
 const DocLink = ({ doc, label }) => {
   const { token } = useAuth();
   const [pending, setPending] = useState(false);
@@ -68,15 +66,17 @@ const DocLink = ({ doc, label }) => {
 
   const handleClick = async (e) => {
     e.preventDefault();
+    e.stopPropagation();
     if (pending) return;
     setPending(true);
     try {
-      if (directUrl) {
-        window.open(directUrl, '_blank', 'noopener,noreferrer');
-        return;
+      const url = directUrl
+        ? directUrl
+        : await fetchDownloadUrl(doc.id, token);
+      const opened = window.open(url, '_blank', 'noopener,noreferrer');
+      if (!opened) {
+        alert('Your browser blocked the popup. Please allow popups for this site and try again.');
       }
-      const url = await fetchDownloadUrl(doc.id, token);
-      window.open(url, '_blank', 'noopener,noreferrer');
     } catch (err) {
       console.error('[DocLink] download failed:', err);
       alert(`Could not open document: ${err.message || 'unknown error'}`);
@@ -86,15 +86,15 @@ const DocLink = ({ doc, label }) => {
   };
 
   return (
-    <a
-      href="#"
+    <button
+      type="button"
       onClick={handleClick}
-      role="button"
       className="ldm-doc-link"
       aria-busy={pending}
+      disabled={pending}
     >
       <DownloadIcon />{label}
-    </a>
+    </button>
   );
 };
 
