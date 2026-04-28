@@ -781,11 +781,12 @@ const startTripToPickup = async (req, res) => {
         tripStartedAt: now,
         onTheWayAt: now,
         updatedAt: now,
-        // ✅ Track protection status if applicable
-        ...(authResult.protected && {
-          protectionApplied: true,
-          protectionReasons: authResult.protectionReasons,
-        }),
+        // protectionApplied / protectionReasons are NOT persisted on
+        // Booking — they are computed at request time from
+        // validateAuthorizationForTransition (and re-computed on the
+        // client too). The previous "track on the row" pattern referenced
+        // columns that don't exist in the schema and would crash any
+        // request where authResult.protected was true.
       },
     });
 
@@ -898,13 +899,12 @@ const markArrivedAtPickup = async (req, res) => {
         status: SHIPMENT_STATUS.ARRIVED_AT_PICKUP,
         arrivedAtPickupAt: now,
         updatedAt: now,
-        // ✅ Increment pickup attempts
+        // Pickup attempt counter — read by validateAuthorizationForTransition
+        // (server) and load-details-modal (client) to gate "first attempt"
+        // protection logic.
         pickupAttempts: { increment: 1 },
-        // ✅ Track protection status if applicable
-        ...(authResult.protected && {
-          protectionApplied: true,
-          protectionReasons: authResult.protectionReasons,
-        }),
+        // protectionApplied / protectionReasons are computed per-request
+        // by validateAuthorizationForTransition; not stored on Booking.
       },
     });
 
