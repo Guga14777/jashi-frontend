@@ -52,7 +52,7 @@ function QuoteSection() {
             <span className="qs-comparison-value qs-fee-danger">$105.29</span>
           </div>
           <div className="qs-comparison-callout qs-callout-danger">
-            <span>Broker markup:</span>
+            <span>Extra broker cost:</span>
             <span className="qs-comparison-callout-value qs-callout-value-danger">$63.18</span>
           </div>
         </div>

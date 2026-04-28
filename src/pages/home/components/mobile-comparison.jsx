@@ -53,7 +53,7 @@ function MobileComparison() {
               <dd>$105.29</dd>
             </div>
             <div className="mh-compare-line mh-compare-line--accent-bad">
-              <dt>Broker markup</dt>
+              <dt>Extra broker cost</dt>
               <dd>$63.18</dd>
             </div>
           </dl>
