@@ -190,20 +190,17 @@ app.set('trust proxy', 1);
 // ============================================================
 // MULTER CONFIGURATION
 // ============================================================
+// Files are streamed straight to Supabase Storage from memory — Railway's
+// container filesystem is ephemeral, so anything written to disk would
+// disappear on the next deploy. Multer keeps the upload in
+// `req.file.buffer` and the controller hands it to storage.service.
 const uploadsDir = path.join(__dirname, 'uploads', 'documents');
 if (!fs.existsSync(uploadsDir)) {
+  // Kept for any legacy code path that still expects the directory to
+  // exist (e.g. local dev fallbacks reading old files); no new uploads
+  // are written here.
   fs.mkdirSync(uploadsDir, { recursive: true });
 }
-
-const storage = multer.diskStorage({
-  destination: (req, file, cb) => cb(null, uploadsDir),
-  filename: (req, file, cb) => {
-    const timestamp = Date.now();
-    const randomStr = require('crypto').randomBytes(16).toString('hex');
-    const ext = path.extname(file.originalname).toLowerCase();
-    cb(null, `${timestamp}-${randomStr}${ext}`);
-  }
-});
 
 const fileFilter = (req, file, cb) => {
   const allowedTypes = ['application/pdf', 'image/jpeg', 'image/jpg', 'image/png'];
@@ -211,7 +208,7 @@ const fileFilter = (req, file, cb) => {
 };
 
 const upload = multer({
-  storage,
+  storage: multer.memoryStorage(),
   fileFilter,
   limits: { fileSize: 10 * 1024 * 1024 }
 });

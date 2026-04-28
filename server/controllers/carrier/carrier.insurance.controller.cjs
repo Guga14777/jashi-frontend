@@ -7,26 +7,10 @@
 // insurance Document for that user — older rows are kept for history but
 // are never returned by GET.
 
-const path = require('path');
-const fs = require('fs');
-const crypto = require('crypto');
 const multer = require('multer');
 
 const prisma = require('../../db.cjs');
-
-const LOCAL_UPLOAD_DIR = path.join(__dirname, '../../../uploads', 'documents');
-if (!fs.existsSync(LOCAL_UPLOAD_DIR)) {
-  fs.mkdirSync(LOCAL_UPLOAD_DIR, { recursive: true });
-}
-
-const storage = multer.diskStorage({
-  destination: (req, file, cb) => cb(null, LOCAL_UPLOAD_DIR),
-  filename: (req, file, cb) => {
-    const stamp = Date.now();
-    const rand = crypto.randomBytes(6).toString('hex');
-    cb(null, `insurance-${stamp}-${rand}${path.extname(file.originalname || '')}`);
-  },
-});
+const storageService = require('../../services/storage.service.cjs');
 
 const ALLOWED_MIMES = new Set([
   'application/pdf',
@@ -35,8 +19,10 @@ const ALLOWED_MIMES = new Set([
   'image/png',
 ]);
 
+// Memory storage — the buffer is forwarded to Supabase Storage by
+// saveCarrierInsurance below. Nothing is written to Railway disk.
 const upload = multer({
-  storage,
+  storage: multer.memoryStorage(),
   limits: { fileSize: 10 * 1024 * 1024 },
   fileFilter: (req, file, cb) => {
     if (ALLOWED_MIMES.has(file.mimetype)) return cb(null, true);
@@ -123,17 +109,23 @@ async function saveCarrierInsurance(req, res) {
     let doc;
 
     if (req.file) {
+      const stored = await storageService.uploadBuffer({
+        buffer: req.file.buffer,
+        originalName: req.file.originalname,
+        mimeType: req.file.mimetype,
+        prefix: 'insurance',
+      });
       doc = await prisma.document.create({
         data: {
           userId,
           type: 'insurance',
-          fileName: req.file.filename,
+          fileName: stored.filePath.split('/').pop(),
           originalName: req.file.originalname,
-          fileUrl: `/uploads/documents/${req.file.filename}`,
-          filePath: req.file.path,
+          fileUrl: stored.fileUrl,
+          filePath: stored.filePath,
           mimeType: req.file.mimetype,
           fileSize: req.file.size,
-          storageType: 'local',
+          storageType: stored.storageType,
           metadata: {
             policyNumber: policyNumber || '',
             insurer: insurer || '',
@@ -191,8 +183,10 @@ async function deleteCarrierInsurance(req, res) {
 
     await prisma.document.delete({ where: { id: existing.id } });
 
-    if (existing.storageType === 'local' && existing.filePath) {
-      try { fs.unlinkSync(existing.filePath); } catch (_) { /* file may already be gone */ }
+    if (existing.storageType === 'supabase' && existing.filePath) {
+      try {
+        await storageService.removeObject(existing.filePath);
+      } catch (_) { /* best effort */ }
     }
 
     res.json({ success: true, deleted: true });

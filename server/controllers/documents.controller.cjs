@@ -6,26 +6,18 @@
 // ✅ ADDED: downloadDocument endpoint for direct file streaming
 
 const { PrismaClient } = require('@prisma/client');
-const { createClient } = require('@supabase/supabase-js');
-const multer = require('multer');
 const path = require('path');
 const fs = require('fs');
-const crypto = require('crypto');
 
 const prisma = new PrismaClient();
 
-// Initialize Supabase client for cloud storage
-const supabase = process.env.SUPABASE_URL && process.env.SUPABASE_KEY
-  ? createClient(process.env.SUPABASE_URL, process.env.SUPABASE_KEY)
-  : null;
+// All shipment document storage now flows through Supabase via the shared
+// storage service. Railway's container disk is ephemeral, so the legacy
+// `uploads/` folder is read-only — used only to serve any pre-migration
+// files that happen to still exist for back-compat with old Document rows.
+const storageService = require('../services/storage.service.cjs');
 
-const STORAGE_BUCKET = process.env.SUPABASE_BUCKET || 'documents';
 const LOCAL_UPLOAD_DIR = path.join(__dirname, '../../uploads');
-
-// Ensure local upload directory exists
-if (!fs.existsSync(LOCAL_UPLOAD_DIR)) {
-  fs.mkdirSync(LOCAL_UPLOAD_DIR, { recursive: true });
-}
 
 // Probe a Document row's possible on-disk locations and return the first
 // one that exists, or null. Older rows wrote `fileUrl: /uploads/<file>`
@@ -60,41 +52,6 @@ function localPathToPublicUrl(absolutePath) {
   if (!rel || rel.startsWith('..') || path.isAbsolute(rel)) return null;
   return `/api/uploads/${rel.split(path.sep).join('/')}`;
 }
-
-// Configure multer for file uploads
-const storage = multer.diskStorage({
-  destination: (req, file, cb) => {
-    cb(null, LOCAL_UPLOAD_DIR);
-  },
-  filename: (req, file, cb) => {
-    const uniqueSuffix = crypto.randomBytes(8).toString('hex');
-    const ext = path.extname(file.originalname);
-    cb(null, `${Date.now()}-${uniqueSuffix}${ext}`);
-  }
-});
-
-const upload = multer({
-  storage,
-  limits: {
-    fileSize: 10 * 1024 * 1024 // 10MB
-  },
-  fileFilter: (req, file, cb) => {
-    const allowedTypes = [
-      'application/pdf',
-      'image/jpeg',
-      'image/jpg',
-      'image/png',
-      'image/gif',
-      'image/webp'
-    ];
-    
-    if (allowedTypes.includes(file.mimetype)) {
-      cb(null, true);
-    } else {
-      cb(new Error('Invalid file type. Allowed: PDF, JPEG, PNG, GIF, WebP'));
-    }
-  }
-});
 
 /**
  * Parse and validate vehicleIndex from request
@@ -147,50 +104,40 @@ function parseVehicleIndexFilter(query) {
 }
 
 /**
- * Upload document to Supabase (or local fallback)
+ * Push an upload to Supabase Storage.
+ *
+ * Accepts a multer file object whose body lives in `buffer` (memoryStorage)
+ * and returns the persistence shape that gets written onto a Document row:
+ *   { fileUrl, filePath, storageType }
+ *
+ * `filePath` is the bucket key, used later by `getDocumentUrl` and
+ * `downloadDocument` to mint signed URLs.
+ *
+ * Throws (statusCode 503) if Supabase env vars are not set, so a
+ * misconfigured deploy fails loudly instead of writing files into a
+ * filesystem that Railway will wipe on the next restart.
  */
-async function uploadToStorage(filePath, fileName, mimeType) {
-  const fileBuffer = fs.readFileSync(filePath);
-
-  if (supabase) {
-    // Upload to Supabase
-    const storagePath = `documents/${Date.now()}-${fileName}`;
-    
-    const { data, error } = await supabase.storage
-      .from(STORAGE_BUCKET)
-      .upload(storagePath, fileBuffer, {
-        contentType: mimeType,
-        upsert: false
-      });
-
-    if (error) {
-      throw new Error(`Supabase upload failed: ${error.message}`);
-    }
-
-    // Get public URL
-    const { data: urlData } = supabase.storage
-      .from(STORAGE_BUCKET)
-      .getPublicUrl(storagePath);
-
-    // Delete local file after successful upload
-    fs.unlinkSync(filePath);
-
-    return {
-      fileUrl: urlData.publicUrl,
-      filePath: storagePath,
-      storageType: 'supabase'
-    };
-  } else {
-    // Local storage fallback. The multer instance in server.cjs writes
-    // into `<repo>/uploads/documents/`, and the static mount serves
-    // `<repo>/uploads/` at `/api/uploads`. The URL therefore must include
-    // the `documents/` subdir or `/api/uploads/<file>` 404s.
-    return {
-      fileUrl: `/uploads/documents/${path.basename(filePath)}`,
-      filePath: filePath,
-      storageType: 'local'
-    };
+async function uploadToStorage(multerFile) {
+  if (!multerFile) {
+    const err = new Error('uploadToStorage: missing file');
+    err.statusCode = 400;
+    throw err;
   }
+
+  // multer.memoryStorage gives us `buffer`; defensively read from disk
+  // if a legacy diskStorage instance is still wired somewhere.
+  let buffer = multerFile.buffer;
+  if (!buffer && multerFile.path) {
+    buffer = fs.readFileSync(multerFile.path);
+    try { fs.unlinkSync(multerFile.path); } catch { /* best effort */ }
+  }
+
+  return storageService.uploadBuffer({
+    buffer,
+    originalName: multerFile.originalname,
+    mimeType: multerFile.mimetype,
+    prefix: 'documents',
+  });
 }
 
 /**
@@ -252,21 +199,21 @@ async function uploadDocument(req, res) {
       fileName: req.file.originalname
     });
 
-    // Upload to storage
-    const storageResult = await uploadToStorage(
-      req.file.path,
-      req.file.originalname,
-      req.file.mimetype
-    );
+    // Stream straight from the multer memory buffer to Supabase Storage —
+    // never touches the Railway filesystem.
+    const storageResult = await uploadToStorage(req.file);
 
-    // Create document record with all multi-vehicle fields
+    // Create document record with all multi-vehicle fields. `fileName` is
+    // the bucket key's basename so download/url endpoints can resolve it
+    // even if `filePath` is ever lost.
+    const supabaseFileName = path.basename(storageResult.filePath);
     const document = await prisma.document.create({
       data: {
         userId,
         bookingId: bookingId || null,
         quoteId: quoteId || null,
         type,
-        fileName: req.file.filename,
+        fileName: supabaseFileName,
         originalName: req.file.originalname,
         fileUrl: storageResult.fileUrl,
         filePath: storageResult.filePath,
@@ -330,9 +277,13 @@ async function uploadDocument(req, res) {
 
   } catch (error) {
     console.error('❌ Document upload error:', error);
-    res.status(500).json({
+    // Surface STORAGE_NOT_CONFIGURED as 503 so an unconfigured Railway
+    // deploy returns a clear "service unavailable" instead of a generic
+    // 500 — the operator needs to know to set SUPABASE_* env vars.
+    const status = error?.statusCode || 500;
+    res.status(status).json({
       success: false,
-      error: 'Failed to upload document',
+      error: status === 503 ? 'Storage not configured' : 'Failed to upload document',
       message: error.message
     });
   }
@@ -807,17 +758,18 @@ async function downloadDocument(req, res) {
       return res.status(403).json({ success: false, error: 'Not authorized' });
     }
 
-    // If Supabase storage, redirect to signed URL
-    if (document.storageType === 'supabase' && supabase) {
-      const { data, error } = await supabase.storage
-        .from(STORAGE_BUCKET)
-        .createSignedUrl(document.filePath, 3600);
-
-      if (error) {
-        throw new Error(`Failed to generate signed URL: ${error.message}`);
-      }
-
-      return res.redirect(data.signedUrl);
+    // Supabase: redirect to a signed URL whose Content-Disposition forces
+    // the original filename, so the browser saves "carfax.pdf" instead of
+    // the bucket key like "documents/1764-abcd.pdf".
+    if (document.storageType === 'supabase' && storageService.isConfigured()) {
+      const downloadAs =
+        document.originalName || document.fileName || 'download';
+      const signedUrl = await storageService.createSignedUrl({
+        filePath: document.filePath,
+        expiresIn: 3600,
+        downloadAs,
+      });
+      return res.redirect(signedUrl);
     }
 
     // Local storage - resolve the on-disk location and stream the file.
@@ -903,20 +855,19 @@ async function getDocumentUrl(req, res) {
       return res.status(403).json({ success: false, error: 'Not authorized' });
     }
 
-    // If using Supabase, generate a signed URL for private files
-    if (document.storageType === 'supabase' && supabase) {
-      const { data, error } = await supabase.storage
-        .from(STORAGE_BUCKET)
-        .createSignedUrl(document.filePath, 3600); // 1 hour expiry
-
-      if (error) {
-        throw new Error(`Failed to generate signed URL: ${error.message}`);
-      }
-
-      return res.json({ 
+    // Supabase: signed URL good for 1 hour. No `downloadAs` here — the
+    // modal uses this URL with window.open() to preview inline; the
+    // download icon goes through /api/documents/:id/download which
+    // does set the original filename via Content-Disposition.
+    if (document.storageType === 'supabase' && storageService.isConfigured()) {
+      const signedUrl = await storageService.createSignedUrl({
+        filePath: document.filePath,
+        expiresIn: 3600,
+      });
+      return res.json({
         success: true,
-        url: data.signedUrl,
-        vehicleIndex: document.vehicleIndex ?? null
+        url: signedUrl,
+        vehicleIndex: document.vehicleIndex ?? null,
       });
     }
 
@@ -1009,11 +960,9 @@ async function deleteDocument(req, res) {
     }
 
     // Delete from storage
-    if (document.storageType === 'supabase' && supabase) {
+    if (document.storageType === 'supabase' && storageService.isConfigured()) {
       try {
-        await supabase.storage
-          .from(STORAGE_BUCKET)
-          .remove([document.filePath]);
+        await storageService.removeObject(document.filePath);
       } catch (storageError) {
         console.warn('⚠️ Could not delete from Supabase storage:', storageError.message);
       }
@@ -1113,9 +1062,9 @@ async function getUserDocuments(req, res) {
   }
 }
 
-// Export multer middleware and controller functions
+// Multer middleware lives in server.cjs (memoryStorage). Only controller
+// functions are exported here.
 module.exports = {
-  upload: upload.single('file'),
   uploadDocument,
   getBookingDocuments,
   getQuoteDocuments,
