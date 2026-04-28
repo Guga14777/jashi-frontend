@@ -27,6 +27,40 @@ if (!fs.existsSync(LOCAL_UPLOAD_DIR)) {
   fs.mkdirSync(LOCAL_UPLOAD_DIR, { recursive: true });
 }
 
+// Probe a Document row's possible on-disk locations and return the first
+// one that exists, or null. Older rows wrote `fileUrl: /uploads/<file>`
+// while the multer config in server.cjs has always saved into the
+// `documents/` subdir — so both the bare and subdir form must be checked.
+// Used by both the streaming download endpoint and the URL endpoint so
+// they cannot disagree about where a file lives.
+function resolveLocalFilePath(document) {
+  if (!document) return null;
+  const candidates = [];
+  const raw = document.filePath;
+  if (raw) {
+    candidates.push(path.isAbsolute(raw) ? raw : path.join(LOCAL_UPLOAD_DIR, raw.replace(/^\/+/, '')));
+    candidates.push(path.join(LOCAL_UPLOAD_DIR, path.basename(raw)));
+  }
+  if (document.fileName) {
+    candidates.push(path.join(LOCAL_UPLOAD_DIR, 'documents', document.fileName));
+    candidates.push(path.join(LOCAL_UPLOAD_DIR, document.fileName));
+  }
+  for (const candidate of candidates) {
+    if (candidate && fs.existsSync(candidate)) return candidate;
+  }
+  return null;
+}
+
+// Map an absolute on-disk path under LOCAL_UPLOAD_DIR to the public URL
+// the static mount serves it under: `/api/uploads/...`. Returns null if
+// the path is outside LOCAL_UPLOAD_DIR (defensive — should not happen).
+function localPathToPublicUrl(absolutePath) {
+  if (!absolutePath) return null;
+  const rel = path.relative(LOCAL_UPLOAD_DIR, absolutePath);
+  if (!rel || rel.startsWith('..') || path.isAbsolute(rel)) return null;
+  return `/api/uploads/${rel.split(path.sep).join('/')}`;
+}
+
 // Configure multer for file uploads
 const storage = multer.diskStorage({
   destination: (req, file, cb) => {
@@ -147,9 +181,12 @@ async function uploadToStorage(filePath, fileName, mimeType) {
       storageType: 'supabase'
     };
   } else {
-    // Local storage fallback
+    // Local storage fallback. The multer instance in server.cjs writes
+    // into `<repo>/uploads/documents/`, and the static mount serves
+    // `<repo>/uploads/` at `/api/uploads`. The URL therefore must include
+    // the `documents/` subdir or `/api/uploads/<file>` 404s.
     return {
-      fileUrl: `/uploads/${path.basename(filePath)}`,
+      fileUrl: `/uploads/documents/${path.basename(filePath)}`,
       filePath: filePath,
       storageType: 'local'
     };
@@ -783,38 +820,24 @@ async function downloadDocument(req, res) {
       return res.redirect(data.signedUrl);
     }
 
-    // Local storage - stream the file
-    // Handle both absolute paths and relative paths
-    let filePath = document.filePath;
-    
-    // If filePath is relative (doesn't start with /), resolve it
-    if (filePath && !path.isAbsolute(filePath)) {
-      filePath = path.join(LOCAL_UPLOAD_DIR, path.basename(filePath));
-    }
-    
-    // Fallback to fileName if filePath doesn't exist
-    if (!filePath || !fs.existsSync(filePath)) {
-      filePath = path.join(LOCAL_UPLOAD_DIR, 'documents', document.fileName);
-    }
-    
-    // Final fallback without documents subdirectory
-    if (!fs.existsSync(filePath)) {
-      filePath = path.join(LOCAL_UPLOAD_DIR, document.fileName);
-    }
+    // Local storage - resolve the on-disk location and stream the file.
+    // resolveLocalFilePath() probes every legacy and current path shape so
+    // this endpoint and getDocumentUrl agree about where a file lives.
+    const filePath = resolveLocalFilePath(document);
 
     console.log('📥 [DOWNLOAD] Attempting to serve file:', {
       documentId: id,
       originalFilePath: document.filePath,
       resolvedFilePath: filePath,
-      exists: fs.existsSync(filePath)
+      exists: !!filePath
     });
 
-    if (!fs.existsSync(filePath)) {
-      console.error('❌ [DOWNLOAD] File not found:', filePath);
-      return res.status(404).json({ 
-        success: false, 
+    if (!filePath) {
+      console.error('❌ [DOWNLOAD] File not found for document:', id);
+      return res.status(404).json({
+        success: false,
         error: 'File not found on disk',
-        debug: { filePath, originalPath: document.filePath }
+        debug: { filePath: document.filePath, fileUrl: document.fileUrl, fileName: document.fileName }
       });
     }
 
@@ -897,22 +920,23 @@ async function getDocumentUrl(req, res) {
       });
     }
 
-    // Local storage: map legacy `/uploads/...` to the proxied/rewritten
-    // path `/api/uploads/...`. This is what the dev Vite proxy and the
-    // prod Vercel rewrite actually pass through to the backend; bare
-    // `/uploads/...` would hit the SPA shell instead and bounce the
-    // user to /dashboard.
-    let localUrl = document.fileUrl || '';
-    if (localUrl.startsWith('/uploads/')) {
-      localUrl = `/api${localUrl}`;
-    } else if (localUrl && !localUrl.startsWith('/api/uploads/') && !/^https?:\/\//.test(localUrl)) {
-      // Defensive: any other relative shape — prepend /api/uploads/.
-      localUrl = `/api/uploads/${localUrl.replace(/^\/+/, '')}`;
+    // Local storage: don't trust whatever shape the DB happens to hold
+    // (legacy rows wrote `/uploads/<file>` without the `documents/` subdir
+    // and that path 404s under the static mount). Resolve the file on
+    // disk and derive the public URL from where it actually lives.
+    const resolved = resolveLocalFilePath(document);
+    if (!resolved) {
+      console.error('❌ [URL] Local file not found for document:', document.id);
+      return res.status(404).json({
+        success: false,
+        error: 'File not found on disk',
+        debug: { fileUrl: document.fileUrl, filePath: document.filePath, fileName: document.fileName }
+      });
     }
 
     res.json({
       success: true,
-      url: localUrl,
+      url: localPathToPublicUrl(resolved),
       vehicleIndex: document.vehicleIndex ?? null
     });
 
